@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Details — Baker Production</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-bg-warm: #faf9f7;
+      --color-dark: #1a1a1a;
+      --color-darker: #111111;
+      --color-text: #111111;
+      --color-text-light: rgba(17,17,17,0.65);
+      --color-text-on-dark: #ffffff;
+      --color-text-on-dark-muted: rgba(255,255,255,0.65);
+      --color-accent: #b8975a;
+      --color-accent-hover: #a07d42;
+      --color-accent-light: #c8a76a;
+      --color-border: rgba(17,17,17,0.08);
+      --color-border-light: rgba(17,17,17,0.1);
+      --font-display: 'Inter', system-ui, sans-serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --ease-confident: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-dramatic: cubic-bezier(0.77, 0, 0.175, 1);
+      --max-width: 1200px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      color: var(--color-text);
+      background: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+    }
+
+    /* ========== GRAIN OVERLAY ========== */
+    .grain::after {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9997;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4; mix-blend-mode: overlay;
+    }
+
+    /* ========== NAVIGATION ========== */
+    .navbar {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 72px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--color-border);
+    }
+    .nav-logo {
+      font-family: var(--font-display); font-size: 24px; font-weight: 600;
+      color: var(--color-text); text-decoration: none; letter-spacing: 0.5px;
+      display: flex; align-items: center;
+    }
+    .nav-logo-img { height: 32px; width: auto; margin-right: 10px; }
+    .nav-logo-text { font-family: var(--font-display); font-size: 16px; font-weight: 600; letter-spacing: 0.3px; }
+    .nav-links {
+      display: flex; align-items: center; gap: 36px; list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-body); font-size: 11px; font-weight: 500;
+      letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none;
+      color: var(--color-text); position: relative; transition: color 0.3s;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 1.5px;
+      background: var(--color-accent); transform: scaleX(0); transform-origin: left;
+      transition: transform 0.25s var(--ease-confident);
+    }
+    .nav-links a:hover::after { transform: scaleX(1); }
+    .nav-cta {
+      font-family: var(--font-body); font-size: 11px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none;
+      color: var(--color-text) !important; background: var(--color-accent);
+      padding: 14px 28px; transition: background 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover { background: var(--color-accent-hover); transform: scale(1.02); }
+    .nav-hamburger {
+      display: none; background: none; border: none; cursor: pointer;
+      width: 28px; height: 20px; position: relative; z-index: 1001;
+    }
+    .nav-hamburger span {
+      position: absolute; left: 0; width: 100%; height: 2px; background: var(--color-text);
+      transition: 0.3s var(--ease-confident);
+    }
+    .nav-hamburger span:nth-child(1) { top: 0; }
+    .nav-hamburger span:nth-child(2) { top: 9px; }
+    .nav-hamburger span:nth-child(3) { top: 18px; }
+    .nav-hamburger.open span:nth-child(1) { top: 9px; transform: rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { top: 9px; transform: rotate(-45deg); }
+    .mobile-menu {
+      position: fixed; inset: 0; background: #fff; z-index: 999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+      clip-path: inset(0 0 100% 0); transition: clip-path 0.5s var(--ease-dramatic);
+    }
+    .mobile-menu.open { clip-path: inset(0 0 0% 0); }
+    .mobile-menu a {
+      font-family: var(--font-display); font-size: 28px; font-weight: 300;
+      color: var(--color-text); text-decoration: none; letter-spacing: 1px;
+    }
+    .mobile-menu .mobile-menu-cta {
+      font-family: var(--font-body); font-size: 13px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      background: var(--color-accent); color: var(--color-text); padding: 16px 36px;
+      margin-top: 12px;
+    }
+
+    /* ========== CHECKOUT LAYOUT ========== */
+    .checkout-wrap {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 120px 80px 80px;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 48px;
+      align-items: start;
+    }
+
+    /* ========== PROGRESS STEPS ========== */
+    .progress-bar {
+      display: flex; align-items: center; gap: 0;
+      margin-bottom: 48px;
+      grid-column: 1 / -1;
+    }
+    .progress-step {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--color-text-light);
+    }
+    .progress-step.active { color: var(--color-text); }
+    .progress-step.done { color: var(--color-accent); }
+    .progress-num {
+      width: 28px; height: 28px;
+      border: 1.5px solid var(--color-border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 12px; font-weight: 600;
+      transition: all 0.3s;
+    }
+    .progress-step.active .progress-num {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: #fff;
+    }
+    .progress-step.done .progress-num {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: #fff;
+    }
+    .progress-line {
+      flex: 1; height: 1px;
+      background: var(--color-border);
+      margin: 0 16px;
+    }
+    .progress-line.done { background: var(--color-accent); }
+
+    /* ========== FORM SECTION ========== */
+    .form-section {
+      background: var(--color-bg);
+    }
+    .form-section-title {
+      font-family: var(--font-display);
+      font-size: 28px; font-weight: 600;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+    .form-section-desc {
+      font-size: 14px;
+      color: var(--color-text-light);
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--color-text);
+      margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--color-text);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border-light);
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .form-input::placeholder {
+      color: rgba(17,17,17,0.3);
+    }
+    .form-input:focus {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(184,151,90,0.1);
+    }
+    .form-input.error {
+      border-color: #dc2626;
+      box-shadow: 0 0 0 3px rgba(220,38,38,0.08);
+    }
+    .form-error {
+      font-size: 12px;
+      color: #dc2626;
+      margin-top: 6px;
+      display: none;
+    }
+    .form-error.visible { display: block; }
+
+    select.form-input {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23111' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+    textarea.form-input {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* ========== MAP ========== */
+    .map-container {
+      margin-top: 24px;
+      border: 1px solid var(--color-border);
+      overflow: hidden;
+      position: relative;
+    }
+    .map-container #map {
+      width: 100%;
+      height: 280px;
+    }
+    .map-placeholder {
+      width: 100%;
+      height: 280px;
+      background: var(--color-bg-warm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--color-text-light);
+    }
+    .map-placeholder svg {
+      width: 40px; height: 40px;
+      stroke: var(--color-accent);
+      fill: none;
+      stroke-width: 1.2;
+      opacity: 0.5;
+    }
+    .map-placeholder span {
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 1px; text-transform: uppercase;
+      opacity: 0.5;
+    }
+
+    /* ========== ORDER SUMMARY SIDEBAR ========== */
+    .order-summary {
+      position: sticky;
+      top: 96px;
+      background: var(--color-bg-warm);
+      padding: 32px 28px;
+      border: 1px solid var(--color-border);
+    }
+    .order-summary-title {
+      font-family: var(--font-display);
+      font-size: 14px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .order-item:last-of-type { border-bottom: none; }
+    .order-item-name {
+      font-size: 14px;
+      font-weight: 500;
+      flex: 1;
+      padding-right: 16px;
+    }
+    .order-item-price {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-accent);
+      white-space: nowrap;
+    }
+    .order-item-remove {
+      background: none; border: none; cursor: pointer;
+      font-size: 11px; color: var(--color-text-light);
+      margin-left: 12px;
+      padding: 2px;
+      opacity: 0.5;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .order-item-remove:hover {
+      opacity: 1; color: #dc2626;
+    }
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px;
+      margin-top: 8px;
+      border-top: 1px solid var(--color-border);
+    }
+    .order-total-label {
+      font-family: var(--font-display);
+      font-size: 14px; font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .order-total-price {
+      font-family: var(--font-display);
+      font-size: 24px; font-weight: 600;
+      color: var(--color-accent);
+    }
+    .order-note {
+      font-size: 12px;
+      color: var(--color-text-light);
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+    .order-edit {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--color-accent);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .order-edit:hover { color: var(--color-accent-hover); }
+
+    /* ========== RECOMMENDED ADD-ONS ========== */
+    .addons-section {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--color-border);
+    }
+    .addons-title {
+      font-family: var(--font-display);
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--color-text-light);
+      margin-bottom: 12px;
+    }
+    .addon-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-border);
+      gap: 12px;
+    }
+    .addon-card:last-child { border-bottom: none; }
+    .addon-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .addon-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .addon-desc {
+      font-size: 11px;
+      color: var(--color-text-light);
+      line-height: 1.4;
+    }
+    .addon-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .addon-price {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-accent);
+      white-space: nowrap;
+    }
+    .addon-add {
+      width: 28px; height: 28px;
+      border: 1.5px solid var(--color-border-light);
+      border-radius: 50%;
+      background: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      flex-shrink: 0;
+    }
+    .addon-add:hover {
+      border-color: var(--color-accent);
+      background: rgba(184,151,90,0.08);
+      transform: scale(1.1);
+    }
+    .addon-add svg {
+      width: 12px; height: 12px;
+      stroke: var(--color-text); stroke-width: 2;
+      fill: none;
+    }
+    .addon-add.added {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+    }
+    .addon-add.added svg { stroke: #fff; }
+
+    /* ========== SURCHARGE ========== */
+    .order-surcharge {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 13px;
+    }
+    .order-surcharge-label {
+      color: var(--color-text-light);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .order-surcharge-label svg {
+      width: 14px; height: 14px;
+      stroke: var(--color-accent); fill: none; stroke-width: 1.5;
+    }
+    .order-surcharge-price {
+      font-family: var(--font-display);
+      font-size: 13px; font-weight: 600;
+      color: var(--color-text);
+    }
+    .surcharge-notice {
+      font-size: 11px;
+      color: var(--color-text-light);
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: rgba(184,151,90,0.06);
+      border-left: 2px solid var(--color-accent);
+      line-height: 1.5;
+      display: none;
+    }
+    .surcharge-notice.visible { display: block; }
+
+    /* ========== CONTACT MODAL ========== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+      z-index: 9998;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--color-bg);
+      max-width: 440px; width: 90%;
+      padding: 40px 36px;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.35s var(--ease-confident);
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; cursor: pointer;
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-text-light);
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--color-text); }
+    .modal-icon {
+      width: 48px; height: 48px;
+      background: rgba(184,151,90,0.1);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .modal-icon svg {
+      width: 24px; height: 24px;
+      stroke: var(--color-accent); fill: none; stroke-width: 1.5;
+    }
+    .modal h2 {
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .modal p {
+      font-size: 14px;
+      color: var(--color-text-light);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    .modal-contact-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 0;
+      border-top: 1px solid var(--color-border);
+    }
+    .modal-contact-row svg {
+      width: 18px; height: 18px;
+      stroke: var(--color-accent); fill: none; stroke-width: 1.5;
+      flex-shrink: 0;
+    }
+    .modal-contact-row a {
+      font-size: 15px; font-weight: 500;
+      color: var(--color-text);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .modal-contact-row a:hover { color: var(--color-accent); }
+    .modal-contact-label {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--color-text-light);
+      margin-bottom: 2px;
+    }
+
+    /* ========== FORM ACTIONS ========== */
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+      padding-top: 32px;
+      border-top: 1px solid var(--color-border);
+    }
+    .btn-back {
+      font-family: var(--font-body);
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--color-text-light);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+      transition: color 0.2s;
+    }
+    .btn-back:hover { color: var(--color-text); }
+    .btn-back svg {
+      width: 16px; height: 16px;
+      stroke: currentColor; fill: none; stroke-width: 1.5;
+    }
+    .btn-submit {
+      font-family: var(--font-body);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      background: var(--color-accent);
+      color: #fff;
+      border: none; cursor: pointer;
+      padding: 18px 48px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-submit:hover { background: var(--color-accent-hover); transform: scale(1.02); }
+    .btn-submit:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none;
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      background: var(--color-darker);
+      color: var(--color-text-on-dark);
+      padding: 80px 80px 40px;
+    }
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 64px;
+      max-width: var(--max-width);
+      margin: 0 auto 60px;
+    }
+    .footer-logo {
+      font-family: var(--font-display); font-size: 26px; font-weight: 600;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 14px;
+      color: #fff;
+      letter-spacing: 0.3px;
+    }
+    .footer-logo-img { height: 44px; width: auto; filter: brightness(0) invert(1); }
+    .footer-logo-text { color: #fff; font-size: 24px; font-weight: 600; letter-spacing: 0.3px; }
+    .footer-tagline {
+      font-size: 14px; color: var(--color-text-on-dark-muted);
+      margin-bottom: 24px; max-width: 280px;
+    }
+    .footer-socials { display: flex; gap: 16px; }
+    .footer-socials a {
+      font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--color-text-on-dark-muted); text-decoration: none; transition: color 0.2s;
+    }
+    .footer-socials a:hover { color: var(--color-accent); }
+    .footer-nav { display: flex; gap: 64px; }
+    .footer-nav-col h4 {
+      font-family: var(--font-display); font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 16px; color: var(--color-accent);
+    }
+    .footer-nav-col ul { list-style: none; }
+    .footer-nav-col li { margin-bottom: 10px; }
+    .footer-nav-col a {
+      font-size: 14px; color: var(--color-text-on-dark-muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-nav-col a:hover { color: #fff; }
+    .footer-contact h4 {
+      font-family: var(--font-display); font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 16px; color: var(--color-accent);
+    }
+    .footer-contact-item { margin-bottom: 14px; }
+    .footer-contact-label {
+      font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--color-text-on-dark-muted); margin-bottom: 2px;
+    }
+    .footer-contact-value { font-size: 14px; }
+    .footer-contact-value a { color: #fff; text-decoration: none; }
+    .footer-contact-value a:hover { color: var(--color-accent); }
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      max-width: var(--max-width); margin: 0 auto;
+    }
+    .footer-copyright { font-size: 12px; color: var(--color-text-on-dark-muted); }
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a {
+      font-size: 12px; color: var(--color-text-on-dark-muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: #fff; }
+
+    /* ========== REVEAL ========== */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.5s var(--ease-confident), transform 0.5s var(--ease-confident);
+    }
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 1024px) {
+      .checkout-wrap {
+        grid-template-columns: 1fr;
+        padding: 110px 48px 60px;
+        gap: 32px;
+      }
+      .progress-bar { grid-column: 1; }
+      .order-summary { position: static; order: -1; }
+      .footer { padding: 60px 48px 32px; }
+      .footer-inner { grid-template-columns: 1fr 1fr; gap: 40px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-cta.desktop-only { display: none; }
+      .nav-hamburger { display: block; }
+      .navbar { padding: 0 24px; height: 64px; }
+      .checkout-wrap { padding: 90px 20px 48px; gap: 24px; }
+      .form-section-title { font-size: 22px; }
+      .form-row, .form-row-3 { grid-template-columns: 1fr; }
+      .order-summary { padding: 24px 20px; }
+      .form-actions { flex-direction: column-reverse; gap: 16px; }
+      .btn-submit { width: 100%; text-align: center; }
+      .map-container #map { height: 220px; }
+      .footer { padding: 48px 24px 24px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+      .footer-nav { flex-direction: column; gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body class="grain">
+
+  <!-- NAVIGATION -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="nav-logo"><img src="logo.avif" alt="Baker Production" class="nav-logo-img"><span class="nav-logo-text">Baker Production</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#services">Services</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="index.html#pricing">Pricing</a></li>
+      <li><a href="index.html#process">Process</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a href="book.html" class="nav-cta desktop-only">Book Now</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html#services" onclick="closeMenu()">Services</a>
+    <a href="gallery.html" onclick="closeMenu()">Gallery</a>
+    <a href="index.html#pricing" onclick="closeMenu()">Pricing</a>
+    <a href="index.html#process" onclick="closeMenu()">Process</a>
+    <a href="index.html#contact" onclick="closeMenu()">Contact</a>
+    <a href="book.html" class="mobile-menu-cta" onclick="closeMenu()">Book Now</a>
+  </div>
+
+  <!-- CHECKOUT -->
+  <div class="checkout-wrap">
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar reveal">
+      <div class="progress-step done">
+        <div class="progress-num">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3" stroke="#fff" stroke-width="2" fill="none"/></svg>
+        </div>
+        <span>Select Services</span>
+      </div>
+      <div class="progress-line done"></div>
+      <div class="progress-step active">
+        <div class="progress-num">2</div>
+        <span>Property Details</span>
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step">
+        <div class="progress-num">3</div>
+        <span>Confirm</span>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-section reveal">
+      <h1 class="form-section-title">Property Details</h1>
+      <p class="form-section-desc">Enter the property address for the shoot. We'll confirm the exact appointment time via email.</p>
+
+      <form id="checkoutForm" novalidate>
+
+        <!-- PROPERTY ADDRESS -->
+        <div class="form-group">
+          <label class="form-label" for="address">Street Address</label>
+          <input type="text" class="form-input" id="address" name="address" placeholder="e.g. 42 Marine Parade" required autocomplete="street-address">
+          <div class="form-error" id="addressError">Please enter the street address</div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="unit">Unit / Apt (optional)</label>
+            <input type="text" class="form-input" id="unit" name="unit" placeholder="e.g. Unit 3">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="suburb">Suburb</label>
+            <input type="text" class="form-input" id="suburb" name="suburb" placeholder="e.g. Cottesloe" required>
+            <div class="form-error" id="suburbError">Please enter the suburb</div>
+          </div>
+        </div>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label class="form-label" for="state">State</label>
+            <select class="form-input" id="state" name="state" required>
+              <option value="WA" selected>Western Australia</option>
+              <option value="NSW">New South Wales</option>
+              <option value="VIC">Victoria</option>
+              <option value="QLD">Queensland</option>
+              <option value="SA">South Australia</option>
+              <option value="TAS">Tasmania</option>
+              <option value="NT">Northern Territory</option>
+              <option value="ACT">ACT</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="postcode">Postcode</label>
+            <input type="text" class="form-input" id="postcode" name="postcode" placeholder="e.g. 6011" required pattern="[0-9]{4}" maxlength="4" inputmode="numeric">
+            <div class="form-error" id="postcodeError">Enter a valid 4-digit postcode</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="country">Country</label>
+            <input type="text" class="form-input" id="country" name="country" value="Australia" readonly>
+          </div>
+        </div>
+
+        <!-- MAP -->
+        <div class="map-container" id="mapContainer">
+          <div class="map-placeholder" id="mapPlaceholder">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            <span>Map updates when address is entered</span>
+          </div>
+          <div id="map" style="display:none;"></div>
+        </div>
+
+        <!-- AGENT DETAILS -->
+        <div style="margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--color-border);">
+          <h2 style="font-family: var(--font-display); font-size: 20px; font-weight: 600; margin-bottom: 6px;">Your Details</h2>
+          <p style="font-size: 14px; color: var(--color-text-light); margin-bottom: 28px;">We'll send the booking confirmation and deliverables to this contact.</p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="firstName">First Name</label>
+              <input type="text" class="form-input" id="firstName" name="firstName" placeholder="First name" required>
+              <div class="form-error" id="firstNameError">Please enter your first name</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lastName">Last Name</label>
+              <input type="text" class="form-input" id="lastName" name="lastName" placeholder="Last name" required>
+              <div class="form-error" id="lastNameError">Please enter your last name</div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="email">Email</label>
+              <input type="email" class="form-input" id="email" name="email" placeholder="agent@agency.com.au" required>
+              <div class="form-error" id="emailError">Please enter a valid email address</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="phone">Phone</label>
+              <input type="tel" class="form-input" id="phone" name="phone" placeholder="04XX XXX XXX" required>
+              <div class="form-error" id="phoneError">Please enter your phone number</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="agency">Agency (optional)</label>
+            <input type="text" class="form-input" id="agency" name="agency" placeholder="e.g. Ray White Cottesloe">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="notes">Special Instructions (optional)</label>
+            <textarea class="form-input" id="notes" name="notes" placeholder="Access codes, lockbox location, pets on property, preferred timing..."></textarea>
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="form-actions">
+          <a href="book.html" class="btn-back">
+            <svg viewBox="0 0 16 16"><polyline points="10 2 4 8 10 14"/></svg>
+            Back to Services
+          </a>
+          <button type="submit" class="btn-submit" id="submitBtn">Continue to Confirm</button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <div class="order-summary reveal">
+      <div class="order-summary-title">Your Booking</div>
+      <div id="orderItems"></div>
+      <div id="surchargeRow" class="order-surcharge" style="display:none;">
+        <span class="order-surcharge-label">
+          <svg viewBox="0 0 16 16"><path d="M8 1L1 15h14L8 1z"/><line x1="8" y1="6" x2="8" y2="10"/><circle cx="8" cy="12" r="0.5"/></svg>
+          Travel surcharge
+        </span>
+        <span class="order-surcharge-price" id="surchargeAmount">$0</span>
+      </div>
+      <div class="surcharge-notice" id="surchargeNotice"></div>
+      <div class="order-total">
+        <span class="order-total-label">Total</span>
+        <span class="order-total-price" id="orderTotal">$0</span>
+      </div>
+      <p class="order-note">All prices inclusive of GST. A $110 cancellation fee applies within 1 hour of appointment.</p>
+      <a href="book.html" class="order-edit">Edit services</a>
+
+      <!-- RECOMMENDED ADD-ONS -->
+      <div class="addons-section" id="addonsSection">
+        <div class="addons-title">Recommended Add-Ons</div>
+        <div id="addonsList"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CONTACT MODAL (90km+) -->
+  <div class="modal-overlay" id="contactModal">
+    <div class="modal">
+      <button class="modal-close" id="modalClose" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" stroke-width="1.5"/><line x1="14" y1="2" x2="2" y2="14" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      </div>
+      <h2>Property Out of Standard Range</h2>
+      <p>This property is over 90km from Perth CBD. Please contact us directly so we can arrange a custom quote for your shoot.</p>
+      <div class="modal-contact-row">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        <div>
+          <div class="modal-contact-label">Call direct</div>
+          <a href="tel:0466789522">0466 789 522</a>
+        </div>
+      </div>
+      <div class="modal-contact-row">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <div>
+          <div class="modal-contact-label">Email us</div>
+          <a href="mailto:admin@bakerproduction.com">admin@bakerproduction.com</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo"><img src="logo.avif" alt="Baker Production" class="footer-logo-img"><span class="footer-logo-text">Baker Production</span></div>
+        <p class="footer-tagline">Perth property media. Fast turnaround on every shoot.</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/_bakerproduction/?hl=en" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/p/Baker-Production-61578706599674/" target="_blank" rel="noopener">Facebook</a>
+        </div>
+      </div>
+      <div class="footer-nav">
+        <div class="footer-nav-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="index.html#services">Photography</a></li>
+            <li><a href="index.html#services">Videography</a></li>
+            <li><a href="index.html#services">Virtual Editing</a></li>
+            <li><a href="index.html#services">Floor Plans</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="index.html#hero">About Us</a></li>
+            <li><a href="index.html#pricing">Pricing</a></li>
+            <li><a href="index.html#process">Process</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="book.html">Book Now</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-contact">
+        <h4>Get in Touch</h4>
+        <div class="footer-contact-item">
+          <div class="footer-contact-label">Call direct</div>
+          <div class="footer-contact-value"><a href="tel:0466789522">0466 789 522</a></div>
+        </div>
+        <div class="footer-contact-item">
+          <div class="footer-contact-label">Email us</div>
+          <div class="footer-contact-value"><a href="mailto:admin@bakerproduction.com">admin@bakerproduction.com</a></div>
+        </div>
+        <div class="footer-contact-item">
+          <div class="footer-contact-label">Based in</div>
+          <div class="footer-contact-value">Perth, Western Australia</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copyright">&copy; 2026 Baker Production. All rights reserved.</div>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // ========== HAMBURGER MENU ==========
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+    function closeMenu() {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // ========== REVEAL ==========
+    const revealObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('revealed'); revealObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // ========== LOAD CART ==========
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem('bp_cart') || '[]'); } catch(e) {}
+    if (cart.length === 0) { window.location.href = 'book.html'; }
+
+    // All available add-ons
+    const allAddons = [
+      { name: 'Virtual Tour', price: 159, desc: '360-degree interactive virtual tour' },
+      { name: 'Twilight Add-On', price: 75, desc: 'Golden hour exterior shots' },
+      { name: 'Social Media Walkthrough', price: 87, desc: 'Vertical walkthrough with music' },
+      { name: 'Aerial / Drone Photography', price: 220, desc: 'Drone photos with overlays and location pins' },
+      { name: 'Virtual Staging', price: 25, desc: 'AI furniture and styling per image' },
+      { name: 'Decluttering / Object Removal', price: 10, desc: 'Remove unwanted items per image' },
+      { name: 'Day to Dusk', price: 5, desc: 'Convert daytime exteriors to twilight' },
+      { name: 'Social Media Reel', price: 300, desc: 'Short-form vertical reel for socials' },
+      { name: 'Agent Headshots', price: 220, desc: 'Professional portraits for two agents' },
+    ];
+
+    // Map packages to what's included so we don't recommend duplicates
+    const packageIncludes = {
+      'essential package': ['photography', 'floorplan', 'drone'],
+      'premium package': ['photography', 'floorplan', 'drone'],
+      'social media lite': ['photography', 'floorplan', 'drone', 'social media walkthrough'],
+      'social media lite package': ['photography', 'floorplan', 'drone', 'social media walkthrough'],
+      'core listing': ['photography', 'floorplan', 'drone', 'social media walkthrough', 'virtual tour'],
+      'core listing package': ['photography', 'floorplan', 'drone', 'social media walkthrough', 'virtual tour'],
+      'signature package': ['photography', 'floorplan', 'drone', 'listing video'],
+      'elite listing': ['photography', 'floorplan', 'drone', 'listing video', 'virtual tour', 'twilight', 'social media reel'],
+      'elite listing package': ['photography', 'floorplan', 'drone', 'listing video', 'virtual tour', 'twilight', 'social media reel'],
+    };
+
+    // Keywords that indicate overlap between cart items and add-ons
+    const addonAliases = {
+      'virtual tour': ['virtual tour'],
+      'twilight add-on': ['twilight'],
+      'social media walkthrough': ['social media walkthrough', 'walkthrough'],
+      'aerial / drone photography': ['drone', 'aerial'],
+      'virtual staging': ['virtual staging', 'staging'],
+      'decluttering / object removal': ['decluttering', 'object removal'],
+      'day to dusk': ['day to dusk', 'day-to-dusk', 'twilight'],
+      'social media reel': ['social media reel', 'social reel'],
+      'agent headshots': ['agent headshots', 'headshots'],
+    };
+
+    function getRecommendedAddons() {
+      // Build a set of all services already covered (direct items + package contents)
+      const covered = new Set();
+      cart.forEach(item => {
+        const name = item.name.toLowerCase();
+        covered.add(name);
+        // Expand package contents
+        const includes = packageIncludes[name];
+        if (includes) includes.forEach(s => covered.add(s));
+      });
+
+      return allAddons.filter(addon => {
+        const aliases = addonAliases[addon.name.toLowerCase()] || [addon.name.toLowerCase()];
+        return !aliases.some(alias => covered.has(alias));
+      }).slice(0, 4);
+    }
+
+    function renderOrder() {
+      const container = document.getElementById('orderItems');
+      let total = 0;
+      container.innerHTML = '';
+      cart.forEach((item, i) => {
+        total += item.price;
+        const el = document.createElement('div');
+        el.className = 'order-item';
+        el.innerHTML = `
+          <span class="order-item-name">${item.name}</span>
+          <span class="order-item-price">${item.price > 0 ? '$' + item.price.toLocaleString() : 'Quote'}</span>
+          <button class="order-item-remove" onclick="removeItem(${i})" aria-label="Remove">&times;</button>
+        `;
+        container.appendChild(el);
+      });
+      const grandTotal = total + currentSurcharge;
+      document.getElementById('orderTotal').textContent = '$' + grandTotal.toLocaleString();
+      renderAddons();
+    }
+
+    function renderAddons() {
+      const list = document.getElementById('addonsList');
+      const section = document.getElementById('addonsSection');
+      const recommended = getRecommendedAddons();
+
+      if (recommended.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+      section.style.display = 'block';
+      list.innerHTML = '';
+
+      recommended.forEach(addon => {
+        const el = document.createElement('div');
+        el.className = 'addon-card';
+        el.innerHTML = `
+          <div class="addon-info">
+            <div class="addon-name">${addon.name}</div>
+            <div class="addon-desc">${addon.desc}</div>
+          </div>
+          <div class="addon-right">
+            <span class="addon-price">${addon.price > 0 ? '$' + addon.price : 'Quote'}</span>
+            <button class="addon-add" aria-label="Add ${addon.name}">
+              <svg viewBox="0 0 12 12"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg>
+            </button>
+          </div>
+        `;
+        el.querySelector('.addon-add').addEventListener('click', () => addAddon(addon));
+        list.appendChild(el);
+      });
+    }
+
+    function addAddon(addon) {
+      cart.push({ name: addon.name, price: addon.price });
+      localStorage.setItem('bp_cart', JSON.stringify(cart));
+      renderOrder();
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      localStorage.setItem('bp_cart', JSON.stringify(cart));
+      if (cart.length === 0) { window.location.href = 'book.html'; return; }
+      renderOrder();
+    }
+
+    renderOrder();
+
+    // ========== MAP + DISTANCE ==========
+    let map = null;
+    let marker = null;
+    let geocodeTimeout = null;
+    let currentSurcharge = 0;
+
+    // Perth CBD coordinates
+    const PERTH_CBD = { lat: -31.9505, lon: 115.8605 };
+
+    // Haversine distance in km
+    function haversineKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function applySurcharge(lat, lon) {
+      const dist = haversineKm(PERTH_CBD.lat, PERTH_CBD.lon, lat, lon);
+      const surchargeRow = document.getElementById('surchargeRow');
+      const surchargeAmount = document.getElementById('surchargeAmount');
+      const surchargeNotice = document.getElementById('surchargeNotice');
+      const submitBtn = document.getElementById('submitBtn');
+
+      if (dist > 90) {
+        // Too far — show contact modal
+        currentSurcharge = 0;
+        surchargeRow.style.display = 'none';
+        surchargeNotice.className = 'surcharge-notice visible';
+        surchargeNotice.textContent = `This property is ~${Math.round(dist)}km from Perth CBD and outside our standard service area.`;
+        submitBtn.disabled = true;
+        openContactModal();
+      } else if (dist > 70) {
+        currentSurcharge = 100;
+        surchargeRow.style.display = 'flex';
+        surchargeAmount.textContent = '$100';
+        surchargeNotice.className = 'surcharge-notice visible';
+        surchargeNotice.textContent = `~${Math.round(dist)}km from Perth CBD — $100 travel surcharge applies.`;
+        submitBtn.disabled = false;
+      } else if (dist > 50) {
+        currentSurcharge = 50;
+        surchargeRow.style.display = 'flex';
+        surchargeAmount.textContent = '$50';
+        surchargeNotice.className = 'surcharge-notice visible';
+        surchargeNotice.textContent = `~${Math.round(dist)}km from Perth CBD — $50 travel surcharge applies.`;
+        submitBtn.disabled = false;
+      } else {
+        currentSurcharge = 0;
+        surchargeRow.style.display = 'none';
+        surchargeNotice.className = 'surcharge-notice';
+        submitBtn.disabled = false;
+      }
+      renderOrder();
+    }
+
+    function geocodeAddress() {
+      const address = document.getElementById('address').value.trim();
+      const suburb = document.getElementById('suburb').value.trim();
+      const state = document.getElementById('state').value;
+      const postcode = document.getElementById('postcode').value.trim();
+
+      if (!address || !suburb) return;
+
+      const query = `${address}, ${suburb}, ${state} ${postcode}, Australia`;
+
+      clearTimeout(geocodeTimeout);
+      geocodeTimeout = setTimeout(() => {
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&countrycodes=au`)
+          .then(r => r.json())
+          .then(data => {
+            if (data.length > 0) {
+              const lat = parseFloat(data[0].lat);
+              const lon = parseFloat(data[0].lon);
+              showMap(lat, lon);
+              applySurcharge(lat, lon);
+            }
+          })
+          .catch(() => {});
+      }, 600);
+    }
+
+    function showMap(lat, lon) {
+      const mapEl = document.getElementById('map');
+      const placeholder = document.getElementById('mapPlaceholder');
+
+      placeholder.style.display = 'none';
+      mapEl.style.display = 'block';
+
+      if (!map) {
+        map = L.map('map', {
+          scrollWheelZoom: false,
+          dragging: false,
+          touchZoom: false,
+          doubleClickZoom: false,
+          boxZoom: false,
+          keyboard: false,
+          zoomControl: false,
+        }).setView([lat, lon], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
+        marker = L.marker([lat, lon]).addTo(map);
+      } else {
+        map.setView([lat, lon], 16);
+        marker.setLatLng([lat, lon]);
+      }
+
+      setTimeout(() => map.invalidateSize(), 100);
+    }
+
+    // Listen to address fields
+    ['address', 'suburb', 'postcode'].forEach(id => {
+      document.getElementById(id).addEventListener('input', geocodeAddress);
+    });
+    document.getElementById('state').addEventListener('change', geocodeAddress);
+
+    // ========== FORM VALIDATION ==========
+    const form = document.getElementById('checkoutForm');
+    const requiredFields = [
+      { id: 'address', error: 'addressError' },
+      { id: 'suburb', error: 'suburbError' },
+      { id: 'postcode', error: 'postcodeError' },
+      { id: 'firstName', error: 'firstNameError' },
+      { id: 'lastName', error: 'lastNameError' },
+      { id: 'email', error: 'emailError' },
+      { id: 'phone', error: 'phoneError' },
+    ];
+
+    // Clear errors on input
+    requiredFields.forEach(f => {
+      document.getElementById(f.id).addEventListener('input', () => {
+        document.getElementById(f.id).classList.remove('error');
+        document.getElementById(f.error).classList.remove('visible');
+      });
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let valid = true;
+
+      requiredFields.forEach(f => {
+        const input = document.getElementById(f.id);
+        const val = input.value.trim();
+        if (!val || (f.id === 'postcode' && !/^\d{4}$/.test(val)) || (f.id === 'email' && !val.includes('@'))) {
+          input.classList.add('error');
+          document.getElementById(f.error).classList.add('visible');
+          valid = false;
+        }
+      });
+
+      if (!valid) {
+        const first = form.querySelector('.form-input.error');
+        if (first) first.focus();
+        return;
+      }
+
+      // Collect form data
+      const formData = {
+        services: cart,
+        property: {
+          address: document.getElementById('address').value.trim(),
+          unit: document.getElementById('unit').value.trim(),
+          suburb: document.getElementById('suburb').value.trim(),
+          state: document.getElementById('state').value,
+          postcode: document.getElementById('postcode').value.trim(),
+          country: 'Australia',
+        },
+        contact: {
+          firstName: document.getElementById('firstName').value.trim(),
+          lastName: document.getElementById('lastName').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          agency: document.getElementById('agency').value.trim(),
+        },
+        notes: document.getElementById('notes').value.trim(),
+        total: cart.reduce((s, i) => s + i.price, 0),
+      };
+
+      formData.surcharge = currentSurcharge;
+      formData.total = formData.total + currentSurcharge;
+
+      localStorage.setItem('bp_booking', JSON.stringify(formData));
+      window.location.href = 'schedule.html';
+    });
+
+    // ========== CONTACT MODAL (90km+) ==========
+    function openContactModal() {
+      document.getElementById('contactModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeContactModal() {
+      document.getElementById('contactModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('modalClose').addEventListener('click', closeContactModal);
+    document.getElementById('contactModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeContactModal();
+    });
+  </script>
+</body>
+</html>

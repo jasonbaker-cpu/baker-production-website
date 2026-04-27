@@ -1,0 +1,113 @@
+MISSING IMAGES
+==============
+
+The website references 89 images in this folder. Save your photos with the
+exact filenames below (case-sensitive) into this img/ folder.
+
+Group by purpose:
+- gal-*       → Gallery page (organised by category: aerial, day, twilight, etc.)
+- svc-*       → Service section thumbnails on the homepage
+- pkg-*       → Package tier images on the booking page
+- logo-*      → Client/agency logos (the "trusted by" section)
+- example-*   → Before/after images for virtual editing
+- service-*   → Large service hero images
+
+If you don't have a specific image yet, you can temporarily use any placeholder
+with the right filename and replace it later.
+
+Tip: convert photos to .webp format first (use https://squoosh.app — free)
+to keep your site fast.
+
+------------------------------------------------------------
+FULL LIST (89 files)
+------------------------------------------------------------
+
+addon-virtual-tour.webp
+example-daytodusk-after.webp
+example-daytodusk-before.webp
+example-declutter-after.webp
+example-declutter-before.webp
+example-staging-after.webp
+example-staging-before.webp
+gal-aerial-1-thumb.webp
+gal-aerial-1.webp
+gal-aerial-2-thumb.webp
+gal-aerial-2.webp
+gal-aerial-3-thumb.webp
+gal-aerial-3.webp
+gal-day-1-thumb.webp
+gal-day-1.webp
+gal-day-2-thumb.webp
+gal-day-2.webp
+gal-day-3-thumb.webp
+gal-day-3.webp
+gal-day-to-dusk-1-thumb.webp
+gal-day-to-dusk-1.webp
+gal-day-to-dusk-2-thumb.webp
+gal-day-to-dusk-2.webp
+gal-declutter-1-thumb.webp
+gal-declutter-1.webp
+gal-declutter-2-thumb.webp
+gal-declutter-2.webp
+gal-declutter-3-thumb.webp
+gal-declutter-3.webp
+gal-headshots-1-thumb.webp
+gal-headshots-1.webp
+gal-headshots-2-thumb.webp
+gal-headshots-2.webp
+gal-headshots-3-thumb.webp
+gal-headshots-3.webp
+gal-headshots-4-thumb.webp
+gal-headshots-4.webp
+gal-headshots-5-thumb.webp
+gal-headshots-5.webp
+gal-staging-1-thumb.webp
+gal-staging-1.webp
+gal-staging-2-thumb.webp
+gal-staging-2.webp
+gal-staging-3-thumb.webp
+gal-staging-3.webp
+gal-twilight-1-thumb.webp
+gal-twilight-1.webp
+gal-twilight-2-thumb.webp
+gal-twilight-2.webp
+gal-twilight-3-thumb.webp
+gal-twilight-3.webp
+hero-bg.webp
+logo-first-national.webp
+logo-harcourts.webp
+logo-peard-real-estate.webp
+logo-professionals.webp
+logo-ray-white.webp
+logo-realmark.webp
+logo-s-class-property.webp
+logo-semple-property-group.webp
+logo-smart-realty.webp
+logo-the-property-group.webp
+logo-vast-commercial.webp
+pkg-core.webp
+pkg-elite.webp
+pkg-essential.webp
+pkg-premium.webp
+pkg-signature.webp
+service-floorplans.webp
+service-photography.webp
+service-videography-poster.webp
+service-videography.webp
+service-virtual.webp
+svc-aerial.webp
+svc-day-to-dusk.webp
+svc-decluttering.webp
+svc-floorplan-large.webp
+svc-floorplan-medium.webp
+svc-floorplan-redraw-siteplan.webp
+svc-floorplan-redraw.webp
+svc-floorplan-small.webp
+svc-floorplan-xl.webp
+svc-headshots.webp
+svc-listing-video.webp
+svc-rental.webp
+svc-sales.webp
+svc-social-reel.webp
+svc-social-walkthrough.webp
+svc-twilight.webp

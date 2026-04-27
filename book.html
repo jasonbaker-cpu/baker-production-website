@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book — Baker Production</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" href="favicon.png?v=2" sizes="any">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-bg-warm: #faf9f7;
+      --color-dark: #1a1a1a;
+      --color-darker: #111111;
+      --color-text: #111111;
+      --color-text-light: rgba(17,17,17,0.65);
+      --color-text-on-dark: #ffffff;
+      --color-text-on-dark-muted: rgba(255,255,255,0.65);
+      --color-accent: #b8975a;
+      --color-accent-hover: #a07d42;
+      --color-accent-light: #c8a76a;
+      --color-border: rgba(17,17,17,0.08);
+      --color-border-light: rgba(17,17,17,0.1);
+      --font-display: 'Inter', system-ui, sans-serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --ease-confident: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-dramatic: cubic-bezier(0.77, 0, 0.175, 1);
+      --section-padding: 120px 80px;
+      --section-padding-mobile: 80px 24px;
+      --max-width: 1200px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      color: var(--color-text);
+      background: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+    }
+    .overflow-clip { overflow-x: clip; }
+
+    /* ========== GRAIN OVERLAY ========== */
+    .grain::after {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9997;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4; mix-blend-mode: overlay;
+    }
+
+    /* ========== NAVIGATION ========== */
+    .navbar {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 72px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--color-border);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .nav-logo {
+      font-family: var(--font-display); font-size: 24px; font-weight: 600;
+      color: var(--color-text); text-decoration: none; letter-spacing: 0.5px;
+      transition: color 0.3s; display: flex; align-items: center;
+    }
+    .nav-logo-img { height: 32px; width: auto; margin-right: 10px; }
+    .nav-logo-text { font-family: var(--font-display); font-size: 16px; font-weight: 600; letter-spacing: 0.3px; }
+    .navbar.menu-open .nav-logo { color: var(--color-text); }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 36px; list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-body); font-size: 11px; font-weight: 500;
+      letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none;
+      color: var(--color-text); position: relative;
+      transition: color 0.3s;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 1.5px;
+      background: var(--color-accent); transform: scaleX(0); transform-origin: left;
+      transition: transform 0.25s var(--ease-confident);
+    }
+    .nav-links a:hover::after { transform: scaleX(1); }
+    .nav-links a.active::after { transform: scaleX(1); }
+
+    .nav-cta {
+      font-family: var(--font-body); font-size: 11px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none;
+      color: var(--color-text) !important; background: var(--color-accent);
+      padding: 14px 28px; transition: background 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover { background: var(--color-accent-hover); transform: scale(1.02); }
+
+    .nav-hamburger {
+      display: none; background: none; border: none; cursor: pointer;
+      width: 28px; height: 20px; position: relative; z-index: 1001;
+    }
+    .nav-hamburger span {
+      position: absolute; left: 0; width: 100%; height: 2px; background: var(--color-text);
+      transition: 0.3s var(--ease-confident);
+    }
+    .nav-hamburger span:nth-child(1) { top: 0; }
+    .nav-hamburger span:nth-child(2) { top: 9px; }
+    .nav-hamburger span:nth-child(3) { top: 18px; }
+    .nav-hamburger.open span { background: var(--color-text); }
+    .nav-hamburger.open span:nth-child(1) { top: 9px; transform: rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { top: 9px; transform: rotate(-45deg); }
+
+    .mobile-menu {
+      position: fixed; inset: 0; background: #fff; z-index: 999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+      clip-path: inset(0 0 100% 0); transition: clip-path 0.5s var(--ease-dramatic);
+    }
+    .mobile-menu.open { clip-path: inset(0 0 0% 0); }
+    .mobile-menu a {
+      font-family: var(--font-display); font-size: 28px; font-weight: 300;
+      color: var(--color-text); text-decoration: none; letter-spacing: 1px;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s var(--ease-confident);
+    }
+    .mobile-menu.open a { opacity: 1; transform: translateY(0); }
+    .mobile-menu.open a:nth-child(1) { transition-delay: 0s; }
+    .mobile-menu.open a:nth-child(2) { transition-delay: 0.08s; }
+    .mobile-menu.open a:nth-child(3) { transition-delay: 0.18s; }
+    .mobile-menu.open a:nth-child(4) { transition-delay: 0.3s; }
+    .mobile-menu.open a:nth-child(5) { transition-delay: 0.44s; }
+    .mobile-menu.open a:nth-child(6) { transition-delay: 0.56s; }
+    .mobile-menu .mobile-menu-cta {
+      font-family: var(--font-body); font-size: 13px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      background: var(--color-accent); color: var(--color-text); padding: 16px 36px;
+      margin-top: 12px;
+    }
+    .desktop-only { display: inline-block; }
+
+    /* ========== PAGE HEADER ========== */
+    .page-header {
+      padding: 160px 80px 72px;
+      text-align: center;
+      background: var(--color-bg);
+      position: relative;
+    }
+    .page-header-label {
+      font-family: var(--font-body);
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .page-header-label::before,
+    .page-header-label::after {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--color-accent);
+      opacity: 0.5;
+    }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: 52px; font-weight: 600;
+      letter-spacing: -0.8px;
+      color: var(--color-text);
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+    .page-header p {
+      font-size: 17px;
+      color: var(--color-text-light);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ========== CATEGORY NAVIGATION ========== */
+    .cat-nav {
+      position: sticky; top: 72px; z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 80px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .cat-nav::-webkit-scrollbar { display: none; }
+    .cat-nav-inner {
+      display: flex; gap: 0;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+    .cat-nav a {
+      flex-shrink: 0;
+      padding: 16px 24px;
+      font-family: var(--font-body);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 2px; text-transform: uppercase;
+      text-decoration: none;
+      color: var(--color-text-light);
+      border-bottom: 2px solid transparent;
+      transition: color 0.25s, border-color 0.25s, background 0.25s;
+      white-space: nowrap;
+    }
+    .cat-nav a:hover {
+      color: var(--color-text);
+      background: rgba(184,151,90,0.04);
+    }
+    .cat-nav a.active {
+      color: var(--color-text);
+      border-bottom-color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    /* ========== SERVICE SECTIONS ========== */
+    .services-wrap {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 80px 100px;
+    }
+
+    .service-category {
+      padding-top: 80px;
+    }
+    .service-category-header {
+      display: flex; align-items: baseline; gap: 12px;
+      margin-bottom: 10px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .service-category-header h2 {
+      font-family: var(--font-display);
+      font-size: 24px; font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+    .service-category-header .cat-count {
+      font-size: 11px;
+      color: var(--color-text-light);
+      font-weight: 400;
+      background: var(--color-bg-warm);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .service-category-desc {
+      font-size: 14px;
+      color: var(--color-text-light);
+      margin-bottom: 24px;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    /* ========== SERVICE CARDS ========== */
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .service-card {
+      border: 1px solid var(--color-border);
+      display: flex; flex-direction: column;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.4s var(--ease-confident);
+      cursor: pointer;
+      position: relative;
+      background: var(--color-bg);
+      overflow: hidden;
+    }
+    .service-card-img {
+      width: 100%;
+      aspect-ratio: 2.4/1;
+      background: linear-gradient(135deg, var(--color-bg-warm) 0%, #f0ede8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-bottom: 1px solid var(--color-border);
+      position: relative;
+    }
+    .service-card-img::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.03) 100%);
+      pointer-events: none;
+    }
+    .service-card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s var(--ease-confident);
+    }
+    .service-card:hover .service-card-img img {
+      transform: scale(1.03);
+    }
+    .service-card-img-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: var(--color-text-light);
+      transition: transform 0.4s var(--ease-confident);
+    }
+    .service-card:hover .service-card-img-placeholder {
+      transform: scale(1.06);
+    }
+    .service-card-img-placeholder svg {
+      width: 36px; height: 36px;
+      stroke: var(--color-accent);
+      fill: none;
+      stroke-width: 1;
+      opacity: 0.45;
+      transition: opacity 0.3s;
+    }
+    .service-card:hover .service-card-img-placeholder svg {
+      opacity: 0.7;
+    }
+    .service-card-img-placeholder span {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      opacity: 0.4;
+    }
+    .service-card-body {
+      padding: 16px 20px 16px;
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .service-card:hover {
+      border-color: var(--color-accent);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.07);
+      transform: translateY(-3px);
+    }
+    .service-card.selected {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 2px var(--color-accent), 0 4px 16px rgba(184,151,90,0.12);
+    }
+    .service-card-check {
+      position: absolute; top: 10px; right: 10px;
+      width: 20px; height: 20px;
+      border: 1.5px solid var(--color-border-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.25s, border-color 0.25s, transform 0.25s var(--ease-confident);
+    }
+    .service-card.selected .service-card-check {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      transform: scale(1.1);
+    }
+    .service-card-check svg {
+      width: 10px; height: 10px;
+      stroke: #fff; stroke-width: 2.5;
+      fill: none; opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .service-card.selected .service-card-check svg { opacity: 1; }
+
+    /* Quick-add button (bottom-right of card, square outline) */
+    .pkg-quick-add {
+      position: absolute; bottom: 14px; right: 14px;
+      width: 36px; height: 36px;
+      background: transparent;
+      color: var(--color-accent);
+      border: 1.5px solid var(--color-accent);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 3;
+      transition: background 0.2s, color 0.2s, transform 0.2s var(--ease-confident);
+      font-family: var(--font-display);
+      font-size: 20px; font-weight: 400; line-height: 1;
+      padding: 0;
+    }
+    .pkg-quick-add:hover { background: rgba(184,151,90,0.08); transform: scale(1.05); }
+    .pkg-quick-add svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.5; fill: none; }
+    .pkg-quick-add .pqa-plus { display: block; }
+    .pkg-quick-add .pqa-check { display: none; }
+    .service-card.selected .pkg-quick-add {
+      background: var(--color-accent);
+      color: #fff;
+      border-color: var(--color-accent);
+    }
+    .service-card.selected .pkg-quick-add:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
+    .service-card.selected .pkg-quick-add .pqa-plus { display: none; }
+    .service-card.selected .pkg-quick-add .pqa-check { display: block; }
+
+    .service-card-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 6px;
+      padding-right: 28px;
+    }
+    .service-card-name {
+      font-family: var(--font-display);
+      font-size: 14px; font-weight: 600;
+      letter-spacing: -0.2px;
+      line-height: 1.3;
+    }
+    .service-card-price {
+      font-family: var(--font-display);
+      font-size: 17px; font-weight: 600;
+      color: var(--color-accent);
+      white-space: nowrap;
+    }
+    .service-card-desc {
+      font-size: 13px;
+      color: var(--color-text-light);
+      line-height: 1.45;
+      margin-bottom: 8px;
+      flex: 1;
+    }
+    .service-card-meta {
+      display: flex; gap: 12px;
+      font-size: 11px;
+      color: var(--color-text-light);
+      letter-spacing: 0.3px;
+    }
+    .service-card-meta span {
+      display: flex; align-items: center; gap: 5px;
+    }
+    .service-card-meta svg {
+      width: 13px; height: 13px;
+      stroke: currentColor; fill: none; stroke-width: 1.5;
+    }
+
+    /* Package cards — highlighted */
+    .service-grid.packages {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .service-card.package {
+      background: var(--color-bg-warm);
+    }
+    .service-card.package .service-card-includes {
+      display: flex; flex-wrap: wrap; gap: 4px;
+      margin-top: 4px;
+      padding-right: 56px;
+    }
+    /* Reserve bottom-right corner for the + quick-add button on every card */
+    .service-card .service-card-meta { padding-right: 56px; }
+    .service-card .service-card-body > *:last-child { padding-right: 56px; }
+    .service-card.package .service-card-includes span {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      padding: 3px 8px;
+      background: rgba(17,17,17,0.04);
+      color: var(--color-text-light);
+    }
+    .popular-badge {
+      position: absolute; top: -1px; left: 20px;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 4px 10px;
+    }
+    .service-card.package .service-card-body:has(.popular-badge) .service-card-top {
+      margin-top: 20px;
+    }
+
+    /* ========== PERSISTENT CART SIDEBAR ========== */
+    .cart-sidebar {
+      position: fixed; top: 72px; right: 0; bottom: 0;
+      width: 340px;
+      background: var(--color-bg);
+      z-index: 100;
+      border-left: 1px solid var(--color-border);
+      display: flex; flex-direction: column;
+    }
+    /* Push main content left to make room for cart sidebar */
+    .page-header { margin-right: 340px; }
+    .services-wrap { margin-right: 340px; }
+    .cat-nav { margin-right: 340px; }
+    .note-banner { margin-right: 340px; }
+    .footer { margin-right: 340px; }
+
+    .cart-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .cart-header-title {
+      font-family: var(--font-display);
+      font-size: 14px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .cart-header-badge {
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    /* Mobile: FAB + overlay instead of sidebar */
+    .cart-fab {
+      display: none;
+      position: fixed; bottom: 20px; right: 20px;
+      width: 50px; height: 50px;
+      background: var(--color-darker);
+      border: none; cursor: pointer;
+      border-radius: 50%;
+      align-items: center; justify-content: center;
+      z-index: 1001;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .cart-fab svg { width: 22px; height: 22px; stroke: #fff; fill: none; stroke-width: 1.5; }
+    .cart-fab-badge {
+      position: absolute; top: -4px; right: -4px;
+      min-width: 20px; height: 20px;
+      background: var(--color-accent); color: #fff;
+      font-family: var(--font-display); font-size: 11px; font-weight: 700;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    }
+    .cart-overlay-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.3);
+      z-index: 1001; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+      display: none;
+    }
+    .cart-overlay-backdrop.open { opacity: 1; pointer-events: all; }
+    .cart-close { display: none; }
+
+    .cart-items {
+      flex: 1; overflow-y: auto;
+      padding: 16px 28px;
+    }
+    .cart-item {
+      display: flex; align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--color-border);
+      gap: 14px;
+    }
+    .cart-item:last-child { border-bottom: none; }
+    .cart-item-thumb {
+      width: 48px; height: 48px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--color-bg-warm) 0%, #f0ede8 100%);
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--color-border);
+    }
+    .cart-item-thumb svg {
+      width: 20px; height: 20px;
+      stroke: var(--color-accent); fill: none; stroke-width: 1.2;
+      opacity: 0.6;
+    }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-name { font-size: 14px; font-weight: 500; line-height: 1.3; }
+    .cart-item-meta { font-size: 11px; color: var(--color-text-light); margin-top: 2px; }
+    .cart-item-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .cart-item-price {
+      font-family: var(--font-display);
+      font-size: 14px; font-weight: 600;
+      color: var(--color-accent);
+      white-space: nowrap;
+    }
+    .cart-item-remove {
+      background: none; border: none; cursor: pointer;
+      font-size: 16px; color: var(--color-text-light);
+      padding: 2px 4px; opacity: 0.4;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .cart-item-remove:hover { opacity: 1; color: #dc2626; }
+    .cart-empty {
+      text-align: center; padding: 48px 24px;
+      color: var(--color-text-light); font-size: 14px;
+    }
+
+    .cart-footer {
+      padding: 20px 28px;
+      border-top: 1px solid var(--color-border);
+    }
+    .cart-total {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px;
+    }
+    .cart-total-label {
+      font-family: var(--font-display);
+      font-size: 14px; font-weight: 600;
+    }
+    .cart-total-price {
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 600;
+      color: var(--color-accent);
+    }
+    .cart-checkout-btn {
+      width: 100%;
+      font-family: var(--font-body);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      background: var(--color-accent);
+      color: #fff;
+      border: none; cursor: pointer;
+      padding: 16px;
+      transition: background 0.2s;
+      text-align: center;
+    }
+    .cart-checkout-btn:hover { background: var(--color-accent-hover); }
+
+    /* ========== PACKAGE DETAIL MODAL ========== */
+    .pkg-modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+      z-index: 1010;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .pkg-modal-overlay.open { opacity: 1; pointer-events: all; }
+    .pkg-modal {
+      background: var(--color-bg);
+      max-width: 520px; width: 90%;
+      max-height: 85vh; overflow-y: auto;
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.35s var(--ease-confident);
+    }
+    .pkg-modal-overlay.open .pkg-modal { transform: translateY(0) scale(1); }
+    .pkg-modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; cursor: pointer;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-text-light); z-index: 1;
+      transition: color 0.2s;
+    }
+    .pkg-modal-close:hover { color: var(--color-text); }
+    .pkg-modal-header {
+      padding: 32px 32px 0;
+    }
+    .pkg-modal-name {
+      font-family: var(--font-display);
+      font-size: 24px; font-weight: 600;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+    .pkg-modal-price {
+      font-family: var(--font-display);
+      font-size: 28px; font-weight: 600;
+      color: var(--color-accent);
+      margin-bottom: 8px;
+    }
+    .pkg-modal-desc {
+      font-size: 14px;
+      color: var(--color-text-light);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .pkg-modal-section-title {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 12px;
+      padding: 0 32px;
+    }
+    .pkg-modal-includes {
+      padding: 0 32px;
+      margin-bottom: 24px;
+    }
+    .pkg-modal-include-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 14px;
+    }
+    .pkg-modal-include-item:last-child { border-bottom: none; }
+    .pkg-modal-include-item svg {
+      width: 18px; height: 18px;
+      stroke: var(--color-accent); fill: none; stroke-width: 1.5;
+      flex-shrink: 0;
+    }
+    .pkg-modal-include-check {
+      width: 20px; height: 20px;
+      background: rgba(184,151,90,0.1);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .pkg-modal-include-check svg {
+      width: 11px; height: 11px;
+      stroke: var(--color-accent); stroke-width: 2.5;
+    }
+    .pkg-modal-meta {
+      padding: 0 32px;
+      margin-bottom: 24px;
+      display: flex; gap: 20px;
+      font-size: 12px; color: var(--color-text-light);
+    }
+    .pkg-modal-meta span {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .pkg-modal-meta svg {
+      width: 14px; height: 14px;
+      stroke: currentColor; fill: none; stroke-width: 1.5;
+    }
+    .pkg-modal-footer {
+      padding: 20px 32px 28px;
+      border-top: 1px solid var(--color-border);
+      display: flex; gap: 12px;
+      position: sticky; bottom: 0;
+      background: var(--color-bg);
+      z-index: 2;
+    }
+    .pkg-modal-add {
+      flex: 1;
+      font-family: var(--font-body);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      background: var(--color-accent);
+      color: #fff;
+      border: none; cursor: pointer;
+      padding: 16px;
+      transition: background 0.2s;
+      text-align: center;
+    }
+    .pkg-modal-add:hover { background: var(--color-accent-hover); }
+    .pkg-modal-add.added {
+      background: #16a34a;
+    }
+    .pkg-modal-cancel {
+      font-family: var(--font-body);
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 1px; text-transform: uppercase;
+      background: none;
+      color: var(--color-text-light);
+      border: 1px solid var(--color-border);
+      cursor: pointer;
+      padding: 16px 24px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .pkg-modal-cancel:hover { color: var(--color-text); border-color: var(--color-text-light); }
+
+    /* PACKAGE CAROUSEL */
+    .pkg-carousel {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: var(--color-bg-warm);
+    }
+    .pkg-carousel-track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.4s var(--ease-confident);
+    }
+    .pkg-carousel-slide {
+      min-width: 100%; height: 100%;
+      position: relative;
+    }
+    .pkg-carousel-slide img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .pkg-carousel-slide-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 24px 20px 14px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.6));
+      color: #fff;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .pkg-carousel-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(4px);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, transform 0.2s;
+      z-index: 2;
+    }
+    .pkg-carousel-nav:hover { background: #fff; transform: translateY(-50%) scale(1.08); }
+    .pkg-carousel-nav svg { width: 14px; height: 14px; stroke: var(--color-text); fill: none; stroke-width: 2; }
+    .pkg-carousel-prev { left: 10px; }
+    .pkg-carousel-next { right: 10px; }
+    .pkg-carousel-dots {
+      position: absolute; bottom: 42px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 6px; z-index: 2;
+    }
+    .pkg-carousel-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      border: none; cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      padding: 0;
+    }
+    .pkg-carousel-dot.active { background: #fff; transform: scale(1.3); }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      background: var(--color-darker);
+      color: var(--color-text-on-dark);
+      padding: 80px 80px 40px;
+    }
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 64px;
+      max-width: var(--max-width);
+      margin: 0 auto 60px;
+    }
+    .footer-logo {
+      font-family: var(--font-display); font-size: 26px; font-weight: 600;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 14px;
+      color: #fff;
+      letter-spacing: 0.3px;
+    }
+    .footer-logo-img { height: 44px; width: auto; filter: brightness(0) invert(1); }
+    .footer-logo-text { color: #fff; font-size: 24px; font-weight: 600; letter-spacing: 0.3px; }
+    .footer-tagline {
+      font-size: 14px;
+      color: var(--color-text-on-dark-muted);
+      margin-bottom: 24px;
+      max-width: 280px;
+    }
+    .footer-socials { display: flex; gap: 16px; }
+    .footer-socials a {
+      font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--color-text-on-dark-muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-socials a:hover { color: var(--color-accent); }
+    .footer-nav { display: flex; gap: 64px; }
+    .footer-nav-col h4 {
+      font-family: var(--font-display); font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 16px; color: var(--color-accent);
+    }
+    .footer-nav-col ul { list-style: none; }
+    .footer-nav-col li { margin-bottom: 10px; }
+    .footer-nav-col a {
+      font-size: 14px; color: var(--color-text-on-dark-muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-nav-col a:hover { color: #fff; }
+    .footer-contact h4 {
+      font-family: var(--font-display); font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 16px; color: var(--color-accent);
+    }
+    .footer-contact-item { margin-bottom: 14px; }
+    .footer-contact-label {
+      font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--color-text-on-dark-muted); margin-bottom: 2px;
+    }
+    .footer-contact-value { font-size: 14px; }
+    .footer-contact-value a { color: #fff; text-decoration: none; }
+    .footer-contact-value a:hover { color: var(--color-accent); }
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      max-width: var(--max-width); margin: 0 auto;
+    }
+    .footer-copyright { font-size: 12px; color: var(--color-text-on-dark-muted); }
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a {
+      font-size: 12px; color: var(--color-text-on-dark-muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: #fff; }
+    .back-to-top {
+      background: none; border: 1px solid rgba(255,255,255,0.15);
+      color: var(--color-text-on-dark-muted); font-size: 12px;
+      padding: 8px 16px; cursor: pointer; transition: 0.2s;
+    }
+    .back-to-top:hover { border-color: var(--color-accent); color: #fff; }
+
+    /* ========== REVEAL ANIMATION ========== */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.5s var(--ease-confident), transform 0.5s var(--ease-confident);
+    }
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+    /* Staggered card reveal */
+    .service-card.card-stagger {
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.4s var(--ease-confident), transform 0.4s var(--ease-confident),
+                  border-color 0.3s, box-shadow 0.3s;
+    }
+    .service-card.card-stagger.card-visible {
+      opacity: 1; transform: translateY(0);
+    }
+    .service-card.card-stagger.card-visible:hover {
+      transform: translateY(-3px);
+    }
+
+    /* ========== NOTE BANNER ========== */
+    .note-banner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 80px;
+    }
+    .note-banner-inner {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--color-bg-warm);
+      padding: 20px 28px;
+      font-size: 14px;
+      color: var(--color-text-light);
+      margin-bottom: 0;
+    }
+    .note-banner-inner strong {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 1024px) {
+      .page-header { padding: 130px 48px 48px; }
+      .page-header h1 { font-size: 38px; }
+      .cart-sidebar { width: 280px; }
+      .page-header { margin-right: 280px; }
+      .services-wrap { margin-right: 280px; padding: 0 32px 80px; }
+      .cat-nav { margin-right: 280px; padding: 0 32px; }
+      .note-banner { margin-right: 280px; }
+      .footer { margin-right: 280px; }
+      .service-grid, .service-grid.packages { grid-template-columns: repeat(2, 1fr); }
+      .footer { padding: 60px 48px 32px; }
+      .footer-inner { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .note-banner { margin-right: 300px; padding: 0 48px; }
+      .pkg-modal { max-width: 460px; }
+    }
+
+    @media (max-width: 768px) {
+      /* Switch from sidebar to FAB + overlay on mobile */
+      .cart-sidebar {
+        position: fixed; top: 0; right: 0; bottom: 0;
+        width: 100%; max-width: 100vw;
+        border-left: none;
+        box-shadow: -8px 0 40px rgba(0,0,0,0.12);
+        transform: translateX(100%);
+        transition: transform 0.35s var(--ease-confident);
+        z-index: 1002;
+      }
+      .cart-sidebar.open { transform: translateX(0); }
+      .cart-fab { display: flex; }
+      .cart-fab.visible { opacity: 1; pointer-events: all; }
+      .cart-overlay-backdrop { display: block; }
+      .cart-close { display: flex; background: none; border: none; cursor: pointer; width: 32px; height: 32px; align-items: center; justify-content: center; color: var(--color-text-light); }
+      .page-header { margin-right: 0; }
+      .services-wrap { margin-right: 0; }
+      .cat-nav { margin-right: 0; }
+      .note-banner { margin-right: 0; }
+      .footer { margin-right: 0; }
+      .navbar { padding: 0 24px; height: 64px; }
+      .nav-links { display: none; }
+      .nav-cta.desktop-only { display: none; }
+      .nav-hamburger { display: block; }
+
+      .page-header { padding: 110px 24px 32px; }
+      .page-header h1 { font-size: 28px; }
+      .page-header p { font-size: 14px; }
+      .page-header-label::before, .page-header-label::after { display: none; }
+
+      .cat-nav { padding: 0 16px; top: 64px; }
+      .cat-nav a { padding: 12px 14px; font-size: 10px; letter-spacing: 1.5px; }
+
+      .services-wrap { padding: 0 16px 80px; }
+      .service-category { padding-top: 40px; }
+      .service-category-header h2 { font-size: 20px; }
+      .service-category-desc { font-size: 13px; margin-bottom: 16px; }
+      .service-grid, .service-grid.packages { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .service-card-img { aspect-ratio: 3/2; }
+      .service-card-body { padding: 10px 12px; }
+      .service-card-name { font-size: 12px; }
+      .service-card-price { font-size: 13px; }
+      .service-card-desc { display: none; }
+      .service-card-meta { font-size: 9px; }
+      .service-card.package .service-card-includes { display: none; }
+      .service-card-check { width: 18px; height: 18px; top: 8px; right: 8px; }
+      .service-card-check svg { width: 9px; height: 9px; }
+      .service-card.package .service-card-includes span { font-size: 9px; padding: 2px 6px; }
+      .popular-badge { font-size: 8px; padding: 3px 8px; left: 16px; top: -1px; }
+
+      .cart-fab { bottom: 20px; right: 20px; width: 50px; height: 50px; }
+      .cart-overlay { width: 100%; max-width: 100vw; }
+
+      .pkg-modal { max-width: 100%; width: 100%; max-height: 90vh; margin: auto 0 0 0; }
+      .pkg-modal-header { padding: 24px 24px 0; }
+      .pkg-modal-name { font-size: 20px; }
+      .pkg-modal-price { font-size: 24px; }
+      .pkg-modal-section-title { padding: 0 24px; }
+      .pkg-modal-includes { padding: 0 24px; }
+      .pkg-modal-meta { padding: 0 24px; }
+      .pkg-modal-footer { padding: 16px 24px 20px; }
+
+      .note-banner { padding: 0 16px; }
+
+      .footer { padding: 48px 24px 24px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+      .footer-nav { flex-direction: column; gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .page-header { padding: 100px 16px 24px; }
+      .page-header h1 { font-size: 24px; }
+      .page-header p { font-size: 13px; }
+      .services-wrap { padding: 0 12px 60px; }
+      .service-grid, .service-grid.packages { gap: 6px; }
+      .service-card-img { aspect-ratio: 4/3; }
+      .service-card-body { padding: 8px 10px; }
+      .service-card-name { font-size: 11px; }
+      .service-card-price { font-size: 12px; }
+      .service-card-top { gap: 2px; }
+    }
+  </style>
+</head>
+<body class="overflow-clip grain">
+
+  <!-- NAVIGATION -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="nav-logo"><img src="logo.avif" alt="Baker Production" class="nav-logo-img"><span class="nav-logo-text">Baker Production</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#services">Services</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="index.html#pricing">Pricing</a></li>
+      <li><a href="index.html#process">Process</a></li>
+      <li><a href="virtual-editing.html">Virtual Editing</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a href="book.html" class="nav-cta desktop-only active">Book Now</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html#services" onclick="closeMenu()">Services</a>
+    <a href="gallery.html" onclick="closeMenu()">Gallery</a>
+    <a href="index.html#pricing" onclick="closeMenu()">Pricing</a>
+    <a href="index.html#process" onclick="closeMenu()">Process</a>
+    <a href="virtual-editing.html" onclick="closeMenu()">Virtual Editing</a>
+    <a href="index.html#contact" onclick="closeMenu()">Contact</a>
+    <a href="book.html" class="mobile-menu-cta" onclick="closeMenu()">Book Now</a>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header reveal">
+    <div class="page-header-label">Book a Service</div>
+    <h1>Select Your Services</h1>
+    <p>Choose one or more services below. Pick a package or build your own combination — we'll handle the rest.</p>
+  </header>
+
+  <!-- CATEGORY NAV -->
+  <div class="cat-nav" id="catNav">
+    <div class="cat-nav-inner">
+      <a href="#packages" class="active">Packages</a>
+      <a href="#photography">Photography</a>
+      <a href="#video">Video</a>
+      <a href="#floorplans">Floorplans</a>
+      <a href="#virtual-editing">Virtual Editing</a>
+      <a href="#add-ons">Add-Ons</a>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <div class="services-wrap">
+
+    <!-- PACKAGES -->
+    <section class="service-category reveal" id="packages">
+      <div class="service-category-header">
+        <h2>Packages</h2>
+        <span class="cat-count">6 options</span>
+      </div>
+      <p class="service-category-desc">Bundled services at a discounted rate. Includes floorplan for homes up to 300m2 — $50 surcharge applies over 300m2.</p>
+
+      <div class="service-grid packages">
+
+        <div class="service-card package" data-name="Essential Package" data-price="299" data-icon="photo" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/pkg-essential.webp" alt="Essential Package" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Essential Package</div>
+              <div class="service-card-price">$299</div>
+            </div>
+            <div class="service-card-desc">Photography + Floorplan OR Drone. The essentials for any listing.</div>
+            <div class="service-card-includes">
+              <span>Photography</span><span>Floorplan or Drone</span>
+            </div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8 4 8 8 11 10"/></svg>90 min</span></div>
+          </div>
+        </div>
+
+        <div class="service-card package" data-name="Premium Package" data-price="375" data-icon="photo" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/pkg-premium.webp" alt="Premium Package" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Premium Package</div>
+              <div class="service-card-price">$375</div>
+            </div>
+            <div class="service-card-desc">Photography + Floorplan + Drone. The complete still-media package.</div>
+            <div class="service-card-includes">
+              <span>Photography</span><span>Floorplan</span><span>Drone</span>
+            </div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8 4 8 8 11 10"/></svg>90 min</span></div>
+          </div>
+        </div>
+
+        <div class="service-card package" data-name="Social Media Lite Package" data-price="439" data-icon="video" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/service-videography.webp" alt="Social Media" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Social Media Lite</div>
+              <div class="service-card-price">$439</div>
+            </div>
+            <div class="service-card-desc">Everything in Premium plus a social media walkthrough video for Instagram and Facebook.</div>
+            <div class="service-card-includes">
+              <span>Photography</span><span>Floorplan</span><span>Drone</span><span>Social Walkthrough</span>
+            </div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8 4 8 8 11 10"/></svg>90 min</span></div>
+          </div>
+        </div>
+
+        <div class="service-card package" data-name="Core Listing Package" data-price="549" data-icon="photo" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/pkg-core.webp" alt="Core Listing Package" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="popular-badge">Popular</div>
+            <div class="service-card-top">
+              <div class="service-card-name">Core Listing</div>
+              <div class="service-card-price">$549</div>
+            </div>
+            <div class="service-card-desc">Photos, floorplan, drone, social walkthrough and virtual tour — covers all the bases.</div>
+            <div class="service-card-includes">
+              <span>Photography</span><span>Floorplan</span><span>Drone</span><span>Social Walkthrough</span><span>Virtual Tour</span>
+            </div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8 4 8 8 11 10"/></svg>105 min</span></div>
+          </div>
+        </div>
+
+        <div class="service-card package" data-name="Signature Package" data-price="750" data-icon="video" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/pkg-signature.webp" alt="Signature Package" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Signature Package</div>
+              <div class="service-card-price">$750</div>
+            </div>
+            <div class="service-card-desc">Photography + Floorplan + Drone + a full listing video. The premium presentation.</div>
+            <div class="service-card-includes">
+              <span>Photography</span><span>Floorplan</span><span>Drone</span><span>Listing Video</span>
+            </div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8 4 8 8 11 10"/></svg>120 min</span></div>
+          </div>
+        </div>
+
+        <div class="service-card package" data-name="Elite Listing Package" data-price="1299" data-icon="photo" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/pkg-elite.webp" alt="Elite Listing Package" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Elite Listing</div>
+              <div class="service-card-price">$1,299</div>
+            </div>
+            <div class="service-card-desc">The full suite — twilight photos, floorplan, drone, day-to-night video, virtual tour, and social reel.</div>
+            <div class="service-card-includes">
+              <span>Photos</span><span>Floorplan</span><span>Drone</span><span>Day &amp; Night Video</span><span>Virtual Tour</span><span>Twilight</span><span>Social Reel</span>
+            </div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8 4 8 8 11 10"/></svg>150 min</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PHOTOGRAPHY -->
+    <section class="service-category reveal" id="photography">
+      <div class="service-category-header">
+        <h2>Photography</h2>
+        <span class="cat-count">4 options</span>
+      </div>
+      <p class="service-category-desc">Professional real estate photography with fast turnaround — images delivered within 24 hours.</p>
+
+      <div class="service-grid">
+
+        <div class="service-card" data-name="Rental Photography" data-price="159" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-rental.webp" alt="Rental Photography" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Rental Photography</div>
+              <div class="service-card-price">$159</div>
+            </div>
+            <div class="service-card-desc">Up to 20 images showing wide shots. Perfect for rental listings.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8 4 8 8 11 10"/></svg>30 min onsite</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Sales Photography" data-price="189" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-sales.webp" alt="Sales Photography" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Sales Photography</div>
+              <div class="service-card-price">$189</div>
+            </div>
+            <div class="service-card-desc">Unlimited images including detail shots. Full coverage for sales campaigns.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8 4 8 8 11 10"/></svg>60 min onsite</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Aerial / Drone Photography" data-price="220" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-aerial.webp" alt="Aerial Drone" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Aerial / Drone Photography</div>
+              <div class="service-card-price">$220</div>
+            </div>
+            <div class="service-card-desc">Drone photos with overlays and location pins. Artery roads and landmarks included.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><path d="M2 12 L6 4 L10 9 L12 7 L14 12Z"/></svg>5 aerial images</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Agent Headshots" data-price="220" onclick="showPackage(this)">
+          <div class="service-card-img" style="background: var(--color-bg-warm);"><img src="img/svc-headshots.webp" alt="Agent Headshots" loading="lazy" style="object-fit: contain; object-position: center;"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Agent Headshots</div>
+              <div class="service-card-price">$220</div>
+            </div>
+            <div class="service-card-desc">Professional portraits and headshots for two agents, fully edited.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="5" r="3"/><path d="M2 14 C2 10 14 10 14 14"/></svg>2 agents</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIDEO -->
+    <section class="service-category reveal" id="video">
+      <div class="service-category-header">
+        <h2>Video</h2>
+        <span class="cat-count">5 options</span>
+      </div>
+      <p class="service-category-desc">Property video content delivered within 24-48 hours. All formats optimised for web, social, and portals.</p>
+
+      <div class="service-grid">
+
+        <div class="service-card" data-name="Listing Video" data-price="450" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-listing-video.webp" alt="Listing Video" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Listing Video</div>
+              <div class="service-card-price">$450</div>
+            </div>
+            <div class="service-card-desc">45-90 second property video. Professional edit with music, next day delivery.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8 4 8 8 11 10"/></svg>75 min</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Day to Night Listing Video" data-price="650" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-day-to-dusk.webp" alt="Day to Night Video" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Day to Night Video</div>
+              <div class="service-card-price">$650</div>
+            </div>
+            <div class="service-card-desc">Combined day and twilight video. 45-90 seconds showcasing the property at its best.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8 4 8 8 11 10"/></svg>90 min</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Social Media Reel" data-price="300" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-social-reel.webp" alt="Social Media Reel" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Social Media Reel</div>
+              <div class="service-card-price">$300</div>
+            </div>
+            <div class="service-card-desc">Short-form vertical reel optimised for Instagram and Facebook.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8 4 8 8 11 10"/></svg>60 min</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Social Media Walkthrough" data-price="87" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-social-walkthrough.webp" alt="Social Media Walkthrough" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Social Media Walkthrough</div>
+              <div class="service-card-price">$87</div>
+            </div>
+            <div class="service-card-desc">Standard vertical walkthrough with non-copyrighted music. Must be added to a photography booking.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><rect x="3" y="2" width="10" height="12" rx="1"/></svg>Vertical format</span><span>Add-on only</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Walkthrough with Intro & Agent Feature" data-price="121" onclick="showPackage(this)">
+          <div class="service-card-img"><div class="service-card-img-placeholder"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M6 18 C6 14 18 14 18 18"/></svg><span>Agent walkthrough</span></div></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Walkthrough + Agent Feature</div>
+              <div class="service-card-price">$121</div>
+            </div>
+            <div class="service-card-desc">Full intro and agent feature included. Branded walkthrough video.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="5" r="3"/><path d="M2 14 C2 10 14 10 14 14"/></svg>Agent featured</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FLOORPLANS -->
+    <section class="service-category reveal" id="floorplans">
+      <div class="service-category-header">
+        <h2>Floorplans</h2>
+        <span class="cat-count">6 options</span>
+      </div>
+      <p class="service-category-desc">Standard black and white floorplans. Delivered within 24 hours.</p>
+
+      <div class="service-grid">
+
+        <div class="service-card" data-name="Floorplan — Small (up to 200m²)" data-price="159" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-floorplan-small.webp" alt="Small Floorplan" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Small Floorplan</div>
+              <div class="service-card-price">$159</div>
+            </div>
+            <div class="service-card-desc">Properties up to 200m². Standard black and white floorplan.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="0" fill="none"/><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>Up to 200m2</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Floorplan — Medium (200-300m²)" data-price="199" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-floorplan-medium.webp" alt="Medium Floorplan" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Medium Floorplan</div>
+              <div class="service-card-price">$199</div>
+            </div>
+            <div class="service-card-desc">Properties 200-300m². Standard black and white floorplan.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="0" fill="none"/><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>200–300m2</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Floorplan — Large (300-500m²)" data-price="239" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-floorplan-large.webp" alt="Large Floorplan" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Large Floorplan</div>
+              <div class="service-card-price">$239</div>
+            </div>
+            <div class="service-card-desc">Properties 300-500m². Standard black and white floorplan.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="0" fill="none"/><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>300–500m2</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Floorplan — XL (500m²+)" data-price="0" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-floorplan-xl.webp" alt="XL Floorplan" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">XL Floorplan</div>
+              <div class="service-card-price">Quote</div>
+            </div>
+            <div class="service-card-desc">Properties over 500m². Contact us for a custom quote.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="0" fill="none"/><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>500m2+</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Basic Floorplan Redraw" data-price="30" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-floorplan-redraw.webp" alt="Basic Floorplan Redraw" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Basic Floorplan Redraw</div>
+              <div class="service-card-price">$30</div>
+            </div>
+            <div class="service-card-desc">Clean black and white redraw from an existing floorplan.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><path d="M3 13 L3 10 L11 2 L14 5 L6 13Z" fill="none"/></svg>Redraw</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Floorplan Redraw with Site Plan" data-price="45" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-floorplan-redraw-siteplan.webp" alt="Floorplan Redraw with Site Plan" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Redraw + Site Plan</div>
+              <div class="service-card-price">$45</div>
+            </div>
+            <div class="service-card-desc">Floorplan redraw including site plan and dimensions.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><path d="M3 13 L3 10 L11 2 L14 5 L6 13Z" fill="none"/></svg>Redraw + site</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIRTUAL STAGING & EDITING -->
+    <section class="service-category reveal" id="virtual-editing">
+      <div class="service-category-header">
+        <h2>Virtual Staging & Editing</h2>
+        <span class="cat-count">3 options</span>
+      </div>
+      <p class="service-category-desc">AI-powered virtual staging, decluttering, and day-to-dusk conversions. Per-image pricing.</p>
+
+      <div class="service-grid">
+
+        <div class="service-card" data-name="Virtual Staging" data-price="25" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/service-virtual.webp" alt="Virtual Staging" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Virtual Staging</div>
+              <div class="service-card-price">$25<span style="font-size:12px;font-weight:400;color:var(--color-text-light)">/image</span></div>
+            </div>
+            <div class="service-card-desc">Furniture, styling, and full room transforms. Make any empty space look lived-in.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><path d="M2 12 L6 4 L10 9 L12 7 L14 12Z" fill="none"/></svg>Per image</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Decluttering / Object Removal" data-price="10" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-decluttering.webp" alt="Decluttering" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Decluttering / Object Removal</div>
+              <div class="service-card-price">$10<span style="font-size:12px;font-weight:400;color:var(--color-text-light)">/image</span></div>
+            </div>
+            <div class="service-card-desc">Remove unwanted items, clutter, or distractions from any image.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><path d="M2 12 L6 4 L10 9 L12 7 L14 12Z" fill="none"/></svg>Per image</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Day to Dusk" data-price="5" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-day-to-dusk.webp" alt="Day to Dusk" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Day to Dusk</div>
+              <div class="service-card-price">$5<span style="font-size:12px;font-weight:400;color:var(--color-text-light)">/image</span></div>
+            </div>
+            <div class="service-card-desc">Convert any daytime exterior shot to a stunning twilight look.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="none"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/></svg>Per image</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ADD-ONS -->
+    <section class="service-category reveal" id="add-ons">
+      <div class="service-category-header">
+        <h2>Add-Ons</h2>
+        <span class="cat-count">2 options</span>
+      </div>
+      <p class="service-category-desc">Enhance any booking with these extras.</p>
+
+      <div class="service-grid">
+
+        <div class="service-card" data-name="Virtual Tour" data-price="159" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/addon-virtual-tour.webp" alt="Virtual Tour" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Virtual Tour</div>
+              <div class="service-card-price">$159</div>
+            </div>
+            <div class="service-card-desc">360-degree interactive virtual tour. Works for any size property.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none"/><ellipse cx="8" cy="8" rx="3" ry="7" fill="none"/><line x1="1" y1="8" x2="15" y2="8"/></svg>Interactive 360</span></div>
+          </div>
+        </div>
+
+        <div class="service-card" data-name="Twilight Add-On" data-price="75" onclick="showPackage(this)">
+          <div class="service-card-img"><img src="img/svc-twilight.webp" alt="Twilight Add-On" loading="lazy"></div>
+          <div class="service-card-body">
+            <div class="service-card-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+            <div class="service-card-top">
+              <div class="service-card-name">Twilight Add-On</div>
+              <div class="service-card-price">$75</div>
+            </div>
+            <div class="service-card-desc">Add twilight coverage to any photography booking. Golden hour exterior shots. Must be added to an existing booking.</div>
+            <div class="service-card-meta"><span><svg viewBox="0 0 16 16"><circle cx="8" cy="10" r="4" fill="none"/><line x1="8" y1="4" x2="8" y2="6"/><line x1="4" y1="6" x2="5.5" y2="7.5"/><line x1="12" y1="6" x2="10.5" y2="7.5"/></svg>Add-on only</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- NOTE -->
+    <div class="note-banner" style="margin-top: 60px;">
+      <div class="note-banner-inner reveal">
+        <strong>Cancellation Policy:</strong> A $110 fee applies to cancellations within 1 hour of any appointment. All prices inclusive of GST.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CART SIDEBAR (desktop) / FAB+OVERLAY (mobile) -->
+  <button class="cart-fab" id="cartFab" aria-label="Open cart">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+    <span class="cart-fab-badge" id="cartBadge" style="display:none;">0</span>
+  </button>
+  <div class="cart-overlay-backdrop" id="cartBackdrop"></div>
+
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <span class="cart-header-title">Your Cart (<span class="cart-header-badge" id="cartHeaderBadge">0</span>)</span>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">
+        <svg width="16" height="16" viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" stroke-width="1.5"/><line x1="14" y1="2" x2="2" y2="14" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">Select services to get started</div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span class="cart-total-label">Total</span>
+        <span class="cart-total-price" id="cartTotal">$0</span>
+      </div>
+      <button class="cart-checkout-btn" id="cartCheckoutBtn">Continue</button>
+    </div>
+  </div>
+
+  <!-- PACKAGE DETAIL MODAL -->
+  <div class="pkg-modal-overlay" id="pkgModalOverlay">
+    <div class="pkg-modal">
+      <button class="pkg-modal-close" id="pkgModalClose" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" stroke-width="1.5"/><line x1="14" y1="2" x2="2" y2="14" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <div class="pkg-carousel" id="pkgCarousel">
+        <div class="pkg-carousel-track" id="pkgCarouselTrack"></div>
+        <button type="button" class="pkg-carousel-nav pkg-carousel-prev" id="pkgCarouselPrev"><svg viewBox="0 0 16 16"><polyline points="10 2 4 8 10 14"/></svg></button>
+        <button type="button" class="pkg-carousel-nav pkg-carousel-next" id="pkgCarouselNext"><svg viewBox="0 0 16 16"><polyline points="6 2 12 8 6 14"/></svg></button>
+        <div class="pkg-carousel-dots" id="pkgCarouselDots"></div>
+      </div>
+      <div class="pkg-modal-header">
+        <div class="pkg-modal-name" id="pkgModalName"></div>
+        <div class="pkg-modal-price" id="pkgModalPrice"></div>
+        <div class="pkg-modal-desc" id="pkgModalDesc"></div>
+      </div>
+      <div class="pkg-modal-section-title">What's Included</div>
+      <div class="pkg-modal-includes" id="pkgModalIncludes"></div>
+      <div class="pkg-modal-meta" id="pkgModalMeta"></div>
+      <div class="pkg-modal-footer">
+        <button type="button" class="pkg-modal-cancel" id="pkgModalCancel">Cancel</button>
+        <button type="button" class="pkg-modal-add" id="pkgModalAdd">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo"><img src="logo.avif" alt="Baker Production" class="footer-logo-img"><span class="footer-logo-text">Baker Production</span></div>
+        <p class="footer-tagline">Perth property media. Fast turnaround on every shoot.</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/_bakerproduction/?hl=en" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+          <a href="https://www.facebook.com/p/Baker-Production-61578706599674/" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <div class="footer-nav-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="index.html#services">Photography</a></li>
+            <li><a href="index.html#services">Videography</a></li>
+            <li><a href="virtual-editing.html">Virtual Editing</a></li>
+            <li><a href="index.html#services">Floor Plans</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="index.html#hero">About Us</a></li>
+            <li><a href="index.html#pricing">Pricing</a></li>
+            <li><a href="index.html#process">Process</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="book.html">Book Now</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-contact">
+        <h4>Get in Touch</h4>
+        <div class="footer-contact-item">
+          <div class="footer-contact-label">Call direct</div>
+          <div class="footer-contact-value"><a href="tel:0466789522">0466 789 522</a></div>
+        </div>
+        <div class="footer-contact-item">
+          <div class="footer-contact-label">Email us</div>
+          <div class="footer-contact-value"><a href="mailto:admin@bakerproduction.com">admin@bakerproduction.com</a></div>
+        </div>
+        <div class="footer-contact-item">
+          <div class="footer-contact-label">Based in</div>
+          <div class="footer-contact-value">Perth, Western Australia</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-copyright">&copy; 2026 Baker Production. All rights reserved.</div>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="https://outbounddesign.com.au" target="_blank" rel="noopener">Designed by OUTBOUND Design</a>
+      </div>
+      <button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593; Back to top</button>
+    </div>
+  </footer>
+
+  <script>
+    // ========== HAMBURGER MENU ==========
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const navbar = document.getElementById('navbar');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      navbar.classList.toggle('menu-open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+    function closeMenu() {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      navbar.classList.remove('menu-open');
+      document.body.style.overflow = '';
+    }
+
+    // ========== SCROLL REVEAL ==========
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ========== STAGGERED CARD REVEAL ==========
+    document.querySelectorAll('.service-card').forEach(function(el) { el.classList.add('card-stagger'); });
+    const cardObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var card = entry.target;
+          var grid = card.closest('.service-grid');
+          var cards = Array.from(grid.querySelectorAll('.service-card'));
+          var index = cards.indexOf(card);
+          setTimeout(function() { card.classList.add('card-visible'); }, index * 60);
+          cardObserver.unobserve(card);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+    document.querySelectorAll('.service-card').forEach(function(el) { cardObserver.observe(el); });
+
+    // ========== CATEGORY NAV SCROLL SPY ==========
+    const catLinks = document.querySelectorAll('.cat-nav a');
+    const categories = document.querySelectorAll('.service-category');
+    const catNavEl = document.getElementById('catNav');
+
+    function updateActiveCategory() {
+      let current = '';
+      categories.forEach(section => {
+        const top = section.offsetTop - 180;
+        if (window.pageYOffset >= top) current = section.id;
+      });
+      catLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
+    }
+    window.addEventListener('scroll', updateActiveCategory, { passive: true });
+    updateActiveCategory();
+
+    // smooth scroll for cat nav
+    catLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          const offset = catNavEl.offsetHeight + navbar.offsetHeight + 20;
+          window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // ========== SERVICE SELECTION ==========
+    var cartFab = document.getElementById('cartFab');
+    var cartBadge = document.getElementById('cartBadge');
+    var cartSidebar = document.getElementById('cartSidebar');
+    var cartHeaderBadge = document.getElementById('cartHeaderBadge');
+    var cartBackdrop = document.getElementById('cartBackdrop');
+    var cartItemsEl = document.getElementById('cartItems');
+    var cartTotalEl = document.getElementById('cartTotal');
+
+    // ========== PACKAGE DETAIL MODAL ==========
+    var packageDetails = {
+      'Essential Package': {
+        desc: 'Photography + Floorplan OR Drone. The essentials for any listing.',
+        includes: ['Photography (unlimited images)', 'Floorplan or Drone (choose one)', 'Professional editing', '24-hour delivery'],
+        time: '90 min onsite'
+      },
+      'Premium Package': {
+        desc: 'Photography + Floorplan + Drone. The complete still-media package for any listing.',
+        includes: ['Photography (unlimited images)', 'Floorplan (up to 300m\u00B2)', 'Aerial / Drone photography', 'Professional editing', '24-hour delivery'],
+        time: '90 min onsite'
+      },
+      'Social Media Lite Package': {
+        desc: 'Everything in Premium plus a social media walkthrough video for Instagram and Facebook.',
+        includes: ['Photography (unlimited images)', 'Floorplan (up to 300m\u00B2)', 'Aerial / Drone photography', 'Social media walkthrough video', 'Professional editing', '24-hour delivery'],
+        time: '90 min onsite'
+      },
+      'Core Listing Package': {
+        desc: 'Photos, floorplan, drone, social walkthrough and virtual tour \u2014 covers all the bases.',
+        includes: ['Photography (unlimited images)', 'Floorplan (up to 300m\u00B2)', 'Aerial / Drone photography', 'Social media walkthrough video', '360\u00B0 Virtual Tour', 'Professional editing', '24-hour delivery'],
+        time: '105 min onsite'
+      },
+      'Signature Package': {
+        desc: 'Photography + Floorplan + Drone + a full listing video. The premium presentation.',
+        includes: ['Photography (unlimited images)', 'Floorplan (up to 300m\u00B2)', 'Aerial / Drone photography', 'Full listing video (45-90 sec)', 'Professional editing', '24-48 hour delivery'],
+        time: '120 min onsite'
+      },
+      'Elite Listing Package': {
+        desc: 'The full suite \u2014 twilight photos, floorplan, drone, day-to-night video, virtual tour, and social reel.',
+        includes: ['Photography (unlimited images)', 'Twilight exterior photography', 'Floorplan (up to 300m\u00B2)', 'Aerial / Drone photography', 'Day-to-night listing video', '360\u00B0 Virtual Tour', 'Social media reel', 'Professional editing', '24-48 hour delivery'],
+        time: '150 min onsite'
+      }
+    };
+
+    // Service images for carousel
+    var serviceImages = {
+      'Photography': { img: 'img/svc-sales.webp', label: 'Photography' },
+      'Floorplan': { img: 'img/svc-floorplan-medium.webp', label: 'Floorplan' },
+      'Drone': { img: 'img/svc-aerial.webp', label: 'Aerial / Drone' },
+      'Social Walkthrough': { img: 'img/service-videography.webp', label: 'Social Walkthrough' },
+      'Virtual Tour': { img: 'img/addon-virtual-tour.webp', label: '360° Virtual Tour' },
+      'Listing Video': { img: 'img/service-videography.webp', label: 'Listing Video' },
+      'Twilight': { img: 'img/svc-twilight.webp', label: 'Twilight Photography' },
+      'Social Reel': { img: 'img/service-videography.webp', label: 'Social Media Reel' },
+      'Day-to-Night Video': { img: 'img/svc-day-to-dusk.webp', label: 'Day to Night Video' },
+    };
+
+    // Map package names to their carousel service keys
+    var packageCarouselItems = {
+      'Essential Package': ['Photography', 'Floorplan', 'Drone'],
+      'Premium Package': ['Photography', 'Floorplan', 'Drone'],
+      'Social Media Lite Package': ['Photography', 'Floorplan', 'Drone', 'Social Walkthrough'],
+      'Core Listing Package': ['Photography', 'Floorplan', 'Drone', 'Social Walkthrough', 'Virtual Tour'],
+      'Signature Package': ['Photography', 'Floorplan', 'Drone', 'Listing Video'],
+      'Elite Listing Package': ['Photography', 'Twilight', 'Floorplan', 'Drone', 'Day-to-Night Video', 'Virtual Tour', 'Social Reel'],
+    };
+
+    var currentPkgCard = null;
+    var pkgOverlay = document.getElementById('pkgModalOverlay');
+    var carouselIndex = 0;
+    var carouselCount = 0;
+
+    function buildCarousel(name, fallbackCard) {
+      var track = document.getElementById('pkgCarouselTrack');
+      var dots = document.getElementById('pkgCarouselDots');
+      track.innerHTML = '';
+      dots.innerHTML = '';
+      carouselIndex = 0;
+
+      var items = packageCarouselItems[name];
+      var slides;
+      if (items) {
+        slides = items.map(function(key) {
+          var svc = serviceImages[key] || { img: 'img/service-photography.webp', label: key };
+          return { img: svc.img, label: svc.label };
+        });
+      } else {
+        var cardImg = fallbackCard && fallbackCard.querySelector('.service-card-img img');
+        var src = cardImg ? cardImg.getAttribute('src') : 'img/service-photography.webp';
+        slides = [{ img: src, label: name }];
+      }
+      carouselCount = slides.length;
+
+      slides.forEach(function(s, i) {
+        var slide = document.createElement('div');
+        slide.className = 'pkg-carousel-slide';
+        slide.innerHTML = '<img src="' + s.img + '" alt="' + s.label + '"><div class="pkg-carousel-slide-label">' + s.label + '</div>';
+        track.appendChild(slide);
+
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'pkg-carousel-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', function() { goToSlide(i); });
+        dots.appendChild(dot);
+      });
+
+      // Hide carousel nav + dots when there's only one slide
+      var prev = document.getElementById('pkgCarouselPrev');
+      var next = document.getElementById('pkgCarouselNext');
+      if (prev) prev.style.display = carouselCount > 1 ? '' : 'none';
+      if (next) next.style.display = carouselCount > 1 ? '' : 'none';
+      dots.style.display = carouselCount > 1 ? '' : 'none';
+
+      track.style.transform = 'translateX(0)';
+    }
+
+    function goToSlide(i) {
+      carouselIndex = i;
+      if (carouselIndex < 0) carouselIndex = carouselCount - 1;
+      if (carouselIndex >= carouselCount) carouselIndex = 0;
+      document.getElementById('pkgCarouselTrack').style.transform = 'translateX(-' + (carouselIndex * 100) + '%)';
+      var allDots = document.querySelectorAll('.pkg-carousel-dot');
+      allDots.forEach(function(d, idx) { d.classList.toggle('active', idx === carouselIndex); });
+    }
+
+    document.getElementById('pkgCarouselPrev').addEventListener('click', function(e) {
+      e.stopPropagation();
+      goToSlide(carouselIndex - 1);
+    });
+    document.getElementById('pkgCarouselNext').addEventListener('click', function(e) {
+      e.stopPropagation();
+      goToSlide(carouselIndex + 1);
+    });
+
+    function showPackage(card) {
+      var name = card.dataset.name;
+      var price = parseInt(card.dataset.price) || 0;
+      var details = packageDetails[name];
+
+      // Fallback: build details from the card DOM for non-package services
+      if (!details) {
+        var descEl = card.querySelector('.service-card-desc');
+        var metaEl = card.querySelector('.service-card-meta');
+        var includeEls = card.querySelectorAll('.service-card-includes span');
+        var includes = [];
+        includeEls.forEach(function(el) { includes.push(el.textContent.trim()); });
+        if (includes.length === 0) includes = ['Professional editing', '24-hour delivery'];
+        details = {
+          desc: descEl ? descEl.textContent.trim() : '',
+          includes: includes,
+          time: metaEl ? metaEl.textContent.trim() : ''
+        };
+      }
+
+      currentPkgCard = card;
+
+      buildCarousel(name, card);
+
+      document.getElementById('pkgModalName').textContent = name;
+      document.getElementById('pkgModalPrice').textContent = price > 0 ? '$' + price.toLocaleString() : 'Quote';
+      document.getElementById('pkgModalDesc').textContent = details.desc;
+
+      var includesEl = document.getElementById('pkgModalIncludes');
+      includesEl.innerHTML = '';
+      details.includes.forEach(function(item) {
+        var row = document.createElement('div');
+        row.className = 'pkg-modal-include-item';
+        row.innerHTML = '<div class="pkg-modal-include-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3" fill="none"/></svg></div>' + item;
+        includesEl.appendChild(row);
+      });
+
+      var metaHtml = details.time
+        ? '<span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8 4 8 8 11 10"/></svg>' + details.time + '</span>'
+        : '';
+      document.getElementById('pkgModalMeta').innerHTML = metaHtml;
+
+      var addBtn = document.getElementById('pkgModalAdd');
+      if (card.classList.contains('selected')) {
+        addBtn.textContent = 'Remove from Cart';
+        addBtn.classList.add('added');
+      } else {
+        addBtn.textContent = 'Add to Cart';
+        addBtn.classList.remove('added');
+      }
+
+      pkgOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePkgModal() {
+      pkgOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+      currentPkgCard = null;
+    }
+
+    document.getElementById('pkgModalClose').addEventListener('click', closePkgModal);
+    document.getElementById('pkgModalCancel').addEventListener('click', closePkgModal);
+    pkgOverlay.addEventListener('click', function(e) { if (e.target === pkgOverlay) closePkgModal(); });
+
+    document.getElementById('pkgModalAdd').addEventListener('click', function() {
+      if (!currentPkgCard) return;
+      toggleCard(currentPkgCard);
+      closePkgModal();
+    });
+
+    function toggleCard(card) {
+      card.classList.toggle('selected');
+      updateSummary();
+    }
+
+    // Inject quick-add (+) button on every service card so users can add to cart in one tap.
+    document.querySelectorAll('.service-card').forEach(function(card) {
+      if (card.querySelector('.pkg-quick-add')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'pkg-quick-add';
+      btn.setAttribute('aria-label', 'Add ' + (card.dataset.name || 'package') + ' to cart');
+      btn.innerHTML = '<span class="pqa-plus" aria-hidden="true">+</span>' +
+        '<svg class="pqa-check" viewBox="0 0 12 12" aria-hidden="true"><polyline points="2 6 5 9 10 3"/></svg>';
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleCard(card);
+      });
+      card.appendChild(btn);
+    });
+
+    function openCart() {
+      cartSidebar.classList.add('open');
+      cartBackdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCart() {
+      cartSidebar.classList.remove('open');
+      cartBackdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    cartFab.addEventListener('click', openCart);
+    document.getElementById('cartClose').addEventListener('click', closeCart);
+    cartBackdrop.addEventListener('click', closeCart);
+
+    function removeCartItem(name) {
+      var card = document.querySelector('.service-card[data-name="' + name + '"]');
+      if (card) card.classList.remove('selected');
+      updateSummary();
+    }
+
+    function updateSummary() {
+      var selected = document.querySelectorAll('.service-card.selected');
+      var count = selected.length;
+      var total = 0;
+
+      // Update badges (sidebar + mobile FAB)
+      cartHeaderBadge.textContent = count;
+      if (count > 0) {
+        cartFab.classList.add('visible');
+        cartBadge.style.display = 'flex';
+        cartBadge.textContent = count;
+      } else {
+        cartFab.classList.remove('visible');
+        cartBadge.style.display = 'none';
+      }
+
+      // Update cart items
+      cartItemsEl.innerHTML = '';
+      if (count === 0) {
+        cartItemsEl.innerHTML = '<div class="cart-empty">Select services to get started</div>';
+        cartTotalEl.textContent = '$0';
+        return;
+      }
+
+      // Icon SVGs by category
+      var icons = {
+        photo: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="8" cy="8" r="2"/><path d="M2 16 L8 10 L14 16"/><path d="M14 14 L18 10 L22 14"/></svg>',
+        video: '<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polygon points="10,8 16,12 10,16"/></svg>',
+        floorplan: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="0" fill="none"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>',
+        staging: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><rect x="6" y="14" width="5" height="6" fill="none"/><rect x="13" y="12" width="6" height="8" fill="none"/></svg>',
+        drone: '<svg viewBox="0 0 24 24"><path d="M2 12 L6 4 L10 9 L12 7 L14 12Z" fill="none"/><rect x="2" y="2" width="20" height="20" rx="2" fill="none"/></svg>',
+        twilight: '<svg viewBox="0 0 24 24"><circle cx="12" cy="14" r="6" fill="none"/><line x1="12" y1="4" x2="12" y2="8"/><line x1="5" y1="8" x2="7" y2="10"/><line x1="19" y1="8" x2="17" y2="10"/></svg>',
+        tour: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none"/><ellipse cx="12" cy="12" rx="4" ry="10" fill="none"/><line x1="2" y1="12" x2="22" y2="12"/></svg>',
+        person: '<svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="4"/><path d="M4 22 C4 16 20 16 20 22"/></svg>',
+      };
+      function getIcon(name) {
+        var n = name.toLowerCase();
+        if (n.includes('photo') || n.includes('essential') || n.includes('premium') || n.includes('core') || n.includes('elite')) return icons.photo;
+        if (n.includes('video') || n.includes('listing video') || n.includes('reel') || n.includes('walkthrough') || n.includes('social media') || n.includes('signature')) return icons.video;
+        if (n.includes('floorplan') || n.includes('floor plan') || n.includes('redraw')) return icons.floorplan;
+        if (n.includes('staging') || n.includes('declutter') || n.includes('dusk')) return icons.staging;
+        if (n.includes('drone') || n.includes('aerial')) return icons.drone;
+        if (n.includes('twilight')) return icons.twilight;
+        if (n.includes('tour')) return icons.tour;
+        if (n.includes('headshot') || n.includes('agent')) return icons.person;
+        return icons.photo;
+      }
+
+      selected.forEach(function(card) {
+        var price = parseInt(card.dataset.price) || 0;
+        total += price;
+        var name = card.dataset.name;
+        var item = document.createElement('div');
+        item.className = 'cart-item';
+        item.innerHTML =
+          '<div class="cart-item-thumb">' + getIcon(name) + '</div>' +
+          '<div class="cart-item-info"><div class="cart-item-name">' + name + '</div></div>' +
+          '<div class="cart-item-right">' +
+            '<span class="cart-item-price">' + (price > 0 ? '$' + price.toLocaleString() : 'Quote') + '</span>' +
+            '<button type="button" class="cart-item-remove" aria-label="Remove">&times;</button>' +
+          '</div>';
+        item.querySelector('.cart-item-remove').addEventListener('click', function() {
+          removeCartItem(name);
+        });
+        cartItemsEl.appendChild(item);
+      });
+
+      cartTotalEl.textContent = '$' + total.toLocaleString();
+    }
+
+    // ========== RESTORE SELECTIONS FROM CART ==========
+    (function restoreCart() {
+      var saved = [];
+      try { saved = JSON.parse(localStorage.getItem('bp_cart') || '[]'); } catch(e) {}
+      if (saved.length === 0) return;
+      var savedNames = saved.map(function(s) { return s.name; });
+      document.querySelectorAll('.service-card').forEach(function(card) {
+        if (savedNames.indexOf(card.dataset.name) !== -1) {
+          card.classList.add('selected');
+        }
+      });
+      updateSummary();
+    })();
+
+    // ========== CONTINUE BUTTON ==========
+    document.getElementById('cartCheckoutBtn').addEventListener('click', function() {
+      const selected = document.querySelectorAll('.service-card.selected');
+      if (selected.length === 0) return;
+
+      const services = [];
+      selected.forEach(card => {
+        services.push({
+          name: card.dataset.name,
+          price: parseInt(card.dataset.price) || 0
+        });
+      });
+
+      localStorage.setItem('bp_cart', JSON.stringify(services));
+      window.location.href = 'checkout.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule & Pay — Baker Production</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" href="favicon.png?v=2" sizes="any">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-bg-warm: #faf9f7;
+      --color-dark: #1a1a1a;
+      --color-darker: #111111;
+      --color-text: #111111;
+      --color-text-light: rgba(17,17,17,0.65);
+      --color-text-on-dark: #ffffff;
+      --color-text-on-dark-muted: rgba(255,255,255,0.65);
+      --color-accent: #b8975a;
+      --color-accent-hover: #a07d42;
+      --color-accent-light: #c8a76a;
+      --color-border: rgba(17,17,17,0.08);
+      --color-border-light: rgba(17,17,17,0.1);
+      --font-display: 'Inter', system-ui, sans-serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --ease-confident: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-dramatic: cubic-bezier(0.77, 0, 0.175, 1);
+      --max-width: 1200px;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body); color: var(--color-text);
+      background: var(--color-bg); -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+    .grain::after {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9997;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4; mix-blend-mode: overlay;
+    }
+
+    /* NAV */
+    .navbar {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 72px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--color-border);
+    }
+    .nav-logo { font-family: var(--font-display); text-decoration: none; color: var(--color-text); display: flex; align-items: center; }
+    .nav-logo-img { height: 32px; width: auto; margin-right: 10px; }
+    .nav-logo-text { font-size: 16px; font-weight: 600; letter-spacing: 0.3px; }
+    .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
+    .nav-links a { font-size: 11px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none; color: var(--color-text); }
+    .nav-cta { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; color: var(--color-text) !important; background: var(--color-accent); padding: 14px 28px; }
+    .nav-hamburger { display: none; background: none; border: none; cursor: pointer; width: 28px; height: 20px; position: relative; z-index: 1001; }
+    .nav-hamburger span { position: absolute; left: 0; width: 100%; height: 2px; background: var(--color-text); transition: 0.3s var(--ease-confident); }
+    .nav-hamburger span:nth-child(1) { top: 0; } .nav-hamburger span:nth-child(2) { top: 9px; } .nav-hamburger span:nth-child(3) { top: 18px; }
+    .nav-hamburger.open span:nth-child(1) { top: 9px; transform: rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { top: 9px; transform: rotate(-45deg); }
+    .mobile-menu { position: fixed; inset: 0; background: #fff; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; clip-path: inset(0 0 100% 0); transition: clip-path 0.5s var(--ease-dramatic); }
+    .mobile-menu.open { clip-path: inset(0 0 0% 0); }
+    .mobile-menu a { font-family: var(--font-display); font-size: 28px; font-weight: 300; color: var(--color-text); text-decoration: none; }
+    .mobile-menu .mobile-menu-cta { font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; background: var(--color-accent); color: var(--color-text); padding: 16px 36px; }
+
+    /* LAYOUT */
+    .checkout-wrap {
+      max-width: var(--max-width); margin: 0 auto;
+      padding: 120px 80px 80px;
+      display: grid; grid-template-columns: 1fr 400px; gap: 48px; align-items: start;
+    }
+
+    /* PROGRESS */
+    .progress-bar { display: flex; align-items: center; margin-bottom: 48px; grid-column: 1 / -1; }
+    .progress-step { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--color-text-light); }
+    .progress-step.active { color: var(--color-text); }
+    .progress-step.done { color: var(--color-accent); }
+    .progress-num { width: 28px; height: 28px; border: 1.5px solid var(--color-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 12px; font-weight: 600; }
+    .progress-step.active .progress-num, .progress-step.done .progress-num { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+    .progress-line { flex: 1; height: 1px; background: var(--color-border); margin: 0 16px; }
+    .progress-line.done { background: var(--color-accent); }
+
+    /* FORM SHARED */
+    .form-section-title { font-family: var(--font-display); font-size: 28px; font-weight: 600; letter-spacing: -0.3px; margin-bottom: 8px; }
+    .form-section-desc { font-size: 14px; color: var(--color-text-light); margin-bottom: 36px; line-height: 1.6; }
+    .form-group { margin-bottom: 20px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-text); margin-bottom: 8px; }
+    .form-label .optional { font-weight: 400; color: var(--color-text-light); letter-spacing: 0.5px; text-transform: none; margin-left: 4px; }
+    .form-input { width: 100%; padding: 14px 16px; font-family: var(--font-body); font-size: 14px; color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-border-light); outline: none; transition: border-color 0.25s, box-shadow 0.25s; }
+    .form-input::placeholder { color: rgba(17,17,17,0.3); }
+    .form-input:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(184,151,90,0.1); }
+    .form-input.error { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.08); }
+    .form-error { font-size: 12px; color: #dc2626; margin-top: 6px; display: none; }
+    .form-error.visible { display: block; }
+    select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23111' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; cursor: pointer; }
+    textarea.form-input { resize: vertical; min-height: 70px; }
+
+    /* CALENDAR */
+    .schedule-panel {
+      margin-bottom: 36px;
+    }
+    .schedule-split {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    }
+    .calendar-wrap {
+      border: 1px solid var(--color-border); padding: 20px; background: var(--color-bg);
+    }
+    .cal-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+    }
+    .cal-title { font-family: var(--font-display); font-size: 15px; font-weight: 600; }
+    .cal-nav {
+      background: none; border: 1px solid var(--color-border); width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .cal-nav:hover { border-color: var(--color-accent); background: rgba(184,151,90,0.05); }
+    .cal-nav svg { width: 14px; height: 14px; stroke: var(--color-text); fill: none; stroke-width: 1.5; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+    .cal-day-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--color-text-light); padding: 8px 0; }
+    .cal-day {
+      padding: 10px 0; font-size: 13px; font-weight: 500; cursor: pointer;
+      border: 1px solid transparent; transition: all 0.2s;
+    }
+    .cal-day:hover { border-color: var(--color-accent); background: rgba(184,151,90,0.05); }
+    .cal-day.today { font-weight: 700; color: var(--color-accent); }
+    .cal-day.selected { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+    .cal-day.disabled { color: rgba(17,17,17,0.2); cursor: default; pointer-events: none; }
+    .cal-day.empty { pointer-events: none; }
+
+    /* TIME PICKER */
+    .time-wrap { border: 1px solid var(--color-border); padding: 20px; background: var(--color-bg); }
+    .time-title { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin-bottom: 16px; }
+    .time-slots { display: flex; flex-direction: column; gap: 6px; max-height: 320px; overflow-y: auto; }
+    .time-slot {
+      padding: 12px 16px; font-size: 13px; font-weight: 500;
+      border: 1px solid var(--color-border); cursor: pointer;
+      transition: all 0.2s; text-align: center;
+    }
+    .time-slot:hover { border-color: var(--color-accent); background: rgba(184,151,90,0.05); }
+    .time-slot.selected { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+
+    /* QUESTIONS SECTION */
+    .section-divider {
+      margin-top: 40px; padding-top: 32px;
+      border-top: 1px solid var(--color-border);
+    }
+    .section-heading {
+      font-family: var(--font-display); font-size: 20px; font-weight: 600; margin-bottom: 6px;
+    }
+    .section-subheading {
+      font-size: 14px; color: var(--color-text-light); margin-bottom: 24px;
+    }
+
+    /* DRONE/FLOORPLAN EXTRA QUESTIONS */
+    .conditional-section {
+      margin-top: 24px; padding: 20px 24px;
+      background: var(--color-bg-warm); border: 1px solid var(--color-border);
+    }
+    .conditional-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--color-accent); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .conditional-label svg { width: 14px; height: 14px; stroke: var(--color-accent); fill: none; stroke-width: 1.5; }
+
+    /* FILE DROP ZONE */
+    .file-drop {
+      border: 2px dashed var(--color-border-light);
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .file-drop:hover, .file-drop.drag-over {
+      border-color: var(--color-accent);
+      background: rgba(184,151,90,0.03);
+    }
+    .file-drop-content {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+    }
+    .file-drop-content span {
+      font-size: 13px; color: var(--color-text-light);
+    }
+    .file-drop-content strong {
+      color: var(--color-accent); cursor: pointer;
+    }
+    .file-drop-content small {
+      font-size: 11px; color: rgba(17,17,17,0.35);
+    }
+    .file-drop-attached {
+      display: flex; align-items: center; gap: 10px;
+      justify-content: center;
+    }
+    .file-drop-attached span {
+      font-size: 13px; font-weight: 500;
+    }
+    .file-remove {
+      background: none; border: none; cursor: pointer;
+      font-size: 18px; color: var(--color-text-light);
+      padding: 0 4px; line-height: 1;
+      transition: color 0.2s;
+    }
+    .file-remove:hover { color: #dc2626; }
+
+    /* PAYMENT */
+    .payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .payment-option {
+      border: 1.5px solid var(--color-border); padding: 20px; cursor: pointer;
+      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .payment-option:hover { border-color: var(--color-accent); }
+    .payment-option.selected { border-color: var(--color-accent); box-shadow: 0 0 0 2px var(--color-accent), 0 4px 16px rgba(184,151,90,0.12); background: rgba(184,151,90,0.03); }
+    .payment-option-header { display: flex; align-items: center; gap: 10px; }
+    .payment-radio {
+      width: 18px; height: 18px; border: 1.5px solid var(--color-border-light);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: border-color 0.2s;
+    }
+    .payment-option.selected .payment-radio { border-color: var(--color-accent); }
+    .payment-radio-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--color-accent); opacity: 0; transition: opacity 0.2s;
+    }
+    .payment-option.selected .payment-radio-dot { opacity: 1; }
+    .payment-option-name { font-family: var(--font-display); font-size: 14px; font-weight: 600; }
+    .payment-option-desc { font-size: 12px; color: var(--color-text-light); line-height: 1.5; padding-left: 28px; }
+
+    /* ORDER SUMMARY */
+    .order-summary { position: sticky; top: 96px; background: var(--color-bg-warm); padding: 32px 28px; border: 1px solid var(--color-border); }
+    .order-summary-title { font-family: var(--font-display); font-size: 14px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--color-border); }
+    .order-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--color-border); }
+    .order-item:last-of-type { border-bottom: none; }
+    .order-item-name { font-size: 14px; font-weight: 500; flex: 1; padding-right: 16px; }
+    .order-item-price { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--color-accent); white-space: nowrap; }
+    .order-surcharge { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--color-border); font-size: 13px; }
+    .order-surcharge-label { color: var(--color-text-light); }
+    .order-surcharge-price { font-family: var(--font-display); font-size: 13px; font-weight: 600; }
+    .order-detail { display: flex; align-items: center; gap: 8px; padding: 8px 0; font-size: 12px; color: var(--color-text-light); }
+    .order-detail svg { width: 14px; height: 14px; stroke: var(--color-accent); fill: none; stroke-width: 1.5; flex-shrink: 0; }
+    .order-total { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; margin-top: 8px; border-top: 1px solid var(--color-border); }
+    .order-total-label { font-family: var(--font-display); font-size: 14px; font-weight: 600; }
+    .order-total-price { font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--color-accent); }
+    .order-note { font-size: 12px; color: var(--color-text-light); margin-top: 12px; line-height: 1.5; }
+    .order-edit { display: inline-block; margin-top: 16px; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--color-accent); text-decoration: none; }
+
+    /* ACTIONS */
+    .form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--color-border); }
+    .btn-back { font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--color-text-light); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
+    .btn-back:hover { color: var(--color-text); }
+    .btn-back svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+    .btn-submit { font-family: var(--font-body); font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; background: var(--color-accent); color: #fff; border: none; cursor: pointer; padding: 18px 48px; transition: background 0.2s, transform 0.2s; }
+    .btn-submit:hover { background: var(--color-accent-hover); transform: scale(1.02); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s var(--ease-confident), transform 0.5s var(--ease-confident); }
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+    /* FOOTER */
+    .footer { background: var(--color-darker); color: var(--color-text-on-dark); padding: 80px 80px 40px; }
+    .footer-inner { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 64px; max-width: var(--max-width); margin: 0 auto 60px; }
+    .footer-logo-img { height: 28px; width: auto; filter: brightness(0) invert(1); }
+    .footer-tagline { font-size: 14px; color: var(--color-text-on-dark-muted); margin-bottom: 24px; max-width: 280px; }
+    .footer-socials { display: flex; gap: 16px; }
+    .footer-socials a { font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-text-on-dark-muted); text-decoration: none; }
+    .footer-nav { display: flex; gap: 64px; }
+    .footer-nav-col h4 { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; color: var(--color-accent); }
+    .footer-nav-col ul { list-style: none; } .footer-nav-col li { margin-bottom: 10px; }
+    .footer-nav-col a { font-size: 14px; color: var(--color-text-on-dark-muted); text-decoration: none; }
+    .footer-contact h4 { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; color: var(--color-accent); }
+    .footer-contact-item { margin-bottom: 14px; }
+    .footer-contact-label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--color-text-on-dark-muted); margin-bottom: 2px; }
+    .footer-contact-value { font-size: 14px; }
+    .footer-contact-value a { color: #fff; text-decoration: none; }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); max-width: var(--max-width); margin: 0 auto; }
+    .footer-copyright { font-size: 12px; color: var(--color-text-on-dark-muted); }
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a { font-size: 12px; color: var(--color-text-on-dark-muted); text-decoration: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .checkout-wrap { grid-template-columns: 1fr; padding: 110px 48px 60px; gap: 32px; }
+      .progress-bar { grid-column: 1; }
+      .order-summary { position: static; order: -1; }
+      .schedule-split { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta.desktop-only { display: none; }
+      .nav-hamburger { display: block; }
+      .navbar { padding: 0 24px; height: 64px; }
+      .checkout-wrap { padding: 80px 16px 48px; gap: 20px; }
+      .progress-bar { gap: 0; margin-bottom: 24px; }
+      .progress-step span { display: none; }
+      .progress-line { margin: 0 8px; }
+      .form-section-title { font-size: 20px; }
+      .form-section-desc { font-size: 13px; margin-bottom: 24px; }
+      .form-group { margin-bottom: 14px; }
+      .form-label { font-size: 10px; margin-bottom: 6px; }
+      .form-input { padding: 12px 14px; font-size: 14px; }
+      .form-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .schedule-split { grid-template-columns: 1fr; gap: 12px; }
+      .calendar-wrap { padding: 16px; }
+      .cal-day { padding: 8px 0; font-size: 12px; }
+      .cal-title { font-size: 14px; }
+      .time-wrap { padding: 16px; }
+      .time-title { font-size: 14px; margin-bottom: 12px; }
+      .time-slots { max-height: 200px; }
+      .time-slot { padding: 10px 12px; font-size: 12px; }
+      .section-divider { margin-top: 28px; padding-top: 24px; }
+      .section-heading { font-size: 18px; }
+      .section-subheading { font-size: 13px; margin-bottom: 16px; }
+      .conditional-section { padding: 16px; }
+      .payment-options { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .payment-option { padding: 14px; }
+      .payment-option-name { font-size: 13px; }
+      .payment-option-desc { font-size: 11px; padding-left: 28px; }
+      .order-summary { padding: 20px 16px; }
+      .order-summary-title { font-size: 12px; margin-bottom: 16px; padding-bottom: 12px; }
+      .order-total-price { font-size: 20px; }
+      .form-actions { flex-direction: column-reverse; gap: 12px; }
+      .btn-back { justify-content: center; }
+      .btn-submit { width: 100%; text-align: center; padding: 16px; }
+      .file-drop { padding: 16px; }
+      .file-drop-content span { font-size: 12px; }
+      .footer { padding: 48px 16px 24px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 24px; }
+      .footer-nav { flex-direction: column; gap: 24px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .checkout-wrap { padding: 76px 12px 40px; gap: 16px; }
+      .form-section-title { font-size: 18px; }
+      .form-row { grid-template-columns: 1fr; gap: 0; }
+      .payment-options { grid-template-columns: 1fr; }
+      .form-input { padding: 11px 12px; font-size: 13px; }
+      .progress-num { width: 24px; height: 24px; font-size: 10px; }
+      .cal-day { padding: 6px 0; font-size: 11px; }
+    }
+  </style>
+</head>
+<body class="grain">
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo"><img src="logo.avif" alt="Baker Production" class="nav-logo-img"><span class="nav-logo-text">Baker Production</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#services">Services</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="index.html#pricing">Pricing</a></li>
+      <li><a href="index.html#process">Process</a></li>
+      <li><a href="virtual-editing.html">Virtual Editing</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a href="book.html" class="nav-cta desktop-only">Book Now</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html#services" onclick="closeMenu()">Services</a>
+    <a href="gallery.html" onclick="closeMenu()">Gallery</a>
+    <a href="index.html#pricing" onclick="closeMenu()">Pricing</a>
+    <a href="index.html#process" onclick="closeMenu()">Process</a>
+    <a href="virtual-editing.html" onclick="closeMenu()">Virtual Editing</a>
+    <a href="index.html#contact" onclick="closeMenu()">Contact</a>
+    <a href="book.html" class="mobile-menu-cta" onclick="closeMenu()">Book Now</a>
+  </div>
+
+  <div class="checkout-wrap">
+
+    <!-- PROGRESS -->
+    <div class="progress-bar reveal">
+      <div class="progress-step done">
+        <div class="progress-num"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3" stroke="#fff" stroke-width="2" fill="none"/></svg></div>
+        <span>Services</span>
+      </div>
+      <div class="progress-line done"></div>
+      <div class="progress-step done">
+        <div class="progress-num"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3" stroke="#fff" stroke-width="2" fill="none"/></svg></div>
+        <span>Property</span>
+      </div>
+      <div class="progress-line done"></div>
+      <div class="progress-step active">
+        <div class="progress-num">3</div>
+        <span>Schedule & Pay</span>
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step">
+        <div class="progress-num">4</div>
+        <span>Confirm</span>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-section reveal">
+      <h1 class="form-section-title">Schedule Your Shoot</h1>
+      <p class="form-section-desc">Pick a date and time, answer a few questions about the property, and choose how you'd like to pay.</p>
+
+      <form id="scheduleForm" novalidate>
+
+        <!-- CALENDAR + TIME -->
+        <div class="schedule-panel">
+          <div class="schedule-split">
+            <div class="calendar-wrap">
+              <div class="cal-header">
+                <button type="button" class="cal-nav" id="calPrev"><svg viewBox="0 0 16 16"><polyline points="10 2 4 8 10 14"/></svg></button>
+                <span class="cal-title" id="calTitle"></span>
+                <button type="button" class="cal-nav" id="calNext"><svg viewBox="0 0 16 16"><polyline points="6 2 12 8 6 14"/></svg></button>
+              </div>
+              <div class="cal-grid" id="calGrid"></div>
+            </div>
+            <div class="time-wrap">
+              <div class="time-title">Available Times</div>
+              <div class="time-slots" id="timeSlots">
+                <div style="padding:24px;text-align:center;font-size:13px;color:var(--color-text-light);">Select a date first</div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" id="selectedDate" name="selectedDate">
+          <input type="hidden" id="selectedTime" name="selectedTime">
+          <div id="twilightNotice" style="display:none;font-size:12px;color:var(--color-accent);margin-top:10px;padding:10px 14px;background:rgba(184,151,90,0.06);border-left:2px solid var(--color-accent);">Twilight Add-On ($75) automatically added for shoots after 5:30 PM.</div>
+          <div class="form-error" id="scheduleError" style="margin-top:8px;">Please select a date and time</div>
+        </div>
+
+        <!-- PROPERTY QUESTIONS -->
+        <div class="section-divider">
+          <h2 class="section-heading">Property Access</h2>
+          <p class="section-subheading">Help us prepare for the shoot day.</p>
+
+          <div class="form-group">
+            <label class="form-label" for="accessMethod">How to access the property</label>
+            <select class="form-input" id="accessMethod" name="accessMethod" required>
+              <option value="" disabled selected>Select access method...</option>
+              <option value="agent-onsite">Agent will be onsite</option>
+              <option value="lockbox">Lockbox / Key safe</option>
+              <option value="key-office">Key from office</option>
+              <option value="tenant-home">Tenant will be home</option>
+              <option value="open-access">Open / unlocked</option>
+              <option value="other">Other (specify below)</option>
+            </select>
+            <div class="form-error" id="accessError">Please select how to access the property</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="accessNotes">Access details <span class="optional">(if lockbox code, gate instructions, etc.)</span></label>
+            <input type="text" class="form-input" id="accessNotes" name="accessNotes" placeholder="e.g. Lockbox on front door, code 1234">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="accessPhone">Contact phone for access <span class="optional">optional</span></label>
+            <input type="tel" class="form-input" id="accessPhone" name="accessPhone" placeholder="e.g. 04XX XXX XXX">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="meetingPerson">Who are we meeting? <span class="optional">optional</span></label>
+              <input type="text" class="form-input" id="meetingPerson" name="meetingPerson" placeholder="e.g. Sarah — agent">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="anytime">Arrival flexibility <span class="optional">optional</span></label>
+              <select class="form-input" id="anytime" name="anytime">
+                <option value="">Select...</option>
+                <option value="anytime">Come anytime during the window</option>
+                <option value="exact">Please arrive at the exact time</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- DRONE/FLOORPLAN CONDITIONAL QUESTIONS -->
+        <div class="conditional-section" id="droneFloorplanSection" style="display:none;">
+          <div class="conditional-label">
+            <svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="0" fill="none"/><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+            Drone & Floorplan Details
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Strata / Title / Land Plan <span class="optional">optional</span></label>
+            <div class="file-drop" id="strataDropZone">
+              <input type="file" id="strataFile" name="strataFile" accept=".pdf,.jpg,.jpeg,.png,.webp" style="display:none;">
+              <div class="file-drop-content" id="strataDropContent">
+                <svg viewBox="0 0 24 24" width="28" height="28" stroke="var(--color-accent)" fill="none" stroke-width="1.2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Drop file here or <strong>browse</strong></span>
+                <small>PDF, JPG, PNG — max 10MB</small>
+              </div>
+              <div class="file-drop-attached" id="strataAttached" style="display:none;">
+                <svg viewBox="0 0 16 16" width="14" height="14" stroke="var(--color-accent)" fill="none" stroke-width="1.5"><path d="M14 4.5V14a2 2 0 01-2 2H4a2 2 0 01-2-2V2a2 2 0 012-2h5.5L14 4.5z"/></svg>
+                <span id="strataFileName"></span>
+                <button type="button" class="file-remove" id="strataRemove">&times;</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Floor Plan <span class="optional">optional</span></label>
+            <div class="file-drop" id="floorplanDropZone">
+              <input type="file" id="floorplanFile" name="floorplanFile" accept=".pdf,.jpg,.jpeg,.png,.webp" style="display:none;">
+              <div class="file-drop-content" id="floorplanDropContent">
+                <svg viewBox="0 0 24 24" width="28" height="28" stroke="var(--color-accent)" fill="none" stroke-width="1.2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Drop file here or <strong>browse</strong></span>
+                <small>PDF, JPG, PNG — max 10MB</small>
+              </div>
+              <div class="file-drop-attached" id="floorplanAttached" style="display:none;">
+                <svg viewBox="0 0 16 16" width="14" height="14" stroke="var(--color-accent)" fill="none" stroke-width="1.5"><path d="M14 4.5V14a2 2 0 01-2 2H4a2 2 0 01-2-2V2a2 2 0 012-2h5.5L14 4.5z"/></svg>
+                <span id="floorplanFileName"></span>
+                <button type="button" class="file-remove" id="floorplanRemove">&times;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAYMENT -->
+        <div class="section-divider">
+          <h2 class="section-heading">Payment Method</h2>
+          <p class="section-subheading">Choose how you'd like to pay for this booking.</p>
+
+          <div class="payment-options">
+            <div class="payment-option selected" data-method="pay-now" onclick="selectPayment(this)">
+              <div class="payment-option-header">
+                <div class="payment-radio"><div class="payment-radio-dot"></div></div>
+                <div class="payment-option-name">Pay Now</div>
+              </div>
+              <div class="payment-option-desc">Secure card payment. Booking confirmed instantly.</div>
+            </div>
+            <div class="payment-option" data-method="invoice" onclick="selectPayment(this)">
+              <div class="payment-option-header">
+                <div class="payment-radio"><div class="payment-radio-dot"></div></div>
+                <div class="payment-option-name">Invoice</div>
+              </div>
+              <div class="payment-option-desc">We'll send an invoice after the shoot. 14-day payment terms.</div>
+            </div>
+          </div>
+          <input type="hidden" id="paymentMethod" name="paymentMethod" value="pay-now">
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="form-actions">
+          <a href="checkout.html" class="btn-back">
+            <svg viewBox="0 0 16 16"><polyline points="10 2 4 8 10 14"/></svg>
+            Back to Property Details
+          </a>
+          <button type="submit" class="btn-submit">Confirm Booking</button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <div class="order-summary reveal">
+      <div class="order-summary-title">Your Booking</div>
+      <div id="orderItems"></div>
+      <div id="surchargeRow" class="order-surcharge" style="display:none;">
+        <span class="order-surcharge-label">Travel surcharge</span>
+        <span class="order-surcharge-price" id="surchargeAmount">$0</span>
+      </div>
+      <div id="orderDetails"></div>
+      <div class="order-total">
+        <span class="order-total-label">Total</span>
+        <span class="order-total-price" id="orderTotal">$0</span>
+      </div>
+      <p class="order-note">All prices inclusive of GST. A $110 cancellation fee applies within 1 hour of appointment.</p>
+      <a href="book.html" class="order-edit">Edit services</a>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo"><img src="logo.avif" alt="Baker Production" class="footer-logo-img"><span class="footer-logo-text">Baker Production</span></div>
+        <p class="footer-tagline">Perth property media. Fast turnaround on every shoot.</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/_bakerproduction/?hl=en" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/p/Baker-Production-61578706599674/" target="_blank" rel="noopener">Facebook</a>
+        </div>
+      </div>
+      <div class="footer-nav">
+        <div class="footer-nav-col"><h4>Services</h4><ul>
+          <li><a href="index.html#services">Photography</a></li>
+          <li><a href="index.html#services">Videography</a></li>
+          <li><a href="virtual-editing.html">Virtual Editing</a></li>
+          <li><a href="index.html#services">Floor Plans</a></li>
+        </ul></div>
+        <div class="footer-nav-col"><h4>Company</h4><ul>
+          <li><a href="index.html#hero">About Us</a></li>
+          <li><a href="index.html#pricing">Pricing</a></li>
+          <li><a href="index.html#process">Process</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li><a href="book.html">Book Now</a></li>
+        </ul></div>
+      </div>
+      <div class="footer-contact"><h4>Get in Touch</h4>
+        <div class="footer-contact-item"><div class="footer-contact-label">Call direct</div><div class="footer-contact-value"><a href="tel:0466789522">0466 789 522</a></div></div>
+        <div class="footer-contact-item"><div class="footer-contact-label">Email us</div><div class="footer-contact-value"><a href="mailto:admin@bakerproduction.com">admin@bakerproduction.com</a></div></div>
+        <div class="footer-contact-item"><div class="footer-contact-label">Based in</div><div class="footer-contact-value">Perth, Western Australia</div></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copyright">&copy; 2026 Baker Production. All rights reserved.</div>
+      <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="https://outbounddesign.com.au" target="_blank" rel="noopener">Designed by OUTBOUND Design</a></div>
+    </div>
+  </footer>
+
+  <script>
+    // HAMBURGER
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : ''; });
+    function closeMenu() { hamburger.classList.remove('open'); mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
+
+    // REVEAL
+    const revealObs = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); revealObs.unobserve(e.target); } }); }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // LOAD BOOKING DATA
+    let booking = {};
+    try { booking = JSON.parse(localStorage.getItem('bp_booking') || '{}'); } catch(e) {}
+    if (!booking.services || booking.services.length === 0) { window.location.href = 'book.html'; }
+    const cart = booking.services || [];
+    const surcharge = booking.surcharge || 0;
+
+    // Check if cart has drone or floorplan items
+    const droneFloorplanKeywords = ['drone', 'floorplan', 'floor plan', 'aerial'];
+    const packageDroneFloorplan = {
+      'essential package': true, 'premium package': true, 'social media lite': true,
+      'social media lite package': true, 'core listing': true, 'core listing package': true,
+      'signature package': true, 'elite listing': true, 'elite listing package': true,
+    };
+    const hasDroneFloorplan = cart.some(item => {
+      const name = item.name.toLowerCase();
+      return droneFloorplanKeywords.some(k => name.includes(k)) || packageDroneFloorplan[name];
+    });
+    if (hasDroneFloorplan) {
+      document.getElementById('droneFloorplanSection').style.display = 'block';
+    }
+
+    // RENDER ORDER SUMMARY
+    function renderOrder() {
+      const container = document.getElementById('orderItems');
+      const details = document.getElementById('orderDetails');
+      let total = 0;
+      container.innerHTML = '';
+      cart.forEach(item => {
+        total += item.price;
+        const el = document.createElement('div');
+        el.className = 'order-item';
+        el.innerHTML = `<span class="order-item-name">${item.name}</span><span class="order-item-price">${item.price > 0 ? '$' + item.price.toLocaleString() : 'Quote'}</span>`;
+        container.appendChild(el);
+      });
+
+      if (surcharge > 0) {
+        document.getElementById('surchargeRow').style.display = 'flex';
+        document.getElementById('surchargeAmount').textContent = '$' + surcharge;
+      }
+
+      // Show property address
+      details.innerHTML = '';
+      if (booking.property) {
+        const addr = booking.property;
+        const line = [addr.unit, addr.address, addr.suburb, addr.state, addr.postcode].filter(Boolean).join(', ');
+        details.innerHTML = `<div class="order-detail"><svg viewBox="0 0 16 16"><path d="M8 1C5.24 1 3 3.24 3 6c0 3.5 5 9 5 9s5-5.5 5-9c0-2.76-2.24-5-5-5z"/><circle cx="8" cy="6" r="1.5"/></svg>${line}</div>`;
+      }
+
+      document.getElementById('orderTotal').textContent = '$' + (total + surcharge).toLocaleString();
+    }
+    renderOrder();
+
+    // CALENDAR
+    let calDate = new Date();
+    calDate.setDate(1);
+    let selectedDate = null;
+    let selectedTime = null;
+
+    const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const DAYS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+    function renderCalendar() {
+      const grid = document.getElementById('calGrid');
+      const title = document.getElementById('calTitle');
+      const year = calDate.getFullYear();
+      const month = calDate.getMonth();
+      title.textContent = `${MONTHS[month]} ${year}`;
+
+      grid.innerHTML = '';
+      DAYS.forEach(d => {
+        const lbl = document.createElement('div');
+        lbl.className = 'cal-day-label';
+        lbl.textContent = d;
+        grid.appendChild(lbl);
+      });
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const today = new Date();
+      today.setHours(0,0,0,0);
+
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'cal-day empty';
+        grid.appendChild(empty);
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-day';
+        cell.textContent = d;
+        const cellDate = new Date(year, month, d);
+        cellDate.setHours(0,0,0,0);
+
+        if (cellDate < today) {
+          cell.classList.add('disabled');
+        } else {
+          if (cellDate.getTime() === today.getTime()) cell.classList.add('today');
+          if (selectedDate && cellDate.getTime() === selectedDate.getTime()) cell.classList.add('selected');
+          cell.addEventListener('click', () => {
+            selectedDate = cellDate;
+            document.getElementById('selectedDate').value = cellDate.toISOString().split('T')[0];
+            renderCalendar();
+            renderTimeSlots();
+          });
+        }
+        grid.appendChild(cell);
+      }
+    }
+
+    document.getElementById('calPrev').addEventListener('click', () => {
+      calDate.setMonth(calDate.getMonth() - 1);
+      renderCalendar();
+    });
+    document.getElementById('calNext').addEventListener('click', () => {
+      calDate.setMonth(calDate.getMonth() + 1);
+      renderCalendar();
+    });
+    renderCalendar();
+
+    // Check if twilight is in cart
+    var hasTwilight = cart.some(function(item) {
+      var n = item.name.toLowerCase();
+      return n.includes('twilight') || n === 'elite listing' || n === 'elite listing package';
+    });
+
+    // TIME SLOTS
+    function renderTimeSlots() {
+      const container = document.getElementById('timeSlots');
+      if (!selectedDate) {
+        container.innerHTML = '<div style="padding:24px;text-align:center;font-size:13px;color:var(--color-text-light);">Select a date first</div>';
+        return;
+      }
+      container.innerHTML = '';
+      const day = selectedDate.getDay();
+      // No slots on Sunday
+      if (day === 0) {
+        container.innerHTML = '<div style="padding:24px;text-align:center;font-size:13px;color:var(--color-text-light);">No availability on Sundays</div>';
+        return;
+      }
+      // If twilight in cart, only show times from 5pm onwards (weekdays only)
+      var startHour = 7;
+      var endHour = day === 6 ? 13 : 19; // extend to 7pm for twilight slots
+      if (hasTwilight) {
+        startHour = 17; // 5pm
+        endHour = 19; // up to 6:30pm
+        if (day === 6) {
+          container.innerHTML = '<div style="padding:24px;text-align:center;font-size:13px;color:var(--color-text-light);">Twilight shoots not available on Saturdays</div>';
+          return;
+        }
+      }
+      for (let h = startHour; h < endHour; h++) {
+        ['00', '30'].forEach(m => {
+          const slot = document.createElement('div');
+          slot.className = 'time-slot';
+          const hr12 = h > 12 ? h - 12 : h;
+          const ampm = h >= 12 ? 'PM' : 'AM';
+          const label = `${hr12}:${m} ${ampm}`;
+          slot.textContent = label;
+          if (selectedTime === `${h}:${m}`) slot.classList.add('selected');
+          slot.addEventListener('click', () => {
+            selectedTime = `${h}:${m}`;
+            document.getElementById('selectedTime').value = label;
+            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+            slot.classList.add('selected');
+            checkTwilightAutoAdd(h, parseInt(m));
+          });
+          container.appendChild(slot);
+        });
+      }
+    }
+
+    // Auto-add twilight surcharge for shoots after 5:30pm
+    function checkTwilightAutoAdd(hour, min) {
+      if (hasTwilight) return; // already has twilight
+      var twilightNotice = document.getElementById('twilightNotice');
+      if (hour > 17 || (hour === 17 && min >= 30)) {
+        // Add twilight if not already in cart
+        if (!cart.some(function(i) { return i.name === 'Twilight Add-On'; })) {
+          cart.push({ name: 'Twilight Add-On', price: 75 });
+          booking.services = cart;
+          localStorage.setItem('bp_booking', JSON.stringify(booking));
+          renderOrder();
+          hasTwilight = true;
+        }
+        if (twilightNotice) twilightNotice.style.display = 'block';
+      } else {
+        if (twilightNotice) twilightNotice.style.display = 'none';
+      }
+    }
+
+    // PAYMENT
+    function selectPayment(el) {
+      document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('paymentMethod').value = el.dataset.method;
+    }
+
+    // FORM SUBMIT
+    document.getElementById('scheduleForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      let valid = true;
+
+      // Check date+time
+      var scheduleErr = document.getElementById('scheduleError');
+      if (!selectedDate && !selectedTime) {
+        scheduleErr.textContent = 'Please select a date and time';
+        scheduleErr.classList.add('visible');
+        valid = false;
+      } else if (!selectedDate) {
+        scheduleErr.textContent = 'Please select a date';
+        scheduleErr.classList.add('visible');
+        valid = false;
+      } else if (!selectedTime) {
+        scheduleErr.textContent = 'Please select a time';
+        scheduleErr.classList.add('visible');
+        valid = false;
+      } else {
+        scheduleErr.classList.remove('visible');
+      }
+
+      // Check access method
+      const access = document.getElementById('accessMethod');
+      if (!access.value) {
+        access.classList.add('error');
+        document.getElementById('accessError').classList.add('visible');
+        valid = false;
+      } else {
+        access.classList.remove('error');
+        document.getElementById('accessError').classList.remove('visible');
+      }
+
+      if (!valid) {
+        // Scroll to the first visible error
+        var firstErr = document.querySelector('.form-error.visible');
+        if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      // Save schedule data
+      booking.schedule = {
+        date: document.getElementById('selectedDate').value,
+        time: document.getElementById('selectedTime').value,
+        accessMethod: access.value,
+        accessNotes: document.getElementById('accessNotes').value.trim(),
+        accessPhone: document.getElementById('accessPhone').value.trim(),
+        meetingPerson: document.getElementById('meetingPerson').value.trim(),
+        anytime: document.getElementById('anytime').value,
+        strataTitle: document.getElementById('strataTitle') ? document.getElementById('strataTitle').value.trim() : '',
+        landSize: document.getElementById('landSize') ? document.getElementById('landSize').value : '',
+      };
+      booking.paymentMethod = document.getElementById('paymentMethod').value;
+
+      localStorage.setItem('bp_booking', JSON.stringify(booking));
+      window.location.href = 'confirmation.html';
+    });
+
+    // ========== PRE-FILL FROM SAVED SCHEDULE ==========
+    if (booking.schedule) {
+      var s = booking.schedule;
+      if (s.date) {
+        selectedDate = new Date(s.date + 'T00:00:00');
+        document.getElementById('selectedDate').value = s.date;
+        calDate = new Date(selectedDate);
+        calDate.setDate(1);
+        renderCalendar();
+        renderTimeSlots();
+      }
+      if (s.time) {
+        selectedTime = s.time.replace(/\s*(AM|PM)$/i, '').replace(/^(\d):/, function(m, h) { return h; });
+        // Convert 12hr back to 24hr for matching
+        var timeParts = s.time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+        if (timeParts) {
+          var hr = parseInt(timeParts[1]);
+          var min = timeParts[2];
+          if (timeParts[3].toUpperCase() === 'PM' && hr < 12) hr += 12;
+          if (timeParts[3].toUpperCase() === 'AM' && hr === 12) hr = 0;
+          selectedTime = hr + ':' + min;
+          document.getElementById('selectedTime').value = s.time;
+          renderTimeSlots();
+        }
+      }
+      if (s.accessMethod) document.getElementById('accessMethod').value = s.accessMethod;
+      if (s.accessNotes) document.getElementById('accessNotes').value = s.accessNotes;
+      if (s.accessPhone) document.getElementById('accessPhone').value = s.accessPhone;
+      if (s.meetingPerson) document.getElementById('meetingPerson').value = s.meetingPerson;
+      if (s.anytime) document.getElementById('anytime').value = s.anytime;
+      if (s.strataTitle && document.getElementById('strataTitle')) document.getElementById('strataTitle').value = s.strataTitle;
+      if (s.landSize && document.getElementById('landSize')) document.getElementById('landSize').value = s.landSize;
+    }
+    if (booking.paymentMethod) {
+      document.querySelectorAll('.payment-option').forEach(function(o) {
+        o.classList.toggle('selected', o.dataset.method === booking.paymentMethod);
+      });
+      document.getElementById('paymentMethod').value = booking.paymentMethod;
+    }
+
+    // ========== FILE DROP ZONES ==========
+    function setupDropZone(zoneId, fileId, contentId, attachedId, nameId, removeId) {
+      var zone = document.getElementById(zoneId);
+      var fileInput = document.getElementById(fileId);
+      var content = document.getElementById(contentId);
+      var attached = document.getElementById(attachedId);
+      var fileName = document.getElementById(nameId);
+      var removeBtn = document.getElementById(removeId);
+      if (!zone) return;
+
+      zone.addEventListener('click', function() { fileInput.click(); });
+      zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', function() { zone.classList.remove('drag-over'); });
+      zone.addEventListener('drop', function(e) {
+        e.preventDefault(); zone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+      });
+      fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) handleFile(fileInput.files[0]);
+      });
+      removeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        fileInput.value = '';
+        content.style.display = 'flex';
+        attached.style.display = 'none';
+      });
+
+      function handleFile(file) {
+        if (file.size > 10 * 1024 * 1024) { alert('File too large — max 10MB'); return; }
+        fileName.textContent = file.name;
+        content.style.display = 'none';
+        attached.style.display = 'flex';
+      }
+    }
+    setupDropZone('strataDropZone', 'strataFile', 'strataDropContent', 'strataAttached', 'strataFileName', 'strataRemove');
+    setupDropZone('floorplanDropZone', 'floorplanFile', 'floorplanDropContent', 'floorplanAttached', 'floorplanFileName', 'floorplanRemove');
+
+    // Clear errors on input
+    document.getElementById('accessMethod').addEventListener('change', () => {
+      document.getElementById('accessMethod').classList.remove('error');
+      document.getElementById('accessError').classList.remove('visible');
+    });
+  </script>
+</body>
+</html>
