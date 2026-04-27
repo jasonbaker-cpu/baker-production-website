@@ -14,11 +14,32 @@ Your website files, ready to upload and go live.
 - `confirmation.html` — The "booking confirmed" page they see after paying.
 - `gallery.html` — Your photo gallery, organised by service type.
 - `virtual-editing.html` — Standalone page for your virtual editing service.
+- `about.html` — About page (placeholder content — needs your real story)
+- `privacy.html` — Privacy policy (basic template — should be reviewed by a lawyer)
+- `terms.html` — Terms of service (basic template — should be reviewed by a lawyer)
 
 **Other files**
 - `logo.avif` — Your logo (used in the navbar and footer).
 - `favicon.ico` — The little icon that shows in browser tabs.
+- `robots.txt` — Tells search engines what to crawl.
+- `sitemap.xml` — Helps Google find all your pages.
 - `img/` — Folder for all your photos. **Currently empty — see below.**
+
+---
+
+## ⚠️ Things still to do (in order of priority)
+
+**1. Replace placeholder testimonials** — Find them in `index.html` (search for "TESTIMONIALS — PLACEHOLDER"). Swap with real Google reviews + real names + agency names. Required by Australian Consumer Law.
+
+**2. Add your photos** — See `img/MISSING_IMAGES.txt` for the list of 89 expected filenames.
+
+**3. Write your About page content** — Open `about.html`, replace the placeholder paragraphs with your real story.
+
+**4. Have Privacy & Terms reviewed by a lawyer** — The included templates are starting points only. Specifically the cancellation policy in `terms.html` needs your actual policy.
+
+**5. Submit your sitemap to Google** — Once your domain is connected, go to https://search.google.com/search-console, add your site, and submit `sitemap.xml`. This tells Google to start indexing.
+
+**6. Set up Google Business Profile** — Free, separate from this site. Drives more local Perth enquiries than your website will. https://business.google.com
 
 ---
 

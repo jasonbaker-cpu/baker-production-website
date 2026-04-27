@@ -4,6 +4,61 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Baker Production — Perth Property Photography & Media</title>
+  <meta name="description" content="Perth's property photography and media studio. Photography, drone, video, floor plans and virtual editing for real estate agents — fast turnaround, every shoot.">
+  <meta name="keywords" content="Perth property photography, real estate photography Perth, property drone Perth, real estate video Perth, floor plans Perth, virtual staging Perth">
+  <link rel="canonical" href="https://bakerproduction.com.au/">
+
+  <!-- Open Graph (Facebook, LinkedIn, Instagram link previews) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bakerproduction.com.au/">
+  <meta property="og:title" content="Baker Production — Perth Property Photography & Media">
+  <meta property="og:description" content="Photography, drone, video, floor plans and virtual editing for real estate agents in Perth. Fast turnaround, every shoot.">
+  <meta property="og:image" content="https://bakerproduction.com.au/img/hero-bg.webp">
+  <meta property="og:locale" content="en_AU">
+
+  <!-- Twitter / X card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Baker Production — Perth Property Photography & Media">
+  <meta name="twitter:description" content="Photography, drone, video, floor plans and virtual editing for real estate agents in Perth.">
+  <meta name="twitter:image" content="https://bakerproduction.com.au/img/hero-bg.webp">
+
+  <!-- LocalBusiness structured data — helps Google show you in local results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Baker Production",
+    "image": "https://bakerproduction.com.au/logo.avif",
+    "@id": "https://bakerproduction.com.au/",
+    "url": "https://bakerproduction.com.au/",
+    "telephone": "+61466789522",
+    "email": "admin@bakerproduction.com",
+    "priceRange": "$$",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Perth",
+      "addressRegion": "WA",
+      "addressCountry": "AU"
+    },
+    "areaServed": [
+      { "@type": "City", "name": "Perth" },
+      { "@type": "City", "name": "Alkimos" },
+      { "@type": "City", "name": "Joondalup" },
+      { "@type": "City", "name": "Scarborough" },
+      { "@type": "City", "name": "Fremantle" },
+      { "@type": "City", "name": "Rockingham" },
+      { "@type": "City", "name": "Mandurah" },
+      { "@type": "AdministrativeArea", "name": "Perth Hills" },
+      { "@type": "AdministrativeArea", "name": "Perth metropolitan area" }
+    ],
+    "description": "Perth-based property photography, drone, video, floor plans, and virtual editing studio for real estate agents.",
+    "sameAs": [
+      "https://www.instagram.com/_bakerproduction/",
+      "https://www.facebook.com/p/Baker-Production-61578706599674/"
+    ]
+  }
+  </script>
+
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="icon" type="image/png" href="favicon.png?v=2" sizes="any">
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
@@ -975,13 +1030,71 @@
 
     @media (max-width: 480px) {
     }
+
+    /* ========== FAQ ========== */
+    .faq {
+      padding: 120px 80px;
+      background: var(--color-bg);
+    }
+    .faq-inner { max-width: 880px; margin: 0 auto; }
+    .faq-header { margin-bottom: 64px; text-align: center; }
+    .faq-eyebrow {
+      font-family: var(--font-body); font-size: 11px; font-weight: 500;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--color-accent);
+      margin-bottom: 16px;
+    }
+    .faq-headline {
+      font-family: var(--font-display); font-size: clamp(36px, 4vw, 52px);
+      font-weight: 600; line-height: 1.1; color: var(--color-text);
+    }
+    .faq-list {
+      border-top: 1px solid var(--color-border);
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--color-border);
+    }
+    .faq-question {
+      width: 100%; background: none; border: none; cursor: pointer;
+      padding: 28px 0; display: flex; align-items: center;
+      justify-content: space-between; gap: 24px;
+      font-family: var(--font-display); font-size: 18px; font-weight: 500;
+      color: var(--color-text); text-align: left;
+      transition: color 0.2s;
+    }
+    .faq-question:hover { color: var(--color-accent); }
+    .faq-icon {
+      flex-shrink: 0; width: 20px; height: 20px;
+      position: relative;
+      transition: transform 0.4s var(--ease-confident);
+    }
+    .faq-icon::before, .faq-icon::after {
+      content: ''; position: absolute; background: var(--color-accent);
+      top: 50%; left: 50%;
+    }
+    .faq-icon::before { width: 14px; height: 1.5px; transform: translate(-50%, -50%); }
+    .faq-icon::after  { width: 1.5px; height: 14px; transform: translate(-50%, -50%); transition: transform 0.4s var(--ease-confident); }
+    .faq-item.open .faq-icon::after { transform: translate(-50%, -50%) rotate(90deg); opacity: 0; }
+    .faq-answer {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s var(--ease-confident);
+    }
+    .faq-answer-inner {
+      padding: 0 0 28px 0; color: var(--color-text-light);
+      font-size: 16px; line-height: 1.7; max-width: 720px;
+    }
+    .faq-answer-inner p { margin-bottom: 12px; }
+    .faq-answer-inner p:last-child { margin-bottom: 0; }
+    @media (max-width: 768px) {
+      .faq { padding: 80px 24px; }
+      .faq-question { font-size: 16px; padding: 22px 0; }
+    }
   </style>
 </head>
 <body class="overflow-clip grain">
 
   <!-- NAVIGATION -->
   <nav class="navbar" id="navbar">
-    <a href="#" class="nav-logo"><img src="logo.avif" alt="Baker Production" class="nav-logo-img"><span class="nav-logo-text">Baker Production</span></a>
+    <a href="index.html" class="nav-logo"><img src="logo.avif" alt="Baker Production" class="nav-logo-img"><span class="nav-logo-text">Baker Production</span></a>
     <ul class="nav-links">
       <li><a href="#services">Services</a></li>
       <li><a href="gallery.html">Gallery</a></li>
@@ -1083,7 +1196,8 @@
           <a href="book.html" class="service-cta-link"><span class="cta-desktop">Watch a sample</span><span class="cta-mobile">More info</span> <span class="arrow">→</span></a>
         </div>
         <div class="service-image" style="aspect-ratio:16/10; overflow:hidden;">
-          <video src="img/service-videography.mp4" poster="img/service-videography-poster.webp" autoplay muted loop playsinline preload="metadata" style="width:100%; height:100%; object-fit:cover; display:block;"></video>
+          <!-- TODO: Add img/service-videography.mp4 to enable video playback. Currently shows poster image only. -->
+          <img src="img/service-videography-poster.webp" alt="Property videography sample" style="width:100%; height:100%; object-fit:cover; display:block;">
         </div>
       </div>
 
@@ -1229,29 +1343,158 @@
     </div>
   </section>
 
-  <!-- GOOGLE REVIEWS -->
+  <!-- ============================================================ -->
+  <!-- GOOGLE REVIEWS — Real reviews from Google Business Profile.   -->
+  <!-- To swap in additional reviews, see the commented options at   -->
+  <!-- the bottom of this section.                                   -->
+  <!-- ============================================================ -->
   <section class="why-us" id="reviews">
     <div class="why-us-inner">
       <div class="why-us-header reveal reveal-up">
         <div class="why-us-eyebrow">Google Reviews</div>
-        <h2 class="why-us-headline">What Agents Are Saying.</h2>
+        <h2 class="why-us-headline">What Clients Are Saying.</h2>
       </div>
       <div class="why-us-grid">
         <div class="why-card reveal reveal-up" style="transition-delay:0.1s;">
           <div class="why-card-stars">★★★★★</div>
-          <p class="why-card-text">"Incredible quality, always on time. The team are professional and make the whole process effortless."</p>
-          <h3 class="why-card-title">Mark R.</h3>
+          <p class="why-card-text">"Jason was great to work with, he knew exactly what he was doing to get the best photos possible of my home. I would highly recommend him and his services!"</p>
+          <h3 class="why-card-title">Ryan V.</h3>
         </div>
         <div class="why-card reveal reveal-up" style="transition-delay:0.25s;">
           <div class="why-card-stars">★★★★★</div>
-          <p class="why-card-text">"Best property photographer in Perth. The turnaround is genuinely fast and the quality is always consistent."</p>
-          <h3 class="why-card-title">Lisa K.</h3>
+          <p class="why-card-text">"Jason was very easy to work with! He made valuable suggestions to help us make the most of our photos as well as working around those of us who were home at the time."</p>
+          <h3 class="why-card-title">Joh-Ann P.</h3>
         </div>
         <div class="why-card reveal reveal-up" style="transition-delay:0.4s;">
           <div class="why-card-stars">★★★★★</div>
-          <p class="why-card-text">"We switched from our old photographer and the difference in enquiry rates was instant. Highly recommend."</p>
-          <h3 class="why-card-title">David H.</h3>
+          <p class="why-card-text">"Friendly professional team! Highly recommended for all photo/video shooting!"</p>
+          <h3 class="why-card-title">Leny C.</h3>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!--
+    ADDITIONAL REAL REVIEWS — available to rotate in:
+
+    Sagarika Thakuri (★★★★★):
+    "Good communication, punctuality and good person. He did photo for my
+    house, my kids were running and making noises. He was very calm
+    everytime. He never once said anything. Thank you so much keep up
+    the good work."
+
+    Innishae Griffen (★★★★★):
+    "Jason is awesome at what he does, and goes above and beyond for us."
+  -->
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="faq-inner">
+      <div class="faq-header reveal reveal-up">
+        <div class="faq-eyebrow">FAQ</div>
+        <h2 class="faq-headline">Common Questions.</h2>
+      </div>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>How fast is the turnaround?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Next-day delivery on photography, drone, floorplans, and virtual editing. Video takes two days because of the additional editing time. If you need something faster, just ask — we'll usually find a way.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>What happens if the weather is bad on shoot day?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>We can usually still shoot. Overcast and light rain are fine for interiors, and we can do a sky replacement on exteriors so they still look clean and bright.</p>
+              <p>If conditions are genuinely too rough — heavy rain, storms — we'll reschedule at no extra cost.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Do I need to be home for the shoot?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>No — as long as we have access (lockbox, key under the mat, agent letting us in), you don't need to be there.</p>
+              <p>You also don't need an empty property. Furniture and styling actually help the photos. We'll move minor things if needed, but we don't need a blank canvas.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>How long does a shoot take on-site?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>It depends on the package and the size of the property. Most shoots are between 60 and 150 minutes on-site — your booking confirmation will tell you exactly what's allocated.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>What areas do you cover?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Perth metro and surrounds — from Alkimos in the north to Rockingham in the south, the coast through to the Hills. If you're outside that area, ask anyway — we travel for the right job.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Can I add services after I've booked?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Yes — drone, video, floorplans, virtual staging, twilight conversions can all be added before or after the shoot. Just message us and we'll update the booking.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Do you do virtual staging and decluttering?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <!-- Pricing: virtual staging $25/image, decluttering $10/image -->
+              <p>Yes. Virtual staging, decluttering, and day-to-dusk conversions are all done in-house. Virtual staging starts at <strong>$25 per image</strong>, decluttering at <strong>$10 per image</strong> — see the <a href="virtual-editing.html" style="color: var(--color-accent); text-decoration: none;">virtual editing page</a> for the full breakdown.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>How do payments work?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Whatever's easiest for you. Card via the booking system is the default, but we also take bank transfer and can invoice agencies on standard terms. Just let us know what suits.</p>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -1263,10 +1506,10 @@
         <div class="contact-band-eyebrow">Get Started</div>
         <h2 class="contact-band-headline">Ready to Book Your Next Shoot?</h2>
         <p class="contact-band-sub">Call or email — we'll confirm your booking within the hour and have your gallery back fast.</p>
-        <a href="tel:0466789522" class="contact-band-btn">Book Now</a>
+        <a href="book.html" class="contact-band-btn">Book Now</a>
       </div>
       <div class="contact-band-right">
-        <a href="tel:0466789522" class="contact-method reveal reveal-right" style="transition-delay:0.1s;">
+        <a href="tel:+61466789522" class="contact-method reveal reveal-right" style="transition-delay:0.1s;">
           <div class="contact-method-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
           <div>
             <div class="contact-method-label">Call direct</div>
@@ -1316,7 +1559,7 @@
         <div class="footer-nav-col">
           <h4>Company</h4>
           <ul>
-            <li><a href="#hero">About Us</a></li>
+            <li><a href="about.html">About Us</a></li>
             <li><a href="#pricing">Pricing</a></li>
             <li><a href="#process">Process</a></li>
             <li><a href="#contact">Contact</a></li>
@@ -1329,7 +1572,7 @@
         <h4>Get in Touch</h4>
         <div class="footer-contact-item">
           <div class="footer-contact-label">Call direct</div>
-          <div class="footer-contact-value"><a href="tel:0466789522">0466 789 522</a></div>
+          <div class="footer-contact-value"><a href="tel:+61466789522">0466 789 522</a></div>
         </div>
         <div class="footer-contact-item">
           <div class="footer-contact-label">Email us</div>
@@ -1343,10 +1586,10 @@
     </div>
 
     <div class="footer-bottom">
-      <div class="footer-copyright">© 2025 Baker Production. All rights reserved.</div>
+      <div class="footer-copyright">© 2026 Baker Production. All rights reserved.</div>
       <div class="footer-legal">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
         <a href="https://outbounddesign.com.au" target="_blank" rel="noopener">Designed by OUTBOUND Design</a>
       </div>
       <button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button>
@@ -1354,6 +1597,25 @@
   </footer>
 
   <script>
+    // ========== FAQ ACCORDION ==========
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const answer = item.querySelector('.faq-answer');
+        const isOpen = item.classList.contains('open');
+
+        if (isOpen) {
+          item.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+          answer.style.maxHeight = '0';
+        } else {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+        }
+      });
+    });
+
     // ========== NAVBAR SCROLL ==========
     let lastScroll = 0;
     const navbar = document.getElementById('navbar');
