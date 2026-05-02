@@ -1088,6 +1088,60 @@
       .faq { padding: 80px 24px; }
       .faq-question { font-size: 16px; padding: 22px 0; }
     }
+
+    /* ===== HERO STATS ===== */
+    .hero-stats {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
+      margin-top: 32px;
+      flex-wrap: nowrap;
+    }
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .hero-stat-n {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .hero-stat-l {
+      font-size: 11px;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .hero-stat-divider {
+      width: 1px;
+      height: 32px;
+      background: rgba(255,255,255,0.3);
+      flex-shrink: 0;
+    }
+    .pricing-turnaround-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 10px 20px;
+      background: rgba(180,148,79,0.12);
+      border: 1px solid rgba(180,148,79,0.35);
+      border-radius: 40px;
+      font-size: 13px;
+      color: #b4944f;
+      font-weight: 500;
+    }
+    .turnaround-icon { font-size: 15px; }
+    @media (max-width: 768px) {
+      .hero-stats { gap: 14px; margin-top: 20px; flex-wrap: wrap; }
+      .hero-stat-n { font-size: 17px; }
+      .hero-stat-divider { display: none; }
+    }
   </style>
 </head>
 <body class="overflow-clip grain">
