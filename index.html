@@ -864,12 +864,12 @@
 
     /* ========== REVEAL SYSTEM ========== */
     .reveal { opacity: 1; transition: all 0.8s var(--ease-confident); }
-    .reveal-up { transform: translateY(20px); }
-    .reveal-down { transform: translateY(-30px); }
-    .reveal-left { transform: translateX(-25px); }
-    .reveal-right { transform: translateX(25px); }
-    .reveal-scale { transform: scale(0.92); }
-    .reveal-clip-left { clip-path: inset(0 100% 0 0); }
+    .reveal-up { transform: none; }
+    .reveal-down { transform: none; }
+    .reveal-left { transform: none; }
+    .reveal-right { transform: none; }
+    .reveal-scale { transform: none; }
+    .reveal-clip-left { transform: none; }
     .revealed { opacity: 1 !important; transform: none !important; clip-path: inset(0) !important; }
 
     .stagger:nth-child(1) { transition-delay: 0.05s; }
@@ -1186,7 +1186,7 @@
       <a href="book.html" class="hero-cta" aria-label="Book a property shoot with Baker Production">Book Now</a>
       <div class="hero-stats">
         <div class="hero-stat">
-          <span class="hero-stat-n" data-count="750" data-suffix="+">750+</span>
+          <span class="hero-stat-n" >750+</span>
           <span class="hero-stat-l">Shoots completed</span>
         </div>
         <div class="hero-stat-divider"></div>
