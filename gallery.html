@@ -851,6 +851,12 @@
       });
     });
 
+    const hashFilter = window.location.hash.replace('#', '');
+    if (hashFilter) {
+      const targetBtn = document.querySelector(`.filter-btn[data-filter="${hashFilter}"]`);
+      if (targetBtn) targetBtn.click();
+    }
+
     // ========== REVEAL ==========
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
