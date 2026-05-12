@@ -967,20 +967,31 @@
       .logo-ticker { padding: 24px 0; }
 
       .services { padding: 0; }
-      .services-inner { max-width: 100%; display: flex; flex-direction: column; }
+      .services-inner {
+        max-width: 100%; display: block;
+        height: auto !important;
+        grid-template-columns: none !important;
+        grid-template-rows: none !important;
+      }
       .services-header { display: none; }
 
       /* Featured services — stacked image cards */
       .service-row {
-        display: block; position: relative; margin-bottom: 0; gap: 0;
+        display: block !important; position: relative;
+        margin-bottom: 0; gap: 0;
+        width: 100%;
         aspect-ratio: 4 / 3;
+        flex: none !important;
+        min-height: auto !important;
       }
       .service-row.layout-65-35,
       .service-row.layout-35-65,
       .service-row.layout-50-50 { grid-template-columns: 1fr; }
 
       .service-image {
-        aspect-ratio: unset !important; position: absolute; inset: 0;
+        aspect-ratio: unset !important;
+        position: absolute !important; inset: 0;
+        width: 100%; height: 100%;
       }
       .service-image::after {
         content: ''; position: absolute; inset: 0;
