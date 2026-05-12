@@ -967,20 +967,20 @@
       .logo-ticker { padding: 24px 0; }
 
       .services { padding: 0; }
-      .services-inner { max-width: 100%; display: flex; flex-direction: column; height: 100vh; }
+      .services-inner { max-width: 100%; display: flex; flex-direction: column; }
       .services-header { display: none; }
 
-      /* Featured services — viewport-fit cards */
+      /* Featured services — stacked image cards */
       .service-row {
         display: block; position: relative; margin-bottom: 0; gap: 0;
-        flex: 1; min-height: 0;
+        aspect-ratio: 4 / 3;
       }
       .service-row.layout-65-35,
       .service-row.layout-35-65,
       .service-row.layout-50-50 { grid-template-columns: 1fr; }
 
       .service-image {
-        aspect-ratio: unset !important; width: 100%; height: 100%; position: relative;
+        aspect-ratio: unset !important; position: absolute; inset: 0;
       }
       .service-image::after {
         content: ''; position: absolute; inset: 0;
