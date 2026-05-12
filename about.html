@@ -26,13 +26,16 @@
       --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
     body {
       font-family: var(--font-body);
       color: var(--color-text);
       background: var(--color-bg);
       -webkit-font-smoothing: antialiased;
       line-height: 1.7;
+      overflow-x: hidden;
     }
+    img { max-width: 100%; height: auto; display: block; }
 
     /* Navbar */
     .navbar {
@@ -53,7 +56,15 @@
       letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none;
       color: var(--color-text);
     }
-    @media (max-width: 600px) { .navbar { padding: 0 24px; } }
+    @media (max-width: 600px) {
+      .navbar { padding: 0 24px; }
+      main { padding: 56px 24px 72px; }
+      h1 { margin-bottom: 24px; }
+      h2 { margin-top: 36px; font-size: 22px; }
+      p { font-size: 16px; }
+      .cta { width: 100%; text-align: center; padding: 18px 24px; }
+      .nav-back { font-size: 10px; letter-spacing: 1.5px; }
+    }
 
     /* Content */
     main {
