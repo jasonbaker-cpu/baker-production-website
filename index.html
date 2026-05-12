@@ -978,12 +978,13 @@
       /* Featured services — stacked image cards */
       .service-row {
         display: block !important; position: relative;
-        margin-bottom: 0; gap: 0;
+        margin-bottom: 16px; gap: 0;
         width: 100%;
         aspect-ratio: 4 / 3;
         flex: none !important;
         min-height: auto !important;
       }
+      .service-row:last-of-type { margin-bottom: 24px; }
       .service-row.layout-65-35,
       .service-row.layout-35-65,
       .service-row.layout-50-50 { grid-template-columns: 1fr; }
