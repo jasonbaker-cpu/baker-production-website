@@ -92,7 +92,7 @@ which means a faster site. Free tool: https://squoosh.app
 
 1. In your Cloudflare Pages project, go to "Custom domains"
 2. Click "Set up a custom domain"
-3. Type your domain (e.g. `bakerproduction.com.au`)
+3. Type your domain (e.g. `bakerproduction.com`)
 4. Cloudflare will tell you exactly what DNS records to add
 5. Add them at wherever your domain is registered (or transfer the domain to Cloudflare — it's the cheapest)
 6. Wait 5–60 mins for it to propagate

@@ -4,4 +4,4 @@ Disallow: /checkout.html
 Disallow: /schedule.html
 Disallow: /confirmation.html
 
-Sitemap: https://bakerproduction.com.au/sitemap.xml
+Sitemap: https://www.bakerproduction.com/sitemap.xml
