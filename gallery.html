@@ -1008,12 +1008,13 @@
     document.querySelectorAll('.gallery-item[data-full]').forEach(item => {
       item.addEventListener('click', () => openImageLightbox(item.dataset.full));
     });
-    document.querySelectorAll('.gallery-image.tour-embed').forEach(box => {
-      box.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const url = box.dataset.tour;
-        if (url) openTourLightbox(url);
-      });
+    // Delegated: a click anywhere on a tour/video tile opens it (the click target is the
+    // outer .gallery-item, so binding to the inner .tour-embed alone never fired).
+    document.getElementById('galleryGrid').addEventListener('click', (e) => {
+      const item = e.target.closest('.gallery-item');
+      if (!item) return;
+      const box = item.querySelector('.gallery-image.tour-embed[data-tour]');
+      if (box && box.dataset.tour) openTourLightbox(box.dataset.tour);
     });
     lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
     lightboxClose.addEventListener('click', closeLightbox);
