@@ -322,6 +322,12 @@
     }
     .tour-play-icon svg { width: 26px; height: 26px; margin-left: 4px; }
     .gallery-image.tour-embed:hover .tour-play-icon { transform: scale(1.08); box-shadow: 0 14px 50px rgba(184,151,90,0.55); }
+    /* Video tiles (YouTube listing videos) — thumbnail background + dark scrim */
+    .gallery-image.tour-embed.video-embed { background-color: #141414; background-size: cover; background-position: center; }
+    .gallery-image.tour-embed.video-embed::before {
+      background: linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.55) 100%);
+      background-size: cover; opacity: 1;
+    }
     .tour-label {
       font-family: var(--font-body); font-size: 11px; font-weight: 600;
       letter-spacing: 2.5px; text-transform: uppercase; color: #fff;
@@ -581,6 +587,67 @@
   <section class="gallery-section">
     <div class="gallery-inner">
       <div class="gallery-grid" id="galleryGrid">
+        <!-- LISTING VIDEOS (YouTube — open in lightbox) -->
+        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/DYrn3EM0LXY?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/DYrn3EM0LXY/hqdefault.jpg');">
+            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">58 Kentucky Drive West</span></div>
+        </div>
+        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/QuO0dJS1o1I?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/QuO0dJS1o1I/hqdefault.jpg');">
+            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">41 Maybach Way, Dianella</span></div>
+        </div>
+        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/m0UQ0a1aXtk?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/m0UQ0a1aXtk/hqdefault.jpg');">
+            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">27 Twickinham Drive, Kingsley</span></div>
+        </div>
+        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/nW1TccPHJ_4?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/nW1TccPHJ_4/hqdefault.jpg');">
+            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">9 Greenwich Court, Kingsley</span></div>
+        </div>
+        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/PCw6tkrv_Z0?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/PCw6tkrv_Z0/hqdefault.jpg');">
+            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">16 McGrath Place, Noranda</span></div>
+        </div>
+        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/L5QTPPZnDMQ?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/L5QTPPZnDMQ/hqdefault.jpg');">
+            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">21 Norcia Way, Ellenbrook</span></div>
+        </div>
+        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/W7vkfuzMEw8?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/W7vkfuzMEw8/hqdefault.jpg');">
+            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">9 Adlington Way, Ellenbrook</span></div>
+        </div>
+        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/6qZuyOTmpJY?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/6qZuyOTmpJY/hqdefault.jpg');">
+            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">26 Hall Road, Roleystone</span></div>
+        </div>
+        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/fwa-Nq-aaWw?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/fwa-Nq-aaWw/hqdefault.jpg');">
+            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">45 Charles Street, Maylands</span></div>
+        </div>
+        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/_0q5iEs13Vk?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/_0q5iEs13Vk/hqdefault.jpg');">
+            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">166 Ponte Vecchio, Ellenbrook</span></div>
+        </div>
         <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-1.webp">
           <img class="gallery-image" loading="eager" fetchpriority="high" src="img/gal-day-1-thumb.webp" alt="Day Photography — Lake Coogee, WA">
           <div class="gallery-caption"><span class="gallery-tag">Day Photography</span><span class="gallery-location">Lake Coogee, WA</span></div>
@@ -921,7 +988,7 @@
       lightboxTour.innerHTML = '';
       const iframe = document.createElement('iframe');
       iframe.src = url;
-      iframe.setAttribute('allow', 'xr-spatial-tracking; gyroscope; accelerometer');
+      iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; xr-spatial-tracking; gyroscope; accelerometer');
       iframe.setAttribute('allowfullscreen', '');
       iframe.setAttribute('scrolling', 'no');
       lightboxTour.appendChild(iframe);
