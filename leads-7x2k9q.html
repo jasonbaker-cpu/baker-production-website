@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Baker Leads</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<style>
+:root{--bg:#0A0D0C;--card:#0F1413;--line:#1E2724;--txt:#DBE4DF;--mut:#8A968F;--accent:#4ADE80;--gold:#D9B45A;--amber:#E3B341;--red:#F1685C;--field:#0C100F;--mono:ui-monospace,"SF Mono",Menlo,monospace}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,"SF Pro Text","Segoe UI",Arial,sans-serif;background:radial-gradient(900px 480px at 12% -8%,rgba(74,222,128,.06),transparent 60%),var(--bg);color:var(--txt);font-size:15px;padding:0 14px 60px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto}
+a{color:inherit}
+/* header */
+header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#0A0D0C 70%,rgba(10,13,12,.85));padding:14px 0 10px;margin-bottom:6px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{font-family:var(--mono);font-weight:800;letter-spacing:2px;font-size:15px}
+.brand b{color:var(--accent)}
+.who{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px}
+.role{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.8px;border-radius:999px;padding:2px 8px;background:rgba(217,180,90,.15);color:var(--gold)}
+.role.rep{background:rgba(74,222,128,.12);color:var(--accent)}
+.lnk{font-family:var(--mono);font-size:11px;color:var(--accent);background:rgba(74,222,128,.08);border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+.lnk:hover{background:var(--accent);color:#08130C}
+.sync{font-family:var(--mono);font-size:10px;color:var(--mut);display:flex;align-items:center;gap:5px;margin-top:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--mut)}
+.dot.on{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.banner{background:rgba(227,179,65,.1);border:1px solid rgba(227,179,65,.3);color:#E9D49A;border-radius:10px;padding:8px 12px;font-size:12px;margin:6px 0}
+/* filter */
+.filter{display:flex;gap:6px;margin:10px 0 4px;flex-wrap:wrap}
+.fchip{font-family:var(--mono);font-size:11px;letter-spacing:.4px;border:1px solid var(--line);border-radius:999px;padding:6px 13px;color:var(--mut);cursor:pointer;background:transparent}
+.fchip.on{background:var(--accent);color:#08130C;border-color:var(--accent);font-weight:700}
+/* sections */
+h2{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:1.6px;color:var(--mut);margin:18px 0 8px;display:flex;align-items:center;gap:8px}
+h2 .badge{background:var(--red);color:#fff;border-radius:999px;font-size:10px;padding:1px 8px;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px;cursor:pointer;transition:border-color .1s}
+.kpi:hover{border-color:var(--accent)}
+.fuwhen{font-family:var(--mono);font-size:11px;color:var(--mut)}
+.due-toast{background:rgba(227,179,65,.12);border:1px solid rgba(227,179,65,.35);color:#E9D49A;border-radius:10px;padding:9px 12px;font-size:13px;margin:6px 0;cursor:pointer;display:none}
+.kpi .n{font-family:var(--mono);font-size:23px;font-weight:800;letter-spacing:-.5px}
+.kpi .l{font-size:10.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.6px;margin-top:1px}
+.kpi.win .n{color:var(--accent)} .kpi.due .n{color:var(--amber)}
+.split{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:8px}
+/* worklist */
+.work{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.work:last-child{border-bottom:none}
+.work .tag{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.5px;border-radius:999px;padding:3px 8px;white-space:nowrap}
+.tag.call{background:rgba(74,222,128,.12);color:var(--accent)} .tag.back{background:rgba(227,179,65,.14);color:var(--amber)} .tag.vid{background:rgba(217,180,90,.16);color:var(--gold)}
+.work .wm{flex:1;min-width:0} .work .wm .a{font-weight:600;font-size:14px} .work .wm .s{font-size:11.5px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.work .when{font-family:var(--mono);font-size:11px;color:var(--mut);white-space:nowrap}
+.work .when.over{color:var(--red);font-weight:700} .work .when.now{color:var(--amber);font-weight:700}
+.work .call-b{text-decoration:none;font-size:18px;padding:4px 6px}
+.empty{color:var(--mut);font-size:13px;padding:8px 0}
+/* lead card */
+.lead{border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:8px;background:linear-gradient(180deg,#0F1413,#0C100F)}
+.lead.over{border-color:rgba(241,104,92,.4)} .lead.now{border-color:rgba(227,179,65,.4)}
+.lead-top{display:flex;align-items:center;gap:9px}
+.av{width:26px;height:26px;border-radius:8px;font-family:var(--mono);font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.av.Jason{background:rgba(217,180,90,.18);color:var(--gold)} .av.Aayan{background:rgba(74,222,128,.14);color:var(--accent)}
+.lead-main{flex:1;min-width:0}
+.lead-main .a{font-weight:700;font-size:14.5px}
+.lead-main .a .ag{font-weight:400;color:var(--mut);font-size:12.5px}
+.lead-main .s{font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lead .call{text-decoration:none;font-size:19px;padding:2px 6px;flex:none}
+.lead .del{color:var(--red);cursor:pointer;font-weight:700;font-size:18px;padding:0 5px;flex:none;opacity:.8}
+.steps{display:flex;gap:4px;flex-wrap:wrap;margin-top:9px}
+.step{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.3px;padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mut);cursor:pointer;background:transparent;white-space:nowrap}
+.step.done{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.25);color:var(--accent)}
+.step.current{background:var(--accent);border-color:var(--accent);color:#08130C;font-weight:700}
+.step.lost{color:var(--mut)} .step.lost.current{background:var(--red);border-color:var(--red);color:#fff}
+.lead .row{display:flex;align-items:center;gap:8px;margin-top:9px;flex-wrap:wrap}
+.lead .lab{font-family:var(--mono);font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+.lead input.fu,.lead input.val{background:var(--field);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:6px 9px;font-size:13px;font-family:var(--mono)}
+.lead input.val{width:110px}
+.lead .notes{font-size:12.5px;color:var(--mut);margin-top:8px;line-height:1.4;white-space:pre-wrap}
+.ttag{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.5px;border-radius:999px;padding:3px 8px;background:rgba(217,180,90,.14);color:var(--gold);white-space:nowrap;align-self:center;flex:none}
+.acts{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.act{text-decoration:none;font-size:12px;font-family:var(--mono);border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--accent);background:rgba(74,222,128,.06)}
+.act:hover{background:var(--accent);color:#08130C}
+.lnotes{width:100%;margin-top:9px;background:var(--field);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:8px 10px;font-size:12.5px;font-family:inherit;resize:vertical;min-height:36px}
+/* add form */
+.add input,.add select,.add textarea{width:100%;background:var(--field);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:10px 12px;font-size:14px;font-family:inherit;margin-bottom:8px}
+.add .two{display:flex;gap:8px}.add .two>*{flex:1}
+.btn{background:linear-gradient(120deg,#1C6B43,#114A2E);color:#EAFBF1;border:none;border-radius:999px;padding:11px 18px;font-size:14px;font-weight:600;cursor:pointer;width:100%}
+.btn.sec{background:transparent;color:var(--accent);border:1px solid rgba(74,222,128,.4)}
+.toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.toggle .plus{font-size:20px;color:var(--accent)}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(6,9,8,.86);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal .box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;max-width:340px;width:100%;text-align:center}
+.modal h3{font-size:18px;margin-bottom:6px} .modal p{color:var(--mut);font-size:13px;margin-bottom:16px}
+.modal .pick{display:flex;gap:10px}
+.modal .pick button{flex:1;padding:16px 0;border-radius:12px;border:1px solid var(--line);background:var(--field);color:var(--txt);font-size:15px;font-weight:700;cursor:pointer}
+.modal .pick button:hover{border-color:var(--accent)}
+footer{text-align:center;color:var(--mut);font-size:10.5px;font-family:var(--mono);margin-top:24px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="bar">
+      <div class="brand">BAKER<b>·</b>LEADS</div>
+      <div class="who"><span id="meName"></span><span id="meRole" class="role"></span><span class="lnk" onclick="doSignOut()">sign out</span></div>
+    </div>
+    <div class="sync"><span class="dot" id="syncDot"></span><span id="syncTxt">starting…</span></div>
+    <div id="localBanner" class="banner" style="display:none">Running <b>local only</b> on this device — to link you &amp; Aayan, add your Firebase keys (see the setup note). Until then this device keeps its own list.</div>
+    <div class="filter" id="filter"></div>
+    <div class="due-toast" id="dueToast" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth',block:'start'})"></div>
+  </header>
+
+  <h2>Contact now <span class="badge" id="workBadge" style="display:none">0</span></h2>
+  <div class="card" id="work"></div>
+
+  <div class="kpis" id="kpis"></div>
+  <div class="split" id="split"></div>
+
+  <h2>Add a lead</h2>
+  <div class="card add">
+    <div class="toggle" onclick="toggleAdd()"><span style="font-weight:600">New agent / listing with no video</span><span class="plus" id="addPlus">+</span></div>
+    <div id="addForm" style="display:none;margin-top:12px">
+      <input id="f_agent" placeholder="Agent name *">
+      <div class="two"><input id="f_agency" placeholder="Agency"><input id="f_suburb" placeholder="Suburb"></div>
+      <input id="f_listing" placeholder="Listing address (or what it's about)">
+      <div class="two"><input id="f_phone" placeholder="Phone" inputmode="tel"><input id="f_email" placeholder="Email" inputmode="email"></div>
+      <div class="two"><select id="f_type" title="Lead type"></select><select id="f_owner"></select></div>
+      <textarea id="f_notes" rows="2" placeholder="Notes"></textarea>
+      <button class="btn" onclick="addLead()">Add lead → To Call</button>
+    </div>
+  </div>
+
+  <h2>Pipeline</h2>
+  <div class="filter" id="stageFilter"></div>
+  <div id="list"></div>
+
+  <footer>Baker Production · Free-Video Lead Tool</footer>
+</div>
+
+<div class="modal" id="signinModal" style="display:none">
+  <div class="box">
+    <h3>Baker Leads</h3>
+    <p id="signinMsg">Sign in with your Baker Production Google account to continue.</p>
+    <button class="btn" style="width:100%;padding:14px" onclick="doSignIn()">Sign in with Google</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   FIREBASE — paste your web-app config between the {} to turn
+   on live sync between you and Aayan. Leave blank = local only.
+   (Firebase console → Project settings → Your apps → Web → Config)
+   ============================================================ */
+const FIREBASE_CONFIG = {
+  apiKey:"AIzaSyC0ES1GZsgtl4_vC6Dpp-4aG-Iy4DtXlCE",
+  authDomain:"baker-leads.firebaseapp.com",
+  projectId:"baker-leads",
+  storageBucket:"baker-leads.firebasestorage.app",
+  messagingSenderId:"544396406010",
+  appId:"1:544396406010:web:9e7289e545fa0a0c8a6d43"
+};
+
+const USERS=["Jason","Aayan"], ADMIN="Jason";
+// Who can sign in, and their role. Add Aayan later: "aayan@gmail.com":{name:"Aayan",role:"rep"}
+const ALLOW={
+  "admin@bakerproduction.com":{name:"Jason",role:"admin"},
+  "jasonbaker@bakerproduction.com":{name:"Jason",role:"admin"}
+};
+let role="admin", AUTH=null;
+const LEAD_TYPES=["No-video call","Referral","Inbound / DM","Repeat client","Agency","Other"];
+const BOOK_URL="https://portal.bakerproduction.com/book";
+const STAGES=["To Call","Called","Callback","Booked","Video Sent","Won"];
+const ALL_STAGES=[...STAGES,"Lost"];
+let leads=[], me=localStorage.getItem('baker_me')||"", view="", stageView="Active", DB=null, addOpen=false;
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const today=()=>new Date().toISOString().slice(0,10);
+const addDays=n=>new Date(Date.now()+n*864e5).toISOString().slice(0,10);
+function fuLabel(d){ if(!d) return ''; const t=today(); if(d<t) return 'overdue '+Math.round((Date.parse(t)-Date.parse(d))/864e5)+'d'; if(d===t) return 'today'; const k=Math.round((Date.parse(d)-Date.parse(t))/864e5); return k===1?'tomorrow':'in '+k+'d'; }
+const isAdmin=()=>role==="admin";
+const fmt$=n=>"$"+Math.round(Number(n)||0).toLocaleString();
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+
+/* ---------- data layer (local + optional cloud) ---------- */
+const local={mode:'local',_cb:null,
+  _read(){return JSON.parse(localStorage.getItem('baker_leads')||'[]')},
+  _write(a){localStorage.setItem('baker_leads',JSON.stringify(a))},
+  subscribe(cb){this._cb=cb;cb(this._read())},
+  upsert(l){const a=this._read();const i=a.findIndex(x=>x.id===l.id);if(i>=0)a[i]=l;else a.push(l);this._write(a);this._cb&&this._cb(a)},
+  remove(id){this._write(this._read().filter(x=>x.id!==id));this._cb&&this._cb(this._read())}
+};
+async function initDB(){
+  if(FIREBASE_CONFIG&&FIREBASE_CONFIG.projectId){
+    try{
+      const {initializeApp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+      const {getFirestore,collection,onSnapshot,doc,setDoc,deleteDoc}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      const {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
+      const app=initializeApp(FIREBASE_CONFIG), fdb=getFirestore(app), col=collection(fdb,'leads'), auth=getAuth(app);
+      DB={mode:'cloud',
+        subscribe(cb){onSnapshot(col,snap=>{const a=[];snap.forEach(d=>a.push(d.data()));cb(a)},err=>console.warn('snapshot',err))},
+        upsert(l){setDoc(doc(fdb,'leads',l.id),l)},
+        remove(id){deleteDoc(doc(fdb,'leads',id))}};
+      AUTH={signIn:()=>signInWithPopup(auth,new GoogleAuthProvider()),signOut:()=>signOut(auth),onChange:cb=>onAuthStateChanged(auth,cb)};
+      return;
+    }catch(e){console.warn('Firebase failed → local',e)}
+  }
+  DB=local;
+}
+function save(l){l.updatedAt=Date.now();DB.upsert(l)}
+function removeLead(id){if(confirm('Delete this lead?'))DB.remove(id)}
+
+/* ---------- identity ---------- */
+function showSignin(show,msg){ const m=$('signinModal'); if(m){ if(msg&&$('signinMsg'))$('signinMsg').textContent=msg; m.style.display=show?'flex':'none'; } const w=document.querySelector('.wrap'); if(w) w.style.display=show?'none':'block'; }
+function doSignIn(){ if(AUTH){ if($('signinMsg'))$('signinMsg').textContent='Opening Google…'; AUTH.signIn().catch(e=>{ if($('signinMsg'))$('signinMsg').textContent='Sign-in failed: '+((e&&e.message)||e); }); } }
+function doSignOut(){ if(AUTH){ try{AUTH.signOut();}catch(e){} } setTimeout(()=>location.reload(),150); }
+function jump(s){ if(s==='due'){ const w=document.getElementById('work'); if(w) w.scrollIntoView({behavior:'smooth',block:'start'}); return; } stageView=s; render(); const el=document.getElementById('list'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
+
+/* ---------- visibility / roles ---------- */
+function scoped(){let v=leads.slice();if(!isAdmin())return v.filter(l=>l.owner===me);if(view&&view!=='Everyone')return v.filter(l=>l.owner===view);return v}
+function dueState(l){if(!l.followUp||["Won","Lost"].includes(l.stage))return"";if(l.followUp<today())return"over";if(l.followUp===today())return"now";return""}
+function needsContact(l){if(["Won","Lost"].includes(l.stage))return false;if(l.stage==="To Call")return true;if((l.stage==="Callback"||l.stage==="Video Sent")&&l.followUp&&l.followUp<=today())return true;return false}
+
+/* ---------- render ---------- */
+function render(){
+  if(!me){return}
+  $('meName').textContent=me;
+  const r=$('meRole');r.textContent=isAdmin()?'admin':'rep';r.className='role'+(isAdmin()?'':' rep');
+  // sync indicator
+  const cloud=DB&&DB.mode==='cloud';
+  $('syncDot').className='dot'+(cloud?' on':'');
+  $('syncTxt').textContent=cloud?'Synced · live':'Local only · this device';
+  $('localBanner').style.display=cloud?'none':'block';
+  // owner select in form
+  $('f_owner').innerHTML=isAdmin()?USERS.map(u=>`<option value="${u}">${u}</option>`).join(""):`<option value="${me}">${me}</option>`;
+  if($('f_type')&&!$('f_type').options.length)$('f_type').innerHTML=LEAD_TYPES.map(t=>`<option value="${t}">${t}</option>`).join("");
+  // filter (admin only)
+  $('filter').innerHTML=isAdmin()?["Everyone",...USERS].map(v=>`<span class="fchip ${view===v?'on':''}" onclick="setView('${v}')">${v==='Everyone'?'Everyone':v+"'s"}</span>`).join(""):"";
+  const data=scoped();
+  renderWork(data);renderKPIs(data);renderList(data);
+}
+function setView(v){view=v;render()}
+function setStageView(s){stageView=s;render()}
+
+function renderWork(data){
+  const items=data.filter(needsContact).sort((a,b)=>{
+    const aC=a.stage==="To Call", bC=b.stage==="To Call";
+    if(aC!==bC) return aC?1:-1;                              // to-call leads go last
+    if(aC&&bC) return (a.createdAt||0)-(b.createdAt||0);
+    return (a.followUp||"").localeCompare(b.followUp||"");   // soonest/closest callback first
+  });
+  const overdue=items.filter(l=>l.stage!=="To Call"&&dueState(l)==="over").length;
+  document.title=(overdue?`(${overdue}) `:"")+"Baker Leads";
+  const dueNow=items.filter(l=>l.stage!=="To Call"&&(dueState(l)==="over"||dueState(l)==="now")).length;
+  const dt=$('dueToast'); if(dt){ if(dueNow){ dt.style.display='block'; dt.textContent="🔔 "+dueNow+" follow-up"+(dueNow>1?"s":"")+" to do today — tap to jump"; } else dt.style.display='none'; }
+  const b=$('workBadge');if(items.length){b.style.display='inline-block';b.textContent=items.length}else b.style.display='none';
+  if(!items.length){$('work').innerHTML=`<div class="empty">Nothing waiting. Add a listing with no video and start calling.</div>`;return}
+  $('work').innerHTML=items.map(l=>{
+    let tag,when,wc="";
+    if(l.stage==="To Call"){tag='<span class="tag call">First call</span>';when="new"}
+    else if(l.stage==="Callback"){tag='<span class="tag back">Call back</span>';wc=dueState(l);when=fuLabel(l.followUp)}
+    else{tag='<span class="tag vid">Chase video</span>';wc=dueState(l);when=fuLabel(l.followUp)}
+    const phone=l.phone?`<a class="call-b" href="tel:${esc(l.phone)}">📞</a>`:"";
+    const mail=l.email?`<a class="call-b" href="${mailto(l)}">✉</a>`:"";
+    return `<div class="work">${tag}<div class="wm"><div class="a">${esc(l.agent)}</div><div class="s">${esc(l.agency||"")}${l.listing?" · "+esc(l.listing):""}</div></div><span class="when ${wc==='over'?'over':wc==='now'?'now':''}">${when}</span>${mail}${phone}</div>`;
+  }).join("");
+}
+
+function renderKPIs(data){
+  const live=data.filter(l=>!["Won","Lost"].includes(l.stage));
+  const toCall=live.filter(l=>l.stage==="To Call").length;
+  const due=live.filter(l=>(l.stage==="Callback"||l.stage==="Video Sent")&&l.followUp&&l.followUp<=today()).length;
+  const vid=live.filter(l=>l.stage==="Video Sent").length;
+  const won=data.filter(l=>l.stage==="Won");
+  const wonVal=won.reduce((s,l)=>s+(Number(l.value)||0),0);
+  $('kpis').innerHTML=`
+    <div class="kpi" onclick="jump('To Call')"><div class="n">${toCall}</div><div class="l">To call</div></div>
+    <div class="kpi due" onclick="jump('due')"><div class="n">${due}</div><div class="l">Follow-ups due</div></div>
+    <div class="kpi" onclick="jump('Video Sent')"><div class="n">${vid}</div><div class="l">Video sent</div></div>
+    <div class="kpi win" onclick="jump('Won')"><div class="n">${won.length}</div><div class="l">Won${wonVal?" · "+fmt$(wonVal):""}</div></div>`;
+  if(isAdmin()&&view==='Everyone'){
+    const by=u=>leads.filter(l=>l.owner===u&&l.stage==="Won").length;
+    $('split').textContent=`Won — Jason ${by('Jason')} · Aayan ${by('Aayan')}    ·    Open pipeline ${leads.filter(l=>!["Won","Lost"].includes(l.stage)).length}`;
+  }else $('split').textContent="";
+}
+
+function renderList(data){
+  $('stageFilter').innerHTML=["Active","All",...ALL_STAGES].map(s=>`<span class="fchip ${stageView===s?'on':''}" onclick="setStageView('${s}')">${s}</span>`).join("");
+  let rows=data.slice().sort((a,b)=>{
+    const af=(a.stage==="Callback"||a.stage==="Video Sent")&&a.followUp, bf=(b.stage==="Callback"||b.stage==="Video Sent")&&b.followUp;
+    if(af&&bf) return a.followUp.localeCompare(b.followUp);   // soonest callback first
+    if(!!af!==!!bf) return af?-1:1;                            // dated callbacks above the rest
+    return (b.updatedAt||0)-(a.updatedAt||0);
+  });
+  if(stageView==="Active")rows=rows.filter(l=>!["Won","Lost"].includes(l.stage));
+  else if(stageView!=="All")rows=rows.filter(l=>l.stage===stageView);
+  if(!rows.length){$('list').innerHTML=`<div class="empty">No leads here yet.</div>`;return}
+  $('list').innerHTML=rows.map(l=>{
+    const ds=dueState(l);
+    const ci=STAGES.indexOf(l.stage);
+    const steps=STAGES.map((s,i)=>{let c="step";if(l.stage===s)c+=" current";else if(ci>=0&&i<ci)c+=" done";return `<span class="${c}" onclick="setStage('${l.id}','${s}')">${s}</span>`}).join("")
+      +`<span class="step lost${l.stage==='Lost'?' current':''}" onclick="setStage('${l.id}','Lost')">Lost</span>`;
+    const av=`<span class="av ${l.owner}">${l.owner==='Jason'?'JB':'AY'}</span>`;
+    const tt=l.type?`<span class="ttag">${esc(l.type)}</span>`:"";
+    let extra="";
+    if(l.stage==="Callback"||l.stage==="Video Sent")
+      extra+=`<div class="row"><span class="lab">📅 ${l.stage==="Callback"?"Call back on":"Chase video on"}</span><input class="fu" type="date" value="${l.followUp||''}" onchange="setFU('${l.id}',this.value)"><span class="fuwhen">${l.followUp?fuLabel(l.followUp):'pick a date'}</span></div>`;
+    if(l.stage==="Won")
+      extra+=`<div class="row"><span class="lab">Job value</span><input class="val" type="number" inputmode="numeric" placeholder="$" value="${l.value||''}" onchange="setVal('${l.id}',this.value)"></div>`;
+    return `<div class="lead ${ds==='over'?'over':ds==='now'?'now':''}">
+      <div class="lead-top">${av}<div class="lead-main"><div class="a">${esc(l.agent)} <span class="ag">${esc(l.agency||"")}</span></div><div class="s">${esc(l.listing||l.suburb||"")}</div></div>${tt}<span class="del" onclick="removeLead('${l.id}')">×</span></div>
+      <div class="steps">${steps}</div>${extra}
+      <div class="acts">${l.phone?`<a class="act" href="tel:${esc(l.phone)}">📞 Call</a>`:""}${l.email?`<a class="act" href="${mailto(l)}">✉ Email</a>`:""}<a class="act" href="${BOOK_URL}" target="_blank" rel="noopener">📅 Book</a></div>
+      <textarea class="lnotes" placeholder="Notes…" onchange="setNotes('${l.id}',this.value)">${esc(l.notes||"")}</textarea></div>`;
+  }).join("");
+}
+
+/* ---------- actions ---------- */
+function setStage(id,s){const l=leads.find(x=>x.id===id);if(!l)return;l.stage=s;
+  if((s==="Callback"||s==="Video Sent")&&!l.followUp)l.followUp=addDays(3);
+  save(l)}
+function setFU(id,v){const l=leads.find(x=>x.id===id);if(!l)return;l.followUp=v;save(l)}
+function setVal(id,v){const l=leads.find(x=>x.id===id);if(!l)return;l.value=parseInt(v,10)||0;save(l)}
+function setNotes(id,v){const l=leads.find(x=>x.id===id);if(!l)return;l.notes=v;save(l)}
+function mailto(l){const fn=l.agent?String(l.agent).split(' ')[0]:"there";const su="Free video for "+(l.listing||"your listing");const body="Hi "+fn+",\n\nI run Baker Production — we do property video and photography for agents across Perth. I'd love to shoot a free video on one of your listings, no strings, so you can see what we do.\n\nHappy to book it in whenever suits.\n\nThanks!";return "mailto:"+encodeURIComponent(l.email||"")+"?subject="+encodeURIComponent(su)+"&body="+encodeURIComponent(body);}
+function toggleAdd(){addOpen=!addOpen;$('addForm').style.display=addOpen?'block':'none';$('addPlus').textContent=addOpen?'–':'+'}
+function addLead(){
+  const agent=$('f_agent').value.trim();if(!agent){$('f_agent').focus();return}
+  const l={id:uid(),agent,agency:$('f_agency').value.trim(),suburb:$('f_suburb').value.trim(),
+    listing:$('f_listing').value.trim(),phone:$('f_phone').value.trim(),email:$('f_email').value.trim(),
+    type:$('f_type')?$('f_type').value:LEAD_TYPES[0],owner:isAdmin()?$('f_owner').value:me,
+    stage:"To Call",followUp:"",value:0,notes:$('f_notes').value.trim(),createdAt:Date.now(),updatedAt:Date.now()};
+  save(l);
+  ['f_agent','f_agency','f_suburb','f_listing','f_phone','f_email','f_notes'].forEach(i=>$(i).value="");
+}
+
+/* ---------- boot ---------- */
+(async function(){
+  await initDB();
+  if(AUTH){
+    me=""; showSignin(true);
+    let subbed=false;
+    AUTH.onChange(user=>{
+      const email=((user&&user.email)||"").toLowerCase();
+      const who=ALLOW[email];
+      if(user&&who){
+        me=who.name; role=who.role; view=isAdmin()?'Everyone':me;
+        showSignin(false);
+        if(!subbed){ subbed=true; DB.subscribe(d=>{leads=Array.isArray(d)?d:[];render()}); }
+        render();
+      } else if(user&&!who){
+        showSignin(true,"“"+((user&&user.email)||"that account")+"” isn’t authorised yet. Ask Jason to add you.");
+        try{AUTH.signOut();}catch(e){}
+      } else {
+        me=""; showSignin(true,"Sign in with your Baker Production Google account to continue.");
+      }
+    });
+  } else {
+    me="Jason"; role="admin"; view="Everyone";
+    DB.subscribe(d=>{leads=Array.isArray(d)?d:[];render()});
+    render();
+  }
+})();
+</script>
+</body>
+</html>
