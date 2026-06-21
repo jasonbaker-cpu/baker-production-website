@@ -989,6 +989,8 @@
       .service-row.layout-65-35,
       .service-row.layout-35-65,
       .service-row.layout-50-50 { grid-template-columns: 1fr; }
+      /* Videography card holds a 16:9 video — match its ratio so it fills with no black bars */
+      .service-row.layout-35-65 { aspect-ratio: 16 / 9; }
 
       .service-image {
         aspect-ratio: unset !important;
