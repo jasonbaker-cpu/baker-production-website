@@ -82,6 +82,10 @@ h2 .badge{background:var(--red);color:#fff;border-radius:999px;font-size:10px;pa
 .act{text-decoration:none;font-size:12px;font-family:var(--mono);border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--accent);background:rgba(74,222,128,.06)}
 .act:hover{background:var(--accent);color:#08130C}
 .lnotes{width:100%;margin-top:9px;background:var(--field);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:8px 10px;font-size:12.5px;font-family:inherit;resize:vertical;min-height:36px}
+.psec{margin-bottom:4px}
+.psec-h{font-family:var(--mono);font-size:11.5px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin:18px 0 9px;display:flex;align-items:center;gap:8px}
+.psec-n{background:rgba(74,222,128,.12);color:var(--accent);border-radius:999px;font-size:10.5px;padding:1px 8px;font-weight:700}
+.psub{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--gold);margin:11px 0 6px;padding-left:8px;border-left:2px solid rgba(217,180,90,.45)}
 /* add form */
 .add input,.add select,.add textarea{width:100%;background:var(--field);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:10px 12px;font-size:14px;font-family:inherit;margin-bottom:8px}
 .add .two{display:flex;gap:8px}.add .two>*{flex:1}
@@ -217,7 +221,7 @@ function removeLead(id){if(confirm('Delete this lead?'))DB.remove(id)}
 function showSignin(show,msg){ const m=$('signinModal'); if(m){ if(msg&&$('signinMsg'))$('signinMsg').textContent=msg; m.style.display=show?'flex':'none'; } const w=document.querySelector('.wrap'); if(w) w.style.display=show?'none':'block'; }
 function doSignIn(){ if(AUTH){ if($('signinMsg'))$('signinMsg').textContent='Opening Google…'; AUTH.signIn().catch(e=>{ if($('signinMsg'))$('signinMsg').textContent='Sign-in failed: '+((e&&e.message)||e); }); } }
 function doSignOut(){ if(AUTH){ try{AUTH.signOut();}catch(e){} } setTimeout(()=>location.reload(),150); }
-function jump(s){ if(s==='due'){ const w=document.getElementById('work'); if(w) w.scrollIntoView({behavior:'smooth',block:'start'}); return; } stageView=s; render(); const el=document.getElementById('list'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
+function jump(s){ if(s==='due'){ const w=document.getElementById('work'); if(w) w.scrollIntoView({behavior:'smooth',block:'start'}); return; } if(s==='Won') stageView='All'; render(); const el=document.getElementById('list'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
 
 /* ---------- visibility / roles ---------- */
 function scoped(){let v=leads.slice();if(!isAdmin())return v.filter(l=>l.owner===me);if(view&&view!=='Everyone')return v.filter(l=>l.owner===view);return v}
@@ -287,35 +291,44 @@ function renderKPIs(data){
   }else $('split').textContent="";
 }
 
+function leadCard(l){
+  const ds=dueState(l);
+  const ci=STAGES.indexOf(l.stage);
+  const steps=STAGES.map((s,i)=>{let c="step";if(l.stage===s)c+=" current";else if(ci>=0&&i<ci)c+=" done";return `<span class="${c}" onclick="setStage('${l.id}','${s}')">${s}</span>`}).join("")
+    +`<span class="step lost${l.stage==='Lost'?' current':''}" onclick="setStage('${l.id}','Lost')">Lost</span>`;
+  const av=`<span class="av ${l.owner}">${l.owner==='Jason'?'JB':'AY'}</span>`;
+  const tt=l.type?`<span class="ttag">${esc(l.type)}</span>`:"";
+  let extra="";
+  if(l.stage==="Callback")
+    extra+=`<div class="row"><span class="lab">📅 Call back on</span><input class="fu" type="date" value="${l.followUp||''}" onchange="setFU('${l.id}',this.value)"><span class="fuwhen">${l.followUp?fuLabel(l.followUp):'pick a date'}</span></div>`;
+  if(l.stage==="Video Sent"){
+    const n=l.followCount||0;
+    extra+=`<div class="row"><span class="lab">📤 ${n?('Chased '+n+'× · next'):'Chase on'}</span><input class="fu" type="date" value="${l.followUp||''}" onchange="setFU('${l.id}',this.value)"><span class="fuwhen">${l.followUp?fuLabel(l.followUp):'pick a date'}</span><button class="act" style="margin-left:auto" onclick="loggedFollowUp('${l.id}')">✓ Followed up</button></div>`;
+  }
+  if(l.stage==="Won")
+    extra+=`<div class="row"><span class="lab">Job value</span><input class="val" type="number" inputmode="numeric" placeholder="$" value="${l.value||''}" onchange="setVal('${l.id}',this.value)"></div>`;
+  return `<div class="lead ${ds==='over'?'over':ds==='now'?'now':''}">
+    <div class="lead-top">${av}<div class="lead-main"><div class="a">${esc(l.agent)} <span class="ag">${esc(l.agency||"")}</span></div><div class="s">${esc(l.listing||l.suburb||"")}</div></div>${tt}<span class="del" onclick="removeLead('${l.id}')">×</span></div>
+    <div class="steps">${steps}</div>${extra}
+    <div class="acts">${l.phone?`<a class="act" href="tel:${esc(l.phone)}">📞 Call</a>`:""}${l.email?`<a class="act" href="${mailto(l)}">✉ Email</a>`:""}<a class="act" href="${BOOK_URL}" target="_blank" rel="noopener">📅 Book</a></div>
+    <textarea class="lnotes" placeholder="Notes…" onchange="setNotes('${l.id}',this.value)">${esc(l.notes||"")}</textarea></div>`;
+}
+function loggedFollowUp(id){const l=leads.find(x=>x.id===id);if(!l)return;l.followCount=(l.followCount||0)+1;l.followUp=addDays(3);save(l)}
+const bySoon=(a,b)=>(a.followUp||"9999").localeCompare(b.followUp||"9999");
 function renderList(data){
-  $('stageFilter').innerHTML=["Active","All",...ALL_STAGES].map(s=>`<span class="fchip ${stageView===s?'on':''}" onclick="setStageView('${s}')">${s}</span>`).join("");
-  let rows=data.slice().sort((a,b)=>{
-    const af=(a.stage==="Callback"||a.stage==="Video Sent")&&a.followUp, bf=(b.stage==="Callback"||b.stage==="Video Sent")&&b.followUp;
-    if(af&&bf) return a.followUp.localeCompare(b.followUp);   // soonest callback first
-    if(!!af!==!!bf) return af?-1:1;                            // dated callbacks above the rest
-    return (b.updatedAt||0)-(a.updatedAt||0);
-  });
-  if(stageView==="Active")rows=rows.filter(l=>!["Won","Lost"].includes(l.stage));
-  else if(stageView!=="All")rows=rows.filter(l=>l.stage===stageView);
-  if(!rows.length){$('list').innerHTML=`<div class="empty">No leads here yet.</div>`;return}
-  $('list').innerHTML=rows.map(l=>{
-    const ds=dueState(l);
-    const ci=STAGES.indexOf(l.stage);
-    const steps=STAGES.map((s,i)=>{let c="step";if(l.stage===s)c+=" current";else if(ci>=0&&i<ci)c+=" done";return `<span class="${c}" onclick="setStage('${l.id}','${s}')">${s}</span>`}).join("")
-      +`<span class="step lost${l.stage==='Lost'?' current':''}" onclick="setStage('${l.id}','Lost')">Lost</span>`;
-    const av=`<span class="av ${l.owner}">${l.owner==='Jason'?'JB':'AY'}</span>`;
-    const tt=l.type?`<span class="ttag">${esc(l.type)}</span>`:"";
-    let extra="";
-    if(l.stage==="Callback"||l.stage==="Video Sent")
-      extra+=`<div class="row"><span class="lab">📅 ${l.stage==="Callback"?"Call back on":"Chase video on"}</span><input class="fu" type="date" value="${l.followUp||''}" onchange="setFU('${l.id}',this.value)"><span class="fuwhen">${l.followUp?fuLabel(l.followUp):'pick a date'}</span></div>`;
-    if(l.stage==="Won")
-      extra+=`<div class="row"><span class="lab">Job value</span><input class="val" type="number" inputmode="numeric" placeholder="$" value="${l.value||''}" onchange="setVal('${l.id}',this.value)"></div>`;
-    return `<div class="lead ${ds==='over'?'over':ds==='now'?'now':''}">
-      <div class="lead-top">${av}<div class="lead-main"><div class="a">${esc(l.agent)} <span class="ag">${esc(l.agency||"")}</span></div><div class="s">${esc(l.listing||l.suburb||"")}</div></div>${tt}<span class="del" onclick="removeLead('${l.id}')">×</span></div>
-      <div class="steps">${steps}</div>${extra}
-      <div class="acts">${l.phone?`<a class="act" href="tel:${esc(l.phone)}">📞 Call</a>`:""}${l.email?`<a class="act" href="${mailto(l)}">✉ Email</a>`:""}<a class="act" href="${BOOK_URL}" target="_blank" rel="noopener">📅 Book</a></div>
-      <textarea class="lnotes" placeholder="Notes…" onchange="setNotes('${l.id}',this.value)">${esc(l.notes||"")}</textarea></div>`;
-  }).join("");
+  $('stageFilter').innerHTML=["Active","All"].map(s=>`<span class="fchip ${stageView===s?'on':''}" onclick="setStageView('${s}')">${s}</span>`).join("");
+  const at=s=>data.filter(l=>l.stage===s);
+  const sec=(title,arr,inner)=>arr.length?`<div class="psec"><div class="psec-h">${title}<span class="psec-n">${arr.length}</span></div>${inner||arr.map(leadCard).join("")}</div>`:"";
+  const toCall=at("To Call");
+  const byType=LEAD_TYPES.map(t=>{const g=toCall.filter(l=>(l.type||"No-video call")===t);return g.length?`<div class="psub">${esc(t)}</div>`+g.map(leadCard).join(""):""}).join("");
+  let html="";
+  html+=sec("📞 To call",toCall,byType);
+  html+=sec("✅ Called",at("Called"));
+  html+=sec("📅 Callback",at("Callback").sort(bySoon));
+  html+=sec("🎬 Booked",at("Booked"));
+  html+=sec("📤 Video sent — follow-ups",at("Video Sent").sort(bySoon));
+  if(stageView==="All"){ html+=sec("🏆 Won",at("Won")); html+=sec("✖ Lost",at("Lost")); }
+  $('list').innerHTML=html||`<div class="empty">No leads yet — add one above.</div>`;
 }
 
 /* ---------- actions ---------- */
