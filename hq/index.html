@@ -27,7 +27,7 @@ header h1{font-size:15px;margin:0;letter-spacing:3px;font-weight:700;flex:1}
 header h1 span{color:var(--gold)}
 .sync{font-size:11px;color:#a9a49a}
 .iconbtn{background:#3a3a3a;color:#f5f3ee;border:none;border-radius:8px;padding:7px 11px;font:inherit;font-size:13px;cursor:pointer}
-main{padding:13px 13px 24px;max-width:780px;margin:0 auto}
+main{padding:12px 11px 28px;max-width:780px;margin:0 auto}
 h2{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--mut);margin:22px 0 9px;font-weight:600}
 h2:first-child{margin-top:2px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px 15px;margin-bottom:10px}
@@ -39,7 +39,7 @@ h2:first-child{margin-top:2px}
 .sub{color:var(--mut);font-size:13px;margin:3px 0 0}
 .time{color:var(--gold-d);font-weight:700;white-space:nowrap}
 .stats{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:4px}
-.stat{flex:1;min-width:86px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+.stat{flex:1 1 44%;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 12px}
 .stat b{display:block;font-size:22px;font-weight:700;line-height:1.1}
 .stat span{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
 .stat.gold b{color:var(--gold-d)}
@@ -49,18 +49,18 @@ h2:first-child{margin-top:2px}
 .pill.warn{background:#fbf3dd;color:var(--gold-d);border-color:#eddfb4}
 .pill.ok{background:#eaf2e4;color:var(--ok);border-color:#cfe1c4}
 .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
-a.act,button.act{min-height:42px;line-height:26px;padding:7px 13px;border-radius:9px;text-decoration:none;
+a.act,button.act{min-height:44px;line-height:26px;padding:7px 13px;border-radius:9px;text-decoration:none;
   font:inherit;font-size:14px;font-weight:600;background:var(--panel2);color:var(--ink);
   border:1px solid var(--line);display:inline-block;cursor:pointer}
 a.act.call{background:var(--gold);color:#fff;border-color:var(--gold)}
 button.act.good{background:var(--ok);color:#fff;border-color:var(--ok)}
 button.act.mid{background:var(--warn);color:#fff;border-color:var(--warn)}
-input,textarea,select{font:inherit;background:var(--panel);color:var(--ink);border:1px solid var(--line);
+input,textarea,select{font:inherit;font-size:16px;background:var(--panel);color:var(--ink);border:1px solid var(--line);
   border-radius:10px;padding:11px 12px;width:100%}
 textarea{min-height:92px;resize:vertical}
 nav{position:sticky;top:0;z-index:19;display:flex;gap:6px;background:var(--bg);
   border-bottom:1px solid var(--line);padding:8px 10px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-nav button{flex:1;min-width:74px;background:var(--panel);border:1px solid var(--line);border-radius:10px;
+nav button{flex:1 0 auto;min-width:66px;background:var(--panel);border:1px solid var(--line);border-radius:10px;
   color:var(--mut);padding:8px 6px;font:inherit;font-size:10.5px;letter-spacing:.05em;
   text-transform:uppercase;cursor:pointer;white-space:nowrap}
 nav button.on{color:#fff;background:var(--gold);border-color:var(--gold)}
@@ -93,7 +93,8 @@ details.card[open] summary::before{content:"▾ "}
 .scr{margin:11px 0 0;padding-left:12px;border-left:2px solid var(--gold);font-size:15.5px}
 .obj{margin:12px 0 0;font-size:14.5px}
 .obj b{color:var(--hot)}
-.inline{display:flex;gap:8px}
+.inline{display:flex;gap:8px;flex-wrap:wrap}
+.inline input{min-width:140px}
 .inline input{flex:1}
 </style>
 </head>
@@ -101,7 +102,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.2</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.3</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -874,22 +875,24 @@ async function ensureToken(){
 async function doSignIn(){
   if("Notification" in window && Notification.permission==="default"){ try{Notification.requestPermission();}catch(e){} }
   $("#gateNote").textContent="Opening Google…";
+  // popup first — works on iOS/Safari where redirect is blocked by storage partitioning
   try{
-    await signInWithRedirect(auth,provider);   // full-page redirect: never blocked
+    const res=await signInWithPopup(auth,provider);
+    saveTok(GoogleAuthProvider.credentialFromResult(res)?.accessToken);
+    $("#gateNote").textContent="";
     return true;
   }catch(e){
-    try{
-      const res=await signInWithPopup(auth,provider);
-      saveTok(GoogleAuthProvider.credentialFromResult(res)?.accessToken);
-      return true;
-    }catch(e2){
-      const m=(e2&&e2.message)||(e&&e.message)||"unknown error";
-      $("#gateNote").textContent="Sign-in failed: "+m;
-      showErr("Sign-in failed: "+m);
-      return false;
+    const code=e.code||"";
+    if(/popup-blocked|popup-closed-by-user|cancelled-popup-request|operation-not-supported/.test(code)){
+      try{ await signInWithRedirect(auth,provider); return true; }
+      catch(e2){ $("#gateNote").textContent="Sign-in failed: "+(e2.message||code); showErr("Sign-in failed: "+(e2.message||code)); return false; }
     }
+    $("#gateNote").textContent="Sign-in failed: "+(e.message||code);
+    showErr("Sign-in failed: "+(e.message||code));
+    return false;
   }
 }
+
 function connectPrompt(msg){
   const e=$("#err"); e.classList.remove("hide");
   e.innerHTML = '<div style="margin-bottom:8px">'+esc(msg)+'</div><button class="act" id="connectBtn">Connect calendar</button>';
