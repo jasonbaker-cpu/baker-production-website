@@ -122,6 +122,14 @@ nav button b{display:block;font-size:17px;margin-bottom:2px}
       <div id="todayList"></div>
       <h2>Tomorrow</h2>
       <div id="tmwList"></div>
+      <h2>To-dos today</h2>
+      <div class="card">
+        <div class="inline" style="margin-bottom:8px">
+          <input id="todoIn2" placeholder="Add a to-do…">
+          <button class="act" id="todoAdd2">+</button>
+        </div>
+        <div id="todoList2"></div>
+      </div>
       <h2>Quick launch</h2>
       <div class="qlaunch">
         <a href="https://mail.google.com" target="_blank" rel="noopener">Gmail</a>
@@ -151,6 +159,15 @@ nav button b{display:block;font-size:17px;margin-bottom:2px}
       <div id="callLog" class="card"></div>
     </section>
 
+    <section id="tab-week" class="hide">
+      <h2>Next 7 days</h2>
+      <p class="note" style="margin:0 0 10px">Jobs from the master calendar plus everything in your own diary.</p>
+      <div id="weekList"></div>
+      <div class="qlaunch" style="margin-top:14px">
+        <a href="https://calendar.google.com/calendar/u/0/r/week" target="_blank" rel="noopener">Open Google Calendar</a>
+      </div>
+    </section>
+
     <section id="tab-notes" class="hide">
       <h2>To-dos</h2>
       <div class="card">
@@ -171,6 +188,7 @@ nav button b{display:block;font-size:17px;margin-bottom:2px}
 
 <nav id="nav" class="hide">
   <button data-tab="today" class="on"><b>◎</b>Today</button>
+  <button data-tab="week"><b>▤</b>Week</button>
   <button data-tab="accounts"><b>☰</b>Accounts</button>
   <button data-tab="calls"><b>✆</b>Calls</button>
   <button data-tab="notes"><b>✎</b>Notes</button>
@@ -178,7 +196,7 @@ nav button b{display:block;font-size:17px;margin-bottom:2px}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut }
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, addDoc, doc, setDoc, getDoc, query, orderBy, limit, getDocs, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -192,7 +210,8 @@ const firebaseConfig = {
   appId: "1:544396406010:web:9e7289e545fa0a0c8a6d43"
 };
 
-const JOB_CALENDAR = "admin@bakerproduction.com";      // master calendar (NOT jasonbaker@)
+const JOB_CALENDAR = "admin@bakerproduction.com";
+const MY_CALENDAR  = "jasonbaker@bakerproduction.com";   // Jason's own diary      // master calendar (NOT jasonbaker@)
 const ALLOW = { "admin@bakerproduction.com":"Jason", "jasonbaker@bakerproduction.com":"Jason" };
 const LOOKBACK_DAYS = 200, QUIET_MULT = 3, QUIET_MIN = 21;
 const PRICES = { rental:159, essential:299, sales:189, premium:375, social:439, signature:750, elite:1299,
@@ -202,7 +221,7 @@ const DEFAULT_VALUE = 310;
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
-let TOKEN=null, ME=null, JOBS=[], ACCTS=[], CALLS=[], TAB="today";
+let TOKEN=null, ME=null, JOBS=[], ACCTS=[], CALLS=[], DIARY=[], TAB="today";
 
 const $=s=>document.querySelector(s);
 const el=h=>{const d=document.createElement("div");d.innerHTML=h.trim();return d.firstElementChild;};
@@ -246,6 +265,35 @@ function parseEv(ev){
     when:new Date(start), allDay:!ev.start?.dateTime };
 }
 
+async function fetchCal(calId, timeMin, timeMax){
+  let pageToken=null, items=[];
+  do{
+    const u=new URL(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId)}/events`);
+    u.searchParams.set("timeMin",timeMin); u.searchParams.set("timeMax",timeMax);
+    u.searchParams.set("singleEvents","true"); u.searchParams.set("orderBy","startTime");
+    u.searchParams.set("maxResults","2500"); if(pageToken)u.searchParams.set("pageToken",pageToken);
+    const r=await fetch(u,{headers:{Authorization:"Bearer "+TOKEN}});
+    if(r.status===401||r.status===403){TOKEN=null;localStorage.removeItem("hq_tok");
+      throw new Error("Calendar access expired — reconnect below.");}
+    if(!r.ok) throw new Error("Calendar error "+r.status);
+    const j=await r.json(); items=items.concat(j.items||[]); pageToken=j.nextPageToken;
+  }while(pageToken);
+  return items;
+}
+
+async function fetchDiary(){
+  try{
+    const items = await fetchCal(MY_CALENDAR, new Date().toISOString(),
+                                 new Date(Date.now()+14*DAY).toISOString());
+    DIARY = items.filter(e=>e.status!=="cancelled").map(e=>({
+      title: e.summary||"(no title)",
+      when: new Date(e.start?.dateTime||e.start?.date),
+      allDay: !e.start?.dateTime,
+      where: e.location||""
+    })).sort((a,b)=>a.when-b.when);
+  }catch(e){ DIARY=[]; }
+}
+
 async function fetchJobs(){
   const timeMin=new Date(Date.now()-LOOKBACK_DAYS*DAY).toISOString();
   const timeMax=new Date(Date.now()+60*DAY).toISOString();
@@ -256,7 +304,7 @@ async function fetchJobs(){
     u.searchParams.set("singleEvents","true"); u.searchParams.set("orderBy","startTime");
     u.searchParams.set("maxResults","2500"); if(pageToken)u.searchParams.set("pageToken",pageToken);
     const r=await fetch(u,{headers:{Authorization:"Bearer "+TOKEN}});
-    if(r.status===401||r.status===403){TOKEN=null;sessionStorage.removeItem("hq_tok");
+    if(r.status===401||r.status===403){TOKEN=null;localStorage.removeItem("hq_tok");
       throw new Error("Calendar access expired — tap ↻ to reconnect.");}
     if(!r.ok) throw new Error("Calendar error "+r.status);
     const j=await r.json(); items=items.concat(j.items||[]); pageToken=j.nextPageToken;
@@ -266,6 +314,7 @@ async function fetchJobs(){
   try{localStorage.setItem("hq_cache",JSON.stringify({t:Date.now(),
     jobs:JOBS.map(j=>({...j,when:j.when.toISOString()}))}));}catch(e){}
   $("#sync").textContent="synced "+fmtT(new Date());
+  await fetchDiary();
 }
 function loadCache(){
   try{const c=JSON.parse(localStorage.getItem("hq_cache")||"null"); if(!c)return false;
@@ -380,6 +429,28 @@ function renderQueue(){
   });
 }
 
+function renderWeek(){
+  const c=$("#weekList"); c.innerHTML="";
+  const now=new Date();
+  for(let d=0; d<7; d++){
+    const day=new Date(+sod(now)+d*DAY);
+    const jobs=JOBS.filter(j=>dbet(j.when,day)===0);
+    const mine=DIARY.filter(e=>dbet(e.when,day)===0);
+    if(!jobs.length && !mine.length && d>0) continue;
+    const label = d===0?"Today":d===1?"Tomorrow":day.toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"short"});
+    const rows = [
+      ...jobs.map(j=>({t:j.allDay?"all day":fmtT(j.when), x:j.address||j.title, s:(j.agent||"")+(j.agency?" · "+j.agency:""), job:true, when:j.when})),
+      ...mine.map(e=>({t:e.allDay?"all day":fmtT(e.when), x:e.title, s:e.where||"diary", job:false, when:e.when}))
+    ].sort((a,b)=>a.when-b.when);
+    const inner = rows.length
+      ? rows.map(r=>`<div class="logline"><b>${esc(r.t)}</b> &nbsp;${esc(r.x)}${r.job?' <span class="pill ok">job</span>':''}<em>${esc(r.s)}</em></div>`).join("")
+      : `<p class="note" style="margin:0">Nothing booked.</p>`;
+    c.appendChild(el(`<div class="card ${d===0?"ok":""}"><p class="ttl">${esc(label)} <span class="pill">${jobs.length} job${jobs.length===1?"":"s"}</span></p>
+      <div style="margin-top:8px">${inner}</div></div>`));
+  }
+  if(!c.children.length) c.appendChild(el(`<p class="empty">Nothing on the book yet.</p>`));
+}
+
 /* ── calls + callbacks ── */
 async function handleOutcome(a,outcome,card){
   let cbAt=null;
@@ -464,25 +535,34 @@ $("#notes").addEventListener("input",()=>{clearTimeout(noteTimer);$("#noteSaved"
 let TODOS=[];
 function renderTodos(list){
   TODOS=list||TODOS;
-  const c=$("#todoList"); c.innerHTML="";
-  if(!TODOS.length){c.innerHTML=`<p class="note">Nothing on the list.</p>`;return;}
-  TODOS.forEach((t,i)=>{
-    const r=el(`<div class="todo"><input type="checkbox" ${t.done?"checked":""}>
-      <span class="${t.done?"done":""}">${esc(t.text)}</span><button>×</button></div>`);
-    r.querySelector("input").onchange=e=>{TODOS[i].done=e.target.checked;renderTodos();saveNotes({todos:TODOS});};
-    r.querySelector("button").onclick=()=>{TODOS.splice(i,1);renderTodos();saveNotes({todos:TODOS});};
-    c.appendChild(r);
+  ["#todoList","#todoList2"].forEach(sel=>{
+    const c=$(sel); if(!c) return; c.innerHTML="";
+    const open=TODOS.filter(t=>!t.done).length;
+    if(!TODOS.length){c.innerHTML=`<p class="note">Nothing on the list.</p>`;return;}
+    TODOS.forEach((t,i)=>{
+      const r=el(`<div class="todo"><input type="checkbox" ${t.done?"checked":""}>
+        <span class="${t.done?"done":""}">${esc(t.text)}</span><button>×</button></div>`);
+      r.querySelector("input").onchange=e=>{TODOS[i].done=e.target.checked;renderTodos();saveNotes({todos:TODOS});};
+      r.querySelector("button").onclick=()=>{TODOS.splice(i,1);renderTodos();saveNotes({todos:TODOS});};
+      c.appendChild(r);
+    });
   });
 }
-$("#todoAdd").onclick=()=>{const v=$("#todoIn").value.trim(); if(!v)return;
-  TODOS.push({text:v,done:false}); $("#todoIn").value=""; renderTodos(); saveNotes({todos:TODOS});};
-$("#todoIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("#todoAdd").click();});
+function addTodo(inputSel){
+  const inp=$(inputSel); const v=(inp.value||"").trim(); if(!v) return;
+  TODOS.push({text:v,done:false}); inp.value=""; renderTodos(); saveNotes({todos:TODOS});
+}
+$("#todoAdd").onclick=()=>addTodo("#todoIn");
+$("#todoIn").addEventListener("keydown",e=>{if(e.key==="Enter")addTodo("#todoIn");});
+$("#todoAdd2").onclick=()=>addTodo("#todoIn2");
+$("#todoIn2").addEventListener("keydown",e=>{if(e.key==="Enter")addTodo("#todoIn2");});
 
 /* ── tabs ── */
 document.querySelectorAll("nav button").forEach(b=>{
   b.onclick=()=>{TAB=b.dataset.tab;
     document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
-    ["today","accounts","calls","notes"].forEach(t=>$("#tab-"+t).classList.toggle("hide",t!==TAB));
+    ["today","week","accounts","calls","notes"].forEach(t=>$("#tab-"+t).classList.toggle("hide",t!==TAB));
+    if(TAB==="week") renderWeek();
     if(TAB==="accounts")renderAccounts();
     if(TAB==="calls"){renderQueue();loadCalls();}
     if(TAB==="notes")loadNotes();
@@ -498,23 +578,53 @@ document.addEventListener("click",e=>{
 const provider=new GoogleAuthProvider();
 provider.addScope("https://www.googleapis.com/auth/calendar.readonly");
 provider.setCustomParameters({prompt:"consent"});
+function saveTok(t){
+  TOKEN=t||null;
+  if(t){ try{ localStorage.setItem("hq_tok",JSON.stringify({t, exp:Date.now()+50*60000})); }catch(e){} }
+}
+function loadTok(){
+  try{ const v=JSON.parse(localStorage.getItem("hq_tok")||"null");
+       if(v && v.exp>Date.now()) return v.t; }catch(e){}
+  return null;
+}
 async function doSignIn(){
+  if("Notification" in window && Notification.permission==="default"){ try{Notification.requestPermission();}catch(e){} }
   try{
     const res=await signInWithPopup(auth,provider);
-    const cred=GoogleAuthProvider.credentialFromResult(res);
-    TOKEN=cred?.accessToken||null;
-    if(TOKEN) sessionStorage.setItem("hq_tok",TOKEN);
-    if("Notification" in window && Notification.permission==="default") Notification.requestPermission();
-  }catch(e){ $("#gateNote").textContent=e.message; }
+    saveTok(GoogleAuthProvider.credentialFromResult(res)?.accessToken);
+    return true;
+  }catch(e){
+    const code=e.code||"";
+    if(/popup-blocked|popup-closed|cancelled-popup|operation-not-supported/.test(code)){
+      try{ await signInWithRedirect(auth,provider); return true; }
+      catch(e2){ $("#gateNote").textContent=e2.message; showErr("Sign-in failed: "+e2.message); return false; }
+    }
+    $("#gateNote").textContent=e.message; showErr("Sign-in failed: "+e.message); return false;
+  }
+}
+function connectPrompt(msg){
+  const e=$("#err"); e.classList.remove("hide");
+  e.innerHTML = esc(msg)+' <button class="act" id="connectBtn" style="margin-left:8px">Connect calendar</button>';
+  $("#connectBtn").onclick = async ()=>{
+    e.textContent="connecting…";
+    const ok=await doSignIn();
+    if(ok && TOKEN){ try{ await fetchJobs(); renderAll(); clearErr(); }catch(err){ showErr(err.message); } }
+  };
 }
 $("#signin").onclick=doSignIn;
-$("#signout").onclick=()=>{sessionStorage.removeItem("hq_tok");signOut(auth);};
+$("#signout").onclick=()=>{localStorage.removeItem("hq_tok");signOut(auth);};
 $("#refresh").onclick=async()=>{
-  if(!TOKEN){await doSignIn();}
+  if(!TOKEN){ const ok=await doSignIn(); if(!ok||!TOKEN){ connectPrompt("Calendar not connected."); return; } }
   $("#sync").textContent="syncing…";
-  try{clearErr();await fetchJobs();renderAll();}catch(e){showErr(e.message);}
+  try{clearErr();await fetchJobs();renderAll();}
+  catch(e){ if(/expired|401|403/.test(e.message)) connectPrompt(e.message); else showErr(e.message); }
 };
-function renderAll(){renderToday();renderAccounts();renderQueue();}
+function renderAll(){renderToday();renderAccounts();renderQueue();renderWeek();}
+
+try{
+  const rr = await getRedirectResult(auth);
+  if(rr) saveTok(GoogleAuthProvider.credentialFromResult(rr)?.accessToken);
+}catch(e){}
 
 onAuthStateChanged(auth,async user=>{
   if(!user){$("#gate").classList.remove("hide");$("#app").classList.add("hide");
@@ -524,11 +634,14 @@ onAuthStateChanged(auth,async user=>{
   ME={email,name:ALLOW[email]};
   $("#gate").classList.add("hide");$("#app").classList.remove("hide");
   $("#nav").classList.remove("hide");$("#signout").classList.remove("hide");
-  TOKEN=TOKEN||sessionStorage.getItem("hq_tok")||null;
+  TOKEN = TOKEN || loadTok();
   const cached=loadCache(); if(cached) renderAll();
-  if(TOKEN){ try{$("#sync").textContent="syncing…";await fetchJobs();renderAll();clearErr();}
-             catch(e){showErr(e.message);} }
-  else if(!cached){ showErr("Tap ↻ to connect the calendar."); }
+  if(TOKEN){
+    try{ $("#sync").textContent="syncing…"; await fetchJobs(); renderAll(); clearErr(); }
+    catch(e){ if(/expired|401|403/.test(e.message)) connectPrompt("Calendar access expired."); else showErr(e.message); }
+  } else {
+    connectPrompt("Calendar not connected yet.");
+  }
   loadCalls(); loadNotes();
 });
 
