@@ -101,7 +101,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.0</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.1</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -645,15 +645,18 @@ function renderManual(){
 async function handleOutcome(a,outcome,card){
   let cbAt=null;
   if(outcome==="Callback"){
-    const days=prompt("Call back in how many days?","7");
-    if(days===null) return;
-    const n=parseInt(days,10); if(isNaN(n)) return;
-    cbAt=new Date(+sod(new Date())+n*DAY+9*3600000);   // 9am that day
+    const def=new Date(+sod(new Date())+7*DAY);
+    const defStr=new Date(def.getTime()-def.getTimezoneOffset()*60000).toISOString().slice(0,10);
+    const d=prompt("Call back on which date? (YYYY-MM-DD)", defStr);
+    if(d===null) return;
+    const parsed=new Date(d+"T09:00:00");
+    if(isNaN(parsed)) return;
+    cbAt=parsed;
   }
   try{
     await addDoc(collection(db,"calls"),{
       name:a.name, agency:a.agency||"", email:a.email||"", phone:a.phone||"",
-      outcome, by:ME.name, at:serverTimestamp(), source:"hq2",
+      outcome, note:"", by:ME.name, at:serverTimestamp(), source:"hq2",
       quietDays:a.quiet??null, jobs:a.jobs??null,
       cbAt: cbAt||null, done:false
     });
@@ -670,34 +673,85 @@ async function loadCalls(){
     renderCalls(); renderDue();
   }catch(e){ /* rules may block until published */ }
 }
-function callLine(v){
-  return `<div class="logline"><b>${esc(v.name||"")}</b> — ${esc(v.outcome||"")}
-    <em>${esc(v.agency||"")}${v.at?" · "+fmtD(v.at)+" "+fmtT(v.at):""}</em></div>`;
+function callCard(v){
+  const t=tel(v.phone);
+  const cb = v.cbAt ? new Date(v.cbAt) : null;
+  const cbVal = cb ? new Date(cb.getTime()-cb.getTimezoneOffset()*60000).toISOString().slice(0,10) : "";
+  const when = v.at ? fmtD(v.at)+" "+fmtT(v.at) : "";
+  const card = el(`<div class="card ${v.done?"":(cb&&cb<=new Date()?"hot":"")}">
+    <div class="row"><div>
+      <p class="ttl">${esc(v.name||"")} ${v.done?'<span class="pill ok">done</span>':''}</p>
+      <p class="sub">${esc(v.agency||"")}${when?" · "+when:""}${v.by?" · "+esc(v.by):""}</p>
+    </div></div>
+    <div class="acts" style="margin-top:9px">
+      ${t?`<a class="act call" href="tel:${t}">Call ${pretty(v.phone)}</a>`:""}
+      <button class="act" data-edit="1">${v.note||v.cbAt?"Edit":"Add note"}</button>
+      ${v.cbAt&&!v.done?`<button class="act good" data-done="1">Mark done</button>`:""}
+    </div>
+    ${v.note?`<p class="sub" style="margin-top:9px">"${esc(v.note)}"</p>`:""}
+    ${cb&&!v.done?`<p class="sub">Call back: <b>${fmtD(cb)}</b></p>`:""}
+    <div class="edit hide" style="margin-top:11px">
+      <select class="outSel" style="margin-bottom:8px">
+        ${["Called","Booked","Callback","No answer","Not now","Dead"].map(o=>
+          `<option ${o===v.outcome?"selected":""}>${o}</option>`).join("")}
+      </select>
+      <textarea class="noteBox" placeholder="What was said…" style="min-height:70px">${esc(v.note||"")}</textarea>
+      <p class="note" style="margin:8px 0 4px">Next call back on</p>
+      <input type="date" class="cbBox" value="${cbVal}">
+      <div class="acts">
+        <button class="act good" data-save="1">Save</button>
+        <button class="act" data-cancel="1">Cancel</button>
+      </div>
+    </div>
+  </div>`);
+  const ed = card.querySelector(".edit");
+  card.querySelector("button[data-edit]").onclick = ()=> ed.classList.toggle("hide");
+  const doneBtn = card.querySelector("button[data-done]");
+  if(doneBtn) doneBtn.onclick = ()=> updateCall(v.id,{done:true});
+  card.querySelector("button[data-cancel]").onclick = ()=> ed.classList.add("hide");
+  card.querySelector("button[data-save]").onclick = ()=>{
+    const outcome = card.querySelector(".outSel").value;
+    const note    = card.querySelector(".noteBox").value.trim();
+    const d       = card.querySelector(".cbBox").value;
+    updateCall(v.id, {
+      outcome, note,
+      cbAt: d ? new Date(d+"T09:00:00") : null,
+      done: d ? false : (v.done||false)
+    });
+    ed.classList.add("hide");
+  };
+  return card;
 }
+
+async function updateCall(id, patch){
+  try{
+    await setDoc(doc(db,"calls",id), {...patch, editedAt:serverTimestamp()}, {merge:true});
+    noteStatus("call updated "+fmtT(new Date()));
+  }catch(e){ noteStatus("couldn't update that call — "+(e.code||e.message)); }
+}
+
 function renderCalls(){
   const today=CALLS.filter(v=>v.at&&dbet(v.at,new Date())===0);
-  $("#callLog").innerHTML = today.length?today.map(callLine).join(""):`<p class="empty" style="padding:10px">Nothing logged today.</p>`;
-  $("#allLog").innerHTML  = CALLS.length?CALLS.slice(0,30).map(callLine).join(""):`<p class="empty" style="padding:10px">No calls logged yet.</p>`;
+  const tl=$("#callLog");
+  if(tl){ tl.innerHTML=""; tl.className="";
+    today.length ? today.forEach(v=>tl.appendChild(callCard(v)))
+                 : tl.appendChild(el(`<p class="empty">Nothing logged today.</p>`)); }
+  const al=$("#allLog");
+  if(al){ al.innerHTML=""; al.className="";
+    CALLS.length ? CALLS.slice(0,30).forEach(v=>al.appendChild(callCard(v)))
+                 : al.appendChild(el(`<p class="empty">No calls logged yet.</p>`)); }
   const cbs=CALLS.filter(v=>v.cbAt&&!v.done).sort((a,b)=>a.cbAt-b.cbAt);
-  const c=$("#cbList"); c.innerHTML="";
-  cbs.length?cbs.forEach(v=>{
-    const t=tel(v.phone); const overdue=v.cbAt<=new Date();
-    c.appendChild(el(`<div class="card ${overdue?"hot":""}"><div class="row"><div>
-      <p class="ttl">${esc(v.name)}</p><p class="sub">${esc(v.agency||"")} · callback ${fmtD(v.cbAt)}</p></div>
-      <span class="time">${overdue?"due":fmtD(v.cbAt)}</span></div>
-      <div class="acts">${t?`<a class="act call" href="tel:${t}">Call ${pretty(v.phone)}</a>`:""}</div></div>`));
-  }):c.appendChild(el(`<p class="empty">No callbacks booked.</p>`));
+  const c=$("#cbList");
+  if(c){ c.innerHTML="";
+    cbs.length ? cbs.forEach(v=>c.appendChild(callCard(v)))
+               : c.appendChild(el(`<p class="empty">No callbacks booked.</p>`)); }
 }
+
 function renderDue(){
   const due=CALLS.filter(v=>v.cbAt&&!v.done&&v.cbAt<=new Date());
   const c=$("#dueList"); c.innerHTML="";
   if(!due.length){c.appendChild(el(`<p class="empty">Nothing due. Log a call and set a callback and it lands here.</p>`));return;}
-  due.forEach(v=>{const t=tel(v.phone);
-    c.appendChild(el(`<div class="card hot"><div class="row"><div>
-      <p class="ttl">${esc(v.name)} <span class="pill hot">callback due</span></p>
-      <p class="sub">${esc(v.agency||"")} · set ${v.at?fmtD(v.at):""}</p></div></div>
-      <div class="acts">${t?`<a class="act call" href="tel:${t}">Call ${pretty(v.phone)}</a>`:""}</div></div>`));
-  });
+  due.forEach(v=>c.appendChild(callCard(v)));
   if("Notification" in window && Notification.permission==="granted"){
     const k="hq_notified_"+sod(new Date()).getTime();
     if(!localStorage.getItem(k)){
