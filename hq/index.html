@@ -101,7 +101,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v2.8</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v2.9</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -275,7 +275,7 @@ details.card[open] summary::before{content:"▾ "}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, setDoc, getDoc, query, orderBy, limit, getDocs, serverTimestamp }
+import { getFirestore, collection, addDoc, doc, setDoc, getDoc, query, orderBy, limit, getDocs, onSnapshot, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -641,9 +641,9 @@ async function loadNotes(){
       const v=d.data();
       if($("#notes") && !$("#notes").value) $("#notes").value=v.text||"";
       const remote=Array.isArray(v.todos)?v.todos:[];
-      // never let an empty/missing remote wipe what is on this device
-      if(remote.length >= (local?local.length:0)) { renderTodos(remote); saveLocalTodos(); }
-      else if(local && local.length) { saveNotes({todos:local}); }
+      // remote is the shared truth; only push local up if the cloud copy is empty
+      if(remote.length || !(local&&local.length)) { renderTodos(remote); saveLocalTodos(); }
+      else { saveNotes({todos:local}); }
     } else if(local && local.length){ saveNotes({todos:local}); }
   }catch(e){ noteStatus("offline — saved on this device"); }
 }
@@ -774,6 +774,37 @@ $("#refresh").onclick=async()=>{
   try{clearErr();await fetchJobs();renderAll();}
   catch(e){ if(/expired|401|403/.test(e.message)) connectPrompt(e.message); else showErr(e.message); }
 };
+let UNSUB=[];
+function startLiveSync(){
+  UNSUB.forEach(u=>{try{u()}catch(e){}}); UNSUB=[];
+  // call log — live on every device
+  UNSUB.push(onSnapshot(query(collection(db,"calls"),orderBy("at","desc"),limit(80)),
+    snap=>{
+      CALLS=[]; snap.forEach(d=>{const v=d.data();
+        CALLS.push({id:d.id,...v,at:v.at?.toDate?.()||null,
+          cbAt:v.cbAt?.toDate?.()||(v.cbAt?new Date(v.cbAt):null)});});
+      renderCalls(); renderDue(); syncBadge(true);
+    },
+    err=>syncBadge(false, err)));
+  // to-dos + scratchpad — live on every device
+  UNSUB.push(onSnapshot(doc(db,"hq","notes-Jason"),
+    d=>{
+      if(!d.exists()) return;
+      const v=d.data();
+      const box=$("#notes");
+      if(box && document.activeElement!==box) box.value=v.text||"";
+      if(Array.isArray(v.todos)){ renderTodos(v.todos); }
+      syncBadge(true);
+    },
+    err=>syncBadge(false, err)));
+}
+function syncBadge(ok, err){
+  const msg = ok ? "synced to your other devices"
+                 : "NOT syncing — Firestore is refusing (rules). Fix: Firebase console → Firestore → Rules → Publish.";
+  noteStatus(ok ? "saved · "+msg : msg);
+  if(!ok && err){ console.log("[HQ] firestore error", err.code||err.message); }
+}
+
 function renderAll(){renderToday();renderAccounts();renderQueue();renderWeek();}
 
 try{
@@ -804,7 +835,7 @@ onAuthStateChanged(auth,async user=>{
   } else {
     $("#sync").textContent="cached — tap ↻";
   }
-  loadCalls(); loadNotes();
+  loadCalls(); loadNotes(); startLiveSync();
 });
 
 if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
