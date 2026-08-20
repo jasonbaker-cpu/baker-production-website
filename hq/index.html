@@ -148,6 +148,26 @@ nav button b{display:block;font-size:17px;margin-bottom:2px}
       </div>
     </section>
 
+    <section id="tab-accounts" class="hide">
+      <input id="search" placeholder="Search agent, agency or address…" autocomplete="off">
+      <div class="stats" style="margin-top:11px">
+        <div class="stat"><b id="s-accts">–</b><span>accounts</span></div>
+        <div class="stat"><b id="s-active">–</b><span>active 14d</span></div>
+        <div class="stat"><b id="s-quiet">–</b><span>gone quiet</span></div>
+      </div>
+      <div id="acctList"></div>
+    </section>
+
+    <section id="tab-calls" class="hide">
+      <h2>Today's queue</h2>
+      <p class="note" style="margin:0 0 10px">Accounts quiet for 3× their own normal gap. Ring, tap the outcome, move on.</p>
+      <div id="queue"></div>
+      <h2>Callbacks booked</h2>
+      <div id="cbList"></div>
+      <h2>Logged today</h2>
+      <div id="callLog" class="card"></div>
+    </section>
+
     <section id="tab-notes" class="hide">
       <h2>To-dos</h2>
       <div class="card">
@@ -546,7 +566,7 @@ async function saveNotes(patch){
        $("#noteSaved").textContent="saved "+fmtT(new Date());
   }catch(e){ $("#noteSaved").textContent="not saved: "+e.message; }
 }
-$("#notes").addEventListener("input",()=>{clearTimeout(noteTimer);$("#noteSaved").textContent="saving…";
+$("#notes")?.addEventListener("input",()=>{clearTimeout(noteTimer);$("#noteSaved").textContent="saving…";
   noteTimer=setTimeout(()=>saveNotes({text:$("#notes").value}),900);});
 let TODOS=[];
 function renderTodos(list){
@@ -568,10 +588,10 @@ function addTodo(inputSel){
   const inp=$(inputSel); const v=(inp.value||"").trim(); if(!v) return;
   TODOS.push({text:v,done:false}); inp.value=""; renderTodos(); saveNotes({todos:TODOS});
 }
-$("#todoAdd").onclick=()=>addTodo("#todoIn");
-$("#todoIn").addEventListener("keydown",e=>{if(e.key==="Enter")addTodo("#todoIn");});
-$("#todoAdd2").onclick=()=>addTodo("#todoIn2");
-$("#todoIn2").addEventListener("keydown",e=>{if(e.key==="Enter")addTodo("#todoIn2");});
+if($("#todoAdd")) $("#todoAdd").onclick=()=>addTodo("#todoIn");
+$("#todoIn")?.addEventListener("keydown",e=>{if(e.key==="Enter")addTodo("#todoIn");});
+if($("#todoAdd2")) $("#todoAdd2").onclick=()=>addTodo("#todoIn2");
+$("#todoIn2")?.addEventListener("keydown",e=>{if(e.key==="Enter")addTodo("#todoIn2");});
 
 /* ── tabs ── */
 document.querySelectorAll("nav button").forEach(b=>{
@@ -584,7 +604,7 @@ document.querySelectorAll("nav button").forEach(b=>{
     if(TAB==="notes")loadNotes();
     window.scrollTo(0,0);};
 });
-$("#search").addEventListener("input",renderAccounts);
+$("#search")?.addEventListener("input",renderAccounts);
 document.addEventListener("click",e=>{
   const b=e.target.closest("button.log"); if(!b)return;
   const a=ACCTS.find(x=>x.key===b.dataset.k); if(a) handleOutcome(a,"Called",b.closest(".card"));
