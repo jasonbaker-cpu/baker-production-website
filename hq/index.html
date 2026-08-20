@@ -102,7 +102,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.3</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.4</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -112,6 +112,7 @@ details.card[open] summary::before{content:"▾ "}
   <button data-tab="week"><b>▤</b>Week</button>
   <button data-tab="accounts"><b>☰</b>Accounts</button>
   <button data-tab="calls"><b>✆</b>Calls</button>
+  <button data-tab="book"><b>◷</b>To book</button>
   <button data-tab="scripts"><b>✆</b>Scripts</button>
   <button data-tab="notes"><b>✎</b>Notes</button>
 </nav>
@@ -122,6 +123,7 @@ details.card[open] summary::before{content:"▾ "}
     <p>Sign in with your Baker Production Google account. HQ reads the job calendar itself — nothing to type in.</p>
     <button class="big" id="signin">Sign in with Google</button>
     <p class="note" id="gateNote"></p>
+    <button class="act" id="signin2" style="margin-top:4px">Trouble signing in? Try the other way</button>
   </div>
 
   <div id="app" class="hide">
@@ -197,6 +199,28 @@ details.card[open] summary::before{content:"▾ "}
       <div id="cbList"></div>
       <h2>Logged today</h2>
       <div id="callLog" class="card"></div>
+    </section>
+
+    <section id="tab-book" class="hide">
+      <h2>Chasing a time</h2>
+      <p class="note" style="margin:0 0 10px">Vendors, tenants and agents you need to ring back to lock a shoot time.</p>
+      <div class="card">
+        <div class="inline" style="margin-bottom:8px">
+          <input id="bkName" placeholder="Who — vendor, tenant, agent">
+          <button class="act" id="bkAdd">+</button>
+        </div>
+        <div class="inline" style="margin-bottom:8px">
+          <input id="bkPhone" placeholder="Phone" inputmode="tel">
+          <input id="bkAddr" placeholder="Property / address">
+        </div>
+        <div class="inline">
+          <input id="bkNote" placeholder="Note — e.g. tenant works nights, try after 4pm">
+          <input id="bkDate" type="date" title="When to call them back">
+        </div>
+      </div>
+      <div id="bookList"></div>
+      <h2>Booked / done</h2>
+      <div id="bookDone"></div>
     </section>
 
     <section id="tab-scripts" class="hide">
@@ -609,7 +633,7 @@ async function addManual(){
   const note=($("#mcNote").value||"").trim();
   $("#mcName").value=""; $("#mcPhone").value=""; $("#mcNote").value="";
   try{
-    await addDoc(collection(db,"manualcalls"),{ name, phone, note, done:false, at:serverTimestamp(), by:ME?.name||"Jason" });
+    await addDoc(collection(db,"manualcalls"),{ name, phone, note, kind:"call", done:false, at:serverTimestamp(), by:ME?.name||"Jason" });
   }catch(e){ noteStatus("couldn't save that call — "+(e.code||e.message)); }
 }
 async function manualDone(id, outcome, m){
@@ -620,9 +644,74 @@ async function manualDone(id, outcome, m){
     await setDoc(doc(db,"manualcalls",id),{done:true,closedAt:serverTimestamp()},{merge:true});
   }catch(e){ noteStatus("couldn't update that call — "+(e.code||e.message)); }
 }
+async function addBooking(){
+  const name=($("#bkName").value||"").trim(); if(!name) return;
+  const rec={ name, phone:($("#bkPhone").value||"").trim(), addr:($("#bkAddr").value||"").trim(),
+              note:($("#bkNote").value||"").trim(), kind:"book", done:false,
+              nextAt: $("#bkDate").value ? new Date($("#bkDate").value+"T09:00:00") : null,
+              at:serverTimestamp(), by:ME?.name||"Jason" };
+  ["#bkName","#bkPhone","#bkAddr","#bkNote","#bkDate"].forEach(k=>{ if($(k)) $(k).value=""; });
+  try{ await addDoc(collection(db,"manualcalls"), rec); }
+  catch(e){ noteStatus("couldn't save that one — "+(e.code||e.message)); }
+}
+async function updateBooking(id, patch){
+  try{ await setDoc(doc(db,"manualcalls",id), {...patch, editedAt:serverTimestamp()}, {merge:true}); }
+  catch(e){ noteStatus("couldn't update — "+(e.code||e.message)); }
+}
+function bookCard(m){
+  const t=tel(m.phone);
+  const next = m.nextAt?.toDate?.() || (m.nextAt? new Date(m.nextAt): null);
+  const nextVal = next ? new Date(next.getTime()-next.getTimezoneOffset()*60000).toISOString().slice(0,10) : "";
+  const due = next && next<=new Date();
+  const card = el(`<div class="card ${m.done?"":(due?"hot":"ok")}">
+    <div class="row"><div>
+      <p class="ttl">${esc(m.name)} ${due&&!m.done?'<span class="pill hot">due</span>':''}</p>
+      ${m.addr?`<p class="sub">${esc(m.addr)}</p>`:""}
+      ${m.note?`<p class="sub">"${esc(m.note)}"</p>`:""}
+      ${next&&!m.done?`<p class="sub">Try again: <b>${fmtD(next)}</b></p>`:""}
+    </div></div>
+    <div class="acts">
+      ${t?`<a class="act call" href="tel:${t}">Call ${pretty(m.phone)}</a>`:""}
+      ${m.done?`<button class="act" data-reopen="1">Reopen</button>`
+              :`<button class="act good" data-booked="1">Time locked in</button>
+                <button class="act" data-edit="1">Edit</button>`}
+    </div>
+    <div class="edit hide" style="margin-top:10px">
+      <textarea class="bkNoteBox" style="min-height:64px" placeholder="Note">${esc(m.note||"")}</textarea>
+      <p class="note" style="margin:8px 0 4px">Try again on</p>
+      <input type="date" class="bkDateBox" value="${nextVal}">
+      <div class="acts"><button class="act good" data-save="1">Save</button>
+        <button class="act" data-cancel="1">Cancel</button></div>
+    </div>
+  </div>`);
+  const ed=card.querySelector(".edit");
+  const q=(sel)=>card.querySelector(sel);
+  if(q("button[data-edit]")) q("button[data-edit]").onclick=()=>ed.classList.toggle("hide");
+  if(q("button[data-cancel]")) q("button[data-cancel]").onclick=()=>ed.classList.add("hide");
+  if(q("button[data-booked]")) q("button[data-booked]").onclick=()=>updateBooking(m.id,{done:true});
+  if(q("button[data-reopen]")) q("button[data-reopen]").onclick=()=>updateBooking(m.id,{done:false});
+  if(q("button[data-save]")) q("button[data-save]").onclick=()=>{
+    const d=q(".bkDateBox").value;
+    updateBooking(m.id,{ note:q(".bkNoteBox").value.trim(), nextAt: d? new Date(d+"T09:00:00"): null });
+    ed.classList.add("hide");
+  };
+  return card;
+}
+function renderBookings(){
+  const open=MANUAL.filter(m=>m.kind==="book" && !m.done)
+    .sort((a,b)=>{ const A=a.nextAt?.toDate?.()||a.nextAt||0, B=b.nextAt?.toDate?.()||b.nextAt||0; return (A?+A:0)-(B?+B:0); });
+  const done=MANUAL.filter(m=>m.kind==="book" && m.done).slice(0,15);
+  const c=$("#bookList"); if(c){ c.innerHTML="";
+    open.length ? open.forEach(m=>c.appendChild(bookCard(m)))
+                : c.appendChild(el(`<p class="empty">Nobody to chase. Add anyone you need a time from.</p>`)); }
+  const d=$("#bookDone"); if(d){ d.innerHTML="";
+    done.length ? done.forEach(m=>d.appendChild(bookCard(m)))
+                : d.appendChild(el(`<p class="empty">Nothing locked in yet.</p>`)); }
+}
+
 function renderManual(){
   const c=$("#manualList"); if(!c) return; c.innerHTML="";
-  const open=MANUAL.filter(m=>!m.done);
+  const open=MANUAL.filter(m=>!m.done && m.kind!=="book");
   open.forEach(m=>{
     const t=tel(m.phone);
     const card=el(`<div class="card ok"><div class="row"><div>
@@ -818,6 +907,8 @@ if($("#todoAdd")) $("#todoAdd").onclick=()=>addTodo("#todoIn");
 $("#todoIn")?.addEventListener("keydown",e=>{if(e.key==="Enter")addTodo("#todoIn");});
 if($("#todoAdd2")) $("#todoAdd2").onclick=()=>addTodo("#todoIn2");
 if($("#mcAdd")) $("#mcAdd").onclick=addManual;
+if($("#bkAdd")) $("#bkAdd").onclick=addBooking;
+$("#bkName")?.addEventListener("keydown",e=>{if(e.key==="Enter")addBooking();});
 $("#mcName")?.addEventListener("keydown",e=>{if(e.key==="Enter")addManual();});
 $("#mcNote")?.addEventListener("keydown",e=>{if(e.key==="Enter")addManual();});
 $("#todoIn2")?.addEventListener("keydown",e=>{if(e.key==="Enter")addTodo("#todoIn2");});
@@ -826,8 +917,9 @@ $("#todoIn2")?.addEventListener("keydown",e=>{if(e.key==="Enter")addTodo("#todoI
 document.querySelectorAll("nav button").forEach(b=>{
   b.onclick=()=>{TAB=b.dataset.tab;
     document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
-    ["today","week","accounts","calls","scripts","notes"].forEach(t=>$("#tab-"+t).classList.toggle("hide",t!==TAB));
+    ["today","week","accounts","calls","book","scripts","notes"].forEach(t=>$("#tab-"+t).classList.toggle("hide",t!==TAB));
     if(TAB==="week") renderWeek();
+    if(TAB==="book") renderBookings();
     if(TAB==="accounts")renderAccounts();
     if(TAB==="calls"){renderQueue();loadCalls();}
     if(TAB==="notes")loadNotes();
@@ -903,6 +995,11 @@ function connectPrompt(msg){
   };
 }
 $("#signin").onclick=doSignIn;
+if($("#signin2")) $("#signin2").onclick=async()=>{
+  $("#gateNote").textContent="Redirecting to Google…";
+  try{ await signInWithRedirect(auth,provider); }
+  catch(e){ $("#gateNote").textContent="Still failing: "+(e.message||e.code); }
+};
 $("#signout").onclick=()=>{localStorage.removeItem("hq_tok");signOut(auth);};
 $("#refresh").onclick=async()=>{
   if(!TOKEN){ await ensureToken(); }
@@ -942,7 +1039,7 @@ function startLiveExtras(){
          renderContact(); renderQueue(); renderHiddenLine(); },
     err=>syncBadge(false,err)));
   UNSUB.push(onSnapshot(query(collection(db,"manualcalls"),orderBy("at","desc"),limit(50)),
-    snap=>{ MANUAL=[]; snap.forEach(d=>MANUAL.push({id:d.id,...d.data()})); renderManual(); },
+    snap=>{ MANUAL=[]; snap.forEach(d=>MANUAL.push({id:d.id,...d.data()})); renderManual(); renderBookings(); },
     err=>syncBadge(false,err)));
 }
 function syncBadge(ok, err){
