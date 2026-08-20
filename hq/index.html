@@ -273,9 +273,19 @@ async function fetchCal(calId, timeMin, timeMax){
     u.searchParams.set("singleEvents","true"); u.searchParams.set("orderBy","startTime");
     u.searchParams.set("maxResults","2500"); if(pageToken)u.searchParams.set("pageToken",pageToken);
     const r=await fetch(u,{headers:{Authorization:"Bearer "+TOKEN}});
-    if(r.status===401||r.status===403){TOKEN=null;localStorage.removeItem("hq_tok");
-      throw new Error("Calendar access expired — reconnect below.");}
-    if(!r.ok) throw new Error("Calendar error "+r.status);
+    if(!r.ok){
+      let reason="", msg="";
+      try{ const b=await r.json(); reason=b?.error?.errors?.[0]?.reason||b?.error?.status||"";
+           msg=b?.error?.message||""; }catch(e){}
+      if(r.status===401||r.status===403){ TOKEN=null; localStorage.removeItem("hq_tok"); }
+      if(/accessNotConfigured|SERVICE_DISABLED/i.test(reason+msg))
+        throw new Error("Google Calendar API isn't switched on for this project yet. One click: console.cloud.google.com/apis/library/calendar-json.googleapis.com?project=baker-leads");
+      if(/insufficient|ACCESS_TOKEN_SCOPE/i.test(reason+msg))
+        throw new Error("Signed in, but calendar permission wasn't granted — tap Connect calendar and tick the calendar box.");
+      if(r.status===401) throw new Error("Calendar access expired — reconnect below.");
+      if(r.status===404) throw new Error("This Google account can't see "+calId+" — sign in as admin@bakerproduction.com.");
+      throw new Error("Calendar error "+r.status+(reason?" ("+reason+")":"")+(msg?": "+msg.slice(0,120):""));
+    }
     const j=await r.json(); items=items.concat(j.items||[]); pageToken=j.nextPageToken;
   }while(pageToken);
   return items;
@@ -303,11 +313,20 @@ async function fetchJobs(){
     u.searchParams.set("timeMin",timeMin); u.searchParams.set("timeMax",timeMax);
     u.searchParams.set("singleEvents","true"); u.searchParams.set("orderBy","startTime");
     u.searchParams.set("maxResults","2500"); if(pageToken)u.searchParams.set("pageToken",pageToken);
-    const r=await fetch(u,{headers:{Authorization:"Bearer "+TOKEN}});
-    if(r.status===401||r.status===403){TOKEN=null;localStorage.removeItem("hq_tok");
-      throw new Error("Calendar access expired — tap ↻ to reconnect.");}
-    if(!r.ok) throw new Error("Calendar error "+r.status);
-    const j=await r.json(); items=items.concat(j.items||[]); pageToken=j.nextPageToken;
+    const rr=await fetch(u,{headers:{Authorization:"Bearer "+TOKEN}});
+    if(!rr.ok){
+      let reason="", msg="";
+      try{ const b=await rr.json(); reason=b?.error?.errors?.[0]?.reason||b?.error?.status||"";
+           msg=b?.error?.message||""; }catch(e){}
+      if(rr.status===401||rr.status===403){ TOKEN=null; localStorage.removeItem("hq_tok"); }
+      if(/accessNotConfigured|SERVICE_DISABLED/i.test(reason+msg))
+        throw new Error("Google Calendar API isn't switched on for this project yet — one click in the Cloud console fixes it.");
+      if(/insufficient|ACCESS_TOKEN_SCOPE/i.test(reason+msg))
+        throw new Error("Signed in, but calendar permission wasn't granted — tap Connect calendar and tick the calendar box.");
+      if(rr.status===401) throw new Error("Calendar access expired — reconnect below.");
+      throw new Error("Calendar error "+rr.status+(reason?" ("+reason+")":"")+(msg?": "+msg.slice(0,120):""));
+    }
+    const j=await rr.json(); items=items.concat(j.items||[]); pageToken=j.nextPageToken;
   }while(pageToken);
   JOBS=items.map(parseEv).filter(Boolean).sort((a,b)=>a.when-b.when);
   buildAccounts();
@@ -604,7 +623,7 @@ async function doSignIn(){
 }
 function connectPrompt(msg){
   const e=$("#err"); e.classList.remove("hide");
-  e.innerHTML = esc(msg)+' <button class="act" id="connectBtn" style="margin-left:8px">Connect calendar</button>';
+  e.innerHTML = '<div style="margin-bottom:8px">'+esc(msg)+'</div><button class="act" id="connectBtn">Connect calendar</button>';
   $("#connectBtn").onclick = async ()=>{
     e.textContent="connecting…";
     const ok=await doSignIn();
