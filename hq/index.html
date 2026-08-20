@@ -20,8 +20,8 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--ink);
   font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-  padding-bottom:calc(74px + var(--safe-bot))}
-header{position:sticky;top:0;z-index:20;background:var(--ink);color:#f5f3ee;
+  padding-bottom:calc(28px + var(--safe-bot))}
+header{position:sticky;top:0;z-index:21;background:var(--ink);color:#f5f3ee;
   padding:calc(11px + var(--safe-top)) 15px 11px;display:flex;align-items:center;gap:10px}
 header h1{font-size:15px;margin:0;letter-spacing:3px;font-weight:700;flex:1}
 header h1 span{color:var(--gold)}
@@ -58,12 +58,13 @@ button.act.mid{background:var(--warn);color:#fff;border-color:var(--warn)}
 input,textarea,select{font:inherit;background:var(--panel);color:var(--ink);border:1px solid var(--line);
   border-radius:10px;padding:11px 12px;width:100%}
 textarea{min-height:92px;resize:vertical}
-nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;background:var(--panel);
-  border-top:1px solid var(--line);padding-bottom:var(--safe-bot)}
-nav button{flex:1;background:none;border:none;color:var(--mut);padding:11px 4px 9px;font:inherit;font-size:10.5px;
-  letter-spacing:.06em;text-transform:uppercase;border-top:2px solid transparent;cursor:pointer}
-nav button.on{color:var(--gold-d);border-top-color:var(--gold)}
-nav button b{display:block;font-size:17px;margin-bottom:2px}
+nav{position:sticky;top:0;z-index:19;display:flex;gap:6px;background:var(--bg);
+  border-bottom:1px solid var(--line);padding:8px 10px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+nav button{flex:1;min-width:74px;background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  color:var(--mut);padding:8px 6px;font:inherit;font-size:10.5px;letter-spacing:.05em;
+  text-transform:uppercase;cursor:pointer;white-space:nowrap}
+nav button.on{color:#fff;background:var(--gold);border-color:var(--gold)}
+nav button b{display:block;font-size:15px;margin-bottom:1px}
 .empty{color:var(--mut);text-align:center;padding:30px 12px;font-size:15px}
 .center{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:72vh;
   text-align:center;padding:24px;gap:15px}
@@ -93,10 +94,18 @@ nav button b{display:block;font-size:17px;margin-bottom:2px}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v2.4</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v2.6</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
+
+<nav id="nav" class="hide">
+  <button data-tab="today" class="on"><b>◎</b>Today</button>
+  <button data-tab="week"><b>▤</b>Week</button>
+  <button data-tab="accounts"><b>☰</b>Accounts</button>
+  <button data-tab="calls"><b>✆</b>Calls</button>
+  <button data-tab="notes"><b>✎</b>Notes</button>
+</nav>
 
 <main>
   <div class="center" id="gate">
@@ -186,13 +195,6 @@ nav button b{display:block;font-size:17px;margin-bottom:2px}
   </div>
 </main>
 
-<nav id="nav" class="hide">
-  <button data-tab="today" class="on"><b>◎</b>Today</button>
-  <button data-tab="week"><b>▤</b>Week</button>
-  <button data-tab="accounts"><b>☰</b>Accounts</button>
-  <button data-tab="calls"><b>✆</b>Calls</button>
-  <button data-tab="notes"><b>✎</b>Notes</button>
-</nav>
 
 <script>window.addEventListener("error",e=>{const g=document.getElementById("gateNote");if(g)g.textContent="Load error: "+(e.message||"");});</script>
 <script type="module">
