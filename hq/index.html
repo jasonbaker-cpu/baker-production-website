@@ -101,7 +101,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.1</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.2</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -130,8 +130,8 @@ details.card[open] summary::before{content:"▾ "}
       <div class="stats">
         <div class="stat"><b id="s-today">–</b><span>today</span></div>
         <div class="stat"><b id="s-week">–</b><span>this week</span></div>
-        <div class="stat"><b id="s-month">–</b><span>this month</span></div>
-        <div class="stat gold"><b id="s-rev">–</b><span>est. revenue mo</span></div>
+        <div class="stat"><b id="s-month">–</b><span>last 30 days</span></div>
+        <div class="stat gold"><b id="s-rev">–</b><span>est. rev · 30d</span></div>
       </div>
 
       <h2>To-dos</h2>
@@ -474,8 +474,8 @@ function renderToday(){
   const today=JOBS.filter(j=>dbet(j.when,now)===0);
   const wkStart=sod(new Date(+now-((now.getDay()+6)%7)*DAY));
   const week=JOBS.filter(j=>j.when>=wkStart&&j.when<=now);
-  const moStart=new Date(now.getFullYear(),now.getMonth(),1);
-  const month=JOBS.filter(j=>j.when>=moStart&&j.when<=now);
+  const d30=new Date(+sod(now)-29*DAY);          // rolling 30 days, today included
+  const month=JOBS.filter(j=>j.when>=d30&&j.when<=now);
   $("#s-today").textContent=today.length;
   $("#s-week").textContent=week.length;
   $("#s-month").textContent=month.length;
