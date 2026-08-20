@@ -1,0 +1,14 @@
+{
+  "name": "Baker HQ",
+  "short_name": "Baker HQ",
+  "description": "Baker Production command centre — jobs, accounts and calls.",
+  "start_url": "/hq/",
+  "scope": "/hq/",
+  "display": "standalone",
+  "background_color": "#262626",
+  "theme_color": "#262626",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/logo.avif", "sizes": "512x512", "type": "image/avif", "purpose": "any maskable" }
+  ]
+}
