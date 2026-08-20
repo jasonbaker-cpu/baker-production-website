@@ -101,7 +101,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v2.7</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v2.8</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -141,6 +141,7 @@ details.card[open] summary::before{content:"▾ "}
           <button class="act" id="todoAdd2">+</button>
         </div>
         <div id="todoList2"></div>
+        <p class="note" id="todoStatus" style="margin:8px 0 0"></p>
       </div>
 
       <h2>Contact today</h2>
@@ -269,6 +270,7 @@ details.card[open] summary::before{content:"▾ "}
 
 
 <script>window.addEventListener("error",e=>{const g=document.getElementById("gateNote");if(g)g.textContent="Load error: "+(e.message||"");});</script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut }
@@ -285,6 +287,7 @@ const firebaseConfig = {
   appId: "1:544396406010:web:9e7289e545fa0a0c8a6d43"
 };
 
+const GOOGLE_CLIENT_ID = "";   // optional: paste the project's OAuth web client id here to get silent hourly token refresh
 const JOB_CALENDAR = "admin@bakerproduction.com";
 const MY_CALENDAR  = "jasonbaker@bakerproduction.com";   // Jason's own diary      // master calendar (NOT jasonbaker@)
 const ALLOW = { "admin@bakerproduction.com":"Jason", "jasonbaker@bakerproduction.com":"Jason" };
@@ -296,7 +299,7 @@ const DEFAULT_VALUE = 310;
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
-let TOKEN=null, ME=null, JOBS=[], ACCTS=[], CALLS=[], DIARY=[], TAB="today";
+let TOKEN=null, TOKENCLIENT=null, ME=null, JOBS=[], ACCTS=[], CALLS=[], DIARY=[], TAB="today";
 
 const $=s=>document.querySelector(s);
 const el=h=>{const d=document.createElement("div");d.innerHTML=h.trim();return d.firstElementChild;};
@@ -630,21 +633,38 @@ function renderDue(){
 /* ── notes + to-dos ── */
 let noteTimer=null;
 async function loadNotes(){
+  const local = localTodos();
+  if(local && local.length){ renderTodos(local); }          // show local immediately
   try{
     const d=await getDoc(doc(db,"hq","notes-Jason"));
-    if(d.exists()){ $("#notes").value=d.data().text||""; renderTodos(d.data().todos||[]); }
-  }catch(e){}
+    if(d.exists()){
+      const v=d.data();
+      if($("#notes") && !$("#notes").value) $("#notes").value=v.text||"";
+      const remote=Array.isArray(v.todos)?v.todos:[];
+      // never let an empty/missing remote wipe what is on this device
+      if(remote.length >= (local?local.length:0)) { renderTodos(remote); saveLocalTodos(); }
+      else if(local && local.length) { saveNotes({todos:local}); }
+    } else if(local && local.length){ saveNotes({todos:local}); }
+  }catch(e){ noteStatus("offline — saved on this device"); }
+}
+function noteStatus(msg){
+  const a=$("#noteSaved"); if(a) a.textContent=msg;
+  const b=$("#todoStatus"); if(b) b.textContent=msg;
 }
 async function saveNotes(patch){
+  if(patch && patch.todos) saveLocalTodos();
   try{ await setDoc(doc(db,"hq","notes-Jason"),{...patch,at:serverTimestamp()},{merge:true});
-       $("#noteSaved").textContent="saved "+fmtT(new Date());
-  }catch(e){ $("#noteSaved").textContent="not saved: "+e.message; }
+       noteStatus("saved "+fmtT(new Date()));
+  }catch(e){ noteStatus("saved on this device only — "+(e.code||e.message)); }
 }
 $("#notes")?.addEventListener("input",()=>{clearTimeout(noteTimer);$("#noteSaved").textContent="saving…";
   noteTimer=setTimeout(()=>saveNotes({text:$("#notes").value}),900);});
 let TODOS=[];
+function localTodos(){ try{ return JSON.parse(localStorage.getItem("hq_todos")||"null"); }catch(e){ return null; } }
+function saveLocalTodos(){ try{ localStorage.setItem("hq_todos", JSON.stringify(TODOS)); }catch(e){} }
 function renderTodos(list){
   TODOS=list||TODOS;
+  saveLocalTodos();
   ["#todoList","#todoList2"].forEach(sel=>{
     const c=$(sel); if(!c) return; c.innerHTML="";
     const open=TODOS.filter(t=>!t.done).length;
@@ -697,6 +717,26 @@ function loadTok(){
        if(v && v.exp>Date.now()) return v.t; }catch(e){}
   return null;
 }
+function gisReady(){ return !!(GOOGLE_CLIENT_ID && window.google && google.accounts && google.accounts.oauth2); }
+function getTokenSilently(){
+  return new Promise(resolve=>{
+    if(!gisReady()) return resolve(null);
+    try{
+      TOKENCLIENT = TOKENCLIENT || google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: "https://www.googleapis.com/auth/calendar.readonly",
+        callback: (resp)=>{ if(resp && resp.access_token){ saveTok(resp.access_token); resolve(resp.access_token); } else resolve(null); },
+        error_callback: ()=>resolve(null)
+      });
+      TOKENCLIENT.requestAccessToken({ prompt: "", hint: ME?.email || "" });
+    }catch(e){ resolve(null); }
+  });
+}
+async function ensureToken(){
+  if(TOKEN) return TOKEN;
+  const t = loadTok(); if(t){ TOKEN=t; return t; }
+  return await getTokenSilently();
+}
 async function doSignIn(){
   if("Notification" in window && Notification.permission==="default"){ try{Notification.requestPermission();}catch(e){} }
   $("#gateNote").textContent="Opening Google…";
@@ -728,6 +768,7 @@ function connectPrompt(msg){
 $("#signin").onclick=doSignIn;
 $("#signout").onclick=()=>{localStorage.removeItem("hq_tok");signOut(auth);};
 $("#refresh").onclick=async()=>{
+  if(!TOKEN){ await ensureToken(); }
   if(!TOKEN){ const ok=await doSignIn(); if(!ok||!TOKEN){ connectPrompt("Calendar not connected."); return; } }
   $("#sync").textContent="syncing…";
   try{clearErr();await fetchJobs();renderAll();}
@@ -750,11 +791,18 @@ onAuthStateChanged(auth,async user=>{
   $("#nav").classList.remove("hide");$("#signout").classList.remove("hide");
   TOKEN = TOKEN || loadTok();
   const cached=loadCache(); if(cached) renderAll();
+  await ensureToken();
   if(TOKEN){
     try{ $("#sync").textContent="syncing…"; await fetchJobs(); renderAll(); clearErr(); }
-    catch(e){ if(/expired|401|403/.test(e.message)) connectPrompt("Calendar access expired."); else showErr(e.message); }
-  } else {
+    catch(e){
+      if(cached){ $("#sync").textContent="cached — tap ↻"; clearErr(); }
+      else if(/expired|401|403/.test(e.message)) connectPrompt("Calendar access expired.");
+      else showErr(e.message);
+    }
+  } else if(!cached){
     connectPrompt("Calendar not connected yet.");
+  } else {
+    $("#sync").textContent="cached — tap ↻";
   }
   loadCalls(); loadNotes();
 });
