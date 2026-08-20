@@ -116,13 +116,8 @@ nav button b{display:block;font-size:17px;margin-bottom:2px}
         <div class="stat"><b id="s-month">–</b><span>this month</span></div>
         <div class="stat gold"><b id="s-rev">–</b><span>est. revenue mo</span></div>
       </div>
-      <h2>Contact today</h2>
-      <div id="dueList"></div>
-      <h2>Today's jobs</h2>
-      <div id="todayList"></div>
-      <h2>Tomorrow</h2>
-      <div id="tmwList"></div>
-      <h2>To-dos today</h2>
+
+      <h2>To-dos</h2>
       <div class="card">
         <div class="inline" style="margin-bottom:8px">
           <input id="todoIn2" placeholder="Add a to-do…">
@@ -130,33 +125,18 @@ nav button b{display:block;font-size:17px;margin-bottom:2px}
         </div>
         <div id="todoList2"></div>
       </div>
+
+      <h2>Contact today</h2>
+      <div id="dueList"></div>
+      <div id="contactList"></div>
+
       <h2>Quick launch</h2>
       <div class="qlaunch">
         <a href="https://mail.google.com" target="_blank" rel="noopener">Gmail</a>
         <a href="https://portal.bakerproduction.com/book" target="_blank" rel="noopener">Booking portal</a>
         <a href="https://studio.bakerproduction.com" target="_blank" rel="noopener">Studio</a>
-        <a href="https://www.bakerproduction.com" target="_blank" rel="noopener">Website</a>
+        <a href="https://calendar.google.com/calendar/u/0/r/day" target="_blank" rel="noopener">Calendar</a>
       </div>
-    </section>
-
-    <section id="tab-accounts" class="hide">
-      <input id="search" placeholder="Search agent, agency or address…" autocomplete="off">
-      <div class="stats" style="margin-top:11px">
-        <div class="stat"><b id="s-accts">–</b><span>accounts</span></div>
-        <div class="stat"><b id="s-active">–</b><span>active 14d</span></div>
-        <div class="stat"><b id="s-quiet">–</b><span>gone quiet</span></div>
-      </div>
-      <div id="acctList"></div>
-    </section>
-
-    <section id="tab-calls" class="hide">
-      <h2>Today's queue</h2>
-      <p class="note" style="margin:0 0 10px">Accounts quiet for 3× their own normal gap. Ring, tap the outcome, move on.</p>
-      <div id="queue"></div>
-      <h2>Callbacks booked</h2>
-      <div id="cbList"></div>
-      <h2>Logged today</h2>
-      <div id="callLog" class="card"></div>
     </section>
 
     <section id="tab-week" class="hide">
@@ -381,7 +361,6 @@ function jobCard(j){
 function renderToday(){
   const now=new Date();
   const today=JOBS.filter(j=>dbet(j.when,now)===0);
-  const tmw=JOBS.filter(j=>dbet(now,j.when)===1);
   const wkStart=sod(new Date(+now-((now.getDay()+6)%7)*DAY));
   const week=JOBS.filter(j=>j.when>=wkStart&&j.when<=now);
   const moStart=new Date(now.getFullYear(),now.getMonth(),1);
@@ -390,13 +369,30 @@ function renderToday(){
   $("#s-week").textContent=week.length;
   $("#s-month").textContent=month.length;
   $("#s-rev").textContent=money(month.reduce((s,j)=>s+j.value,0));
-  const tl=$("#todayList"); tl.innerHTML="";
-  today.length?today.forEach(j=>tl.appendChild(jobCard(j)))
-    :tl.appendChild(el(`<p class="empty">Nothing booked today.</p>`));
-  const ml=$("#tmwList"); ml.innerHTML="";
-  tmw.length?tmw.forEach(j=>ml.appendChild(jobCard(j)))
-    :ml.appendChild(el(`<p class="empty">Nothing tomorrow yet — bookings usually land 2–3 days out.</p>`));
+  renderContact();
   renderDue();
+}
+
+function renderContact(){
+  const c=$("#contactList"); if(!c) return; c.innerHTML="";
+  const list=ACCTS.filter(a=>a.isQuiet).slice(0,5);
+  if(!list.length){ c.appendChild(el(`<p class="empty">Nobody's overdue a call.</p>`)); return; }
+  list.forEach(a=>{
+    const t=tel(a.phone);
+    const card=el(`<div class="card ${a.quiet>=45?"hot":"warn"}"><div class="row"><div>
+        <p class="ttl">${esc(a.name)} <span class="pill ${a.quiet>=45?"hot":"warn"}">${a.quiet}d quiet</span></p>
+        <p class="sub">${esc(a.agency)} · ${a.jobs} jobs · usually every ${a.medGap||"–"}d</p>
+        <p class="sub">Last: ${esc(a.addr)}</p></div></div>
+      <div class="acts">
+        ${t?`<a class="act call" href="tel:${t}">Call ${pretty(a.phone)}</a>`
+          :(a.email?`<a class="act" href="mailto:${esc(a.email)}">Email</a>`:`<span class="sub">no number on file</span>`)}
+        <button class="act good" data-o="Booked">Booked</button>
+        <button class="act mid" data-o="Callback">Callback</button>
+        <button class="act" data-o="No answer">No answer</button>
+      </div></div>`);
+    card.querySelectorAll("button[data-o]").forEach(b=>b.onclick=()=>handleOutcome(a,b.dataset.o,card));
+    c.appendChild(card);
+  });
 }
 
 function acctCard(a){
