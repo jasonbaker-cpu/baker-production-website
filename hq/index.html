@@ -101,7 +101,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v2.9</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.0</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -145,8 +145,20 @@ details.card[open] summary::before{content:"▾ "}
       </div>
 
       <h2>Contact today</h2>
+      <div class="card">
+        <div class="inline" style="margin-bottom:8px">
+          <input id="mcName" placeholder="Name (new lead, cold call, anyone)">
+          <button class="act" id="mcAdd">+</button>
+        </div>
+        <div class="inline">
+          <input id="mcPhone" placeholder="Phone" inputmode="tel">
+          <input id="mcNote" placeholder="Note — agency, why you're calling">
+        </div>
+      </div>
+      <div id="manualList"></div>
       <div id="dueList"></div>
       <div id="contactList"></div>
+      <p class="note" id="hiddenLine" style="margin-top:6px"></p>
 
       <h2>Quick launch</h2>
       <div class="qlaunch">
@@ -299,6 +311,7 @@ const DEFAULT_VALUE = 310;
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
+let HIDDEN=[], MANUAL=[];
 let TOKEN=null, TOKENCLIENT=null, ME=null, JOBS=[], ACCTS=[], CALLS=[], DIARY=[], TAB="today";
 
 const $=s=>document.querySelector(s);
@@ -473,7 +486,7 @@ function renderToday(){
 
 function renderContact(){
   const c=$("#contactList"); if(!c) return; c.innerHTML="";
-  const list=ACCTS.filter(a=>a.isQuiet).slice(0,5);
+  const list=ACCTS.filter(a=>a.isQuiet && !HIDDEN.includes(a.key)).slice(0,5);
   if(!list.length){ c.appendChild(el(`<p class="empty">Nobody's overdue a call.</p>`)); return; }
   list.forEach(a=>{
     const t=tel(a.phone);
@@ -487,8 +500,10 @@ function renderContact(){
         <button class="act good" data-o="Booked">Booked</button>
         <button class="act mid" data-o="Callback">Callback</button>
         <button class="act" data-o="No answer">No answer</button>
+        <button class="act" data-hide="1">Not this one</button>
       </div></div>`);
     card.querySelectorAll("button[data-o]").forEach(b=>b.onclick=()=>handleOutcome(a,b.dataset.o,card));
+    card.querySelector("button[data-hide]").onclick=()=>hideAccount(a.key,a.name);
     c.appendChild(card);
   });
 }
@@ -520,7 +535,7 @@ function renderAccounts(){
 }
 
 function renderQueue(){
-  const q=ACCTS.filter(a=>a.isQuiet).slice(0,5);
+  const q=ACCTS.filter(a=>a.isQuiet && !HIDDEN.includes(a.key)).slice(0,5);
   const c=$("#queue"); c.innerHTML="";
   if(!q.length){c.appendChild(el(`<p class="empty">Nobody's overdue. Enjoy it.</p>`));return;}
   q.forEach(a=>{
@@ -536,8 +551,10 @@ function renderQueue(){
         <button class="act mid" data-o="Callback">Callback</button>
         <button class="act" data-o="No answer">No answer</button>
         <button class="act" data-o="Not now">Not now</button>
+        <button class="act" data-hide="1">Not this one</button>
       </div></div>`);
     card.querySelectorAll("button[data-o]").forEach(b=>b.onclick=()=>handleOutcome(a,b.dataset.o,card));
+    card.querySelector("button[data-hide]").onclick=()=>hideAccount(a.key,a.name);
     c.appendChild(card);
   });
 }
@@ -562,6 +579,66 @@ function renderWeek(){
       <div style="margin-top:8px">${inner}</div></div>`));
   }
   if(!c.children.length) c.appendChild(el(`<p class="empty">Nothing on the book yet.</p>`));
+}
+
+/* ── hidden recommendations ── */
+async function hideAccount(key,name){
+  if(HIDDEN.includes(key)) return;
+  HIDDEN.push(key);
+  try{ await setDoc(doc(db,"hq","hidden"),{keys:HIDDEN,at:serverTimestamp()},{merge:true}); }
+  catch(e){ noteStatus("couldn't save that dismissal — "+(e.code||e.message)); }
+  renderContact(); renderQueue(); renderHiddenLine();
+}
+async function unhideAll(){
+  HIDDEN=[];
+  try{ await setDoc(doc(db,"hq","hidden"),{keys:[],at:serverTimestamp()},{merge:true}); }catch(e){}
+  renderContact(); renderQueue(); renderHiddenLine();
+}
+function renderHiddenLine(){
+  const el0=$("#hiddenLine"); if(!el0) return;
+  if(!HIDDEN.length){ el0.textContent=""; return; }
+  el0.innerHTML = HIDDEN.length+" dismissed. <a href=\"#\" id=\"unhide\" style=\"color:var(--gold-d)\">Bring them back</a>";
+  const a=$("#unhide"); if(a) a.onclick=(e)=>{e.preventDefault();unhideAll();};
+}
+
+/* ── manual / cold calls you add yourself ── */
+async function addManual(){
+  const name=($("#mcName").value||"").trim(); if(!name) return;
+  const phone=($("#mcPhone").value||"").trim();
+  const note=($("#mcNote").value||"").trim();
+  $("#mcName").value=""; $("#mcPhone").value=""; $("#mcNote").value="";
+  try{
+    await addDoc(collection(db,"manualcalls"),{ name, phone, note, done:false, at:serverTimestamp(), by:ME?.name||"Jason" });
+  }catch(e){ noteStatus("couldn't save that call — "+(e.code||e.message)); }
+}
+async function manualDone(id, outcome, m){
+  try{
+    if(outcome) await addDoc(collection(db,"calls"),{
+      name:m.name, agency:m.note||"", phone:m.phone||"", email:"", outcome,
+      by:ME?.name||"Jason", at:serverTimestamp(), source:"manual", cbAt:null, done:false });
+    await setDoc(doc(db,"manualcalls",id),{done:true,closedAt:serverTimestamp()},{merge:true});
+  }catch(e){ noteStatus("couldn't update that call — "+(e.code||e.message)); }
+}
+function renderManual(){
+  const c=$("#manualList"); if(!c) return; c.innerHTML="";
+  const open=MANUAL.filter(m=>!m.done);
+  open.forEach(m=>{
+    const t=tel(m.phone);
+    const card=el(`<div class="card ok"><div class="row"><div>
+        <p class="ttl">${esc(m.name)} <span class="pill">yours</span></p>
+        ${m.note?`<p class="sub">${esc(m.note)}</p>`:""}
+      </div></div>
+      <div class="acts">
+        ${t?`<a class="act call" href="tel:${t}">Call ${pretty(m.phone)}</a>`:""}
+        <button class="act good" data-o="Booked">Booked</button>
+        <button class="act mid" data-o="Callback">Callback</button>
+        <button class="act" data-o="No answer">No answer</button>
+        <button class="act" data-x="1">Remove</button>
+      </div></div>`);
+    card.querySelectorAll("button[data-o]").forEach(b=>b.onclick=()=>{ manualDone(m.id,b.dataset.o,m); card.style.opacity=".45"; });
+    card.querySelector("button[data-x]").onclick=()=>{ manualDone(m.id,null,m); card.remove(); };
+    c.appendChild(card);
+  });
 }
 
 /* ── calls + callbacks ── */
@@ -685,6 +762,9 @@ function addTodo(inputSel){
 if($("#todoAdd")) $("#todoAdd").onclick=()=>addTodo("#todoIn");
 $("#todoIn")?.addEventListener("keydown",e=>{if(e.key==="Enter")addTodo("#todoIn");});
 if($("#todoAdd2")) $("#todoAdd2").onclick=()=>addTodo("#todoIn2");
+if($("#mcAdd")) $("#mcAdd").onclick=addManual;
+$("#mcName")?.addEventListener("keydown",e=>{if(e.key==="Enter")addManual();});
+$("#mcNote")?.addEventListener("keydown",e=>{if(e.key==="Enter")addManual();});
 $("#todoIn2")?.addEventListener("keydown",e=>{if(e.key==="Enter")addTodo("#todoIn2");});
 
 /* ── tabs ── */
@@ -787,6 +867,7 @@ function startLiveSync(){
     },
     err=>syncBadge(false, err)));
   // to-dos + scratchpad — live on every device
+  startLiveExtras();
   UNSUB.push(onSnapshot(doc(db,"hq","notes-Jason"),
     d=>{
       if(!d.exists()) return;
@@ -797,6 +878,15 @@ function startLiveSync(){
       syncBadge(true);
     },
     err=>syncBadge(false, err)));
+}
+function startLiveExtras(){
+  UNSUB.push(onSnapshot(doc(db,"hq","hidden"),
+    d=>{ HIDDEN = (d.exists() && Array.isArray(d.data().keys)) ? d.data().keys : [];
+         renderContact(); renderQueue(); renderHiddenLine(); },
+    err=>syncBadge(false,err)));
+  UNSUB.push(onSnapshot(query(collection(db,"manualcalls"),orderBy("at","desc"),limit(50)),
+    snap=>{ MANUAL=[]; snap.forEach(d=>MANUAL.push({id:d.id,...d.data()})); renderManual(); },
+    err=>syncBadge(false,err)));
 }
 function syncBadge(ok, err){
   const msg = ok ? "synced to your other devices"
