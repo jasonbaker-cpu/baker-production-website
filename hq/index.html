@@ -58,7 +58,7 @@ button.act.mid{background:var(--warn);color:#fff;border-color:var(--warn)}
 input,textarea,select{font:inherit;font-size:16px;background:var(--panel);color:var(--ink);border:1px solid var(--line);
   border-radius:10px;padding:11px 12px;width:100%}
 textarea{min-height:92px;resize:vertical}
-nav{position:sticky;top:0;z-index:19;display:flex;gap:6px;background:var(--bg);
+nav{position:sticky;top:var(--hdr,56px);z-index:19;display:flex;gap:6px;background:var(--bg);
   border-bottom:1px solid var(--line);padding:8px 10px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 nav button{flex:1 0 auto;min-width:66px;background:var(--panel);border:1px solid var(--line);border-radius:10px;
   color:var(--mut);padding:8px 6px;font:inherit;font-size:10.5px;letter-spacing:.05em;
@@ -108,7 +108,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.7</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.8</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -416,6 +416,16 @@ let HIDDEN=[], MANUAL=[];
 let TOKEN=null, TOKENCLIENT=null, ME=null, JOBS=[], ACCTS=[], CALLS=[], DIARY=[], TAB="today";
 
 const $=s=>document.querySelector(s);
+/* the tab row sticks BELOW the header, not under it — measure the header so it
+   works with the iOS safe-area inset instead of a guessed constant */
+function fitNav(){
+  const h=document.querySelector("header");
+  if(h) document.documentElement.style.setProperty("--hdr", h.offsetHeight+"px");
+}
+fitNav();
+addEventListener("resize", fitNav);
+addEventListener("orientationchange", ()=>setTimeout(fitNav,120));
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitNav).catch(()=>{});
 const el=h=>{const d=document.createElement("div");d.innerHTML=h.trim();return d.firstElementChild;};
 const esc=s=>(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const DAY=86400000;
