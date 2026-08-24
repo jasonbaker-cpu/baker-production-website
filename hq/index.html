@@ -86,6 +86,12 @@ nav button b{display:block;font-size:15px;margin-bottom:1px}
 .qlaunch a{flex:1;min-width:130px;text-align:center;text-decoration:none;background:var(--panel);
   border:1px solid var(--line);border-radius:10px;padding:12px 8px;color:var(--ink);font-size:14px;font-weight:600}
 .hide{display:none!important}
+.bar{margin-top:11px;height:10px;border-radius:20px;background:var(--panel2);
+     border:1px solid var(--line);overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:var(--gold);
+     transition:width .35s ease}
+.bar.done span{background:var(--ok)}
+.num{color:var(--gold-d);font-weight:700}
 details.card summary{cursor:pointer;font-size:15px;list-style:none;padding:2px 0}
 details.card summary::-webkit-details-marker{display:none}
 details.card summary::before{content:"▸ ";color:var(--gold-d)}
@@ -102,7 +108,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.4</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.5</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -130,6 +136,19 @@ details.card[open] summary::before{content:"▾ "}
     <div id="err" class="err hide"></div>
 
     <section id="tab-today">
+      <div class="card" id="dialCard" style="margin-bottom:12px">
+        <div class="row" style="align-items:center">
+          <div>
+            <p class="ttl">Calls today <span id="dialCount" class="num">0</span><span class="num" id="dialOf"> / 5</span></p>
+            <p class="sub" id="dialMsg">Voicemails count. Fifteen minutes, done.</p>
+          </div>
+          <div style="text-align:right">
+            <input id="dialTarget" type="number" min="1" max="50" value="5"
+                   style="width:64px;text-align:center;padding:7px 6px" title="Daily target">
+          </div>
+        </div>
+        <div class="bar"><span id="dialFill"></span></div>
+      </div>
       <div class="stats">
         <div class="stat"><b id="s-today">–</b><span>today</span></div>
         <div class="stat"><b id="s-week">–</b><span>this week</span></div>
@@ -509,6 +528,32 @@ function renderToday(){
   renderDue();
 }
 
+let DIAL_TARGET = 5;
+function dialsToday(){
+  const now=new Date();
+  const logged = CALLS.filter(v=>v.at && dbet(v.at,now)===0).length;
+  return logged;
+}
+function renderDial(){
+  const n = dialsToday(), t = Math.max(1, DIAL_TARGET);
+  const c=$("#dialCount"), o=$("#dialOf"), f=$("#dialFill"), card=$("#dialCard"), msg=$("#dialMsg");
+  if(!c) return;
+  c.textContent = n; o.textContent = " / " + t;
+  const pct = Math.min(100, Math.round(n/t*100));
+  if(f) f.style.width = pct + "%";
+  const bar = f ? f.parentElement : null;
+  if(bar) bar.classList.toggle("done", n>=t);
+  if(msg) msg.textContent = n===0 ? "Voicemails count. Fifteen minutes, done."
+    : n>=t ? "Target hit. Anything past this is a bonus."
+    : (t-n)+" to go — the first one is the only hard one.";
+  const inp=$("#dialTarget"); if(inp && document.activeElement!==inp) inp.value=t;
+}
+async function saveDialTarget(v){
+  DIAL_TARGET=v; renderDial();
+  try{ await setDoc(doc(db,"hq","settings"),{dialTarget:v,at:serverTimestamp()},{merge:true}); }
+  catch(e){ try{ localStorage.setItem("hq_dialTarget", String(v)); }catch(_){} }
+}
+
 function renderContact(){
   const c=$("#contactList"); if(!c) return; c.innerHTML="";
   const list=ACCTS.filter(a=>a.isQuiet && !HIDDEN.includes(a.key)).slice(0,5);
@@ -821,6 +866,7 @@ async function updateCall(id, patch){
 }
 
 function renderCalls(){
+  renderDial();
   const today=CALLS.filter(v=>v.at&&dbet(v.at,new Date())===0);
   const tl=$("#callLog");
   if(tl){ tl.innerHTML=""; tl.className="";
@@ -908,6 +954,10 @@ $("#todoIn")?.addEventListener("keydown",e=>{if(e.key==="Enter")addTodo("#todoIn
 if($("#todoAdd2")) $("#todoAdd2").onclick=()=>addTodo("#todoIn2");
 if($("#mcAdd")) $("#mcAdd").onclick=addManual;
 if($("#bkAdd")) $("#bkAdd").onclick=addBooking;
+if($("#dialTarget")) $("#dialTarget").onchange=e=>{
+  const v=parseInt(e.target.value,10); if(v>0) saveDialTarget(v);
+};
+try{ const lt=parseInt(localStorage.getItem("hq_dialTarget")||"",10); if(lt>0) DIAL_TARGET=lt; }catch(e){}
 $("#bkName")?.addEventListener("keydown",e=>{if(e.key==="Enter")addBooking();});
 $("#mcName")?.addEventListener("keydown",e=>{if(e.key==="Enter")addManual();});
 $("#mcNote")?.addEventListener("keydown",e=>{if(e.key==="Enter")addManual();});
@@ -1034,6 +1084,9 @@ function startLiveSync(){
     err=>syncBadge(false, err)));
 }
 function startLiveExtras(){
+  UNSUB.push(onSnapshot(doc(db,"hq","settings"),
+    d=>{ if(d.exists() && Number(d.data().dialTarget)>0){ DIAL_TARGET=Number(d.data().dialTarget); renderDial(); } },
+    ()=>{}));
   UNSUB.push(onSnapshot(doc(db,"hq","hidden"),
     d=>{ HIDDEN = (d.exists() && Array.isArray(d.data().keys)) ? d.data().keys : [];
          renderContact(); renderQueue(); renderHiddenLine(); },
@@ -1049,7 +1102,7 @@ function syncBadge(ok, err){
   if(!ok && err){ console.log("[HQ] firestore error", err.code||err.message); }
 }
 
-function renderAll(){renderToday();renderAccounts();renderQueue();renderWeek();}
+function renderAll(){renderDial();renderToday();renderAccounts();renderQueue();renderWeek();}
 
 try{
   const rr = await getRedirectResult(auth);
