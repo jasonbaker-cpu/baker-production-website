@@ -104,6 +104,14 @@ details.card summary::before{content:"▸ ";color:var(--gold-d)}
 details.card[open] summary::before{content:"▾ "}
 .scr{margin:11px 0 0;padding-left:12px;border-left:2px solid var(--gold);font-size:15.5px}
 .obj{margin:12px 0 0;font-size:14.5px}
+.dlg{margin:10px 0 0;padding:11px 13px;background:var(--panel2);border:1px solid var(--line);
+     border-radius:10px;font-size:14.5px;line-height:1.55}
+.dlg p{margin:0 0 7px}.dlg p:last-child{margin-bottom:0}
+.dlg b{color:var(--gold-d)}.dlg i{color:var(--mut)}
+.win{margin:10px 0 0;padding:10px 12px;border-left:3px solid var(--ok);background:var(--panel2);
+     border-radius:0 9px 9px 0;font-size:14.5px}
+.bad{margin:10px 0 0;padding:10px 12px;border-left:3px solid var(--hot);background:var(--panel2);
+     border-radius:0 9px 9px 0;font-size:14.5px}
 .obj b{color:var(--hot)}
 .inline{display:flex;gap:8px;flex-wrap:wrap}
 .inline input{min-width:140px}
@@ -114,7 +122,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.9</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v4.0</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -250,19 +258,90 @@ details.card[open] summary::before{content:"▾ "}
 
     <section id="tab-scripts" class="hide">
       <h2>What to say</h2>
-      <p class="note" style="margin:0 0 10px">Learn the shape, say it your way. <b>Never apologise for the gap</b> — no "sorry I dropped off", no "that's on me". Lead with what you've got on, not with why you went quiet.</p>
+      <p class="note" style="margin:0 0 10px">Learn the shape, say it your way. <b>Never apologise for the gap</b> — no "sorry I dropped off", no "that's on me". Lead with what you've got on, not why you went quiet.</p>
 
       <details class="card" open>
         <summary><b>Before you dial</b></summary>
-        <p class="note">Stand up. Their listing open on screen. <b>Target is dials, not wins</b> — voicemail counts, a no counts.</p>
+        <p class="note"><b>Prep the images first.</b> Find one of their current listings, pick the two worst photos, clean them up, have them sitting in a draft. Don't dial until those exist — the whole call rests on them.</p>
+        <p class="note"><b>Target is dials, not wins.</b> Voicemail counts. A no counts. Five dials, fifteen minutes, stop when the bar fills even if every one says no.</p>
         <p class="note">Warmest name first, always. Someone who's booked you ten times isn't a cold call, and once you've talked to one human the next four are easy.</p>
-        <p class="note">The nerves don't go before the call — they go about twenty seconds into it. More preparing is just more avoiding. Cap it: five dials, fifteen minutes, stop when the bar fills even if they all say no.</p>
-        <p class="note">Same hour every day. 9–10am or 3–4pm. Never during a home open.</p>
+        <p class="note">The nerves go about twenty seconds <em>into</em> the call, not before it. More preparing is just more avoiding — memorise two lines and dial.</p>
+        <p class="note"><b>Timing:</b> Monday and Tuesday mornings, or 3–4pm Tuesday to Thursday. Avoid the middle of Wednesday and Thursday — they're prepping for the weekend. Never Saturday, never during a home open.</p>
+        <p class="note"><b>The one rule that covers everything: pause after every question mark, and never answer your own question.</b></p>
+      </details>
+
+      <details class="card">
+        <summary><b>Cold agent — never worked with them</b></summary>
+        <p class="note">Across 90,380 recorded cold calls: a warm human opener lifts booking rate <b>3.4×</b>, saying "the reason I'm calling" lifts it <b>2.1×</b>, and asking permission up front ("got a minute?", "bad time?") performs <b>40% worse than saying nothing at all</b>. Permission before the reason kills the call — permission <em>after</em> it helps.</p>
+        <p class="scr">"Hi [name], Jason from Baker Production — how're you going?"</p>
+        <p class="note">Pause. Let them answer. Costs two seconds, worth 3.4×.</p>
+        <p class="scr">"Good. Look, reason I'm calling — saw you just launched [street]. I've cleaned up two of the photos, took the bins out of the driveway shot. Feel free to tell me to get lost, but want me to send them over?"</p>
+        <p class="note"><b>Full stop. Say nothing.</b> This is the pause that matters. Fill it and you turn a gift into a pitch.</p>
+        <p class="scr">"Is [first]@[agency].com.au the right one?"</p>
+        <p class="note">A tick, not a request — and it proves you did homework.</p>
+        <p class="scr">"Are you busy at the moment, or has it gone quiet?"</p>
+        <p class="note">Long pause. Let them talk. Peer-to-peer, not qualifying — and it's the bit they'll remember you for.</p>
+        <p class="scr">"If you like how they come out, try me on one. I'll do your next listing and you can judge it on the photos."</p>
+        <p class="note">Stop. No softeners. A trial, not a booking — that's what actually converts a stranger.</p>
+        <p class="scr">"I'll get those over within the hour. I'll give you a bell next week — that alright?"</p>
+        <p class="note"><b>The win is the email and a date, not a booking.</b> If you're sorting newest-first they've already paid someone to shoot that one — you're buying queue position for the next.</p>
+      </details>
+
+      <details class="card">
+        <summary><b>Cold call — how it goes right</b></summary>
+        <div class="dlg">
+          <p><b>You:</b> Hi Dave, Jason from Baker Production — how're you going?</p>
+          <p><b>Dave:</b> Yeah good mate, bit flat out. What's up?</p>
+          <p><b>You:</b> Good. Look, reason I'm calling — saw you just launched the Karrinyup one. I've cleaned up two of the photos, took the bins out of the driveway shot. Feel free to tell me to get lost, but want me to send them over?</p>
+          <p><b>Dave:</b> …Sorry, you've edited my photos?</p>
+          <p><b>You:</b> Just the two off realestate.com.au. Haven't done anything with them, just tidied them up. Happy to bin them if you'd rather.</p>
+          <p><b>Dave:</b> Nah, send 'em through, I'm curious.</p>
+          <p><b>You:</b> Is dave@[agency].com.au the right one?</p>
+          <p><b>Dave:</b> Yep.</p>
+          <p><b>You:</b> Beauty. Are you busy at the moment, or has it gone quiet?</p>
+          <p><b>Dave:</b> Bit up and down. Got two coming next month, quiet till then.</p>
+          <p><b>You:</b> <i>(pause — let him keep going)</i></p>
+          <p><b>Dave:</b> Vendors are all waiting for spring, that's the problem.</p>
+          <p><b>You:</b> Yeah, everyone's saying that. Look — if you like how those come out, try me on one. I'll do your next listing and you can judge it on the photos.</p>
+          <p><b>Dave:</b> Yeah maybe, send them over and we'll see.</p>
+          <p><b>You:</b> No worries. I'll get those over within the hour. I'll give you a bell next week — that alright?</p>
+          <p><b>Dave:</b> Yeah righto.</p>
+        </div>
+        <p class="win"><b>That's a win.</b> No booking — but an email, a real conversation, his pipeline ("two next month") and a date. Ring him next week and you're not a stranger.</p>
+      </details>
+
+      <details class="card">
+        <summary><b>Cold call — a no, handled properly</b></summary>
+        <div class="dlg">
+          <p><b>You:</b> Hi Sarah, Jason from Baker Production — how're you going?</p>
+          <p><b>Sarah:</b> Yeah, fine. <i>(flat)</i></p>
+          <p><b>You:</b> Look, reason I'm calling — saw you just launched the Duncraig one. I've cleaned up two of the photos, took the clutter off the benches. Feel free to tell me to get lost, but want me to send them over?</p>
+          <p><b>Sarah:</b> We've got a photographer, mate.</p>
+          <p><b>You:</b> Course you do, everyone does. Not asking you to swap — when they're booked out, who do you call?</p>
+          <p><b>Sarah:</b> Doesn't really happen.</p>
+          <p><b>You:</b> Fair enough. Can I send the two through anyway? They're already sitting there.</p>
+          <p><b>Sarah:</b> …Yeah, alright.</p>
+          <p><b>You:</b> Is sarah@[agency].com.au right?</p>
+          <p><b>Sarah:</b> Yep. Look, I've gotta run.</p>
+          <p><b>You:</b> No worries, I'll send them now. Thanks Sarah.</p>
+        </div>
+        <p class="win"><b>Twenty-five seconds, no booking, went fine.</b> You got the email and the images will land. That's the job. Judge that as a failure and you'll stop calling by Thursday.</p>
+      </details>
+
+      <details class="card">
+        <summary><b>Cold call — the same one, wrecked</b></summary>
+        <div class="dlg">
+          <p><b>Sarah:</b> We've got a photographer, mate.</p>
+          <p><b>You:</b> Yeah no worries, I just — I mean I'm not trying to replace anyone, I just do things a bit differently, like I include the decluttering free and I've got this tool where you can do your own photos and I do about fifty jobs a week so turnaround's really quick, and my Essential's only $299 which is—</p>
+          <p><b>Sarah:</b> Yeah I'm right, thanks.</p>
+        </div>
+        <p class="bad"><b>Three traps in ten seconds:</b> filling the silence, stacking offers, and pitching price unasked. All three come from panic after a no. <b>The no is not an emergency.</b> Answer it in one line and ask for the email.</p>
       </details>
 
       <details class="card">
         <summary><b>Past client — 2 weeks to a month quiet</b></summary>
         <p class="scr">"Hey [name], Jason from Baker Production — how've you been? … I was going through my calendar and realised I hadn't shot anything for you since [address]. How'd that one end up going?"</p>
+        <p class="note">"How've you been" is the single best-performing opener there is — <b>6.6×</b> — because it signals you know each other. With a past client that's true, so use it. Never use it on a stranger.</p>
         <p class="note">Then shut up and listen. That's the whole call. Don't fill the pause.</p>
         <p class="scr">"I'm booking spring dates now — what've you got coming up? Even if it's not locked in I'll pencil you in."</p>
         <p class="note">A fortnight isn't a problem, it's a gap. Don't go digging for one — asking "was something wrong?" invents a complaint that wasn't there.</p>
@@ -272,40 +351,37 @@ details.card[open] summary::before{content:"▾ "}
         <summary><b>Long gap — 4 to 6 months</b></summary>
         <p class="scr">"Hey [name], Jason from Baker Production — shot [address] for you back in [month]. How've you been?"</p>
         <p class="scr">"I'm getting my spring calendar sorted and you were on my list. What have you got coming up?"</p>
-        <p class="note">No explaining where you've been. No "been flat out". It reads as an excuse and they never asked.</p>
+        <p class="note">No explaining where you've been. No "been flat out" — it reads as an excuse and they never asked.</p>
         <p class="note">Name one real detail from that property — the pool, the view, the staircase. Proves it isn't a mass call.</p>
         <p class="scr">"Send me your next one and I'll do the walkthrough video on me, so you can see how they're coming out now."</p>
         <p class="note">Book the follow-up before you hang up. A long gap closes on the second or third call, not the first.</p>
       </details>
 
       <details class="card">
-        <summary><b>Cold agent — free declutter hook</b></summary>
-        <p class="scr">"Hi [name], Jason from Baker Production — real estate photographer here in Perth. I've gone and cleaned up two of your photos from [street] — pulled the bins and the benchtop clutter out. No charge, no catch. What's the best email and I'll send them across?"</p>
-        <p class="note">One breath, ends in a question they want to say yes to. <b>The email is the win of this call</b>, not the booking.</p>
-        <p class="scr">"How'd they come out? … Good. Anything I shoot, that decluttering's included — it's not an add-on."</p>
-        <p class="scr">"What's coming to market in the next couple of weeks? Even if it's not locked in I'll pencil you in."</p>
-        <p class="note">Don't tell them what's wrong with their listing — say what you did. The clutter is usually the vendor's fault and it's a sore point.</p>
-        <p class="note">Send the images the same day or the call was wasted. Send them <b>with Studio credits attached</b> so there's a second touch that doesn't need another phone call.</p>
-      </details>
-
-      <details class="card">
         <summary><b>Same agency as an existing client</b></summary>
-        <p class="scr">"Hi [name], Jason from Baker Production — I do the photography for [colleague] in your office. Got a minute?"</p>
-        <p class="scr">"I've been shooting their listings for months so I already know your office's style — logo on the web images, your floorplan format, clean high-res, all of it. Nothing to set up."</p>
+        <p class="scr">"Hi [name], Jason from Baker Production — how're you going? … Reason I'm calling, I do the photography for [colleague] in your office."</p>
+        <p class="note">Not "got a minute?" — that's the 40%-worse opener. Give the reason first, every time.</p>
+        <p class="scr">"I've been shooting their listings for months so I already know your office's style — logo on the web images, your floorplan format, clean high-res. Nothing to set up."</p>
         <p class="scr">"Have a look at what I did for [colleague] at [address] — that'll tell you more than I can. What's next in your pipeline?"</p>
         <p class="note">Never say the colleague recommended you unless they did. "I shoot for them" is true and does the same job.</p>
       </details>
 
       <details class="card">
         <summary><b>When they push back</b></summary>
-        <p class="obj"><b>"We've already got a photographer."</b><br>"Course you do — everyone does. Not asking you to swap, just keep me for when they're booked out. Can I send my price list so I'm in your phone?"</p>
-        <p class="obj"><b>"Not interested."</b><br>"No worries at all. Can I send the two cleaned-up photos anyway? They're already done." <em>(Then leave it. Log it as Not now, not Remove.)</em></p>
-        <p class="obj"><b>"Send me an email."</b><br>"Will do. Just so I send the right thing — mostly units or houses?" <em>(Then actually send it, same day.)</em></p>
-        <p class="obj"><b>"Nothing on at the moment."</b><br>"All good — that's why I'm calling early. When you do get one, what turnaround do you need? … I'll check back in a fortnight, alright?"</p>
-        <p class="obj"><b>"How much?"</b><br>Flat, no apology, no hedging: "$299 Essential — photos, floorplan, decluttering included. Most go Premium at $375 with the drone. What sort of properties are you listing?"</p>
-        <p class="obj"><b>"You're dearer than X."</b><br>"Probably am. What you get for it is the decluttering and the turnaround. Try me on one and judge it on the photos."</p>
-        <p class="obj"><b>"Who's this? / What's this about?"</b><br>Don't re-pitch. "Jason, photographer in Perth — I cleaned up two of your [street] photos, want them?"</p>
-        <p class="obj"><b>"Bad time."</b><br>"No worries — when's better, morning or arvo?" Then hang up. Don't push through it.</p>
+        <p class="note"><b>Brush-offs</b> — they're rejecting the call, not you.</p>
+        <p class="obj"><b>"Send me an email."</b><br>Don't take it gratefully and hang up, that's how it dies. "Will do. Just so I send the right thing — mostly units or houses? … And I'll give you a bell next week."</p>
+        <p class="obj"><b>"Not interested."</b><br>"No worries. Can I send the two photos anyway? They're already sitting there." Costs them nothing to accept, and the images do the work you couldn't.</p>
+        <p class="obj"><b>Flat energy, "uh huh", nothing coming back</b><br>Not an objection — a signal. Cut to the exit: "I'll just send the two through, have a look when you get a sec." Leave. Don't push a dead call.</p>
+        <p class="note"><b>Real walls</b> — don't fight them, go around.</p>
+        <p class="obj"><b>"We've got a photographer."</b><br>"Course you do, everyone does. Not asking you to swap — when they're booked out, who do you call?" That question tells you whether a gap exists.</p>
+        <p class="obj"><b>"The agency has a deal / we use [big company]."</b><br>Don't argue with an office contract. "Fair enough, that's an office thing. Does it cover your rentals too?" Rentals and off-panel work usually sit outside the deal.</p>
+        <p class="obj"><b>"Take me off your list."</b><br>"No worries, sorry to bother you." Hang up, log it Dead, don't send the images.</p>
+        <p class="note"><b>Doubt about you</b></p>
+        <p class="obj"><b>"Did you edit my listing photos without asking?"</b><br>This will happen and they're not being unreasonable. Give away the power straight away: "Just the two off realestate.com.au — haven't done anything with them other than tidy them up for you. Happy to bin them if you'd rather." Offering to delete ends it on the spot.</p>
+        <p class="obj"><b>"How much?"</b><br>Often a filter, not interest. Flat, then hand it back: "$299 Essential — photos and floorplan. Most go Premium at $375 with the drone. What sort of stock are you listing?"</p>
+        <p class="obj"><b>"How old are you?"</b><br>No defence, no over-claiming: "Twenty. Been shooting property a few years — we do about fifty jobs a week across Perth." Your volume beats most studios' credentials.</p>
+        <p class="obj"><b>"Who is this? What's this about?"</b><br>Don't re-pitch. Compress: "Jason, photographer in Perth — cleaned up two of your [street] photos, want them?"</p>
+        <p class="obj"><b>Gatekeeper — "he's in a meeting"</b><br>"No worries, when's he usually about? … I'll try then." Never leave the pitch with reception.</p>
         <p class="obj"><b>Awkward pause</b><br>Let it sit. Whoever speaks first usually loses.</p>
       </details>
 
@@ -315,6 +391,13 @@ details.card[open] summary::before{content:"▾ "}
         <p class="note">Curiosity, not a pitch. A message they have to think about doesn't get returned. Under 15 seconds, number twice, hang up.</p>
         <p class="scr">Text: "Hi [name], Jason from Baker Production — just left you a voicemail. Cleaned up two of your [street] photos, no charge. Want me to send them through?"</p>
         <p class="note">The text is what actually gets replied to.</p>
+      </details>
+
+      <details class="card">
+        <summary><b>The email — send within the hour</b></summary>
+        <p class="note">The call is worthless without this. Same day isn't good enough; inside the hour is the proof of what you're like to work with.</p>
+        <p class="scr">"Here are those two cleaned up. If you want to run any others — old listings, rentals, anything sitting there — I've put a few credits on an account for you: [link]. Anything I shoot, the decluttering's included."</p>
+        <p class="note"><b>This is where Studio gets named — never on the call.</b> By now they've seen the result, so the name explains how rather than pitching. It's also your second touch without another phone call.</p>
       </details>
 
       <details class="card">
@@ -335,7 +418,7 @@ details.card[open] summary::before{content:"▾ "}
         <summary><b>On the job — any agent, as you pack up</b></summary>
         <p class="note">Best sales moment of your week. Full attention, they've just watched you work, nothing's gone wrong yet.</p>
         <p class="scr">"What else have you got coming up? I'll pencil you in now."</p>
-        <p class="note">"Pencil you in now" is the trick — it moves it from a thought to your calendar while you're standing there. Never "let me know if you need anything".</p>
+        <p class="note">"Pencil you in now" moves it from a thought to your calendar while you're standing there. Never "let me know if you need anything".</p>
         <p class="scr">At the car, not in front of the vendor: "Anyone else in the office listing at the moment? I've got a bit of room before spring hits."</p>
         <p class="note">Say one specific thing about the house — the light in the back room, the ceiling height, how the block sits. Agents deal with tradies who grunt and leave. Being the one who noticed is most of why they call back.</p>
         <p class="note">If the vendor's there, say goodbye to them properly. They're a seller now and a buyer in six weeks, and they talk to their next agent about who took the photos.</p>
@@ -354,6 +437,7 @@ details.card[open] summary::before{content:"▾ "}
         <p class="note"><b>Photos I shot → decluttering included.</b> Costs nothing at the margin, makes the work better than whoever they used before, and it's a real reason to book you over a cheaper shooter.</p>
         <p class="note"><b>Photos I didn't shoot → that's Studio, and it's paid.</b> Their old listings, phone photos, rentals, stock that's been sitting there.</p>
         <p class="scr">"Anything I shoot, decluttering's included. If you want to run your own photos or old listings through it, that's the Studio side — five bucks an image, same day."</p>
+        <p class="note"><b>Never name Studio on a cold call</b> — it turns a favour into a demo. Name it in the follow-up email. The exception: if they ask "how'd you do that?", say it straight away — that's them pulling.</p>
         <p class="note">Never give Studio away free on every shoot forever. Free-per-shoot trains them to never pay, and then there's no product. One trial of credits per account, then it's a price.</p>
         <p class="scr">On every delivery email: "Want any of these staged or decluttered? Send the file numbers back and I'll turn them around today — $5 an image to declutter, $25 to stage."</p>
       </details>
