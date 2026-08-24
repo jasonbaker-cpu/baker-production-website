@@ -108,7 +108,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.5</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.6</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -570,6 +570,7 @@ function renderContact(){
         <button class="act good" data-o="Booked">Booked</button>
         <button class="act mid" data-o="Callback">Callback</button>
         <button class="act" data-o="No answer">No answer</button>
+        <button class="act" data-o="Not now">Not now</button>
         <button class="act" data-hide="1">Not this one</button>
       </div></div>`);
     card.querySelectorAll("button[data-o]").forEach(b=>b.onclick=()=>handleOutcome(a,b.dataset.o,card));
@@ -687,6 +688,7 @@ async function manualDone(id, outcome, m){
       name:m.name, agency:m.note||"", phone:m.phone||"", email:"", outcome,
       by:ME?.name||"Jason", at:serverTimestamp(), source:"manual", cbAt:null, done:false });
     await setDoc(doc(db,"manualcalls",id),{done:true,closedAt:serverTimestamp()},{merge:true});
+    if(outcome) await loadCalls();
   }catch(e){ noteStatus("couldn't update that call — "+(e.code||e.message)); }
 }
 async function addBooking(){
@@ -768,10 +770,16 @@ function renderManual(){
         <button class="act good" data-o="Booked">Booked</button>
         <button class="act mid" data-o="Callback">Callback</button>
         <button class="act" data-o="No answer">No answer</button>
+        <button class="act" data-o="Not now">Not now</button>
         <button class="act" data-x="1">Remove</button>
       </div></div>`);
     card.querySelectorAll("button[data-o]").forEach(b=>b.onclick=()=>{ manualDone(m.id,b.dataset.o,m); card.style.opacity=".45"; });
-    card.querySelector("button[data-x]").onclick=()=>{ manualDone(m.id,null,m); card.remove(); };
+    const rm=card.querySelector("button[data-x]");
+    if(rm) rm.onclick=()=>{
+      if(rm.dataset.sure!=="1"){ rm.dataset.sure="1"; rm.textContent="Sure? tap again";
+        setTimeout(()=>{ if(rm.isConnected){ rm.dataset.sure=""; rm.textContent="Remove"; } },4000); return; }
+      manualDone(m.id,null,m); card.remove();
+    };
     c.appendChild(card);
   });
 }
@@ -805,7 +813,7 @@ async function loadCalls(){
     const snap=await getDocs(query(collection(db,"calls"),orderBy("at","desc"),limit(80)));
     CALLS=[]; snap.forEach(d=>{const v=d.data();
       CALLS.push({id:d.id,...v,at:v.at?.toDate?.()||null,cbAt:v.cbAt?.toDate?.()||(v.cbAt?new Date(v.cbAt):null)});});
-    renderCalls(); renderDue();
+    renderCalls(); renderDue(); renderDial();
   }catch(e){ /* rules may block until published */ }
 }
 function callCard(v){
