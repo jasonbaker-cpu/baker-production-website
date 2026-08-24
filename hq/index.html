@@ -64,6 +64,12 @@ nav button{flex:1 0 auto;min-width:66px;background:var(--panel);border:1px solid
   color:var(--mut);padding:8px 6px;font:inherit;font-size:10.5px;letter-spacing:.05em;
   text-transform:uppercase;cursor:pointer;white-space:nowrap}
 nav button.on{color:#fff;background:var(--gold);border-color:var(--gold)}
+@media (max-width:520px){
+  nav{gap:4px;padding:7px 8px;overflow-x:visible}
+  nav button{min-width:0;flex:1 1 0;padding:7px 2px;font-size:9px;letter-spacing:.02em}
+  nav button b{font-size:12px}
+}
+@media (max-width:390px){ nav button b{display:none} nav button{padding:9px 2px} }
 nav button b{display:block;font-size:15px;margin-bottom:1px}
 .empty{color:var(--mut);text-align:center;padding:30px 12px;font-size:15px}
 .center{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:72vh;
@@ -108,7 +114,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.8</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v3.9</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -119,7 +125,7 @@ details.card[open] summary::before{content:"▾ "}
   <button data-tab="accounts"><b>☰</b>Accounts</button>
   <button data-tab="calls"><b>✆</b>Calls</button>
   <button data-tab="book"><b>◷</b>To book</button>
-  <button data-tab="scripts"><b>✆</b>Scripts</button>
+  <button data-tab="scripts"><b>❞</b>Scripts</button>
   <button data-tab="notes"><b>✎</b>Notes</button>
 </nav>
 
