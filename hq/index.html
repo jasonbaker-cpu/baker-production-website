@@ -97,10 +97,10 @@ nav button b{display:block;font-size:15px;margin-bottom:1px}
      transition:width .35s ease}
 .bar.done span{background:var(--ok)}
 .num{color:var(--gold-d);font-weight:700}
-details.card summary{cursor:pointer;font-size:15px;list-style:none;padding:2px 0}
-details.card summary::-webkit-details-marker{display:none}
-details.card summary::before{content:"▸ ";color:var(--gold-d)}
-details.card[open] summary::before{content:"▾ "}
+details.card > summary{cursor:pointer;font-size:15px;list-style:none;padding:2px 0}
+details.card > summary::-webkit-details-marker{display:none}
+details.card > summary::before{content:"▸ ";color:var(--gold-d)}
+details.card[open] > summary::before{content:"▾ "}
 .scr{margin:11px 0 0;padding-left:12px;border-left:2px solid var(--gold);font-size:15.5px}
 .obj{margin:12px 0 0;font-size:14.5px}
 .dlg{margin:10px 0 0;padding:11px 13px;background:var(--panel2);border:1px solid var(--line);
@@ -112,6 +112,13 @@ details.card[open] summary::before{content:"▾ "}
 .bad{margin:10px 0 0;padding:10px 12px;border-left:3px solid var(--hot);background:var(--panel2);
      border-radius:0 9px 9px 0;font-size:14.5px}
 .obj b{color:var(--hot)}
+details.nest{margin:11px 0 0;padding:10px 0 0;border-top:1px solid var(--line)}
+details.nest > summary{cursor:pointer;font-size:14.5px;font-weight:650;color:var(--gold-d);list-style:none;padding:1px 0}
+details.nest > summary::-webkit-details-marker{display:none}
+details.nest > summary::before{content:"▸ ";color:var(--gold-d)}
+details.nest[open] > summary::before{content:"▾ "}
+.nestlbl{margin:18px 0 2px;font-size:10.5px;text-transform:uppercase;letter-spacing:.15em;
+     color:var(--mut);font-weight:700}
 .inline{display:flex;gap:8px;flex-wrap:wrap}
 .inline input{min-width:140px}
 .inline input{flex:1}
@@ -121,7 +128,7 @@ details.card[open] summary::before{content:"▾ "}
 
 <header>
   <h1>BAKER <span>HQ</span></h1>
-  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v4.4</span>
+  <span class="sync" id="sync"></span><span class="sync" style="opacity:.55">v4.5</span>
   <button class="iconbtn" id="refresh">↻</button>
   <button class="iconbtn hide" id="signout">out</button>
 </header>
@@ -299,57 +306,55 @@ details.card[open] summary::before{content:"▾ "}
         <p class="note">Give the callback a reason or it sounds like a sales cadence. <b>Better still, use what they just told you</b> — if he said "two coming next month", say "I'll check in when those come up." That's not a cadence, that's paying attention.</p>
         <p class="note">If the call was flat and they clearly wanted off the phone, <b>don't announce a callback at all</b> — just send the photos and set the reminder in HQ quietly. And if you do say it, do it. Otherwise you're the bloke who said he'd ring.</p>
         <p class="note"><b>The win is the email and a date, not a booking.</b> If you're sorting newest-first they've already paid someone to shoot that one — you're buying queue position for the next.</p>
-      </details>
-
-      <details class="card">
-        <summary><b>Cold call — how it goes right</b></summary>
-        <div class="dlg">
-          <p><b>You:</b> Hi Dave, Jason from Baker Production — how're you going?</p>
-          <p><b>Dave:</b> Yeah good mate, bit flat out. What's up?</p>
-          <p><b>You:</b> Good. Look, reason I'm calling — saw you just launched the Karrinyup one. I've cleaned up two of the photos, took the bins out of the driveway shot. Feel free to tell me to get lost, but want me to send them over?</p>
-          <p><b>Dave:</b> …Sorry, you've edited my photos?</p>
-          <p><b>You:</b> Just the two off realestate.com.au. Haven't done anything with them, just tidied them up. Happy to bin them if you'd rather.</p>
-          <p><b>Dave:</b> Nah, send 'em through, I'm curious.</p>
-          <p><b>You:</b> Is dave@[agency].com.au the right one?</p>
-          <p><b>Dave:</b> Yep.</p>
-          <p><b>You:</b> Beauty. Are you busy at the moment, or has it gone quiet?</p>
-          <p><b>Dave:</b> Bit up and down. Got two coming next month, quiet till then.</p>
-          <p><b>You:</b> <i>(pause — let him keep going)</i></p>
-          <p><b>Dave:</b> Vendors are all waiting for spring, that's the problem.</p>
-          <p><b>You:</b> Yeah, everyone's saying that. Look — if you like how those come out, try me on one. Every shoot comes back like that.</p>
-          <p><b>Dave:</b> Yeah maybe, send them over and we'll see.</p>
-          <p><b>You:</b> No worries. I'll get those over within the hour — I'll give you a call next week once you've had a look.</p>
-          <p><b>Dave:</b> Yeah righto.</p>
-        </div>
-        <p class="win"><b>That's a win.</b> No booking — but an email, a real conversation, his pipeline ("two next month") and a date. Ring him next week and you're not a stranger.</p>
-      </details>
-
-      <details class="card">
-        <summary><b>Cold call — a no, handled properly</b></summary>
-        <div class="dlg">
-          <p><b>You:</b> Hi Sarah, Jason from Baker Production — how're you going?</p>
-          <p><b>Sarah:</b> Yeah, fine. <i>(flat)</i></p>
-          <p><b>You:</b> Look, reason I'm calling — saw you just launched the Duncraig one. I've cleaned up two of the photos, took the clutter off the benches. Feel free to tell me to get lost, but want me to send them over?</p>
-          <p><b>Sarah:</b> We've got a photographer, mate.</p>
-          <p><b>You:</b> Course you do, everyone does. Not asking you to swap — when they're booked out, who do you call?</p>
-          <p><b>Sarah:</b> Doesn't really happen.</p>
-          <p><b>You:</b> Fair enough. Can I send the two through anyway? They're already sitting there.</p>
-          <p><b>Sarah:</b> …Yeah, alright.</p>
-          <p><b>You:</b> Is sarah@[agency].com.au right?</p>
-          <p><b>Sarah:</b> Yep. Look, I've gotta run.</p>
-          <p><b>You:</b> No worries, I'll send them now. Thanks Sarah.</p>
-        </div>
-        <p class="win"><b>Twenty-five seconds, no booking, went fine.</b> You got the email and the images will land. That's the job. Judge that as a failure and you'll stop calling by Thursday.</p>
-      </details>
-
-      <details class="card">
-        <summary><b>Cold call — the same one, wrecked</b></summary>
-        <div class="dlg">
-          <p><b>Sarah:</b> We've got a photographer, mate.</p>
-          <p><b>You:</b> Yeah no worries, I just — I mean I'm not trying to replace anyone, I just do things a bit differently, like I include the decluttering free and I've got this tool where you can do your own photos and I do about fifty jobs a week so turnaround's really quick, and my Essential's only $299 which is—</p>
-          <p><b>Sarah:</b> Yeah I'm right, thanks.</p>
-        </div>
-        <p class="bad"><b>Three traps in ten seconds:</b> filling the silence, stacking offers, and pitching price unasked. All three come from panic after a no. <b>The no is not an emergency.</b> Answer it in one line and ask for the email.</p>
+        <p class="nestlbl">How it actually sounds</p>
+        <details class="nest">
+          <summary>How it goes right</summary>
+          <div class="dlg">
+            <p><b>You:</b> Hi Dave, Jason from Baker Production — how're you going?</p>
+            <p><b>Dave:</b> Yeah good mate, bit flat out. What's up?</p>
+            <p><b>You:</b> Good. Look, reason I'm calling — saw you just launched the Karrinyup one. I've cleaned up two of the photos, took the bins out of the driveway shot. Feel free to tell me to get lost, but want me to send them over?</p>
+            <p><b>Dave:</b> …Sorry, you've edited my photos?</p>
+            <p><b>You:</b> Just the two off realestate.com.au. Haven't done anything with them, just tidied them up. Happy to bin them if you'd rather.</p>
+            <p><b>Dave:</b> Nah, send 'em through, I'm curious.</p>
+            <p><b>You:</b> Is dave@[agency].com.au the right one?</p>
+            <p><b>Dave:</b> Yep.</p>
+            <p><b>You:</b> Beauty. Are you busy at the moment, or has it gone quiet?</p>
+            <p><b>Dave:</b> Bit up and down. Got two coming next month, quiet till then.</p>
+            <p><b>You:</b> <i>(pause — let him keep going)</i></p>
+            <p><b>Dave:</b> Vendors are all waiting for spring, that's the problem.</p>
+            <p><b>You:</b> Yeah, everyone's saying that. Look — if you like how those come out, try me on one. Every shoot comes back like that.</p>
+            <p><b>Dave:</b> Yeah maybe, send them over and we'll see.</p>
+            <p><b>You:</b> No worries. I'll get those over within the hour — I'll give you a call next week once you've had a look.</p>
+            <p><b>Dave:</b> Yeah righto.</p>
+          </div>
+          <p class="win"><b>That's a win.</b> No booking — but an email, a real conversation, his pipeline ("two next month") and a date. Ring him next week and you're not a stranger.</p>
+        </details>
+        <details class="nest">
+          <summary>A no, handled properly</summary>
+          <div class="dlg">
+            <p><b>You:</b> Hi Sarah, Jason from Baker Production — how're you going?</p>
+            <p><b>Sarah:</b> Yeah, fine. <i>(flat)</i></p>
+            <p><b>You:</b> Look, reason I'm calling — saw you just launched the Duncraig one. I've cleaned up two of the photos, took the clutter off the benches. Feel free to tell me to get lost, but want me to send them over?</p>
+            <p><b>Sarah:</b> We've got a photographer, mate.</p>
+            <p><b>You:</b> Course you do, everyone does. Not asking you to swap — when they're booked out, who do you call?</p>
+            <p><b>Sarah:</b> Doesn't really happen.</p>
+            <p><b>You:</b> Fair enough. Can I send the two through anyway? They're already sitting there.</p>
+            <p><b>Sarah:</b> …Yeah, alright.</p>
+            <p><b>You:</b> Is sarah@[agency].com.au right?</p>
+            <p><b>Sarah:</b> Yep. Look, I've gotta run.</p>
+            <p><b>You:</b> No worries, I'll send them now. Thanks Sarah.</p>
+          </div>
+          <p class="win"><b>Twenty-five seconds, no booking, went fine.</b> You got the email and the images will land. That's the job. Judge that as a failure and you'll stop calling by Thursday.</p>
+        </details>
+        <details class="nest">
+          <summary>The same one, wrecked</summary>
+          <div class="dlg">
+            <p><b>Sarah:</b> We've got a photographer, mate.</p>
+            <p><b>You:</b> Yeah no worries, I just — I mean I'm not trying to replace anyone, I just do things a bit differently, like I include the decluttering free and I've got this tool where you can do your own photos and I do about fifty jobs a week so turnaround's really quick, and my Essential's only $299 which is—</p>
+            <p><b>Sarah:</b> Yeah I'm right, thanks.</p>
+          </div>
+          <p class="bad"><b>Three traps in ten seconds:</b> filling the silence, stacking offers, and pitching price unasked. All three come from panic after a no. <b>The no is not an emergency.</b> Answer it in one line and ask for the email.</p>
+        </details>
       </details>
 
       <details class="card">
@@ -392,6 +397,7 @@ details.card[open] summary::before{content:"▾ "}
         <p class="obj"><b>"Take me off your list."</b><br>"No worries, sorry to bother you." Hang up, log it Dead, don't send the images.</p>
         <p class="note"><b>Doubt about you</b></p>
         <p class="obj"><b>"Did you edit my listing photos without asking?"</b><br>This will happen and they're not being unreasonable. Give away the power straight away: "Just the two off realestate.com.au — haven't done anything with them other than tidy them up for you. Happy to bin them if you'd rather." Offering to delete ends it on the spot.</p>
+        <p class="obj"><b>"What makes you different?"</b><br>Three things, said flat — no list, no pitch: "Every image gets decluttered — that's the two I sent you, that's standard, not an extra. Photos back with you by nine the next morning. And on your first one, if they don't look better than what you're getting now, don't pay me." Then stop. It only lands after they've seen the photos — never lead with it.</p>
         <p class="obj"><b>"How much?"</b><br>Often a filter, not interest. Flat, then hand it back: "$299 Essential — photos and floorplan. Most go Premium at $375 with the drone. What sort of stock are you listing?"</p>
         <p class="obj"><b>"How old are you?"</b><br>No defence, no over-claiming: "Twenty. Been shooting property a few years — we do about fifty jobs a week across Perth." Your volume beats most studios' credentials.</p>
         <p class="obj"><b>"Who is this? What's this about?"</b><br>Don't re-pitch. Compress: "Jason, photographer in Perth — cleaned up two of your [street] photos, want them?"</p>
@@ -577,7 +583,6 @@ details.card[open] summary::before{content:"▾ "}
     </section>
   </div>
 </main>
-
 
 <script>window.addEventListener("error",e=>{const g=document.getElementById("gateNote");if(g)g.textContent="Load error: "+(e.message||"");});</script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>

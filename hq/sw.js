@@ -1,5 +1,5 @@
 // Baker HQ service worker — shell cache only. Calendar and Firestore always go to network.
-const CACHE = 'hq-v4-4';
+const CACHE = 'hq-v4-5';
 const SHELL = ['/hq/', '/hq/index.html', '/hq/manifest.json'];
 
 self.addEventListener('install', e => {
