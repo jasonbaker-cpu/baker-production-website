@@ -1343,3 +1343,65 @@ a.lp-chip:hover { border-color: var(--color-accent); color: var(--color-text); }
   .lp-hero-facts { gap: 26px; }
   .lp-answer { padding: 24px 22px; }
 }
+
+/* ---- Pricing v3 + landing-page fixes (13 Oct 2026) ---- */
+.lp-sec-tight { padding-top: 56px; padding-bottom: 8px; }
+.pk-grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(214px, 1fr)); align-items: stretch; margin-top: 36px; }
+.pk {
+  position: relative; background: #fff; border: 1px solid var(--color-border-light);
+  padding: 34px 26px 26px; display: flex; flex-direction: column;
+  transition: transform .35s var(--ease-confident), box-shadow .35s var(--ease-confident), border-color .35s;
+}
+.pk:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(17,17,17,.10); border-color: rgba(184,151,90,.5); }
+.pk-feat { background: var(--color-dark); color: #fff; border: 2px solid var(--color-accent); }
+.pk-feat:hover { border-color: var(--color-accent-light); }
+.pk-tag {
+  position: absolute; top: -12px; left: 24px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  font-weight: 600; background: var(--color-accent); color: var(--color-darker); padding: 5px 12px;
+}
+.pk-tag-soft { background: var(--color-bg-warm); color: var(--color-accent-hover); border: 1px solid rgba(184,151,90,.45); }
+.pk-name { font-family: var(--font-display); font-weight: 600; font-size: 19px; margin-bottom: 12px; letter-spacing: -.1px; }
+.pk-price { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1; letter-spacing: -.8px; }
+.pk-feat .pk-price { color: var(--color-accent); }
+.pk-gst { font-size: 11.5px; letter-spacing: .6px; text-transform: uppercase; color: var(--color-text-light); margin: 8px 0 16px; }
+.pk-feat .pk-gst { color: rgba(255,255,255,.55); }
+.pk-blurb { font-size: 14px; line-height: 1.6; color: var(--color-text-light); margin-bottom: 18px; min-height: 3.2em; }
+.pk-feat .pk-blurb { color: rgba(255,255,255,.7); }
+.pk-inc { list-style: none; margin: 0 0 26px; flex: 1; }
+.pk-inc li { font-size: 13.5px; padding: 7px 0; border-bottom: 1px solid var(--color-border); display: flex; gap: 9px; align-items: flex-start; line-height: 1.45; }
+.pk-inc li::before { content: '\2713'; color: var(--color-accent); font-weight: 700; flex-shrink: 0; }
+.pk-inc li em { font-style: italic; opacity: .8; }
+.pk-feat .pk-inc li { border-color: rgba(255,255,255,.1); color: rgba(255,255,255,.85); }
+.pk-cta {
+  display: block; text-align: center; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  text-decoration: none; padding: 14px; border: 2px solid var(--color-text); color: var(--color-text); transition: all .25s;
+}
+.pk-cta:hover { background: var(--color-text); color: #fff; }
+.pk-feat .pk-cta { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-darker); }
+.pk-feat .pk-cta:hover { background: var(--color-accent-light); border-color: var(--color-accent-light); }
+.pk-size { margin-top: 28px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border: 1px solid var(--color-border-light); background: #fff; }
+.pk-size > div { padding: 18px 22px; border-right: 1px solid var(--color-border); }
+.pk-size > div:last-child { border-right: 0; }
+.pk-size-b { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-text-light); }
+.pk-size-v { font-family: var(--font-display); font-weight: 600; font-size: 18px; margin-top: 4px; }
+.pk-size-v em { font-style: normal; color: var(--color-accent-hover); }
+
+/* Fixes: dark-band notes were invisible; area cards ran inline; price column fell off-screen on phones */
+.lp-sec-dark .lp-note { color: rgba(255,255,255,.6); }
+.lp-sec-dark .lp-note a { color: var(--color-accent-light); }
+.lp-link-t, .lp-link-d, .lp-link-a { display: block; }
+.lp-links { gap: 12px; }
+.lp-table { min-width: 0; }
+.lp-table td:last-child { vertical-align: top; }
+.lp-table tbody tr:hover td { background: rgba(184,151,90,.04); }
+@media (max-width: 600px) {
+  .lp-table th, .lp-table td { padding: 13px 12px; }
+  .lp-table td:first-child { padding-right: 6px; }
+  .lp-table .lp-price { font-size: 15px; }
+  .pk-size > div { border-right: 0; border-bottom: 1px solid var(--color-border); }
+  .pk-size > div:last-child { border-bottom: 0; }
+  .pk-grid { grid-template-columns: 1fr; }
+  .pk-feat { order: -1; }
+}
+.lp-sec.lp-sec-dark p { color: var(--color-text-on-dark-muted); }
+.lp-sec.lp-sec-dark p strong { color: #fff; }
