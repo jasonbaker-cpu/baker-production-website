@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gallery — Baker Production</title>
+  <title>Gallery — Recent Perth Real Estate Photography &amp; Video | Baker Production</title>
   <meta name="description" content="Gallery of recent property photography, drone, twilight and virtual editing work by Baker Production in Perth.">
   <link rel="canonical" href="https://www.bakerproduction.com/gallery.html">
 
@@ -166,51 +166,54 @@
     }
     .mobile-menu.light .mobile-menu-cta { color: var(--color-text); }
 
-    /* ========== GALLERY HERO ========== */
+    /* ========== GALLERY HERO (photo) ========== */
     .gallery-hero {
-      height: 60vh; min-height: 440px;
-      background: var(--color-dark);
-      display: flex; align-items: center; justify-content: center;
-      text-align: center;
-      position: relative; overflow: hidden;
+      position: relative; overflow: hidden; color: #fff;
+      padding: 168px 48px 72px; background: var(--color-darker);
     }
     .gallery-hero::before {
       content: ''; position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 30% 50%, rgba(184,151,90,0.08) 0%, transparent 60%),
-                  radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.03) 0%, transparent 50%);
-      pointer-events: none;
+      background-image: url('img/pkg-signature.webp'); background-size: cover; background-position: center 42%;
+      transform: scale(1.04);
     }
     .gallery-hero::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(to right, transparent, var(--color-accent), transparent);
-      opacity: 0.3;
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(10,10,10,0.86) 0%, rgba(10,10,10,0.66) 48%, rgba(10,10,10,0.38) 100%),
+                  linear-gradient(180deg, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0) 40%, rgba(10,10,10,0.55) 100%);
     }
-    .gallery-hero-content {
-      position: relative; z-index: 2;
-      padding-top: 72px;
-    }
+    .gallery-hero-inner { position: relative; z-index: 2; max-width: var(--max-width); margin: 0 auto; }
     .gallery-hero-eyebrow {
-      font-family: var(--font-body); font-size: 11px; font-weight: 500;
-      letter-spacing: 4px; text-transform: uppercase; color: var(--color-accent);
-      margin-bottom: 24px;
-      opacity: 0; animation: heroFadeUp 0.6s ease 0.2s forwards;
+      font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--color-accent); margin-bottom: 22px; opacity: 0; animation: heroFadeUp .6s ease .15s forwards;
     }
     .gallery-hero-headline {
-      font-family: var(--font-display); font-size: clamp(48px, 6vw, 80px);
-      font-weight: 300; line-height: 1; color: #fff;
-      letter-spacing: -1px;
-      opacity: 0; animation: heroFadeUp 0.7s ease 0.35s forwards;
+      font-family: var(--font-display); font-size: clamp(40px, 5.4vw, 68px); font-weight: 300; line-height: 1.04;
+      letter-spacing: -1.2px; max-width: 14ch; opacity: 0; animation: heroFadeUp .7s ease .3s forwards;
     }
-    .gallery-hero-line {
-      width: 48px; height: 1px; background: var(--color-accent);
-      margin: 28px auto 0;
-      opacity: 0; animation: heroFadeUp 0.5s ease 0.55s forwards;
+    .gallery-hero-headline strong { font-weight: 600; }
+    .gallery-hero-lede {
+      font-family: var(--font-body); font-size: 17px; line-height: 1.7; color: rgba(255,255,255,0.78);
+      max-width: 56ch; margin-top: 22px; opacity: 0; animation: heroFadeUp .7s ease .45s forwards;
     }
+    .gallery-hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; opacity: 0; animation: heroFadeUp .7s ease .55s forwards; }
+    .g-btn {
+      display: inline-block; font-family: var(--font-body); font-size: 12px; font-weight: 600; letter-spacing: 1.8px;
+      text-transform: uppercase; text-decoration: none; padding: 16px 30px; background: var(--color-accent);
+      color: var(--color-darker); transition: background .2s, transform .2s;
+    }
+    .g-btn:hover { background: var(--color-accent-hover); transform: translateY(-2px); }
+    .g-btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.45); }
+    .g-btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: var(--color-accent); }
+    .gallery-hero-facts {
+      display: flex; flex-wrap: wrap; gap: 44px; margin-top: 52px; padding-top: 26px;
+      border-top: 1px solid rgba(255,255,255,0.18); opacity: 0; animation: heroFadeUp .7s ease .7s forwards;
+    }
+    .g-fact-n { font-family: var(--font-display); font-weight: 600; font-size: 21px; color: var(--color-accent-light); letter-spacing: -.2px; }
+    .g-fact-l { font-family: var(--font-body); font-size: 10.5px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-top: 4px; }
     @keyframes heroFadeUp {
       from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
     /* ========== FILTER BAR ========== */
     .filter-bar {
       background: var(--color-bg);
@@ -531,20 +534,111 @@
       .gallery-grid { grid-template-columns: 1fr; }
       .gallery-item.large { grid-column: 1; }
     }
+
+    /* ========== GALLERY v2 additions (13 Oct 2026) ========== */
+    .filter-bar { position: sticky; top: 72px; z-index: 50; padding: 18px 80px; background: rgba(255,255,255,0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 0 var(--color-border); }
+    .filter-secondary.visible { max-height: 80px; margin-top: 12px; }
+    .gallery-section { padding-top: 28px; }
+    .gallery-image.tour-embed.video-embed { background-color: #141414; background-size: cover, cover; background-position: center, center; background-repeat: no-repeat; }
+    .gallery-item.video-item .tour-play-icon { width: 64px; height: 64px; }
+    .gallery-item.tour3d-item .gallery-image.tour-embed { background: radial-gradient(ellipse at center, rgba(184,151,90,0.22) 0%, transparent 62%), linear-gradient(135deg, #1c1a16 0%, #0a0a0a 100%); }
+    .gallery-item.video-item .gallery-caption, .gallery-item.tour3d-item .gallery-caption { pointer-events: none; }
+    @media (hover: none) {
+      .gallery-item::after { opacity: 1; }
+      .gallery-caption { opacity: 1; transform: none; }
+    }
+    /* Video tiles: clean thumbnail, pill label, glass play button, address always on */
+    .gallery-item.video-item .gallery-image.tour-embed.video-embed::before {
+      background: linear-gradient(180deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.12) 50%, rgba(0,0,0,0.74) 100%);
+      opacity: 1; transition: background .3s;
+    }
+    .gallery-item.video-item .gallery-image { transition: transform .6s var(--ease-confident); }
+    .gallery-item.video-item:hover .gallery-image { transform: scale(1.03); }
+    .gallery-item.video-item .tour-play-icon {
+      width: 60px; height: 60px; background: rgba(255,255,255,0.14); color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.8); box-shadow: none;
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      transition: transform .3s var(--ease-confident), background .3s, border-color .3s, color .3s;
+    }
+    .gallery-item.video-item .tour-play-icon svg { width: 22px; height: 22px; margin-left: 3px; }
+    .gallery-item.video-item .gallery-image.tour-embed:hover .tour-play-icon {
+      background: var(--color-accent); border-color: var(--color-accent); color: var(--color-darker); transform: scale(1.1); box-shadow: 0 10px 30px rgba(184,151,90,0.45);
+    }
+    .v-pill {
+      position: absolute; top: 14px; left: 14px; z-index: 3;
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase;
+      color: #fff; background: rgba(17,17,17,0.55); padding: 7px 11px 7px 9px;
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); pointer-events: none;
+    }
+    .v-pill::before { content: ''; width: 0; height: 0; border-left: 7px solid var(--color-accent); border-top: 4.5px solid transparent; border-bottom: 4.5px solid transparent; }
+    .gallery-item.video-item .gallery-caption { opacity: 1; transform: none; padding: 14px 18px 16px; }
+    .gallery-item.video-item .gallery-tag { display: none; }
+    .gallery-item.video-item .gallery-location { font-family: var(--font-display); font-weight: 600; font-size: 14px; color: #fff; margin-top: 0; }
+    .gallery-item.video-item .gallery-location::after { content: '  Watch 92'; font-family: var(--font-body); font-weight: 600; font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--color-accent-light); margin-left: 10px; opacity: 0; transition: opacity .3s; }
+    .gallery-item.video-item:hover .gallery-location::after { opacity: 1; }
+    .gallery-item.video-item::after { display: none; }
+    /* 3D tour tiles: sphere look instead of the grid */
+    .gallery-item.tour3d-item .gallery-image.tour-embed {
+      background: radial-gradient(circle at 50% 44%, rgba(184,151,90,0.42) 0%, rgba(184,151,90,0.10) 26%, transparent 48%), linear-gradient(160deg, #1e1b16 0%, #0a0a0a 100%);
+    }
+    .gallery-item.tour3d-item .gallery-image.tour-embed::before {
+      background: repeating-radial-gradient(circle at 50% 44%, transparent 0 24px, rgba(255,255,255,0.045) 24px 25px),
+                  repeating-linear-gradient(90deg, transparent 0 30px, rgba(255,255,255,0.035) 30px 31px);
+      background-size: auto, auto; opacity: 1;
+      mask-image: radial-gradient(circle at 50% 44%, #000 0%, rgba(0,0,0,0.25) 70%, transparent 100%);
+      -webkit-mask-image: radial-gradient(circle at 50% 44%, #000 0%, rgba(0,0,0,0.25) 70%, transparent 100%);
+    }
+    .gallery-item.tour3d-item .tour-play-icon {
+      width: 76px; height: 76px; background: transparent; color: var(--color-accent-light);
+      border: 1.5px solid var(--color-accent); box-shadow: 0 0 0 12px rgba(184,151,90,0.08), 0 0 0 24px rgba(184,151,90,0.04);
+      font-size: 15px;
+    }
+    .t360 { font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: .5px; }
+    .gallery-item.tour3d-item .gallery-image.tour-embed:hover .tour-play-icon { background: var(--color-accent); color: var(--color-darker); transform: scale(1.06); box-shadow: 0 0 0 12px rgba(184,151,90,0.16), 0 0 0 24px rgba(184,151,90,0.06); }
+    .gallery-item.tour3d-item .tour-label { letter-spacing: 2px; }
+    .gallery-item.tour3d-item .tour-hint { color: rgba(255,255,255,0.5); font-size: 11.5px; }
+    .gallery-item.tour3d-item .gallery-caption { display: none; }
+    .g-cta { padding: 96px 48px; background: var(--color-darker); color: #fff; text-align: center; border-top: 1px solid rgba(255,255,255,0.06); }
+    .g-cta h2 { font-family: var(--font-display); font-weight: 300; font-size: clamp(28px, 3.8vw, 44px); letter-spacing: -.8px; margin-bottom: 16px; }
+    .g-cta p { font-family: var(--font-body); color: rgba(255,255,255,0.62); max-width: 52ch; margin: 0 auto 32px; font-size: 16.5px; line-height: 1.7; }
+    .g-cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    @media (max-width: 1024px) {
+      .gallery-item.wide.video-item { grid-column: span 2; grid-row: span 2; }
+      .filter-bar { padding: 14px 40px; }
+    }
+    @media (max-width: 768px) {
+      .gallery-hero { padding: 120px 24px 48px; height: auto; min-height: 0; }
+      .gallery-hero-headline { font-size: clamp(34px, 9vw, 48px); }
+      .gallery-hero-lede { font-size: 15.5px; }
+      .gallery-hero-facts { gap: 22px 30px; margin-top: 36px; }
+      .g-fact-n { font-size: 18px; }
+      .filter-bar { top: 64px; padding: 12px 24px; }
+      .gallery-item.video-item, .gallery-item.wide.video-item { grid-column: 1 / -1; }
+      .gallery-item.video-item .gallery-image.tour-embed { aspect-ratio: 16/9; }
+      .gallery-item.tall.video-item { grid-column: span 1; }
+      .gallery-item.tall.video-item .gallery-image.tour-embed { aspect-ratio: 3/4; }
+      .gallery-item.tall:not(.video-item) .gallery-image { aspect-ratio: 3/4; }
+      .g-cta { padding: 64px 24px; }
+    }
+    @media (max-width: 480px) {
+      .gallery-item.tall.video-item { grid-column: 1; }
+    }
   </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":["LocalBusiness","ProfessionalService"],"@id":"https://www.bakerproduction.com/#business","name":"Baker Production","alternateName":"Baker Production Australia","url":"https://www.bakerproduction.com/","logo":"https://www.bakerproduction.com/logo.avif","image":"https://www.bakerproduction.com/img/service-photography.webp","telephone":"+61466789522","email":"admin@bakerproduction.com","priceRange":"$159-$1299","currenciesAccepted":"AUD","paymentAccepted":"Credit Card, Bank Transfer, Invoice","slogan":"Perth property media. Next-day delivery on every shoot.","description":"Baker Production is a Perth real estate media studio providing property photography, drone and aerial photography, listing video, floor plans, twilight photography, 3D virtual tours and virtual staging for real estate agents across the Perth metropolitan area. Photography, drone and floor plans are delivered next day.","address":{"@type":"PostalAddress","addressLocality":"Perth","addressRegion":"WA","addressCountry":"AU"},"areaServed":[{"@type":"AdministrativeArea","name":"Perth"},{"@type":"AdministrativeArea","name":"Perth metropolitan area"},{"@type":"AdministrativeArea","name":"Western Suburbs of Perth"},{"@type":"AdministrativeArea","name":"Northern Suburbs of Perth"},{"@type":"AdministrativeArea","name":"Southern Suburbs of Perth"},{"@type":"AdministrativeArea","name":"Fremantle"},{"@type":"AdministrativeArea","name":"Perth Hills"},{"@type":"AdministrativeArea","name":"Joondalup"},{"@type":"AdministrativeArea","name":"Rockingham"},{"@type":"AdministrativeArea","name":"Cockburn"},{"@type":"AdministrativeArea","name":"Stirling"},{"@type":"AdministrativeArea","name":"Bayswater"},{"@type":"AdministrativeArea","name":"Wanneroo"},{"@type":"AdministrativeArea","name":"Melville"},{"@type":"AdministrativeArea","name":"Canning"}],"knowsAbout":["real estate photography","property photography","drone photography","real estate videography","floor plans","twilight photography","virtual staging","3D virtual tours"],"sameAs":["https://www.instagram.com/_bakerproduction/","https://www.facebook.com/p/Baker-Production-61578706599674/","https://www.youtube.com/@BakerProductionAustralia"],"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"07:00","closes":"18:00"}]},{"@type":"CollectionPage","@id":"https://www.bakerproduction.com/gallery.html#webpage","url":"https://www.bakerproduction.com/gallery.html","name":"Baker Production gallery — Perth property photography, drone, twilight and virtual editing","about":{"@id":"https://www.bakerproduction.com/#business"},"inLanguage":"en-AU"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.bakerproduction.com/index.html"},{"@type":"ListItem","position":2,"name":"Gallery","item":"https://www.bakerproduction.com/gallery.html"}]}]}</script>
 </head>
 <body class="overflow-clip">
 
   <!-- NAVIGATION -->
-  <nav class="navbar scrolled" id="navbar">
+  <nav class="navbar" id="navbar">
     <a href="index.html" class="nav-logo"><img src="logo.avif" alt="Baker Production" class="nav-logo-img"><span class="nav-logo-text">Baker Production</span></a>
     <ul class="nav-links">
       <li><a href="index.html#services">Services</a></li>
       <li><a href="gallery.html" class="active">Gallery</a></li>
-      <li><a href="index.html#pricing">Pricing</a></li>
+      <li><a href="https://studio.bakerproduction.com/client" title="Virtual staging &amp; photo editing &mdash; instant, from $1.50/image">Baker Studio</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
       <li><a href="index.html#process">Process</a></li>
-      <li><a href="index.html#contact">Contact</a></li>
+      <li><a href="index.html#book">Contact</a></li>
     </ul>
     <a href="https://portal.bakerproduction.com/book" class="nav-cta desktop-only">Book Now</a>
     <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
@@ -556,20 +650,23 @@
   <div class="mobile-menu" id="mobileMenu">
     <a href="index.html#services" onclick="closeMenu()">Services</a>
     <a href="gallery.html" onclick="closeMenu()">Gallery</a>
-    <a href="index.html#pricing" onclick="closeMenu()">Pricing</a>
+    <a href="https://studio.bakerproduction.com/client" onclick="closeMenu()">Baker Studio</a>
+    <a href="pricing.html" onclick="closeMenu()">Pricing</a>
     <a href="index.html#process" onclick="closeMenu()">Process</a>
-    <a href="index.html#contact" onclick="closeMenu()">Contact</a>
+    <a href="index.html#book" onclick="closeMenu()">Contact</a>
     <a href="https://portal.bakerproduction.com/book" class="mobile-menu-cta" onclick="closeMenu()">Book Now</a>
   </div>
 
   <!-- GALLERY HERO -->
-  <section class="gallery-hero">
-    <div class="gallery-hero-content">
-      <div class="gallery-hero-eyebrow">Our Work</div>
-      <h1 class="gallery-hero-headline">Gallery</h1>
-      <div class="gallery-hero-line"></div>
+  <header class="gallery-hero">
+    <div class="gallery-hero-inner">
+      <p class="gallery-hero-eyebrow">Our work &middot; Perth</p>
+      <h1 class="gallery-hero-headline">Recent <strong>Perth</strong> work</h1>
+      <p class="gallery-hero-lede">Photography, drone, twilight, listing video, 3D tours and virtual editing &mdash; shot across the Perth metro and delivered to agents the next day. Click anything to see it full size.</p>
+      <div class="gallery-hero-actions"><a href="https://portal.bakerproduction.com/book" class="g-btn">Book a shoot</a><a href="pricing.html" class="g-btn g-btn-ghost">See pricing</a></div>
+      <div class="gallery-hero-facts"><div class="g-fact"><div class="g-fact-n">1,500+</div><div class="g-fact-l">Perth shoots</div></div><div class="g-fact"><div class="g-fact-n">Next day</div><div class="g-fact-l">Photo delivery</div></div><div class="g-fact"><div class="g-fact-n">5.0 &#9733;</div><div class="g-fact-l">Google rating</div></div><div class="g-fact"><div class="g-fact-n">Alkimos&ndash;Rockingham</div><div class="g-fact-l">Coverage</div></div></div>
     </div>
-  </section>
+  </header>
 
   <!-- FILTER BAR -->
   <div class="filter-bar">
@@ -588,164 +685,57 @@
   <section class="gallery-section">
     <div class="gallery-inner">
       <div class="gallery-grid" id="galleryGrid">
-        <!-- LISTING VIDEOS (YouTube — open in lightbox) -->
-        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/DYrn3EM0LXY?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/DYrn3EM0LXY/hqdefault.jpg');">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
+        <div class="gallery-item large reveal reveal-up" data-category="photography" data-subcategory="twilight-photography" data-full="img/gal-twilight-1.webp">
+          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-twilight-1-thumb.webp" alt="Twilight Photography — South Guildford, WA">
+          <div class="gallery-caption"><span class="gallery-tag">Twilight Photography</span><span class="gallery-location">South Guildford, WA</span></div>
+        </div>
+        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/DYrn3EM0LXY?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/DYrn3EM0LXY/hq720.jpg'),url('https://i.ytimg.com/vi/DYrn3EM0LXY/mqdefault.jpg');">
+            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
           </div>
           <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">58 Kentucky Drive West</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="social-media-content">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/QuO0dJS1o1I?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/QuO0dJS1o1I/hqdefault.jpg');">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Social Media</div><div class="tour-hint">Click to watch</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Social Media</span><span class="gallery-location">41 Maybach Way, Dianella</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/m0UQ0a1aXtk?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/m0UQ0a1aXtk/hqdefault.jpg');">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">27 Twickinham Drive, Kingsley</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/nW1TccPHJ_4?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/nW1TccPHJ_4/hqdefault.jpg');">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">9 Greenwich Court, Kingsley</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/PCw6tkrv_Z0?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/PCw6tkrv_Z0/hqdefault.jpg');">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">16 McGrath Place, Noranda</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/L5QTPPZnDMQ?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/L5QTPPZnDMQ/hqdefault.jpg');">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">21 Norcia Way, Ellenbrook</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/W7vkfuzMEw8?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/W7vkfuzMEw8/hqdefault.jpg');">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">9 Adlington Way, Ellenbrook</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/ltM3520b5vE?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/ltM3520b5vE/hqdefault.jpg');">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">26 Hall Road, Roleystone</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/fwa-Nq-aaWw?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/fwa-Nq-aaWw/hqdefault.jpg');">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">45 Charles Street, Maylands</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/_0q5iEs13Vk?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/_0q5iEs13Vk/hqdefault.jpg');">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">Listing Video</div><div class="tour-hint">Click to watch</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">166 Ponte Vecchio, Ellenbrook</span></div>
         </div>
         <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-1.webp">
           <img class="gallery-image" loading="eager" fetchpriority="high" src="img/gal-day-1-thumb.webp" alt="Day Photography — Lake Coogee, WA">
           <div class="gallery-caption"><span class="gallery-tag">Day Photography</span><span class="gallery-location">Lake Coogee, WA</span></div>
         </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
-          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7MTG1?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">3D Tour</div><div class="tour-hint">Click to explore</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
-        </div>
         <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="virtual-staging" data-full="img/gal-staging-1.webp">
           <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-staging-1-thumb.webp" alt="Virtual Staging — Perth, WA">
           <div class="gallery-caption"><span class="gallery-tag">Virtual Staging</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item tall reveal reveal-up" data-category="photography" data-subcategory="twilight-photography" data-full="img/gal-twilight-1.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-twilight-1-thumb.webp" alt="Twilight Photography — South Guildford, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Twilight Photography</span><span class="gallery-location">South Guildford, WA</span></div>
         </div>
         <div class="gallery-item wide reveal reveal-up" data-category="photography" data-subcategory="aerials" data-full="img/gal-aerial-1.webp">
           <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-aerial-1-thumb.webp" alt="Aerials — Roleystone, WA">
           <div class="gallery-caption"><span class="gallery-tag">Aerials</span><span class="gallery-location">Roleystone, WA</span></div>
         </div>
+        <div class="gallery-item tall video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="social-media-content">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/QuO0dJS1o1I?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/QuO0dJS1o1I/hq720.jpg'),url('https://i.ytimg.com/vi/QuO0dJS1o1I/mqdefault.jpg');">
+            <span class="v-pill">Social media reel</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Social Media</span><span class="gallery-location">41 Maybach Way, Dianella</span></div>
+        </div>
+        <div class="gallery-item tour3d-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
+          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7MTG1?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
+            <div class="tour-play"><div class="tour-play-icon"><span class="t360">360&deg;</span></div><div class="tour-label">3D virtual tour</div><div class="tour-hint">Walk through the whole home</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
+        </div>
+        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/m0UQ0a1aXtk?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/m0UQ0a1aXtk/hq720.jpg'),url('https://i.ytimg.com/vi/m0UQ0a1aXtk/mqdefault.jpg');">
+            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">27 Twickinham Drive, Kingsley</span></div>
+        </div>
         <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="decluttering" data-full="img/gal-declutter-1.webp">
           <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-declutter-1-thumb.webp" alt="Decluttering — Palmyra, WA">
           <div class="gallery-caption"><span class="gallery-tag">Decluttering</span><span class="gallery-location">Palmyra, WA</span></div>
-        </div>
-        <div class="gallery-item wide reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-2.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-2-thumb.webp" alt="Day Photography — Kingsley, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Day Photography</span><span class="gallery-location">Kingsley, WA</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
-          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7MXmn?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">3D Tour</div><div class="tour-hint">Click to explore</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
         </div>
         <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="twilight-photography" data-full="img/gal-twilight-2.webp">
           <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-twilight-2-thumb.webp" alt="Twilight Photography — Como, WA">
           <div class="gallery-caption"><span class="gallery-tag">Twilight Photography</span><span class="gallery-location">Como, WA</span></div>
         </div>
-        <div class="gallery-item wide reveal reveal-up" data-category="virtual-editing" data-subcategory="day-to-dusk" data-full="img/gal-day-to-dusk-1.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-to-dusk-1-thumb.webp" alt="Day to Dusk — Tapping, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Day to Dusk</span><span class="gallery-location">Tapping, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="aerials" data-full="img/gal-aerial-2.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-aerial-2-thumb.webp" alt="Aerials — West Perth, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Aerials</span><span class="gallery-location">West Perth, WA</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
-          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7Mkrn?logo=0&info=1&fs=1&vr=0&sd=1&thumbs=1">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">3D Tour</div><div class="tour-hint">Click to explore</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="virtual-staging" data-full="img/gal-staging-2.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-staging-2-thumb.webp" alt="Virtual Staging — Perth, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Virtual Staging</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-3.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-3-thumb.webp" alt="Day Photography — Chittering, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Day Photography</span><span class="gallery-location">Chittering, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="decluttering" data-full="img/gal-declutter-2.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-declutter-2-thumb.webp" alt="Decluttering — Palmyra, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Decluttering</span><span class="gallery-location">Palmyra, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="twilight-photography" data-full="img/gal-twilight-3.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-twilight-3-thumb.webp" alt="Twilight Photography — Perth, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Twilight Photography</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
-          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7MK1v?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">3D Tour</div><div class="tour-hint">Click to explore</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
-        </div>
-        <div class="gallery-item wide reveal reveal-up" data-category="photography" data-subcategory="aerials" data-full="img/gal-aerial-3.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-aerial-3-thumb.webp" alt="Aerials — Chittering, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Aerials</span><span class="gallery-location">Chittering, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="virtual-staging" data-full="img/gal-staging-3.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-staging-3-thumb.webp" alt="Virtual Staging — Perth, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Virtual Staging</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
-          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7H3KG?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
-            <div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div><div class="tour-label">3D Tour</div><div class="tour-hint">Click to explore</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
-        </div>
-        <div class="gallery-item tall reveal reveal-up" data-category="virtual-editing" data-subcategory="decluttering" data-full="img/gal-declutter-3.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-declutter-3-thumb.webp" alt="Decluttering — Palmyra, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Decluttering</span><span class="gallery-location">Palmyra, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="day-to-dusk" data-full="img/gal-day-to-dusk-2.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-to-dusk-2-thumb.webp" alt="Day to Dusk — Perth, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Day to Dusk</span><span class="gallery-location">Perth, WA</span></div>
+        <div class="gallery-item wide reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-2.webp">
+          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-2-thumb.webp" alt="Day Photography — Kingsley, WA">
+          <div class="gallery-caption"><span class="gallery-tag">Day Photography</span><span class="gallery-location">Kingsley, WA</span></div>
         </div>
         <div class="gallery-item tall reveal reveal-up" data-category="photography" data-subcategory="agent-headshots" data-full="img/gal-headshots-1.webp">
           <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-headshots-1-thumb.webp" alt="Agent Headshots — Perth, WA" style="object-position: center top;">
@@ -755,6 +745,64 @@
           <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-headshots-2-thumb.webp" alt="Agent Headshots — Perth, WA" style="object-position: center top;">
           <div class="gallery-caption"><span class="gallery-tag">Agent Headshots</span><span class="gallery-location">Perth, WA</span></div>
         </div>
+        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/nW1TccPHJ_4?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/nW1TccPHJ_4/hq720.jpg'),url('https://i.ytimg.com/vi/nW1TccPHJ_4/mqdefault.jpg');">
+            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">9 Greenwich Court, Kingsley</span></div>
+        </div>
+        <div class="gallery-item wide reveal reveal-up" data-category="virtual-editing" data-subcategory="day-to-dusk" data-full="img/gal-day-to-dusk-1.webp">
+          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-to-dusk-1-thumb.webp" alt="Day to Dusk — Tapping, WA">
+          <div class="gallery-caption"><span class="gallery-tag">Day to Dusk</span><span class="gallery-location">Tapping, WA</span></div>
+        </div>
+        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="virtual-staging" data-full="img/gal-staging-2.webp">
+          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-staging-2-thumb.webp" alt="Virtual Staging — Perth, WA">
+          <div class="gallery-caption"><span class="gallery-tag">Virtual Staging</span><span class="gallery-location">Perth, WA</span></div>
+        </div>
+        <div class="gallery-item tour3d-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
+          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7MXmn?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
+            <div class="tour-play"><div class="tour-play-icon"><span class="t360">360&deg;</span></div><div class="tour-label">3D virtual tour</div><div class="tour-hint">Walk through the whole home</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
+        </div>
+        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="aerials" data-full="img/gal-aerial-2.webp">
+          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-aerial-2-thumb.webp" alt="Aerials — West Perth, WA">
+          <div class="gallery-caption"><span class="gallery-tag">Aerials</span><span class="gallery-location">West Perth, WA</span></div>
+        </div>
+        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/PCw6tkrv_Z0?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/PCw6tkrv_Z0/hq720.jpg'),url('https://i.ytimg.com/vi/PCw6tkrv_Z0/mqdefault.jpg');">
+            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">16 McGrath Place, Noranda</span></div>
+        </div>
+        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="twilight-photography" data-full="img/gal-twilight-3.webp">
+          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-twilight-3-thumb.webp" alt="Twilight Photography — Perth, WA">
+          <div class="gallery-caption"><span class="gallery-tag">Twilight Photography</span><span class="gallery-location">Perth, WA</span></div>
+        </div>
+        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-3.webp">
+          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-3-thumb.webp" alt="Day Photography — Chittering, WA">
+          <div class="gallery-caption"><span class="gallery-tag">Day Photography</span><span class="gallery-location">Chittering, WA</span></div>
+        </div>
+        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/L5QTPPZnDMQ?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/L5QTPPZnDMQ/hq720.jpg'),url('https://i.ytimg.com/vi/L5QTPPZnDMQ/mqdefault.jpg');">
+            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">21 Norcia Way, Ellenbrook</span></div>
+        </div>
+        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="decluttering" data-full="img/gal-declutter-2.webp">
+          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-declutter-2-thumb.webp" alt="Decluttering — Palmyra, WA">
+          <div class="gallery-caption"><span class="gallery-tag">Decluttering</span><span class="gallery-location">Palmyra, WA</span></div>
+        </div>
+        <div class="gallery-item tour3d-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
+          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7Mkrn?logo=0&info=1&fs=1&vr=0&sd=1&thumbs=1">
+            <div class="tour-play"><div class="tour-play-icon"><span class="t360">360&deg;</span></div><div class="tour-label">3D virtual tour</div><div class="tour-hint">Walk through the whole home</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
+        </div>
+        <div class="gallery-item wide reveal reveal-up" data-category="photography" data-subcategory="aerials" data-full="img/gal-aerial-3.webp">
+          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-aerial-3-thumb.webp" alt="Aerials — Chittering, WA">
+          <div class="gallery-caption"><span class="gallery-tag">Aerials</span><span class="gallery-location">Chittering, WA</span></div>
+        </div>
         <div class="gallery-item tall reveal reveal-up" data-category="photography" data-subcategory="agent-headshots" data-full="img/gal-headshots-3.webp">
           <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-headshots-3-thumb.webp" alt="Agent Headshots — Perth, WA" style="object-position: center top;">
           <div class="gallery-caption"><span class="gallery-tag">Agent Headshots</span><span class="gallery-location">Perth, WA</span></div>
@@ -763,9 +811,57 @@
           <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-headshots-4-thumb.webp" alt="Agent Headshots — Perth, WA" style="object-position: center top;">
           <div class="gallery-caption"><span class="gallery-tag">Agent Headshots</span><span class="gallery-location">Perth, WA</span></div>
         </div>
+        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/W7vkfuzMEw8?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/W7vkfuzMEw8/hq720.jpg'),url('https://i.ytimg.com/vi/W7vkfuzMEw8/mqdefault.jpg');">
+            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">9 Adlington Way, Ellenbrook</span></div>
+        </div>
+        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="virtual-staging" data-full="img/gal-staging-3.webp">
+          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-staging-3-thumb.webp" alt="Virtual Staging — Perth, WA">
+          <div class="gallery-caption"><span class="gallery-tag">Virtual Staging</span><span class="gallery-location">Perth, WA</span></div>
+        </div>
+        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="day-to-dusk" data-full="img/gal-day-to-dusk-2.webp">
+          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-to-dusk-2-thumb.webp" alt="Day to Dusk — Perth, WA">
+          <div class="gallery-caption"><span class="gallery-tag">Day to Dusk</span><span class="gallery-location">Perth, WA</span></div>
+        </div>
+        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/ltM3520b5vE?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/ltM3520b5vE/hq720.jpg'),url('https://i.ytimg.com/vi/ltM3520b5vE/mqdefault.jpg');">
+            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">26 Hall Road, Roleystone</span></div>
+        </div>
         <div class="gallery-item tall reveal reveal-up" data-category="photography" data-subcategory="agent-headshots" data-full="img/gal-headshots-5.webp">
           <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-headshots-5-thumb.webp" alt="Agent Headshots — Perth, WA" style="object-position: center top;">
           <div class="gallery-caption"><span class="gallery-tag">Agent Headshots</span><span class="gallery-location">Perth, WA</span></div>
+        </div>
+        <div class="gallery-item tour3d-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
+          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7MK1v?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
+            <div class="tour-play"><div class="tour-play-icon"><span class="t360">360&deg;</span></div><div class="tour-label">3D virtual tour</div><div class="tour-hint">Walk through the whole home</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
+        </div>
+        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/fwa-Nq-aaWw?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/fwa-Nq-aaWw/hq720.jpg'),url('https://i.ytimg.com/vi/fwa-Nq-aaWw/mqdefault.jpg');">
+            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">45 Charles Street, Maylands</span></div>
+        </div>
+        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
+          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/_0q5iEs13Vk?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/_0q5iEs13Vk/hq720.jpg'),url('https://i.ytimg.com/vi/_0q5iEs13Vk/mqdefault.jpg');">
+            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">166 Ponte Vecchio, Ellenbrook</span></div>
+        </div>
+        <div class="gallery-item tour3d-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
+          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7H3KG?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
+            <div class="tour-play"><div class="tour-play-icon"><span class="t360">360&deg;</span></div><div class="tour-label">3D virtual tour</div><div class="tour-hint">Walk through the whole home</div></div>
+          </div>
+          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
+        </div>
+        <div class="gallery-item wide reveal reveal-up" data-category="virtual-editing" data-subcategory="decluttering" data-full="img/gal-declutter-3.webp">
+          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-declutter-3-thumb.webp" alt="Decluttering — Palmyra, WA">
+          <div class="gallery-caption"><span class="gallery-tag">Decluttering</span><span class="gallery-location">Palmyra, WA</span></div>
         </div>
       </div>
 
@@ -780,6 +876,12 @@
   </section>
 
   <!-- FOOTER -->
+  <section class="g-cta">
+    <h2>Want your listing to look like this?</h2>
+    <p>Pick a package, choose a date, enter the address. The gallery lands in your inbox the next day.</p>
+    <div class="g-cta-actions"><a href="https://portal.bakerproduction.com/book" class="g-btn">Book a shoot</a><a href="pricing.html" class="g-btn g-btn-ghost">See pricing</a></div>
+  </section>
+
   <footer class="footer" id="contact">
     <div class="footer-inner">
       <div class="footer-brand">
@@ -840,8 +942,9 @@
   <script>
     // ========== NAVBAR ==========
     const navbar = document.getElementById('navbar');
-    // Gallery page navbar starts scrolled (white) since no hero image
-    navbar.classList.add('scrolled');
+    // Transparent over the photo hero, white once scrolled (same as the homepage)
+    const setNav = () => navbar.classList.toggle('scrolled', window.pageYOffset > 80);
+    setNav(); window.addEventListener('scroll', setNav, { passive: true });
 
     // ========== HAMBURGER ==========
     const hamburger = document.getElementById('hamburger');
@@ -850,8 +953,7 @@
       hamburger.classList.toggle('open');
       mobileMenu.classList.toggle('open');
       navbar.classList.toggle('menu-open');
-      // Always light menu on gallery page (navbar is always white/scrolled)
-      mobileMenu.classList.toggle('light', mobileMenu.classList.contains('open'));
+      mobileMenu.classList.toggle('light', mobileMenu.classList.contains('open') && navbar.classList.contains('scrolled'));
       document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
     });
     function closeMenu() {
