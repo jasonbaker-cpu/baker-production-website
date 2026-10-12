@@ -1405,3 +1405,5 @@ a.lp-chip:hover { border-color: var(--color-accent); color: var(--color-text); }
 }
 .lp-sec.lp-sec-dark p { color: var(--color-text-on-dark-muted); }
 .lp-sec.lp-sec-dark p strong { color: #fff; }
+
+#packages, #photography, #video, #floor-plans, #add-ons, #virtual-editing { scroll-margin-top: 96px; }
