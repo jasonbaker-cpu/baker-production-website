@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Baker HQ</title>
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&display=swap">
+<style>
+  /* Locked front door for the team hub. The hub link is stored encrypted; the passcode is the key. */
+  :root{--bg:#F5F5F7;--panel:#FFFFFF;--sunk:#F2F2F7;--line:#E5E5EA;--ink:#1D1D1F;--muted:#6E6E73;--faint:#86868B;--accent:#0071E3;--bad:#D4001A;--bad-bg:#FDE8EA;
+    --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+    --display:"Inter Tight","Inter",-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif}
+  @media (prefers-color-scheme:dark){:root{--bg:#000;--panel:#1C1C1E;--sunk:#2C2C2E;--line:#38383A;--ink:#F5F5F7;--muted:#A1A1A6;--faint:#8E8E93;--accent:#0A84FF;--bad:#FF453A;--bad-bg:#331311;--shadow:0 1px 2px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.35);color-scheme:dark}}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;display:grid;place-items:center;padding:24px 16px}
+  .card{width:100%;max-width:380px;background:var(--panel);border-radius:20px;box-shadow:var(--shadow);padding:28px 26px 26px;display:flex;flex-direction:column;gap:14px}
+  .brand{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.02em;display:inline-flex;align-items:center;gap:9px}
+  .brand i{font-style:normal;display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--ink);color:var(--bg);font-size:13px;font-weight:700}
+  p{margin:0;color:var(--muted);font-size:14.5px}
+  label{font-size:12px;font-weight:600;color:var(--faint)}
+  input{font:inherit;font-size:17px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--sunk);color:var(--ink);width:100%;letter-spacing:.04em}
+  input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  button{font:inherit;font-weight:600;font-size:15px;padding:12px 16px;border-radius:999px;border:0;background:var(--accent);color:#fff;cursor:pointer;width:100%}
+  button:disabled{opacity:.5;cursor:default}
+  .err{display:none;background:var(--bad-bg);color:var(--bad);border-radius:12px;padding:9px 12px;font-size:13.5px}
+  .err.on{display:block}
+  .shake{animation:sh .35s}
+  @keyframes sh{20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+  .foot{font-size:12.5px;color:var(--faint);text-align:center}
+  .foot a{color:var(--accent);text-decoration:none}
+  @media (prefers-reduced-motion:reduce){.shake{animation:none}}
+</style>
+</head>
+<body>
+<form class="card" id="f" autocomplete="off">
+  <span class="brand"><i>B</i>Baker HQ</span>
+  <p id="msg">Team only. Enter the passcode to open the hub.</p>
+  <div>
+    <label for="pc">Passcode</label>
+    <input id="pc" type="password" inputmode="text" autocapitalize="off" autocorrect="off" spellcheck="false" autofocus>
+  </div>
+  <div class="err" id="err">That's not it. Check with Jason.</div>
+  <button type="submit" id="go">Open Baker HQ</button>
+  <span class="foot">Remembered on this device for 30 days. <a href="#" id="forget">Forget</a></span>
+</form>
+<script>
+(function(){
+  var LOCK = {"salt":"MEwM37TNejW38H6+8/da6w==","iv":"Pm9KNvDJ77ldPDrJ","ct":"CzMk0GdnouqyMTGXWP3tAuwPR8aZPc4v+xjjgaY1E6bQPyGvVh/C/0EsV45b07WDvx/RubskowFbroy0F844QTU="};
+  var KEY = 'bhq-door';
+  var f = document.getElementById('f'), pc = document.getElementById('pc'), err = document.getElementById('err'), go = document.getElementById('go'), msg = document.getElementById('msg');
+  function b64(s){ var b = atob(s), a = new Uint8Array(b.length); for (var i=0;i<b.length;i++) a[i] = b.charCodeAt(i); return a; }
+  function remembered(){ try { var r = JSON.parse(localStorage.getItem(KEY)||'null'); if (r && r.url && r.exp > Date.now()) return r.url; } catch(e){} return null; }
+  function remember(url){ try { localStorage.setItem(KEY, JSON.stringify({url:url, exp: Date.now() + 30*86400000})); } catch(e){} }
+  function open(url){ msg.textContent = 'Opening Baker HQ…'; location.replace(url); }
+  async function unlock(pass){
+    var enc = new TextEncoder();
+    var base = await crypto.subtle.importKey('raw', enc.encode(pass.trim().toLowerCase()), 'PBKDF2', false, ['deriveKey']);
+    var key = await crypto.subtle.deriveKey({name:'PBKDF2', salt:b64(LOCK.salt), iterations:200000, hash:'SHA-256'}, base, {name:'AES-GCM', length:256}, false, ['decrypt']);
+    var pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64(LOCK.iv)}, key, b64(LOCK.ct));
+    return new TextDecoder().decode(pt);
+  }
+  var r = remembered();
+  if (r){ open(r); return; }
+  f.addEventListener('submit', async function(ev){
+    ev.preventDefault();
+    err.classList.remove('on'); go.disabled = true; go.textContent = 'Checking…';
+    try { var url = await unlock(pc.value); remember(url); open(url); }
+    catch(e){ err.classList.add('on'); f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake'); pc.select(); go.disabled = false; go.textContent = 'Open Baker HQ'; }
+  });
+  document.getElementById('forget').addEventListener('click', function(ev){ ev.preventDefault(); try { localStorage.removeItem(KEY); } catch(e){} msg.textContent = 'Forgotten on this device.'; });
+})();
+</script>
+</body>
+</html>
