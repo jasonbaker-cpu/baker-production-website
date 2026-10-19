@@ -1,0 +1,1402 @@
+<!doctype html>
+<html lang="en-AU"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Baker Aerial Editor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=DM+Serif+Display&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+/* Layout: editor shell — tool rail | photo stage | inspector, photo strip along the bottom. Single dark look, like a darkroom. */
+:root{
+  --bg:#121417; --panel:#1a1d22; --panel-2:#22262c; --line:#2e333b;
+  --fg:#e8e6e1; --muted:#9298a1; --accent:#f2b33d; --accent-ink:#1b1408; --danger:#ff6b5b;
+  --ui:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --display:"Archivo", "IBM Plex Sans", system-ui, sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--ui);font-size:13px;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{height:100%;display:grid;grid-template-rows:auto 1fr auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px;gap:10px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:8px;margin-right:auto;min-width:0}
+.brand h1{font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.01em;margin:0;white-space:nowrap}
+.brand span{color:var(--muted);font-size:12px;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:7px;border:1px solid var(--line);background:var(--panel-2);cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:#454c56}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.btn.ghost{background:transparent}
+.btn.icon{width:32px;padding:0;justify-content:center}
+.btn svg{width:16px;height:16px;flex:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.group{display:flex;gap:6px;align-items:center}
+
+.main{display:grid;grid-template-columns:52px minmax(0,1fr) 290px;gap:10px;min-height:0}
+.rail{display:flex;flex-direction:column;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px}
+.tool{position:relative;width:38px;height:38px;border-radius:8px;border:1px solid transparent;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+.tool svg{width:19px;height:19px}
+.tool:hover{color:var(--fg);background:var(--panel-2)}
+.tool[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tool kbd{position:absolute;right:3px;bottom:1px;font:500 8px var(--mono);opacity:.6}
+.rail hr{width:100%;border:0;border-top:1px solid var(--line);margin:4px 0}
+
+.stage{position:relative;border-radius:10px;overflow:hidden;background:#0b0c0e;border:1px solid var(--line);min-height:0;touch-action:none}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hint{position:absolute;left:10px;top:10px;right:10px;display:flex;gap:8px;align-items:center;pointer-events:none;flex-wrap:wrap}
+.hint .pill{pointer-events:auto;background:rgba(18,20,23,.82);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:12px;color:var(--fg)}
+.hint .pill.sample{color:var(--accent);border-color:rgba(242,179,61,.4)}
+.zoom{position:absolute;right:10px;bottom:10px;display:flex;gap:4px;background:rgba(18,20,23,.82);border:1px solid var(--line);border-radius:9px;padding:4px;align-items:center}
+.zoom .btn{height:28px;border:0;background:transparent}
+.zoom .btn.icon{width:28px}
+.zoom output{font:500 11px var(--mono);color:var(--muted);min-width:42px;text-align:center;font-variant-numeric:tabular-nums}
+.drawbar{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:6px;background:rgba(18,20,23,.9);border:1px solid var(--line);border-radius:10px;padding:5px}
+.drop{position:absolute;inset:0;display:grid;place-items:center;background:rgba(242,179,61,.12);border:2px dashed var(--accent);border-radius:10px;font-family:var(--display);font-weight:700;font-size:18px;color:var(--accent);pointer-events:none}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:auto;min-height:0;display:flex;flex-direction:column}
+.sec{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.sec:last-child{border-bottom:0}
+.sec h2{margin:0;font:600 11px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+.row{display:flex;align-items:center;gap:8px;min-width:0}
+.row label.lbl{flex:none;width:76px;color:var(--muted)}
+.row > :not(.lbl){min-width:0}
+input[type=range]{flex:1;accent-color:var(--accent);min-width:0}
+input[type=text],input[type=number],textarea,select{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:54px;line-height:1.35}
+input[type=color]{width:30px;height:26px;border:1px solid var(--line);border-radius:6px;background:none;padding:1px;flex:none;cursor:pointer}
+.val{font:500 11px var(--mono);color:var(--muted);width:34px;text-align:right;font-variant-numeric:tabular-nums;flex:none}
+.swatches{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.sw{width:24px;height:24px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 1px var(--line);cursor:pointer;padding:0}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--accent)}
+.seg{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;flex:1}
+.seg button{flex:1;border:0;background:transparent;padding:6px 4px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--panel-2);color:var(--fg);box-shadow:inset 0 -2px 0 var(--accent)}
+.check{display:flex;align-items:center;gap:8px;cursor:pointer}
+.check input{accent-color:var(--accent);width:15px;height:15px}
+.note{color:var(--muted);font-size:12px;line-height:1.45;margin:0}
+.layers{display:flex;flex-direction:column;gap:3px}
+.layer{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;border:1px solid transparent;background:transparent;text-align:left;width:100%}
+.layer:hover{background:var(--panel-2)}
+.layer[aria-current="true"]{border-color:var(--accent);background:var(--panel-2)}
+.layer i{width:10px;height:10px;border-radius:2px;flex:none}
+.layer span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.layer small{color:var(--muted);font:500 10px var(--mono)}
+.edge-chip{font:500 11px var(--mono);color:var(--accent)}
+
+.strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;align-items:center;min-height:64px}
+.thumb{position:relative;flex:none;height:60px;border-radius:7px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:var(--panel);padding:0}
+.thumb img{height:100%;display:block;max-width:none}
+.thumb[aria-current="true"]{border-color:var(--accent)}
+.thumb .x{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;border:0;font-size:12px;line-height:18px;cursor:pointer;display:none}
+.thumb:hover .x,.thumb:focus-within .x{display:block}
+.thumb .n{position:absolute;left:4px;bottom:3px;font:500 10px var(--mono);color:#fff;text-shadow:0 1px 2px #000}
+.addthumb{flex:none;height:60px;width:84px;border-radius:7px;border:1px dashed var(--line);background:transparent;color:var(--muted);cursor:pointer}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:grid;place-items:center;z-index:50;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;max-width:min(900px,100%);max-height:100%;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.modal img{max-width:100%;max-height:65vh;object-fit:contain;border-radius:6px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel-2);border:1px solid var(--line);padding:9px 14px;border-radius:9px;z-index:60;font-size:13px;max-width:calc(100% - 32px)}
+
+.tabs{display:flex;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2}
+.tabs button{flex:1;border:0;background:transparent;padding:11px 6px;cursor:pointer;color:var(--muted);font-weight:600;font-size:12.5px}
+.tabs button[aria-selected="true"]{color:var(--fg);box-shadow:inset 0 -2px 0 var(--accent)}
+.places{display:flex;flex-direction:column;gap:2px;max-height:340px;overflow:auto;margin:0 -4px}
+.place{display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:8px;align-items:center;padding:6px 6px;border-radius:6px;cursor:pointer;text-align:left;border:1px solid transparent;background:transparent;width:100%}
+.place:hover{background:var(--panel-2)}
+.place[aria-pressed="true"] .box{background:var(--accent);border-color:var(--accent)}
+.place[aria-pressed="true"] .box::after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;border:solid var(--accent-ink);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.place .box{position:relative;width:15px;height:15px;border:1.5px solid #59606b;border-radius:4px}
+.place .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.place .nm small{display:block;color:var(--muted);font-size:11px}
+.place .d{font:500 11px var(--mono);color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.place.off .d{color:#c98a5a}
+.badge{display:inline-block;font:600 9.5px var(--ui);letter-spacing:.04em;padding:1px 5px;border-radius:4px;margin-left:4px;vertical-align:1px;background:#1f3a2f;color:#7fd8a8}
+.badge.u{background:#3a3220;color:#e8c070}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:12px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.callout{border:1px solid var(--line);background:var(--panel-2);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+@media (max-width:860px){
+  .app{height:auto;min-height:100%}
+  .main{grid-template-columns:1fr;grid-template-rows:auto 62vh auto}
+  .rail{flex-direction:row;flex-wrap:wrap}
+  .rail hr{width:1px;height:28px;border-top:0;border-left:1px solid var(--line);margin:5px 2px}
+  .panel{overflow:visible}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head><body>
+<div class="app">
+  <header>
+    <div class="brand"><h1>Baker Aerial Editor</h1><span>Place pins, lot boundaries and labels on drone shots</span></div>
+    <div class="group">
+      <button class="btn" id="addBtn" title="Add photos (or drop / paste them)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add photos</button>
+      <button class="btn icon ghost" id="undoBtn" title="Undo (⌘Z)" aria-label="Undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
+      <button class="btn icon ghost" id="redoBtn" title="Redo (⇧⌘Z)" aria-label="Redo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/></svg></button>
+    </div>
+    <div class="group">
+      <select id="fmt" aria-label="Export format" style="width:auto;height:32px"><option value="jpg">JPG</option><option value="png">PNG</option></select>
+      <button class="btn" id="exportAllBtn" title="Export every photo as a ZIP">Export all</button>
+      <button class="btn primary" id="exportBtn">Export photo</button>
+    </div>
+    <input type="file" id="fileIn" accept="image/jpeg,image/png,image/webp" multiple hidden>
+    <input type="file" id="jobIn" accept=".json,.html,.htm,application/json,text/html" hidden>
+    <input type="file" id="metaIn" accept="image/jpeg" hidden>
+    <input type="file" id="logoIn" accept="image/png,image/svg+xml,image/webp,image/jpeg" hidden>
+  </header>
+
+  <div class="main">
+    <nav class="rail" aria-label="Tools">
+      <button class="tool" data-tool="select" title="Select & move (V)" aria-label="Select"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 3l14 8-6 2-3 6z"/></svg><kbd>V</kbd></button>
+      <button class="tool" data-tool="pin" title="Add pin (P)" aria-label="Add pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="8" rx="2"/><path d="M12 11v8"/><circle cx="12" cy="20" r="1.6" fill="currentColor"/></svg><kbd>P</kbd></button>
+      <button class="tool" data-tool="poly" title="Draw boundary (B)" aria-label="Draw boundary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 7l9-4 7 7-3 10-12-2z"/><circle cx="4" cy="7" r="1.6" fill="currentColor"/><circle cx="13" cy="3" r="1.6" fill="currentColor"/><circle cx="20" cy="10" r="1.6" fill="currentColor"/></svg><kbd>B</kbd></button>
+      <button class="tool" data-tool="line" title="Add line (L)" aria-label="Add line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19 10 9l4 5 6-10"/></svg><kbd>L</kbd></button>
+      <button class="tool" data-tool="text" title="Add text (T)" aria-label="Add text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 6V4h14v2M12 4v16M9 20h6"/></svg><kbd>T</kbd></button>
+      <hr>
+      <button class="tool" id="hideBtn" title="Hide graphics to check the photo (H)" aria-label="Hide graphics" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><kbd>H</kbd></button>
+    </nav>
+
+    <div class="stage" id="stage">
+      <canvas id="cv"></canvas>
+      <div class="hint"><span class="pill" id="hint"></span><span class="pill sample" id="sampleTag" hidden>Sample photo — add your own</span></div>
+      <div class="drawbar" id="drawbar" hidden>
+        <button class="btn" id="finishBtn">Finish</button>
+        <button class="btn ghost" id="cancelBtn">Cancel</button>
+      </div>
+      <div class="zoom">
+        <button class="btn icon" id="zoomOut" aria-label="Zoom out">−</button>
+        <output id="zoomVal">100%</output>
+        <button class="btn icon" id="zoomIn" aria-label="Zoom in">+</button>
+        <button class="btn" id="fitBtn" style="font-size:12px">Fit</button>
+      </div>
+      <div class="drop" id="drop" hidden>Drop drone photos or a pin file</div>
+    </div>
+
+    <aside class="panel" id="panel">
+      <div class="tabs" role="tablist" aria-label="Panels"><button role="tab" data-tab="pins" id="tabBtnPins">Pins</button><button role="tab" data-tab="boundary" id="tabBtnBoundary">Boundary &amp; text</button></div>
+      <section class="sec" id="selSec"></section>
+      <div id="tabPins" role="tabpanel"></div>
+      <div id="tabBoundary" role="tabpanel">
+      <section class="sec">
+        <h2>Outside the lot</h2>
+        <label class="check"><input type="checkbox" id="hlOn"> Darken everything outside boundaries</label>
+        <div class="row"><label class="lbl" for="hlOp">Darkness</label><input type="range" id="hlOp" min="0" max="85" step="1"><span class="val" id="hlOpV"></span></div>
+        <div class="row"><label class="lbl" for="hlCol">Tint</label><input type="color" id="hlCol"><span class="note">Black darkens; a colour washes.</span></div>
+        <label class="check"><input type="checkbox" id="fillOn"> Tint inside in the line colour</label>
+        <div class="row"><label class="lbl" for="fillOp">Strength</label><input type="range" id="fillOp" min="0" max="50" step="1"><span class="val" id="fillOpV"></span></div>
+      </section>
+      <section class="sec">
+        <h2>Disclaimer</h2>
+        <label class="check"><input type="checkbox" id="discOn"> Show on this photo</label>
+        <textarea id="discText" aria-label="Disclaimer wording"></textarea>
+        <p class="note">Shows only on photos with a boundary or line. Wording is remembered for every new photo.</p>
+      </section>
+      <section class="sec">
+        <h2>On this photo</h2>
+        <div class="layers" id="layers"></div>
+      </section>
+      </div>
+    </aside>
+  </div>
+
+  <div class="strip" id="strip"></div>
+</div>
+
+<script>
+(() => {
+"use strict";
+// ---------- storage helpers ----------
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem("bab:"+k); return v==null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem("bab:"+k, JSON.stringify(v)); }catch(e){} }
+};
+const DEFAULT_DISC = "Boundary lines are approximate and for illustration only.";
+const prefs = Object.assign({ color:"#ffffff", width:3, glow:false, casing:true, hlOn:true, hlOp:45, hlCol:"#000000", fillOn:false, fillOp:12, discOn:true, discText:DEFAULT_DISC, textStyle:"pill", textFont:"Archivo" }, LS.get("prefs", {}));
+const savePrefs = () => LS.set("prefs", prefs);
+
+const SWATCHES = ["#ffffff","#ffd23f","#f2b33d","#ff4d4d","#3fd0ff","#5ee38a","#111111"];
+const FONTS = [["Archivo","Archivo"],["IBM Plex Sans","Plex Sans"],["DM Serif Display","DM Serif"]];
+
+// ---------- state ----------
+let photos = [];
+let cur = -1;
+let tool = "select";
+let sel = null;          // {kind:'shape'|'text', id, edge?:n, vtx?:n}
+let draft = null;        // {type, pts:[]}
+let hover = null;        // image point for rubber band
+let hideGfx = false;
+let view = { s:1, tx:0, ty:0 };
+let userMoved = false;
+let uid = 1;
+const nid = () => "o" + (uid++);
+const P = () => photos[cur];
+const U = () => P() ? P().w / 1000 : 1;
+
+const cv = document.getElementById("cv");
+const ctx = cv.getContext("2d");
+const stage = document.getElementById("stage");
+
+// ---------- pins: job, camera, style ----------
+let job = null;        // {address, lat, lng, sample, places:[{key,name,cat,lat,lng,desc,school,dist,dir}]}
+let armed = null;      // place key, "__house" or "__custom" waiting for a click on the photo
+let aligning = false;  // waiting for a click on the subject house
+let ptab = LS.get("ptab", "pins");
+const PIN_DEFAULT = { font:"Archivo", size:18, bg:"#ffffff", fg:"#111111", stem:"#ffffff", dot:"#ffffff", houseBg:"#111111", houseFg:"#ffffff", upper:false, showDist:true, stemLen:80 };
+let pinStyle = Object.assign({}, PIN_DEFAULT, LS.get("pinStyle", {}));
+let pinTemplates = LS.get("pinTemplates", {});
+let pinTpl = LS.get("pinTpl", "");
+let pinLogo = null;
+const savePinStyle = () => LS.set("pinStyle", pinStyle);
+(function(){ const d = LS.get("pinLogo", ""); if (d){ const im = new Image(); im.onload = ()=>{ pinLogo = im; requestDraw(); }; im.src = d; } })();
+
+function newPhotoState(name, img, w, h, sample){
+  return { id:nid(), name, img, w, h, sample:!!sample, thumb:"",
+    shapes:[], texts:[], pins:[], cam:null, cam0:null,
+    hl:{ on:prefs.hlOn, op:prefs.hlOp, col:prefs.hlCol },
+    fill:{ on:prefs.fillOn, op:prefs.fillOp },
+    disc:{ on:prefs.discOn, text:prefs.discText },
+    undo:[], redo:[] };
+}
+function snapshotOf(p){ return JSON.stringify({shapes:p.shapes, texts:p.texts, pins:p.pins, cam:p.cam, hl:p.hl, fill:p.fill, disc:p.disc}); }
+function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
+function restore(p, s){ const o=JSON.parse(s); p.shapes=o.shapes; p.texts=o.texts; p.pins=o.pins||[]; p.cam=o.cam||null; p.hl=o.hl; p.fill=o.fill; p.disc=o.disc; }
+function undo(){ const p=P(); if(!p||!p.undo.length) return; p.redo.push(snapshotOf(p)); restore(p,p.undo.pop()); sel=null; refreshAll(); }
+function redo(){ const p=P(); if(!p||!p.redo.length) return; p.undo.push(snapshotOf(p)); restore(p,p.redo.pop()); sel=null; refreshAll(); }
+function updateUndo(){ const p=P(); undoBtn.disabled=!p||!p.undo.length; redoBtn.disabled=!p||!p.redo.length; }
+
+// ---------- geometry ----------
+const dist = (a,b) => Math.hypot(a[0]-b[0], a[1]-b[1]);
+function distSeg(p,a,b){ const dx=b[0]-a[0], dy=b[1]-a[1]; const L=dx*dx+dy*dy; let t=L?((p[0]-a[0])*dx+(p[1]-a[1])*dy)/L:0; t=Math.max(0,Math.min(1,t)); return Math.hypot(p[0]-(a[0]+t*dx), p[1]-(a[1]+t*dy)); }
+function inPoly(p, pts){ let c=false; for(let i=0,j=pts.length-1;i<pts.length;j=i++){ const a=pts[i],b=pts[j]; if(((a[1]>p[1])!==(b[1]>p[1])) && (p[0] < (b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])) c=!c; } return c; }
+function centroid(pts){ let x=0,y=0; pts.forEach(q=>{x+=q[0];y+=q[1];}); return [x/pts.length, y/pts.length]; }
+function edgesOf(sh){ const n=sh.pts.length; const m = sh.type==="poly" ? n : n-1; const out=[]; for(let i=0;i<m;i++) out.push([sh.pts[i], sh.pts[(i+1)%n]]); return out; }
+
+// ---------- geo + camera projection ----------
+const DIRS = ["N","NE","E","SE","S","SW","W","NW"];
+const DEG = Math.PI/180;
+function geoDist(lat0, lng0, lat, lng){
+  const dy = (lat-lat0)*111320, dx = (lng-lng0)*111320*Math.cos(lat0*DEG);
+  const d = Math.hypot(dx,dy), b = (Math.atan2(dx,dy)/DEG + 360) % 360;
+  return { d, b, dir: DIRS[Math.floor((b+22.5)/45) % 8] };
+}
+function fmtDist(d){ return d < 1000 ? `${Math.max(10, Math.round(d/10)*10)} m` : `${(d/1000).toFixed(1)} km`; }
+// cam: {lat,lng,h (m above ground), yaw (deg from north, clockwise), pitch (deg, -90 = straight down), roll, f35 (35mm-equivalent focal length)}
+function project(cam, W, H, lat, lng){
+  const c0 = Math.cos(cam.lat*DEG);
+  const vx = (lng-cam.lng)*111320*c0, vy = (lat-cam.lat)*111320, vz = -cam.h;
+  const yw = cam.yaw*DEG, pt = cam.pitch*DEG;
+  const f = [Math.sin(yw)*Math.cos(pt), Math.cos(yw)*Math.cos(pt), Math.sin(pt)];
+  const r = [Math.cos(yw), -Math.sin(yw), 0];
+  const u = [r[1]*f[2]-r[2]*f[1], r[2]*f[0]-r[0]*f[2], r[0]*f[1]-r[1]*f[0]];
+  let xc = vx*r[0]+vy*r[1]+vz*r[2], yc = vx*u[0]+vy*u[1]+vz*u[2];
+  const zc = vx*f[0]+vy*f[1]+vz*f[2];
+  if (zc <= 0.5) return null;
+  const rl = (cam.roll||0)*DEG;
+  if (rl){ const cr=Math.cos(rl), sr=Math.sin(rl); const x2 = xc*cr + yc*sr, y2 = -xc*sr + yc*cr; xc=x2; yc=y2; }
+  const fpx = cam.f35*Math.hypot(W,H)/43.27;
+  return [W/2 + fpx*xc/zc, H/2 - fpx*yc/zc];
+}
+function inFrame(p, q, m){ m = m||0; return q && q[0] >= -m && q[0] <= p.w+m && q[1] >= -m && q[1] <= p.h+m; }
+// Turn the camera so the property lands where the editor clicked (fixes compass/gimbal drift).
+function alignCamera(p, target){
+  if (!p.cam || !job) return false;
+  const cam = Object.assign({}, p.cam);
+  for (let it=0; it<12; it++){
+    const q = project(cam, p.w, p.h, job.lat, job.lng); if (!q) return false;
+    const ex = target[0]-q[0], ey = target[1]-q[1];
+    if (Math.hypot(ex,ey) < 0.5) break;
+    const e = 0.05;
+    const qy = project(Object.assign({}, cam, {yaw:cam.yaw+e}), p.w, p.h, job.lat, job.lng);
+    const qp = project(Object.assign({}, cam, {pitch:cam.pitch+e}), p.w, p.h, job.lat, job.lng);
+    if (!qy || !qp) return false;
+    const a = (qy[0]-q[0])/e, b = (qp[0]-q[0])/e, c = (qy[1]-q[1])/e, d = (qp[1]-q[1])/e;
+    const det = a*d - b*c; if (Math.abs(det) < 1e-9) return false;
+    const dyaw = ( d*ex - b*ey)/det, dpit = (-c*ex + a*ey)/det;
+    cam.yaw += Math.max(-20, Math.min(20, dyaw)); cam.pitch = Math.max(-90, Math.min(10, cam.pitch + Math.max(-20, Math.min(20, dpit))));
+  }
+  p.cam = cam; return true;
+}
+
+// ---------- drone metadata (DJI XMP + EXIF) ----------
+function exifFocal35(buf){
+  try{
+    const v = new DataView(buf); if (v.getUint16(0) !== 0xFFD8) return null;
+    let o = 2;
+    while (o < v.byteLength-10){
+      const m = v.getUint16(o), len = v.getUint16(o+2);
+      if ((m & 0xFF00) !== 0xFF00) break;
+      if (m === 0xFFE1 && v.getUint32(o+4) === 0x45786966){
+        const t = o+10, le = v.getUint16(t) === 0x4949;
+        const g16 = q=>v.getUint16(q,le), g32 = q=>v.getUint32(q,le);
+        const ifd = off => { const n = g16(t+off), tags = {}; for (let i=0;i<n;i++){ const e = t+off+2+i*12; tags[g16(e)] = e+8; } return tags; };
+        const i0 = ifd(g32(t+4)); if (!i0[0x8769]) return null;
+        const ex = ifd(g32(i0[0x8769]));
+        if (ex[0xA405]){ const f = g16(ex[0xA405]); if (f > 0) return f; }
+        return null;
+      }
+      o += 2 + len;
+    }
+  }catch(e){}
+  return null;
+}
+async function readDroneMeta(file){
+  try{
+    const buf = await file.slice(0, 1024*1024).arrayBuffer();
+    const txt = new TextDecoder("latin1").decode(buf);
+    const g = k => { const m = txt.match(new RegExp("drone-dji:"+k+"\\s*(?:=\\s*\"|>)\\s*([+-]?[\\d.]+)")); return m ? parseFloat(m[1]) : null; };
+    const lat = g("GpsLatitude"), lng = g("GpsLongitude") ?? g("GpsLongtitude");
+    const h = g("RelativeAltitude"), yaw = g("GimbalYawDegree") ?? g("FlightYawDegree"), pitch = g("GimbalPitchDegree");
+    if ([lat,lng,h,yaw,pitch].some(x=>x==null || isNaN(x)) || h < 2) return null;
+    return { lat, lng, h, yaw, pitch, roll: g("GimbalRollDegree") || 0, f35: exifFocal35(buf) || 24, src:"photo" };
+  }catch(e){ return null; }
+}
+
+// ---------- pin file (job.json from the amenity task, or its _map.html) ----------
+function decodeEntities(s){ const t = document.createElement("textarea"); t.innerHTML = s; return t.value; }
+function parseJobFile(text){
+  let j = null;
+  const tt = text.trim();
+  if (tt.startsWith("{")){
+    const o = JSON.parse(tt);
+    if (typeof o.lat !== "number" || !Array.isArray(o.pins)) throw new Error("This JSON has no property position or pins.");
+    j = { address:o.address||"Property", lat:o.lat, lng:o.lng, places:o.pins.map(q=>({ name:q.name, cat:q.cat||"other", lat:q.lat, lng:q.lng, desc:q.desc||"", school:q.school||"" })) };
+  } else {
+    const pm = tt.match(/var\s+PROP\s*=\s*(\[[^\]]+\])/), mm = tt.match(/var\s+M\s*=\s*(\[[\s\S]*?\]);\s*\n/);
+    if (!pm || !mm) throw new Error("That file isn't an amenity map or pin file.");
+    const prop = JSON.parse(pm[1]), M = JSON.parse(mm[1]);
+    const am = tt.match(/<div class="addr">([\s\S]*?)<\/div>/);
+    j = { address: am ? decodeEntities(am[1]).trim() : "Property", lat:prop[0], lng:prop[1],
+      places: M.map(q=>({ name:decodeEntities(q.name), cat:q.cat||"other", lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
+  }
+  const seen = new Set();
+  j.places = j.places.filter(q=>q.name && isFinite(q.lat) && isFinite(q.lng)).map(q=>{
+    const g = geoDist(j.lat, j.lng, q.lat, q.lng); let key = q.name.toLowerCase(); while (seen.has(key)) key += "+"; seen.add(key);
+    return Object.assign(q, { key, dist:g.d, dir:g.dir });
+  }).sort((a,b)=>a.dist-b.dist);
+  return j;
+}
+function setJob(j, persist){
+  job = j; armed = null; aligning = false;
+  if (persist){ try{ LS.set("job", { address:j.address, lat:j.lat, lng:j.lng, places:j.places, at:Date.now() }); }catch(e){} }
+  refreshAll();
+}
+function shortAddress(a){ return String(a||"").split(",")[0].trim() || "Subject property"; }
+
+// ---------- pin creation / placement ----------
+function pinName(q){ return q.name; }
+function makePin(p, opts, at){
+  const u = p.w/1000;
+  const pin = { id:nid(), key:opts.key||null, house:!!opts.house, name:opts.name, sub:opts.sub||"", showSub: opts.showSub!==undefined ? opts.showSub : pinStyle.showDist, ex:at[0], ey:at[1], lx:at[0], ly:at[1], moved:false };
+  setLabelAbove(p, pin, u);
+  return pin;
+}
+function setLabelAbove(p, pin, u){
+  const m = pinMetrics(ctx, pin, u);
+  const stem = pinStyle.stemLen*u * (pin.house ? 1.15 : 1);
+  pin.lx = Math.max(m.bw/2 + 6*u, Math.min(p.w - m.bw/2 - 6*u, pin.ex));
+  pin.ly = pin.ey - stem - m.bh/2;
+  if (pin.ly - m.bh/2 < 6*u) pin.ly = pin.ey + stem + m.bh/2; // no room above: hang below
+}
+function placeForKey(key){ return job && job.places.find(q=>q.key===key); }
+function autoPoint(p, lat, lng){ if (!p.cam) return null; const q = project(p.cam, p.w, p.h, lat, lng); return inFrame(p, q, 2) ? q : null; }
+function addPlacePin(key){
+  const p = P(); if (!p || !job) return;
+  if (key === "__house"){
+    const at = autoPoint(p, job.lat, job.lng);
+    if (!at){ arm("__house"); return; }
+    commit(); p.pins = p.pins.filter(x=>!x.house); const pin = makePin(p, { house:true, name:shortAddress(job.address), showSub:false }, at); p.pins.push(pin); sel = { kind:"pin", id:pin.id }; refreshAll(); return;
+  }
+  const q = placeForKey(key); if (!q) return;
+  const at = autoPoint(p, q.lat, q.lng);
+  if (!at){ arm(key); return; }
+  commit(); const pin = makePin(p, { key, name:pinName(q), sub:fmtDist(q.dist) }, at); p.pins.push(pin); refreshAll();
+}
+function arm(key){
+  armed = key; aligning = false; setTool("select");
+  const q = key==="__house" ? null : placeForKey(key);
+  const nm = key==="__house" ? "the property" : key==="__custom" ? "the new pin" : q.name;
+  toast(P() && P().cam && key!=="__custom" ? `${nm} is outside this photo's view. Click where it is to place it anyway.` : `Click on the photo where ${nm} is`);
+  setHint(); refreshPinsTab();
+}
+function placeArmed(pt){
+  const p = P(); const key = armed; armed = null; commit();
+  let pin;
+  if (key === "__house"){ p.pins = p.pins.filter(x=>!x.house); pin = makePin(p, { house:true, name:shortAddress(job?job.address:""), showSub:false }, pt); }
+  else if (key === "__custom"){ pin = makePin(p, { name:"New place", sub:"", showSub:false }, pt); }
+  else { const q = placeForKey(key); pin = makePin(p, { key, name:pinName(q), sub:fmtDist(q.dist) }, pt); }
+  pin.moved = true; p.pins.push(pin); sel = { kind:"pin", id:pin.id }; refreshAll();
+  if (key === "__custom") setTimeout(()=>{ const i=document.getElementById("pnName"); if(i){ i.focus(); i.select(); } }, 0);
+}
+function replacePinsNoCommit(){ const p=P(); if(!p||!p.cam||!job) return; p.pins.forEach(pin=>{ const ll = pin.house ? job : placeForKey(pin.key); if(!ll) return; const at=autoPoint(p, ll.lat, ll.lng); if(!at) return; pin.ex=at[0]; pin.ey=at[1]; pin.moved=false; setLabelAbove(p,pin,p.w/1000); }); }
+function replacePins(all){
+  const p = P(); if (!p || !p.cam || !job) return; commit();
+  let off = 0;
+  p.pins.forEach(pin=>{
+    if (pin.moved && !all) return;
+    const ll = pin.house ? job : placeForKey(pin.key); if (!ll) return;
+    const at = autoPoint(p, ll.lat, ll.lng); if (!at){ off++; return; }
+    pin.ex = at[0]; pin.ey = at[1]; pin.moved = false; setLabelAbove(p, pin, p.w/1000);
+  });
+  refreshAll(); if (off) toast(`${off} pin${off>1?"s are":" is"} now outside the photo and stayed put`);
+}
+function tidyLabels(quiet){
+  const p = P(); if (!p || !p.pins.length) return; if (!quiet) commit();
+  const u = p.w/1000, placed = [], gap = 8*u;
+  const order = p.pins.slice().sort((a,b)=> (b.house?1:0)-(a.house?1:0) || a.ey-b.ey);
+  order.forEach(pin=>{
+    const m = pinMetrics(ctx, pin, u);
+    const stem = pinStyle.stemLen*u*(pin.house?1.15:1);
+    const free = (cx,cy)=> cx-m.bw/2 >= 4*u && cx+m.bw/2 <= p.w-4*u && cy-m.bh/2 >= 4*u && cy+m.bh/2 <= p.h-4*u &&
+      !placed.some(b => Math.abs(b.x-cx) < (b.w+m.bw)/2+gap && Math.abs(b.y-cy) < (b.h+m.bh)/2+gap*0.75);
+    let best = null;
+    outer: for (const sc of [1, 0.5, 0.25]) for (let k=0;k<6;k++){
+      for (const f of [0,-0.6,0.6,-1.2,1.2,-1.8,1.8,-2.6,2.6]){
+        const cx = Math.max(m.bw/2+4*u, Math.min(p.w-m.bw/2-4*u, pin.ex + f*m.bw));
+        const cy = pin.ey - stem*sc - m.bh/2 - k*(m.bh+gap);
+        if (free(cx,cy)){ best=[cx,cy]; break outer; }
+      }
+    }
+    if (!best){ for (let k=0;k<6 && !best;k++){ const cy = pin.ey + stem + m.bh/2 + k*(m.bh+gap); if (free(pin.ex,cy)) best=[pin.ex,cy]; } }
+    if (!best){ setLabelAbove(p, pin, u); best=[pin.lx,pin.ly]; }
+    pin.lx = best[0]; pin.ly = best[1];
+    placed.push({ x:pin.lx, y:pin.ly, w:m.bw, h:m.bh });
+  });
+  if (!quiet) refreshAll();
+}
+
+// ---------- rendering ----------
+function hexA(hex, a){ const n=parseInt(hex.slice(1),16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
+
+function textMetrics(c, t, u){
+  const size = t.size*u;
+  c.font = `${t.bold?800:500} ${size}px "${t.font}", "IBM Plex Sans", sans-serif`;
+  const lines = String(t.text||" ").split("\n");
+  const lh = size*1.18;
+  let w=0; lines.forEach(l=>{ w=Math.max(w, c.measureText(l).width); });
+  const padX = t.style==="pill" ? size*.62 : 0, padY = t.style==="pill" ? size*.38 : 0;
+  const bw = w+padX*2, bh = lines.length*lh + padY*2;
+  return { size, lines, lh, bw, bh, x:t.x-bw/2, y:t.y-bh/2, padX, padY };
+}
+
+function drawScene(c, p, opt){
+  const u = p.w/1000;
+  c.drawImage(p.img, 0, 0, p.w, p.h);
+  if (opt.hide) return;
+  const polys = p.shapes.filter(s=>s.type==="poly" && s.pts.length>=3);
+  // outside highlight
+  if (p.hl.on && polys.length && p.hl.op>0){
+    c.save(); c.beginPath(); c.rect(0,0,p.w,p.h);
+    polys.forEach(s=>{ c.moveTo(s.pts[0][0],s.pts[0][1]); for(let i=1;i<s.pts.length;i++) c.lineTo(s.pts[i][0],s.pts[i][1]); c.closePath(); });
+    c.fillStyle = hexA(p.hl.col, p.hl.op/100); c.fill("evenodd"); c.restore();
+  }
+  if (p.fill.on && p.fill.op>0){
+    polys.forEach(s=>{ c.save(); c.beginPath(); s.pts.forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1])); c.closePath(); c.fillStyle=hexA(s.color, p.fill.op/100); c.fill(); c.restore(); });
+  }
+  // shapes
+  p.shapes.forEach(s=>{
+    if (s.pts.length<2) return;
+    const w = s.width*u;
+    const edges = edgesOf(s);
+    const passes = [];
+    if (s.casing) passes.push({ col:"rgba(0,0,0,.42)", w:w+2.2*u, shadow:false });
+    passes.push({ col:s.color, w, shadow:s.glow });
+    passes.forEach(pass=>{
+      c.save(); c.lineJoin="round"; c.lineCap="round"; c.strokeStyle=pass.col; c.lineWidth=pass.w;
+      if (pass.shadow){ c.shadowColor=s.color; c.shadowBlur=7*u; }
+      edges.forEach((e,i)=>{
+        const dashed = !!(s.dashed && s.dashed[i]);
+        c.setLineDash(dashed ? [w*3.2, w*2.4] : []);
+        c.lineCap = dashed ? "butt" : "round";
+        c.beginPath(); c.moveTo(e[0][0],e[0][1]); c.lineTo(e[1][0],e[1][1]); c.stroke();
+      });
+      c.restore();
+    });
+    if (s.type==="line" && s.dots){
+      c.save(); c.fillStyle=s.color; [s.pts[0], s.pts[s.pts.length-1]].forEach(q=>{ c.beginPath(); c.arc(q[0],q[1], w*1.6, 0, Math.PI*2); c.fill(); }); c.restore();
+    }
+  });
+  // texts
+  p.texts.forEach(t=>{
+    const m = textMetrics(c, t, u);
+    c.save(); c.textBaseline="middle"; c.textAlign="center";
+    if (t.style==="pill"){
+      c.fillStyle = t.bg; c.shadowColor="rgba(0,0,0,.35)"; c.shadowBlur=m.size*.35; c.shadowOffsetY=m.size*.08;
+      roundRect(c, m.x, m.y, m.bw, m.bh, m.size*.32); c.fill(); c.shadowColor="transparent";
+    }
+    c.font = `${t.bold?800:500} ${m.size}px "${t.font}", "IBM Plex Sans", sans-serif`;
+    m.lines.forEach((l,i)=>{
+      const ly = m.y + m.padY + m.lh*(i+.5);
+      if (t.style==="plain"){ c.shadowColor="rgba(0,0,0,.75)"; c.shadowBlur=m.size*.28; c.shadowOffsetY=m.size*.05; }
+      if (t.style==="outline"){ c.lineJoin="round"; c.lineWidth=m.size*.16; c.strokeStyle=t.bg; c.strokeText(l, t.x, ly); }
+      c.fillStyle=t.color; c.fillText(l, t.x, ly);
+    });
+    c.restore();
+  });
+  drawPins(c, p, u);
+  // disclaimer
+  if (p.disc.on && p.disc.text.trim() && p.shapes.length){
+    const fs = Math.max(10, 12.5*u);
+    c.save(); c.font=`400 ${fs}px "IBM Plex Sans", sans-serif`; c.textBaseline="bottom"; c.textAlign="left";
+    c.shadowColor="rgba(0,0,0,.8)"; c.shadowBlur=fs*.4; c.fillStyle="rgba(255,255,255,.92)";
+    c.fillText(p.disc.text.trim(), 16*u, p.h-12*u); c.restore();
+  }
+}
+function pinMetrics(c, pin, u){
+  const st = pinStyle, size = st.size*u;
+  const name = st.upper ? String(pin.name||"").toUpperCase() : String(pin.name||"");
+  const sub = pin.showSub && pin.sub ? pin.sub : "";
+  const logo = pin.house && pinLogo;
+  if (logo){
+    const lh = size*2.6, lw = lh*pinLogo.width/pinLogo.height;
+    return { size, name, sub, logo:true, bw:lw, bh:lh, x:pin.lx-lw/2, y:pin.ly-lh/2 };
+  }
+  c.font = `800 ${size}px "${st.font}", "IBM Plex Sans", sans-serif`;
+  let w = c.measureText(name).width;
+  const subSize = size*0.78;
+  if (sub){ c.font = `500 ${subSize}px "${st.font}", "IBM Plex Sans", sans-serif`; w = Math.max(w, c.measureText(sub).width); }
+  const icon = pin.house ? size*1.15 : 0;
+  const padX = size*0.6, padY = size*0.42;
+  const bw = w + padX*2 + (icon ? icon + size*0.45 : 0);
+  const bh = size*1.12 + (sub ? subSize*1.2 : 0) + padY*2;
+  return { size, subSize, name, sub, icon, padX, padY, bw, bh, x:pin.lx-bw/2, y:pin.ly-bh/2 };
+}
+function drawHouseIcon(c, x, y, s, col){
+  c.save(); c.fillStyle = col; c.beginPath();
+  c.moveTo(x+s*0.5, y); c.lineTo(x+s, y+s*0.45); c.lineTo(x+s*0.86, y+s*0.45); c.lineTo(x+s*0.86, y+s); c.lineTo(x+s*0.14, y+s); c.lineTo(x+s*0.14, y+s*0.45); c.lineTo(x, y+s*0.45); c.closePath(); c.fill();
+  c.globalCompositeOperation = "destination-out"; c.fillRect(x+s*0.4, y+s*0.62, s*0.2, s*0.38); c.restore();
+}
+function drawPins(c, p, u){
+  const st = pinStyle;
+  const list = p.pins.slice().sort((a,b)=>(a.house?1:0)-(b.house?1:0));
+  list.forEach(pin=>{
+    const m = pinMetrics(c, pin, u);
+    const top = pin.ey < pin.ly ? m.y : m.y + m.bh;   // stem leaves the label edge nearest the endpoint
+    c.save();
+    c.strokeStyle = "rgba(0,0,0,.35)"; c.lineWidth = 4.2*u; c.lineCap = "round";
+    c.beginPath(); c.moveTo(pin.lx, top); c.lineTo(pin.ex, pin.ey); c.stroke();
+    c.strokeStyle = st.stem; c.lineWidth = 2.2*u;
+    c.beginPath(); c.moveTo(pin.lx, top); c.lineTo(pin.ex, pin.ey); c.stroke();
+    c.fillStyle = "rgba(0,0,0,.45)"; c.beginPath(); c.arc(pin.ex, pin.ey, 6.4*u, 0, Math.PI*2); c.fill();
+    c.fillStyle = st.dot; c.beginPath(); c.arc(pin.ex, pin.ey, 4.6*u, 0, Math.PI*2); c.fill();
+    if (m.logo){
+      c.shadowColor = "rgba(0,0,0,.4)"; c.shadowBlur = 8*u; c.drawImage(pinLogo, m.x, m.y, m.bw, m.bh); c.restore(); return;
+    }
+    c.shadowColor = "rgba(0,0,0,.38)"; c.shadowBlur = m.size*0.5; c.shadowOffsetY = m.size*0.1;
+    c.fillStyle = pin.house ? st.houseBg : st.bg; roundRect(c, m.x, m.y, m.bw, m.bh, m.size*0.34); c.fill();
+    c.shadowColor = "transparent";
+    const fg = pin.house ? st.houseFg : st.fg;
+    let tx = m.x + m.padX;
+    if (m.icon){ drawHouseIcon(c, tx, pin.ly - m.icon/2 - (m.sub ? m.subSize*0.6 : 0), m.icon, fg); tx += m.icon + m.size*0.45; }
+    c.fillStyle = fg; c.textBaseline = "middle"; c.textAlign = "left";
+    c.font = `800 ${m.size}px "${st.font}", "IBM Plex Sans", sans-serif`;
+    const y1 = m.y + m.padY + m.size*0.56;
+    c.fillText(m.name, tx, y1);
+    if (m.sub){ c.globalAlpha = 0.78; c.font = `500 ${m.subSize}px "${st.font}", "IBM Plex Sans", sans-serif`; c.fillText(m.sub, tx, y1 + m.size*0.56 + m.subSize*0.66); }
+    c.restore();
+  });
+}
+function roundRect(c,x,y,w,h,r){ r=Math.min(r,w/2,h/2); c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+
+let dirty = false;
+function requestDraw(){ if(!dirty){ dirty=true; requestAnimationFrame(draw); } }
+function draw(){
+  dirty=false;
+  const dpr = window.devicePixelRatio||1;
+  const r = stage.getBoundingClientRect();
+  const W = Math.max(1,Math.round(r.width*dpr)), H = Math.max(1,Math.round(r.height*dpr));
+  if (cv.width!==W || cv.height!==H){ cv.width=W; cv.height=H; }
+  ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,W,H);
+  const p = P(); if(!p) return;
+  ctx.setTransform(view.s*dpr,0,0,view.s*dpr,view.tx*dpr,view.ty*dpr);
+  ctx.imageSmoothingQuality="high";
+  drawScene(ctx, p, { hide:hideGfx });
+  if (hideGfx) return;
+  const k = 1/view.s; // one screen px in image units
+  // selection handles
+  if (sel && sel.kind==="shape"){
+    const s = p.shapes.find(x=>x.id===sel.id);
+    if (s){
+      if (sel.edge!=null){ const e=edgesOf(s)[sel.edge]; if(e){ ctx.save(); ctx.strokeStyle="#f2b33d"; ctx.lineWidth=4*k; ctx.setLineDash([6*k,4*k]); ctx.beginPath(); ctx.moveTo(e[0][0],e[0][1]); ctx.lineTo(e[1][0],e[1][1]); ctx.stroke(); ctx.restore(); } }
+      s.pts.forEach((q,i)=>{ ctx.beginPath(); ctx.arc(q[0],q[1], (sel.vtx===i?7:5.5)*k, 0, Math.PI*2); ctx.fillStyle = sel.vtx===i ? "#f2b33d" : "#fff"; ctx.fill(); ctx.lineWidth=1.6*k; ctx.strokeStyle="#111"; ctx.stroke(); });
+      edgesOf(s).forEach(e=>{ const m=[(e[0][0]+e[1][0])/2,(e[0][1]+e[1][1])/2]; ctx.beginPath(); ctx.arc(m[0],m[1],3.2*k,0,Math.PI*2); ctx.fillStyle="rgba(255,255,255,.55)"; ctx.fill(); });
+    }
+  }
+  if (sel && sel.kind==="text"){
+    const t = p.texts.find(x=>x.id===sel.id);
+    if (t){ const m=textMetrics(ctx,t,U()); const pad=5*k; ctx.save(); ctx.strokeStyle="#f2b33d"; ctx.lineWidth=1.5*k; ctx.setLineDash([5*k,4*k]); ctx.strokeRect(m.x-pad,m.y-pad,m.bw+pad*2,m.bh+pad*2); ctx.restore(); }
+  }
+  if (sel && sel.kind==="pin"){
+    const pin = p.pins.find(x=>x.id===sel.id);
+    if (pin){ const m = pinMetrics(ctx, pin, U()); const pad = 5*k; ctx.save(); ctx.strokeStyle="#f2b33d"; ctx.lineWidth=1.6*k; ctx.setLineDash([5*k,4*k]); ctx.strokeRect(m.x-pad, m.y-pad, m.bw+pad*2, m.bh+pad*2); ctx.setLineDash([]); ctx.beginPath(); ctx.arc(pin.ex, pin.ey, 11*k, 0, Math.PI*2); ctx.stroke(); ctx.restore(); }
+  }
+  // draft
+  if (draft && draft.pts.length){
+    const pts = hover ? draft.pts.concat([hover]) : draft.pts;
+    ctx.save(); ctx.strokeStyle=prefs.color; ctx.lineWidth=Math.max(prefs.width*U(), 2*k); ctx.lineJoin="round"; ctx.lineCap="round";
+    ctx.beginPath(); pts.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1])); ctx.stroke();
+    draft.pts.forEach((q,i)=>{ ctx.beginPath(); ctx.arc(q[0],q[1],(i===0&&draft.type==="poly"?8:5)*k,0,Math.PI*2); ctx.fillStyle = i===0 && draft.type==="poly" ? "#f2b33d" : "#fff"; ctx.fill(); ctx.lineWidth=1.5*k; ctx.strokeStyle="#111"; ctx.stroke(); });
+    ctx.restore();
+  }
+}
+
+// ---------- view ----------
+function fit(){
+  const p=P(); if(!p) return; const r=stage.getBoundingClientRect(); const pad=24;
+  const s = Math.min((r.width-pad*2)/p.w, (r.height-pad*2)/p.h);
+  view.s = s; view.tx=(r.width-p.w*s)/2; view.ty=(r.height-p.h*s)/2; userMoved = false; zoomLabel(); requestDraw();
+}
+function zoomAt(f, sx, sy){
+  userMoved = true;
+  const ns = Math.max(0.02, Math.min(8, view.s*f)); const g = ns/view.s;
+  view.tx = sx - (sx-view.tx)*g; view.ty = sy - (sy-view.ty)*g; view.s = ns; zoomLabel(); requestDraw();
+}
+function zoomLabel(){ document.getElementById("zoomVal").textContent = Math.round(view.s*100)+"%"; }
+function toImg(e){ const r=cv.getBoundingClientRect(); return [ (e.clientX-r.left-view.tx)/view.s, (e.clientY-r.top-view.ty)/view.s ]; }
+function toScr(e){ const r=cv.getBoundingClientRect(); return [ e.clientX-r.left, e.clientY-r.top ]; }
+
+// ---------- hit testing ----------
+function hitTest(pt){
+  const p=P(); const k=1/view.s; const tol=9*k;
+  if (sel && sel.kind==="shape"){
+    const s=p.shapes.find(x=>x.id===sel.id);
+    if (s){ for(let i=0;i<s.pts.length;i++) if (dist(pt,s.pts[i])<tol+3*k) return {kind:"vtx", shape:s, i}; }
+  }
+  for (let i=p.pins.length-1;i>=0;i--){ const pn=p.pins[i]; if (dist(pt,[pn.ex,pn.ey]) < tol+3*k) return {kind:"pinEnd", pin:pn}; }
+  for (let i=p.pins.length-1;i>=0;i--){ const pn=p.pins[i]; const m=pinMetrics(ctx,pn,U()); if (pt[0]>=m.x-3*k && pt[0]<=m.x+m.bw+3*k && pt[1]>=m.y-3*k && pt[1]<=m.y+m.bh+3*k) return {kind:"pinLabel", pin:pn}; }
+  for (let i=p.texts.length-1;i>=0;i--){ const t=p.texts[i]; const m=textMetrics(ctx,t,U()); if (pt[0]>=m.x-4*k && pt[0]<=m.x+m.bw+4*k && pt[1]>=m.y-4*k && pt[1]<=m.y+m.bh+4*k) return {kind:"text", text:t}; }
+  for (let i=p.shapes.length-1;i>=0;i--){ const s=p.shapes[i]; const edges=edgesOf(s); const lw=s.width*U()/2;
+    for (let j=0;j<edges.length;j++) if (distSeg(pt,edges[j][0],edges[j][1])<tol+lw) return {kind:"edge", shape:s, i:j}; }
+  for (let i=p.shapes.length-1;i>=0;i--){ const s=p.shapes[i]; if (s.type==="poly" && inPoly(pt,s.pts)) return {kind:"body", shape:s}; }
+  return null;
+}
+
+// ---------- pointer interaction ----------
+let drag = null;   // {type:'pan'|'vtx'|'move'|'text', start, last, committed}
+const pointers = new Map();
+let pinch = null;
+let spaceDown = false;
+
+cv.addEventListener("pointerdown", e=>{
+  if (!P()) return;
+  cv.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, toScr(e));
+  if (pointers.size===2){ // pinch
+    drag=null; const [a,b]=[...pointers.values()];
+    pinch = { d:dist(a,b), mid:[(a[0]+b[0])/2,(a[1]+b[1])/2] }; return;
+  }
+  const pt = toImg(e);
+  if (e.button===1 || spaceDown){ drag={type:"pan", last:toScr(e)}; return; }
+  if (e.button!==0 && e.pointerType==="mouse") return;
+
+  if (aligning){ commit(); aligning=false; if (alignCamera(P(), pt)){ replacePinsNoCommit(); toast("Camera lined up. Check the far pins and drag any that are off."); } else toast("Couldn't line up from that point. Drag the pins by hand."); refreshAll(); return; }
+  if (armed){ placeArmed(pt); return; }
+  if (tool==="pin"){ armed="__custom"; placeArmed(pt); setTool("select"); return; }
+  if (tool==="poly" || tool==="line"){
+    if (!draft) draft = { type:tool, pts:[] };
+    const k=1/view.s;
+    if (draft.type==="poly" && draft.pts.length>=3 && dist(pt,draft.pts[0])<12*k){ finishDraft(); return; }
+    draft.pts.push(pt); hover=pt; updateDrawbar(); requestDraw(); return;
+  }
+  if (tool==="text"){
+    commit();
+    const t = { id:nid(), x:pt[0], y:pt[1], text:"Label", size:24, style:prefs.textStyle, color:prefs.textStyle==="pill"?"#111111":"#ffffff", bg:prefs.textStyle==="pill"?"#ffffff":"#111111", font:prefs.textFont, bold:true };
+    P().texts.push(t); sel={kind:"text", id:t.id}; setTool("select"); refreshAll();
+    setTimeout(()=>{ const ta=document.getElementById("tText"); if(ta){ ta.focus(); ta.select(); } },0);
+    return;
+  }
+  // select tool
+  const h = hitTest(pt);
+  if (!h){ sel=null; drag={type:"pan", last:toScr(e)}; refreshPanel(); requestDraw(); return; }
+  if (h.kind==="pinEnd"){ sel={kind:"pin", id:h.pin.id}; drag={type:"pinEnd", pin:h.pin, committed:false}; }
+  else if (h.kind==="pinLabel"){ sel={kind:"pin", id:h.pin.id}; drag={type:"pinLabel", pin:h.pin, last:pt, committed:false}; }
+  else if (h.kind==="vtx"){ sel={kind:"shape", id:h.shape.id, vtx:h.i}; drag={type:"vtx", shape:h.shape, i:h.i, committed:false}; }
+  else if (h.kind==="text"){ sel={kind:"text", id:h.text.id}; drag={type:"text", text:h.text, last:pt, committed:false}; }
+  else if (h.kind==="edge"){ const same = sel && sel.id===h.shape.id; sel={kind:"shape", id:h.shape.id, edge: same ? h.i : null}; drag={type:"move", shape:h.shape, last:pt, committed:false}; }
+  else { sel={kind:"shape", id:h.shape.id}; drag={type:"move", shape:h.shape, last:pt, committed:false}; }
+  refreshPanel(); requestDraw();
+});
+
+cv.addEventListener("pointermove", e=>{
+  if (pointers.has(e.pointerId)) pointers.set(e.pointerId, toScr(e));
+  if (pinch && pointers.size===2){
+    const [a,b]=[...pointers.values()]; const d=dist(a,b); const mid=[(a[0]+b[0])/2,(a[1]+b[1])/2];
+    view.tx += mid[0]-pinch.mid[0]; view.ty += mid[1]-pinch.mid[1];
+    zoomAt(d/pinch.d, mid[0], mid[1]); pinch={d, mid}; return;
+  }
+  if (!P()) return;
+  const pt = toImg(e);
+  if (draft){ hover=pt; requestDraw(); }
+  if (!drag){ updateCursor(pt); return; }
+  if (drag.type==="pan"){ userMoved = true; const s=toScr(e); view.tx+=s[0]-drag.last[0]; view.ty+=s[1]-drag.last[1]; drag.last=s; requestDraw(); return; }
+  if (!drag.committed){ commit(); drag.committed=true; }
+  if (drag.type==="pinEnd"){ drag.pin.ex=pt[0]; drag.pin.ey=pt[1]; drag.pin.moved=true; }
+  else if (drag.type==="pinLabel"){ drag.pin.lx+=pt[0]-drag.last[0]; drag.pin.ly+=pt[1]-drag.last[1]; drag.last=pt; }
+  else if (drag.type==="vtx"){ drag.shape.pts[drag.i]=[pt[0],pt[1]]; }
+  else if (drag.type==="move"){ const dx=pt[0]-drag.last[0], dy=pt[1]-drag.last[1]; drag.shape.pts.forEach(q=>{q[0]+=dx;q[1]+=dy;}); drag.last=pt; }
+  else if (drag.type==="text"){ drag.text.x+=pt[0]-drag.last[0]; drag.text.y+=pt[1]-drag.last[1]; drag.last=pt; }
+  requestDraw();
+});
+function endPointer(e){ pointers.delete(e.pointerId); if (pointers.size<2) pinch=null; if (drag && drag.committed) refreshLayers(); drag=null; }
+cv.addEventListener("pointerup", endPointer);
+cv.addEventListener("pointercancel", endPointer);
+cv.addEventListener("pointerleave", ()=>{ if(draft){ hover=null; requestDraw(); } });
+
+cv.addEventListener("dblclick", e=>{
+  if (!P()) return;
+  const pt = toImg(e);
+  if (draft){ // dblclick fires after two pointerdowns: drop the duplicate point then finish
+    if (draft.pts.length>=2 && dist(draft.pts[draft.pts.length-1], draft.pts[draft.pts.length-2]) < 4/view.s) draft.pts.pop();
+    finishDraft(); return;
+  }
+  if (tool!=="select") return;
+  const h = hitTest(pt);
+  if (h && h.kind==="edge"){ commit(); h.shape.pts.splice(h.i+1,0,pt); if (h.shape.dashed) h.shape.dashed.splice(h.i+1,0,!!h.shape.dashed[h.i]); sel={kind:"shape", id:h.shape.id, vtx:h.i+1}; refreshAll(); toast("Corner added"); }
+  else if (h && h.kind==="text"){ const ta=document.getElementById("tText"); if(ta){ ta.focus(); ta.select(); } }
+});
+
+stage.addEventListener("wheel", e=>{ if(!P()) return; e.preventDefault(); const s=toScr(e); const f = Math.exp(-e.deltaY*(e.ctrlKey?0.01:0.0018)); zoomAt(f, s[0], s[1]); }, {passive:false});
+
+function updateCursor(pt){
+  if (spaceDown){ cv.style.cursor="grab"; return; }
+  if (tool!=="select"){ cv.style.cursor="crosshair"; return; }
+  if (armed || aligning){ cv.style.cursor="crosshair"; return; }
+  const h=hitTest(pt); cv.style.cursor = !h ? "grab" : (h.kind==="vtx"||h.kind==="pinEnd") ? "pointer" : "move";
+}
+
+function finishDraft(){
+  if (!draft) return;
+  const min = draft.type==="poly" ? 3 : 2;
+  if (draft.pts.length>=min){
+    commit();
+    const s = { id:nid(), type:draft.type, pts:draft.pts, color:prefs.color, width:prefs.width, glow:prefs.glow, casing:prefs.casing, dashed:[], dots:draft.type==="line" };
+    s.dashed = new Array(draft.type==="poly"?s.pts.length:s.pts.length-1).fill(draft.type==="line");
+    P().shapes.push(s); sel={kind:"shape", id:s.id};
+    draft=null; hover=null; setTool("select"); refreshAll();
+  } else { toast(draft.type==="poly" ? "A boundary needs at least 3 corners" : "A line needs at least 2 points"); }
+}
+function cancelDraft(){ draft=null; hover=null; updateDrawbar(); requestDraw(); }
+function updateDrawbar(){ document.getElementById("drawbar").hidden = !draft; setHint(); }
+
+// ---------- tools ----------
+function setTool(t){
+  if (draft && t!==draft.type) cancelDraft();
+  tool=t; document.querySelectorAll(".tool[data-tool]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.tool===t));
+  cv.style.cursor = t==="select" ? "default" : "crosshair"; setHint();
+}
+function setHint(){
+  const h = document.getElementById("hint");
+  if (!P()){ h.textContent="Add a drone photo to start"; return; }
+  if (hideGfx){ h.textContent="Graphics hidden. Press H to show."; return; }
+  if (aligning){ h.textContent="Click the middle of the subject house's roof."; return; }
+  if (armed){ const q = armed==="__house" ? null : placeForKey(armed); h.textContent = `Click where ${armed==="__house" ? "the property" : armed==="__custom" ? "the new pin" : q ? q.name : "it"} is. Esc to cancel.`; return; }
+  const msg = {
+    select:"Drag corners to adjust. Click an edge twice to style it. Double-click an edge to add a corner.",
+    poly: draft ? "Click to add corners. Click the first point (or Finish) to close." : "Click each corner of the lot.",
+    line: draft ? "Click to add points. Double-click or Finish to end." : "Click to start an open line.",
+    text:"Click where the label should go.",
+    pin:"Click a landmark to drop a custom pin."
+  }[tool];
+  h.textContent = msg;
+}
+document.querySelectorAll(".tool[data-tool]").forEach(b=>b.addEventListener("click",()=>setTool(b.dataset.tool)));
+const hideBtn=document.getElementById("hideBtn");
+function toggleHide(){ hideGfx=!hideGfx; hideBtn.setAttribute("aria-pressed",hideGfx); setHint(); requestDraw(); }
+hideBtn.addEventListener("click", toggleHide);
+document.getElementById("finishBtn").addEventListener("click", finishDraft);
+document.getElementById("cancelBtn").addEventListener("click", cancelDraft);
+document.getElementById("zoomIn").addEventListener("click",()=>{ const r=stage.getBoundingClientRect(); zoomAt(1.25,r.width/2,r.height/2); });
+document.getElementById("zoomOut").addEventListener("click",()=>{ const r=stage.getBoundingClientRect(); zoomAt(0.8,r.width/2,r.height/2); });
+document.getElementById("fitBtn").addEventListener("click", fit);
+const undoBtn=document.getElementById("undoBtn"), redoBtn=document.getElementById("redoBtn");
+undoBtn.addEventListener("click", undo); redoBtn.addEventListener("click", redo);
+
+document.addEventListener("keydown", e=>{
+  const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+  if ((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==="z" && !typing){ e.preventDefault(); e.shiftKey?redo():undo(); return; }
+  if (typing) return;
+  if (e.code==="Space"){ spaceDown=true; cv.style.cursor="grab"; e.preventDefault(); return; }
+  const k=e.key.toLowerCase();
+  if (k==="p") setTool("pin"); else if (k==="v") setTool("select"); else if (k==="b") setTool("poly"); else if (k==="l") setTool("line"); else if (k==="t") setTool("text"); else if (k==="h") toggleHide();
+  else if (e.key==="Enter") finishDraft();
+  else if (e.key==="Escape"){ if (armed||aligning){ armed=null; aligning=false; setHint(); refreshPinsTab(); } else if (draft) cancelDraft(); else { sel=null; refreshPanel(); requestDraw(); } }
+  else if (e.key==="Backspace"||e.key==="Delete"){ if (draft){ draft.pts.pop(); if(!draft.pts.length) cancelDraft(); requestDraw(); } else deleteSelection(); e.preventDefault(); }
+});
+document.addEventListener("keyup", e=>{ if (e.code==="Space"){ spaceDown=false; cv.style.cursor = tool==="select"?"default":"crosshair"; } });
+
+function deleteSelection(){
+  const p=P(); if(!p||!sel) return; commit();
+  if (sel.kind==="pin"){ p.pins=p.pins.filter(x=>x.id!==sel.id); sel=null; }
+  else if (sel.kind==="text"){ p.texts=p.texts.filter(t=>t.id!==sel.id); sel=null; }
+  else {
+    const s=p.shapes.find(x=>x.id===sel.id);
+    if (s && sel.vtx!=null && s.pts.length > (s.type==="poly"?3:2)){ s.pts.splice(sel.vtx,1); if (s.dashed) s.dashed.splice(Math.min(sel.vtx, s.dashed.length-1),1); sel={kind:"shape",id:s.id}; }
+    else { p.shapes=p.shapes.filter(x=>x.id!==sel.id); p.texts=p.texts.filter(t=>t.link!==sel.id); sel=null; }
+  }
+  refreshAll();
+}
+
+// ---------- inspector ----------
+const selSec = document.getElementById("selSec");
+function el(html){ const d=document.createElement("div"); d.innerHTML=html.trim(); return d.firstChild; }
+function swatchRow(current, onPick, id){
+  const wrap = el(`<div class="swatches"></div>`);
+  SWATCHES.forEach(c=>{ const b=el(`<button class="sw" style="background:${c}" aria-label="Colour ${c}" aria-pressed="${c.toLowerCase()===String(current).toLowerCase()}"></button>`); b.onclick=()=>onPick(c); wrap.appendChild(b); });
+  const ci = el(`<input type="color" id="${id}" value="${current}" aria-label="Custom colour">`); ci.oninput=()=>onPick(ci.value, true); wrap.appendChild(ci);
+  return wrap;
+}
+function refreshPanel(){
+  const p=P(); selSec.innerHTML="";
+  if (!p){ selSec.appendChild(el(`<p class="note">Add a drone photo to start.</p>`)); return; }
+  const shape = sel && sel.kind==="shape" ? p.shapes.find(x=>x.id===sel.id) : null;
+  const text = sel && sel.kind==="text" ? p.texts.find(x=>x.id===sel.id) : null;
+  const pin = sel && sel.kind==="pin" ? p.pins.find(x=>x.id===sel.id) : null;
+  selSec.hidden = false;
+  if (pin) return pinPanel(p, pin);
+  if (shape) return shapePanel(p, shape);
+  if (text) return textPanel(p, text);
+  if (ptab==="pins"){ selSec.hidden = true; return; }
+  selSec.appendChild(el(`<h2>New lines</h2>`));
+  selSec.appendChild(el(`<p class="note">Style for the next boundary or line you draw. Select one on the photo to change it.</p>`));
+  const sw = swatchRow(prefs.color, (c)=>{ prefs.color=c; savePrefs(); refreshPanel(); }, "pColor"); selSec.appendChild(sw);
+  const wr = el(`<div class="row"><label class="lbl" for="pW">Thickness</label><input type="range" id="pW" min="1" max="12" step="0.5" value="${prefs.width}"><span class="val">${prefs.width}</span></div>`);
+  wr.querySelector("input").oninput=ev=>{ prefs.width=+ev.target.value; wr.querySelector(".val").textContent=prefs.width; savePrefs(); };
+  selSec.appendChild(wr);
+  const row = el(`<div class="row" style="gap:16px"><label class="check"><input type="checkbox" id="pCas" ${prefs.casing?"checked":""}> Dark edge</label><label class="check"><input type="checkbox" id="pGlow" ${prefs.glow?"checked":""}> Glow</label></div>`);
+  row.querySelector("#pCas").onchange=ev=>{ prefs.casing=ev.target.checked; savePrefs(); };
+  row.querySelector("#pGlow").onchange=ev=>{ prefs.glow=ev.target.checked; savePrefs(); };
+  selSec.appendChild(row);
+  const b = el(`<div class="row"><button class="btn primary" style="flex:1;justify-content:center" id="startDraw">Draw boundary</button><button class="btn" id="startLine">Add line</button></div>`);
+  b.querySelector("#startDraw").onclick=()=>setTool("poly"); b.querySelector("#startLine").onclick=()=>setTool("line");
+  selSec.appendChild(b);
+}
+function mutate(fn){ commit(); fn(); requestDraw(); refreshLayers(); }
+function shapePanel(p, s){
+  const name = s.type==="poly" ? "Boundary" : "Line";
+  selSec.appendChild(el(`<h2><span>${name}</span><span class="edge-chip">${s.pts.length} pts</span></h2>`));
+  selSec.appendChild(swatchRow(s.color, (c, live)=>{ if(!live) commit(); s.color=c; prefs.color=c; savePrefs(); requestDraw(); refreshLayers(); if(!live) refreshPanel(); }, "sColor"));
+  const wr = el(`<div class="row"><label class="lbl" for="sW">Thickness</label><input type="range" id="sW" min="1" max="12" step="0.5" value="${s.width}"><span class="val">${s.width}</span></div>`);
+  const wi = wr.querySelector("input"); wi.onpointerdown=()=>commit(); wi.onkeydown=()=>commit();
+  wi.oninput=ev=>{ s.width=+ev.target.value; prefs.width=s.width; savePrefs(); wr.querySelector(".val").textContent=s.width; requestDraw(); };
+  selSec.appendChild(wr);
+  const row = el(`<div class="row" style="gap:16px;flex-wrap:wrap"><label class="check"><input type="checkbox" id="sCas" ${s.casing?"checked":""}> Dark edge</label><label class="check"><input type="checkbox" id="sGlow" ${s.glow?"checked":""}> Glow</label>${s.type==="line"?`<label class="check"><input type="checkbox" id="sDots" ${s.dots?"checked":""}> End dots</label>`:""}</div>`);
+  row.querySelector("#sCas").onchange=ev=>mutate(()=>{ s.casing=ev.target.checked; prefs.casing=s.casing; savePrefs(); });
+  row.querySelector("#sGlow").onchange=ev=>mutate(()=>{ s.glow=ev.target.checked; prefs.glow=s.glow; savePrefs(); });
+  const dots=row.querySelector("#sDots"); if (dots) dots.onchange=ev=>mutate(()=>{ s.dots=ev.target.checked; });
+  selSec.appendChild(row);
+
+  const n = edgesOf(s).length;
+  if (!s.dashed || s.dashed.length!==n) s.dashed = new Array(n).fill(false);
+  if (sel.edge!=null && sel.edge<n){
+    const er = el(`<div class="row"><label class="lbl">Edge ${sel.edge+1}</label><div class="seg"><button aria-pressed="${!s.dashed[sel.edge]}">Solid</button><button aria-pressed="${!!s.dashed[sel.edge]}">Dashed</button></div></div>`);
+    const [b1,b2]=er.querySelectorAll("button");
+    b1.onclick=()=>{ mutate(()=>{ s.dashed[sel.edge]=false; }); refreshPanel(); }; b2.onclick=()=>{ mutate(()=>{ s.dashed[sel.edge]=true; }); refreshPanel(); };
+    selSec.appendChild(er);
+  } else {
+    selSec.appendChild(el(`<p class="note">Click one edge again to make just that edge dashed (e.g. a water frontage).</p>`));
+  }
+  const all = el(`<div class="row"><label class="lbl">All edges</label><div class="seg"><button aria-pressed="${s.dashed.every(d=>!d)}">Solid</button><button aria-pressed="${s.dashed.every(d=>d)}">Dashed</button></div></div>`);
+  const [a1,a2]=all.querySelectorAll("button");
+  a1.onclick=()=>{ mutate(()=>{ s.dashed=s.dashed.map(()=>false); }); refreshPanel(); }; a2.onclick=()=>{ mutate(()=>{ s.dashed=s.dashed.map(()=>true); }); refreshPanel(); };
+  selSec.appendChild(all);
+
+  if (s.type==="poly"){
+    const linked = p.texts.find(t=>t.link===s.id);
+    const lr = el(`<div class="row"><label class="lbl" for="sLot">Lot size</label><input type="text" id="sLot" inputmode="decimal" placeholder="e.g. 612" value="${linked && linked.lot!=null ? linked.lot : ""}"><span class="val" style="width:auto">m²</span></div>`);
+    const li = lr.querySelector("input");
+    li.onchange=()=>{
+      const v = li.value.trim();
+      commit();
+      let t = p.texts.find(x=>x.link===s.id);
+      if (!v){ if (t) p.texts=p.texts.filter(x=>x!==t); }
+      else {
+        const label = `${v.replace(/m²|m2/i,"").trim()} m²`;
+        if (!t){ const c=centroid(s.pts); t={ id:nid(), link:s.id, x:c[0], y:c[1], text:label, size:26, style:"pill", color:"#111111", bg:"#ffffff", font:prefs.textFont, bold:true }; p.texts.push(t); }
+        else t.text = /[\d.,]+\s*m²/.test(t.text) ? t.text.replace(/[\d.,]+\s*m²/, label) : label;
+        t.lot = v.replace(/m²|m2/i,"").trim();
+      }
+      requestDraw(); refreshLayers();
+    };
+    selSec.appendChild(lr);
+    selSec.appendChild(el(`<p class="note">Adds a label you can drag and restyle. For a unit, the lot size is the whole site, not the strata area.</p>`));
+  }
+
+  const tr = el(`<div class="row" style="flex-wrap:wrap"><label class="lbl">Fit</label>
+    <button class="btn icon" data-r="-2" title="Rotate left" aria-label="Rotate left">⟲</button><button class="btn icon" data-r="2" title="Rotate right" aria-label="Rotate right">⟳</button>
+    <button class="btn icon" data-z="0.97" title="Shrink" aria-label="Shrink">−</button><button class="btn icon" data-z="1.03" title="Grow" aria-label="Grow">+</button></div>`);
+  tr.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+    mutate(()=>{ const c=centroid(s.pts); const a=(+b.dataset.r||0)*Math.PI/180, z=+b.dataset.z||1; const co=Math.cos(a), si=Math.sin(a);
+      s.pts=s.pts.map(q=>{ const x=(q[0]-c[0])*z, y=(q[1]-c[1])*z; return [c[0]+x*co-y*si, c[1]+x*si+y*co]; }); });
+  });
+  selSec.appendChild(tr);
+  const dr = el(`<div class="row"><button class="btn" style="flex:1;justify-content:center" id="sDup">Duplicate</button><button class="btn" style="flex:1;justify-content:center;color:var(--danger)" id="sDel">${sel.vtx!=null?"Delete corner":"Delete "+name.toLowerCase()}</button></div>`);
+  dr.querySelector("#sDup").onclick=()=>{ commit(); const k=12*U(); const c={...JSON.parse(JSON.stringify(s)), id:nid()}; c.pts=c.pts.map(q=>[q[0]+k,q[1]+k]); p.shapes.push(c); sel={kind:"shape",id:c.id}; refreshAll(); };
+  dr.querySelector("#sDel").onclick=deleteSelection;
+  selSec.appendChild(dr);
+}
+function textPanel(p, t){
+  selSec.appendChild(el(`<h2>Text label</h2>`));
+  const ta = el(`<textarea id="tText" aria-label="Label text">${escapeHtml(t.text)}</textarea>`);
+  ta.onfocus=()=>commit(); ta.oninput=()=>{ t.text=ta.value; requestDraw(); refreshLayers(); };
+  selSec.appendChild(ta);
+  const st = el(`<div class="row"><label class="lbl">Style</label><div class="seg"><button data-s="pill">Pill</button><button data-s="plain">Shadow</button><button data-s="outline">Outline</button></div></div>`);
+  st.querySelectorAll("button").forEach(b=>{ b.setAttribute("aria-pressed", b.dataset.s===t.style); b.onclick=()=>{ mutate(()=>{ t.style=b.dataset.s; prefs.textStyle=t.style; savePrefs();
+    if (t.style==="pill" && t.color.toLowerCase()==="#ffffff" && t.bg.toLowerCase()==="#111111"){ t.color="#111111"; t.bg="#ffffff"; }
+    if (t.style!=="pill" && t.color.toLowerCase()==="#111111" && t.bg.toLowerCase()==="#ffffff"){ t.color="#ffffff"; t.bg="#111111"; } }); refreshPanel(); }; });
+  selSec.appendChild(st);
+  const sz = el(`<div class="row"><label class="lbl" for="tSize">Size</label><input type="range" id="tSize" min="8" max="90" step="1" value="${t.size}"><span class="val">${t.size}</span></div>`);
+  const si=sz.querySelector("input"); si.onpointerdown=()=>commit(); si.onkeydown=()=>commit(); si.oninput=()=>{ t.size=+si.value; sz.querySelector(".val").textContent=t.size; requestDraw(); };
+  selSec.appendChild(sz);
+  const cr = el(`<div class="row"><label class="lbl" for="tCol">Text</label><input type="color" id="tCol" value="${t.color}"><label class="lbl" for="tBg" style="width:auto;margin-left:10px">${t.style==="pill"?"Pill":t.style==="outline"?"Outline":"—"}</label><input type="color" id="tBg" value="${t.bg}" ${t.style==="plain"?"disabled":""}></div>`);
+  cr.querySelector("#tCol").onpointerdown=()=>commit(); cr.querySelector("#tBg").onpointerdown=()=>commit();
+  cr.querySelector("#tCol").oninput=ev=>{ t.color=ev.target.value; requestDraw(); };
+  cr.querySelector("#tBg").oninput=ev=>{ t.bg=ev.target.value; requestDraw(); };
+  selSec.appendChild(cr);
+  const fr = el(`<div class="row"><label class="lbl" for="tFont">Font</label><select id="tFont">${FONTS.map(f=>`<option value="${f[0]}" ${f[0]===t.font?"selected":""}>${f[1]}</option>`).join("")}</select><label class="check" style="flex:none"><input type="checkbox" id="tBold" ${t.bold?"checked":""}> Bold</label></div>`);
+  fr.querySelector("#tFont").onchange=ev=>{ mutate(()=>{ t.font=ev.target.value; prefs.textFont=t.font; savePrefs(); }); loadFont(t.font); };
+  fr.querySelector("#tBold").onchange=ev=>mutate(()=>{ t.bold=ev.target.checked; });
+  selSec.appendChild(fr);
+  const dr = el(`<div class="row"><button class="btn" style="flex:1;justify-content:center" id="tDup">Duplicate</button><button class="btn" style="flex:1;justify-content:center;color:var(--danger)" id="tDel">Delete label</button></div>`);
+  dr.querySelector("#tDup").onclick=()=>{ commit(); const c={...t, id:nid(), link:undefined, y:t.y+t.size*U()*1.8}; p.texts.push(c); sel={kind:"text",id:c.id}; refreshAll(); };
+  dr.querySelector("#tDel").onclick=deleteSelection;
+  selSec.appendChild(dr);
+}
+function pinPanel(p, pin){
+  selSec.appendChild(el(`<h2><span>${pin.house ? "House pin" : "Pin"}</span><button class="btn ghost" id="pnDone" style="height:24px;padding:0 8px;font-size:11px">Done</button></h2>`));
+  selSec.querySelector("#pnDone").onclick = ()=>{ sel=null; refreshPanel(); refreshLayers(); requestDraw(); };
+  const nr = el(`<div class="row"><label class="lbl" for="pnName">Name</label><input type="text" id="pnName"></div>`);
+  const ni = nr.querySelector("input"); ni.value = pin.name; ni.onfocus=()=>commit(); ni.oninput=()=>{ pin.name=ni.value; requestDraw(); refreshLayers(); };
+  selSec.appendChild(nr);
+  if (!pin.house){
+    const sr = el(`<div class="row"><label class="lbl" for="pnSub">Second line</label><input type="text" id="pnSub" placeholder="e.g. 450 m"></div>`);
+    const si = sr.querySelector("input"); si.value = pin.sub; si.onfocus=()=>commit(); si.oninput=()=>{ pin.sub=si.value; pin.showSub = !!si.value; requestDraw(); };
+    selSec.appendChild(sr);
+  }
+  const q = pin.key ? placeForKey(pin.key) : null;
+  if (q) selSec.appendChild(el(`<p class="note">${escapeHtml(q.cat)} · ${fmtDist(q.dist)} ${q.dir}${q.desc ? " · "+escapeHtml(q.desc) : ""}</p>`));
+  selSec.appendChild(el(`<p class="note">Drag the label to move it. Drag the dot onto the landmark.</p>`));
+  const br = el(`<div class="row"><button class="btn" style="flex:1;justify-content:center" id="pnTidy">Label above dot</button><button class="btn" style="flex:1;justify-content:center;color:var(--danger)" id="pnDel">Delete pin</button></div>`);
+  br.querySelector("#pnTidy").onclick=()=>{ commit(); setLabelAbove(p, pin, U()); requestDraw(); };
+  br.querySelector("#pnDel").onclick=deleteSelection;
+  selSec.appendChild(br);
+}
+
+// ---------- Pins tab ----------
+const tabPins = document.getElementById("tabPins"), tabBoundary = document.getElementById("tabBoundary");
+function setTab(t){
+  ptab = t; LS.set("ptab", t);
+  document.getElementById("tabBtnPins").setAttribute("aria-selected", t==="pins");
+  document.getElementById("tabBtnBoundary").setAttribute("aria-selected", t==="boundary");
+  tabPins.hidden = t!=="pins"; tabBoundary.hidden = t!=="boundary"; document.getElementById("panel").scrollTop = 0;
+  refreshPanel();
+}
+document.getElementById("tabBtnPins").onclick=()=>setTab("pins");
+document.getElementById("tabBtnBoundary").onclick=()=>setTab("boundary");
+let placeFilter = "";
+function refreshPinsTab(){
+  const p = P(); tabPins.innerHTML = "";
+  // 1. property / pin file
+  const s1 = el(`<section class="sec"><h2><span>Property</span></h2></section>`);
+  if (!job){
+    s1.appendChild(el(`<div class="callout"><p class="note" style="color:var(--fg)">Load the job's pin file to list the nearby places.</p><p class="note">It's in the job's Dropbox folder, in <b>Aerial - Drone Photography</b>: the <b>_pins.json</b> file, or the <b>_map.html</b> amenity map.</p></div>`));
+    const b = el(`<button class="btn primary" style="justify-content:center">Load pin file</button>`); b.onclick=()=>jobIn.click(); s1.appendChild(b);
+  } else {
+    const r = el(`<div class="row" style="justify-content:space-between;align-items:flex-start"><div style="min-width:0"><div style="font-weight:600"></div><div class="note">${job.places.length} checked places${job.sample?" · sample":""}</div></div><button class="btn ghost" style="height:26px;padding:0 9px;font-size:12px;flex:none">Change</button></div>`);
+    r.querySelector("div div").textContent = job.address; r.querySelector("button").onclick=()=>jobIn.click(); s1.appendChild(r);
+  }
+  tabPins.appendChild(s1);
+  if (!p) return;
+  // 2. camera
+  const s2 = el(`<section class="sec"><h2><span>Drone position</span></h2></section>`);
+  if (p.cam){
+    const c = p.cam, c0 = p.cam0 || c;
+    s2.appendChild(el(`<dl class="kv"><dt>Height</dt><dd>${Math.round(c.h)} m</dd><dt>Facing</dt><dd>${Math.round((c.yaw+360)%360)}° ${DIRS[Math.floor((((c.yaw%360)+360)%360+22.5)/45)%8]}</dd><dt>Tilt</dt><dd>${Math.round(c.pitch)}°</dd><dt>Lens</dt><dd>${c.f35} mm equiv.</dd></dl>`));
+    const mk = (id, label, min, max, step, val, fmt, apply) => {
+      const r = el(`<div class="row"><label class="lbl" for="${id}">${label}</label><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"><span class="val">${fmt(val)}</span></div>`);
+      const i = r.querySelector("input"); i.onpointerdown=()=>commit(); i.onkeydown=()=>commit();
+      i.oninput = ()=>{ apply(+i.value); r.querySelector(".val").textContent = fmt(+i.value); replacePinsNoCommit(); requestDraw(); };
+      i.onchange = ()=>refreshPinsTab();
+      return r;
+    };
+    s2.appendChild(mk("cYaw", "Turn", -15, 15, 0.1, +(c.yaw - c0.yaw).toFixed(1), v=>(v>0?"+":"")+v.toFixed(1)+"°", v=>{ p.cam.yaw = c0.yaw + v; }));
+    s2.appendChild(mk("cPit", "Tilt", -10, 10, 0.1, +(c.pitch - c0.pitch).toFixed(1), v=>(v>0?"+":"")+v.toFixed(1)+"°", v=>{ p.cam.pitch = c0.pitch + v; }));
+    s2.appendChild(mk("cH", "Height", 50, 150, 1, Math.round(c.h/c0.h*100), v=>v+"%", v=>{ p.cam.h = c0.h * v/100; }));
+    const r = el(`<div class="row"><button class="btn" style="flex:1;justify-content:center" id="cAlign">${aligning?"Click the house…":"Line up on house"}</button><button class="btn" id="cReset">Reset</button></div>`);
+    r.querySelector("#cAlign").onclick=()=>{ if(!job){ toast("Load the pin file first"); return; } aligning=!aligning; armed=null; setTool("select"); setHint(); refreshPinsTab(); };
+    r.querySelector("#cReset").onclick=()=>{ commit(); p.cam = Object.assign({}, p.cam0); replacePinsNoCommit(); refreshAll(); };
+    s2.appendChild(r);
+    s2.appendChild(el(`<p class="note">Compass readings drift a few degrees. Click Line up on house, then click the subject roof, and every pin shifts to match.</p>`));
+  } else {
+    s2.appendChild(el(`<p class="note">This photo has no drone position, so pins can't be placed automatically. Edited exports often drop it.</p>`));
+    const b = el(`<button class="btn" style="justify-content:center">Read position from original drone JPG</button>`); b.onclick=()=>metaIn.click(); s2.appendChild(b);
+    s2.appendChild(el(`<p class="note">Or tick a place below, then click where it is on the photo.</p>`));
+  }
+  tabPins.appendChild(s2);
+  // 3. places
+  if (job){
+    const s3 = el(`<section class="sec"><h2><span>Places</span><span class="edge-chip" id="plCount"></span></h2></section>`);
+    const hr = el(`<div class="row"><button class="btn" style="flex:1;justify-content:center" id="plHouse"></button><button class="btn" id="plCustom">Custom pin</button></div>`);
+    const hasHouse = p.pins.some(x=>x.house);
+    hr.querySelector("#plHouse").textContent = armed==="__house" ? "Click the house…" : hasHouse ? "House pin ✓" : "Add house pin";
+    hr.querySelector("#plHouse").onclick=()=>{ if (hasHouse){ const hp=p.pins.find(x=>x.house); sel={kind:"pin",id:hp.id}; refreshPanel(); requestDraw(); } else addPlacePin("__house"); };
+    hr.querySelector("#plCustom").onclick=()=>arm("__custom");
+    s3.appendChild(hr);
+    const fi = el(`<input type="text" id="plFilter" placeholder="Filter places" aria-label="Filter places">`); fi.value = placeFilter;
+    s3.appendChild(fi);
+    const list = el(`<div class="places" role="list"></div>`);
+    const f = placeFilter.trim().toLowerCase();
+    let on = 0;
+    job.places.forEach(q=>{
+      const has = p.pins.some(x=>x.key===q.key); if (has) on++;
+      if (f && !(q.name.toLowerCase().includes(f) || q.cat.includes(f))) return;
+      const vis = !p.cam || !!autoPoint(p, q.lat, q.lng);
+      const badge = q.school==="zoned" ? `<span class="badge">ZONED</span>` : q.school==="unverified" ? `<span class="badge u">zone ?</span>` : q.school==="private" ? `<span class="badge u" style="background:#26303d;color:#9fb6d6">private</span>` : "";
+      const b = el(`<button class="place${vis?"":" off"}" role="listitem" aria-pressed="${has}" title="${escapeHtml(q.desc||q.cat)}"><span class="box"></span><span class="nm"><span class="t"></span>${badge}<small>${escapeHtml(q.cat.replace(/_/g," "))}${vis?"":" · outside this photo"}</small></span><span class="d">${fmtDist(q.dist)}<br>${q.dir}</span></button>`);
+      b.querySelector(".t").textContent = q.name;
+      b.onclick = ()=>{ if (has){ commit(); p.pins = p.pins.filter(x=>x.key!==q.key); refreshAll(); } else addPlacePin(q.key); };
+      list.appendChild(b);
+    });
+    s3.querySelector("#plCount").textContent = `${on} on photo`;
+    fi.oninput = ()=>{ placeFilter = fi.value; const pos = fi.selectionStart; refreshPinsTab(); const n = document.getElementById("plFilter"); n.focus(); n.setSelectionRange(pos,pos); };
+    s3.appendChild(list);
+    const ar = el(`<div class="row" style="flex-wrap:wrap"><button class="btn" style="flex:1;justify-content:center" id="plTidy">Tidy labels</button><button class="btn" style="flex:1;justify-content:center" id="plRe" ${p.cam?"":"disabled"}>Re-place pins</button><button class="btn ghost" id="plClear" style="color:var(--danger)">Clear</button></div>`);
+    ar.querySelector("#plTidy").onclick = ()=>tidyLabels(false);
+    ar.querySelector("#plRe").onclick = ()=>replacePins(true);
+    ar.querySelector("#plClear").onclick = ()=>{ if(!p.pins.length) return; commit(); p.pins=[]; sel=null; refreshAll(); toast("Pins cleared. Undo brings them back."); };
+    s3.appendChild(ar);
+    s3.appendChild(el(`<p class="note">Orange distances are outside this photo's view. Pick the 4–8 places that matter most to buyers.</p>`));
+    tabPins.appendChild(s3);
+  }
+  // 4. style
+  const s4 = el(`<section class="sec"><h2><span>Pin style</span></h2></section>`);
+  const names = Object.keys(pinTemplates).sort();
+  const tr = el(`<div class="row"><label class="lbl" for="tplSel">Template</label><select id="tplSel"><option value="">Baker default</option>${names.map(n=>`<option ${n===pinTpl?"selected":""}></option>`).join("")}</select></div>`);
+  const opts = tr.querySelectorAll("option"); names.forEach((n,i)=>{ opts[i+1].value = n; opts[i+1].textContent = n; });
+  tr.querySelector("select").onchange = ev=>{ pinTpl = ev.target.value; LS.set("pinTpl", pinTpl); pinStyle = Object.assign({}, PIN_DEFAULT, pinTpl ? pinTemplates[pinTpl] : {}); savePinStyle(); refreshPinsTab(); requestDraw(); };
+  s4.appendChild(tr);
+  const fr = el(`<div class="row"><label class="lbl" for="psFont">Font</label><select id="psFont">${FONTS.map(f=>`<option value="${f[0]}" ${f[0]===pinStyle.font?"selected":""}>${f[1]}</option>`).join("")}</select></div>`);
+  fr.querySelector("select").onchange = ev=>{ pinStyle.font = ev.target.value; savePinStyle(); loadFont(pinStyle.font); requestDraw(); };
+  s4.appendChild(fr);
+  const sz = el(`<div class="row"><label class="lbl" for="psSize">Size</label><input type="range" id="psSize" min="10" max="44" step="1" value="${pinStyle.size}"><span class="val">${pinStyle.size}</span></div>`);
+  sz.querySelector("input").oninput = ev=>{ pinStyle.size = +ev.target.value; sz.querySelector(".val").textContent = pinStyle.size; savePinStyle(); requestDraw(); };
+  s4.appendChild(sz);
+  const sl = el(`<div class="row"><label class="lbl" for="psStem">Stem</label><input type="range" id="psStem" min="20" max="240" step="5" value="${pinStyle.stemLen}"><span class="val">${pinStyle.stemLen}</span></div>`);
+  sl.querySelector("input").oninput = ev=>{ pinStyle.stemLen = +ev.target.value; sl.querySelector(".val").textContent = pinStyle.stemLen; savePinStyle(); };
+  sl.querySelector("input").onchange = ()=>{ const p=P(); if(p){ commit(); p.pins.forEach(pin=>setLabelAbove(p,pin,U())); requestDraw(); } };
+  s4.appendChild(sl);
+  const col = (id, label, key) => { const r = el(`<label class="row" style="gap:6px;flex:1;min-width:120px"><input type="color" id="${id}" value="${pinStyle[key]}"><span class="note" style="color:var(--fg)">${label}</span></label>`); r.querySelector("input").oninput = ev=>{ pinStyle[key] = ev.target.value; savePinStyle(); requestDraw(); }; return r; };
+  const cg = el(`<div class="row" style="flex-wrap:wrap;gap:8px"></div>`);
+  cg.appendChild(col("psBg","Label","bg")); cg.appendChild(col("psFg","Label text","fg")); cg.appendChild(col("psStemC","Stem","stem")); cg.appendChild(col("psDot","Dot","dot")); cg.appendChild(col("psHBg","House pin","houseBg")); cg.appendChild(col("psHFg","House text","houseFg"));
+  s4.appendChild(cg);
+  const tg = el(`<div class="row" style="gap:16px;flex-wrap:wrap"><label class="check"><input type="checkbox" id="psDist" ${pinStyle.showDist?"checked":""}> Show distance</label><label class="check"><input type="checkbox" id="psUp" ${pinStyle.upper?"checked":""}> Capitals</label></div>`);
+  tg.querySelector("#psDist").onchange = ev=>{ pinStyle.showDist = ev.target.checked; savePinStyle(); const p=P(); if(p){ commit(); p.pins.forEach(x=>{ if(!x.house && x.key) x.showSub = pinStyle.showDist; }); } requestDraw(); };
+  tg.querySelector("#psUp").onchange = ev=>{ pinStyle.upper = ev.target.checked; savePinStyle(); requestDraw(); };
+  s4.appendChild(tg);
+  const lr = el(`<div class="row"><button class="btn" style="flex:1;justify-content:center" id="psLogo">${pinLogo ? "Change house logo" : "Use a logo for the house pin"}</button>${pinLogo ? `<button class="btn ghost" id="psLogoX">Remove</button>` : ""}</div>`);
+  lr.querySelector("#psLogo").onclick = ()=>logoIn.click();
+  const lx = lr.querySelector("#psLogoX"); if (lx) lx.onclick = ()=>{ pinLogo = null; LS.set("pinLogo",""); refreshPinsTab(); requestDraw(); };
+  s4.appendChild(lr);
+  const sv = el(`<div class="row"><input type="text" id="tplName" placeholder="Agency name, e.g. Raspa"><button class="btn" id="tplSave" style="flex:none">Save</button></div>`);
+  sv.querySelector("#tplSave").onclick = ()=>{ const n = sv.querySelector("input").value.trim() || pinTpl; if (!n){ toast("Type a name for the template"); return; } pinTemplates[n] = Object.assign({}, pinStyle); LS.set("pinTemplates", pinTemplates); pinTpl = n; LS.set("pinTpl", n); refreshPinsTab(); toast(`Saved template "${n}"`); };
+  s4.appendChild(sv);
+  if (pinTpl){ const d = el(`<button class="btn ghost" style="color:var(--danger);justify-content:center">Delete template "${escapeHtml(pinTpl)}"</button>`); d.onclick = ()=>{ delete pinTemplates[pinTpl]; LS.set("pinTemplates", pinTemplates); pinTpl=""; LS.set("pinTpl",""); pinStyle = Object.assign({}, PIN_DEFAULT); savePinStyle(); refreshPinsTab(); requestDraw(); }; s4.appendChild(d); }
+  s4.appendChild(el(`<p class="note">Templates are saved in this browser.</p>`));
+  tabPins.appendChild(s4);
+}
+
+const jobIn = document.getElementById("jobIn"), metaIn = document.getElementById("metaIn"), logoIn = document.getElementById("logoIn");
+jobIn.onchange = async ()=>{ const f = jobIn.files[0]; jobIn.value=""; if (f) loadJobFile(f); };
+async function loadJobFile(f){
+  try{ const j = parseJobFile(await f.text()); setJob(j, true); toast(`${j.places.length} places loaded for ${shortAddress(j.address)}`); }
+  catch(err){ toast(err.message || "Couldn't read that pin file"); }
+}
+metaIn.onchange = async ()=>{
+  const f = metaIn.files[0]; metaIn.value=""; if (!f || !P()) return;
+  const m = await readDroneMeta(f);
+  if (!m){ toast("No drone position in that file either. Use the untouched JPG straight off the drone."); return; }
+  commit(); P().cam = m; P().cam0 = Object.assign({}, m); refreshAll(); toast("Drone position loaded. Tick places to add pins.");
+};
+logoIn.onchange = ()=>{
+  const f = logoIn.files[0]; logoIn.value=""; if (!f) return;
+  const r = new FileReader(); r.onload = ()=>{ const im = new Image(); im.onload = ()=>{ pinLogo = im; try{ LS.set("pinLogo", r.result); }catch(e){} refreshPinsTab(); requestDraw(); }; im.src = r.result; }; r.readAsDataURL(f);
+};
+
+function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function refreshLayers(){
+  const p=P(); const box=document.getElementById("layers"); box.innerHTML="";
+  if (!p) return;
+  const items = [];
+  let bi=0, li=0;
+  p.pins.forEach(pn=>items.push({ kind:"pin", id:pn.id, color:pn.house?pinStyle.houseBg:pinStyle.bg, name:(pn.house?"⌂ ":"")+pn.name, meta:"pin" }));
+  p.shapes.forEach(s=>items.push({ kind:"shape", id:s.id, color:s.color, name: s.type==="poly" ? `Boundary ${++bi}` : `Line ${++li}`, meta:`${s.pts.length} pts` }));
+  p.texts.forEach(t=>items.push({ kind:"text", id:t.id, color:t.style==="pill"?t.bg:t.color, name:`“${(t.text||"").split("\n")[0].slice(0,26)}”`, meta:"text" }));
+  if (!items.length){ box.appendChild(el(`<p class="note">Nothing yet. Press B and click the lot corners.</p>`)); return; }
+  items.forEach(it=>{
+    const b = el(`<button class="layer" aria-current="${!!(sel&&sel.id===it.id)}"><i style="background:${it.color}"></i><span></span><small>${it.meta}</small></button>`);
+    b.querySelector("span").textContent = it.name;
+    b.onclick=()=>{ sel={kind:it.kind, id:it.id}; setTool("select"); refreshPanel(); refreshLayers(); requestDraw(); };
+    box.appendChild(b);
+  });
+}
+
+// photo-wide controls
+const hlOn=document.getElementById("hlOn"), hlOp=document.getElementById("hlOp"), hlCol=document.getElementById("hlCol"), hlOpV=document.getElementById("hlOpV");
+const fillOn=document.getElementById("fillOn"), fillOp=document.getElementById("fillOp"), fillOpV=document.getElementById("fillOpV");
+const discOn=document.getElementById("discOn"), discText=document.getElementById("discText");
+function refreshPhotoControls(){
+  const p=P(); const dis=!p;
+  [hlOn,hlOp,hlCol,fillOn,fillOp,discOn,discText].forEach(x=>x.disabled=dis);
+  if (!p) return;
+  hlOn.checked=p.hl.on; hlOp.value=p.hl.op; hlOpV.textContent=p.hl.op+"%"; hlCol.value=p.hl.col;
+  fillOn.checked=p.fill.on; fillOp.value=p.fill.op; fillOpV.textContent=p.fill.op+"%";
+  discOn.checked=p.disc.on; discText.value=p.disc.text;
+}
+hlOn.onchange=()=>{ commit(); P().hl.on=hlOn.checked; prefs.hlOn=hlOn.checked; savePrefs(); requestDraw(); };
+[hlOp, fillOp, hlCol].forEach(x=>{ x.addEventListener("pointerdown", ()=>commit()); x.addEventListener("keydown", ()=>commit()); });
+hlOp.oninput=()=>{ P().hl.op=+hlOp.value; hlOpV.textContent=hlOp.value+"%"; prefs.hlOp=+hlOp.value; savePrefs(); requestDraw(); };
+hlCol.oninput=()=>{ P().hl.col=hlCol.value; prefs.hlCol=hlCol.value; savePrefs(); requestDraw(); };
+fillOn.onchange=()=>{ commit(); P().fill.on=fillOn.checked; prefs.fillOn=fillOn.checked; savePrefs(); requestDraw(); };
+fillOp.oninput=()=>{ P().fill.op=+fillOp.value; fillOpV.textContent=fillOp.value+"%"; prefs.fillOp=+fillOp.value; savePrefs(); requestDraw(); };
+discOn.onchange=()=>{ commit(); P().disc.on=discOn.checked; prefs.discOn=discOn.checked; savePrefs(); requestDraw(); };
+discText.onfocus=()=>commit();
+discText.oninput=()=>{ P().disc.text=discText.value; prefs.discText=discText.value; savePrefs(); requestDraw(); };
+
+// ---------- photos ----------
+function makeThumb(p){
+  const c=document.createElement("canvas"); const h=120; c.height=h; c.width=Math.round(p.w/p.h*h);
+  c.getContext("2d").drawImage(p.img,0,0,c.width,c.height); try{ p.thumb=c.toDataURL("image/jpeg",.7); }catch(e){ p.thumb=""; }
+}
+function refreshStrip(){
+  const s=document.getElementById("strip"); s.innerHTML="";
+  photos.forEach((p,i)=>{
+    const b = el(`<div class="thumb" role="button" tabindex="0" aria-current="${i===cur}" title="${escapeHtml(p.name)}"><img alt=""><span class="n">${i+1}</span><button class="x" aria-label="Remove photo">×</button></div>`);
+    b.querySelector("img").src=p.thumb;
+    b.onclick=ev=>{ if (ev.target.classList.contains("x")) return; selectPhoto(i); };
+    b.onkeydown=ev=>{ if (ev.key==="Enter") selectPhoto(i); };
+    b.querySelector(".x").onclick=()=>removePhoto(i);
+    s.appendChild(b);
+  });
+  const add = el(`<button class="addthumb">+ Add</button>`); add.onclick=()=>fileIn.click(); s.appendChild(add);
+  document.getElementById("exportAllBtn").disabled = photos.length<2;
+  document.getElementById("exportBtn").disabled = !photos.length;
+}
+function selectPhoto(i){ if (draft) cancelDraft(); cur=i; sel=null; document.getElementById("sampleTag").hidden = !(P()&&P().sample); refreshAll(); fit(); }
+function removePhoto(i){
+  photos.splice(i,1);
+  if (!photos.length){ cur=-1; refreshAll(); return; }
+  selectPhoto(Math.min(cur>i?cur-1:cur, photos.length-1));
+}
+function refreshAll(){ refreshStrip(); refreshPinsTab(); refreshPanel(); refreshLayers(); refreshPhotoControls(); updateUndo(); updateDrawbar(); setHint(); requestDraw(); }
+
+const fileIn=document.getElementById("fileIn");
+document.getElementById("addBtn").onclick=()=>fileIn.click();
+fileIn.onchange=()=>{ addFiles([...fileIn.files]); fileIn.value=""; };
+function addFiles(files){
+  const jf = files.find(f=>/\.(json|html?)$/i.test(f.name));
+  if (jf) loadJobFile(jf);
+  files = files.filter(f=>/^image\//.test(f.type));
+  if (!files.length && jf) return;
+  if (!files.length){ toast("Those files aren't photos. Use JPG, PNG or WebP."); return; }
+  let first = photos.length; let done=0;
+  // drop the sample once real photos arrive
+  const hadSample = photos.length===1 && photos[0].sample;
+  files.forEach(f=>{
+    const url = URL.createObjectURL(f); const img=new Image();
+    img.onload=async ()=>{
+      const p=newPhotoState(f.name, img, img.naturalWidth, img.naturalHeight, false); makeThumb(p);
+      p.cam = await readDroneMeta(f); p.cam0 = p.cam ? Object.assign({}, p.cam) : null;
+      photos.push(p);
+      if (++done===files.length){
+        if (hadSample){ photos.shift(); first=Math.max(0, first-1); if (job && job.sample){ job=null; const sj=LS.get("job",null); if (sj && sj.places) job=sj; } }
+        selectPhoto(first); const nm = files.length===1 ? "Photo added." : `${files.length} photos added.`; toast(job ? `${nm} Tick places on the Pins tab.` : `${nm} Load the job's pin file on the Pins tab.`);
+      }
+    };
+    img.onerror=()=>{ done++; toast(`Couldn't open ${f.name}. DNG/RAW won't load; export a JPG first.`); };
+    img.src=url;
+  });
+}
+// drag & drop + paste
+let dragDepth=0; const drop=document.getElementById("drop");
+document.addEventListener("dragenter", e=>{ if ([...(e.dataTransfer?.types||[])].includes("Files")){ dragDepth++; drop.hidden=false; e.preventDefault(); } });
+document.addEventListener("dragover", e=>{ if ([...(e.dataTransfer?.types||[])].includes("Files")) e.preventDefault(); });
+document.addEventListener("dragleave", ()=>{ dragDepth=Math.max(0,dragDepth-1); if(!dragDepth) drop.hidden=true; });
+document.addEventListener("drop", e=>{ e.preventDefault(); dragDepth=0; drop.hidden=true; if (e.dataTransfer?.files?.length) addFiles([...e.dataTransfer.files]); });
+document.addEventListener("paste", e=>{ const fs=[...(e.clipboardData?.files||[])]; if (fs.length) addFiles(fs); });
+
+// ---------- export ----------
+function baseName(n){ return (n||"photo").replace(/\.[^.]+$/,"").replace(/[^\w\- ]+/g,"").trim() || "photo"; }
+function renderFull(p, fmt){
+  return new Promise(res=>{
+    const attempt = (scale)=>{
+      const c=document.createElement("canvas"); c.width=Math.round(p.w*scale); c.height=Math.round(p.h*scale);
+      const x=c.getContext("2d"); x.imageSmoothingQuality="high"; x.setTransform(scale,0,0,scale,0,0);
+      drawScene(x, p, { hide:false });
+      c.toBlob(b=>{ if (b) res(b); else if (scale>0.4) attempt(scale*Math.sqrt(16e6/(p.w*p.h*scale*scale))*0.98); else res(null); },
+        fmt==="png"?"image/png":"image/jpeg", 0.93);
+    };
+    attempt(1);
+  });
+}
+let downloads = null;
+(async()=>{ try{ downloads = window.claude ? await window.claude.use("downloads") : null; }catch(e){ downloads=null; } })();
+
+async function deliver(blob, filename){
+  if (downloads){
+    try{ await downloads.save({ filename, data: blob }); toast("Saved "+filename); return; }
+    catch(err){ if (err && err.code==="declined"){ toast("Save cancelled"); return; } if (err && err.code==="rate_limited"){ toast("A save is already waiting for you to confirm"); return; } }
+  }
+  if (!window.claude){
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 60000); toast("Downloaded "+filename); return;
+  }
+  showFallback(blob, filename);
+}
+function showFallback(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const isImg = /^image\//.test(blob.type);
+  const m = el(`<div class="modal" role="dialog" aria-label="Your export"><div class="card"><div class="row" style="justify-content:space-between"><strong>${escapeHtml(filename)}</strong><button class="btn" id="mClose">Close</button></div>${isImg?`<img alt="Exported photo">`:""}<p class="note">${isImg?"Right-click or long-press the image and choose Save Image.":"Saving isn't available in this view. Open this page in claude.ai to export a ZIP."}</p></div></div>`);
+  if (isImg) m.querySelector("img").src=url;
+  m.querySelector("#mClose").onclick=()=>{ m.remove(); URL.revokeObjectURL(url); };
+  m.onclick=ev=>{ if (ev.target===m){ m.remove(); URL.revokeObjectURL(url); } };
+  document.body.appendChild(m);
+}
+const fmtSel=document.getElementById("fmt");
+fmtSel.value = LS.get("fmt","jpg"); fmtSel.onchange=()=>LS.set("fmt", fmtSel.value);
+document.getElementById("exportBtn").onclick=async()=>{
+  const p=P(); if(!p) return; await fontsReady(); const fmt=fmtSel.value;
+  toast("Rendering full size…"); const b=await renderFull(p, fmt);
+  if (!b){ toast("This photo is too large to render in this browser."); return; }
+  deliver(b, `${baseName(p.name)}_marked.${fmt}`);
+};
+document.getElementById("exportAllBtn").onclick=async()=>{
+  if (!window.JSZip){ toast("ZIP export couldn't load. Export photos one at a time."); return; }
+  await fontsReady(); const fmt=fmtSel.value; const zip=new JSZip(); const used=new Set();
+  for (let i=0;i<photos.length;i++){
+    toast(`Rendering ${i+1} of ${photos.length}…`);
+    const b=await renderFull(photos[i], fmt); if(!b) continue;
+    let n=`${baseName(photos[i].name)}_marked`; while(used.has(n)) n+="_"+(i+1); used.add(n);
+    zip.file(`${n}.${fmt}`, b);
+  }
+  const z = await zip.generateAsync({type:"blob"});
+  deliver(z, `aerials_marked_${new Date().toISOString().slice(0,10)}.zip`);
+};
+
+// ---------- fonts ----------
+function loadFont(f){ if (document.fonts) document.fonts.load(`800 40px "${f}"`).then(requestDraw).catch(()=>{}); }
+function fontsReady(){ if (!document.fonts) return Promise.resolve(); const ps=[document.fonts.load(`800 40px "${pinStyle.font}"`), document.fonts.load(`500 40px "${pinStyle.font}"`)]; photos.forEach(p=>p.texts.forEach(t=>ps.push(document.fonts.load(`${t.bold?800:500} 40px "${t.font}"`)))); ps.push(document.fonts.load(`400 20px "IBM Plex Sans"`)); return Promise.all(ps).catch(()=>{}); }
+FONTS.forEach(f=>loadFont(f[0])); if (document.fonts) document.fonts.ready.then(requestDraw);
+
+// ---------- toast ----------
+let toastT;
+function toast(msg){ let t=document.querySelector(".toast"); if(!t){ t=el(`<div class="toast" role="status"></div>`); document.body.appendChild(t); } t.textContent=msg; clearTimeout(toastT); toastT=setTimeout(()=>t.remove(), 2600); }
+
+// ---------- sample aerial (rendered through a virtual drone camera) ----------
+function rng(seed){ return ()=>{ seed=(seed*16807)%2147483647; return (seed-1)/2147483646; }; }
+function makeSample(){
+  const W=2400, H=1600, c=document.createElement("canvas"); c.width=W; c.height=H; const x=c.getContext("2d"); const r=rng(11);
+  const PROP = { lat:-31.95120, lng:115.86030 }, c0 = Math.cos(PROP.lat*DEG);
+  const ll = (mx,my)=>[PROP.lat + my/111320, PROP.lng + mx/(111320*c0)];
+  const back = 148, camLL = ll(0,-back);
+  const cam = { lat:camLL[0], lng:camLL[1], h:60, yaw:0, pitch:-22, roll:0, f35:24, src:"sample" };
+  const pj = (mx,my)=>{ const q = ll(mx,my); return project(cam, W, H, q[0], q[1]); };
+  const poly = (pts, fill, stroke, lw)=>{ const q = pts.map(a=>pj(a[0],a[1])); if (q.some(z=>!z)) return; x.beginPath(); q.forEach((z,i)=>i?x.lineTo(z[0],z[1]):x.moveTo(z[0],z[1])); x.closePath(); if (fill){ x.fillStyle=fill; x.fill(); } if (stroke){ x.strokeStyle=stroke; x.lineWidth=lw||1; x.stroke(); } };
+  const rect = (x0,y0,x1,y1,fill,stroke,lw)=>poly([[x0,y0],[x1,y0],[x1,y1],[x0,y1]], fill, stroke, lw);
+  const hz = pj(0, 60000)[1];
+  let g = x.createLinearGradient(0,0,0,hz); g.addColorStop(0,"#7ea6cc"); g.addColorStop(1,"#dfe7ea"); x.fillStyle=g; x.fillRect(0,0,W,hz+2);
+  x.fillStyle="#7c8d55"; x.fillRect(0,hz,W,H-hz);
+  for (let i=0;i<2600;i++){ const mx=-1600+r()*3200, my=-90+Math.pow(r(),1.7)*3600, s2=5+r()*18; rect(mx,my,mx+s2,my+s2*(.6+r()*.8), `rgba(${55+r()*60|0},${78+r()*50|0},${32+r()*28|0},${.18+r()*.2})`); }
+  const NS = [-1000,-620,-260,240,600,1050], EW = [-23,60,150,260,640,900,1200,1550,1950,2500];
+  const park = [100,60,230,150], reserve=[-250,260,240,640], school=[-250,150,-60,260], shops=[260,640,600,900];
+  const inZone = (mx,my)=>[park,reserve,school,shops].some(z=>mx>z[0]-2&&mx<z[2]+2&&my>z[1]-2&&my<z[3]+2);
+  rect(park[0],park[1],park[2],park[3],"#6f9a46"); rect(reserve[0],reserve[1],reserve[2],reserve[3],"#73944b");
+  const lake=[]; for(let i=0;i<40;i++){ const a=i/40*Math.PI*2; lake.push([-120+Math.cos(a)*(190+18*Math.sin(a*3)), 470+Math.sin(a)*(110+10*Math.cos(a*2))]); }
+  poly(lake.map(q=>[q[0]+6,q[1]+6]), "#5c7a3f"); poly(lake, "#3f6f86"); poly(lake.map(q=>[(q[0]+120)*.8-120,(q[1]-470)*.75+470]), "rgba(120,170,190,.35)");
+  rect(school[0],school[1],school[2],school[3],"#86a05a"); poly([[ -230,175],[-80,175],[-80,240],[-230,240]],"#a2b67a"); x.save(); x.setLineDash([]); rect(-215,185,-95,232,null,"rgba(235,225,205,.8)",3); x.restore();
+  rect(shops[0],shops[1],shops[2],shops[3],"#7e7f7c");
+  EW.forEach(y0=>{ rect(-1600,y0-8.5,1600,y0+8.5,"#a7a397"); rect(-1600,y0-6,1600,y0+6,"#4b4d50"); });
+  NS.forEach(x0=>{ rect(x0-8.5,-90,x0+8.5,3800,"#a7a397"); rect(x0-6,-90,x0+6,3800,"#4b4d50"); });
+  EW.forEach(y0=>{ for(let mx=-1600;mx<1600;mx+=10) rect(mx,y0-0.25,mx+5,y0+0.25,"rgba(235,235,225,.7)"); });
+  rect(812,-90,828,3800,"#8a8378"); rect(816,-90,817,3800,"#5a554e"); rect(823,-90,824,3800,"#5a554e");
+  rect(800,1460,812,1540,"#c9c4b8"); rect(828,1460,840,1540,"#c9c4b8"); rect(797,1470,800,1530,"#d9d2c4");
+  rect(280,660,450,760,"#c9c6c0"); rect(290,670,440,750,"#b7b3ac"); for(let i=0;i<14;i++) rect(470+i*9,670,474+i*9,880,"rgba(240,240,240,.55)");
+  rect(280,780,450,880,"#9a9890");
+  const items = [];
+  EW.forEach(y0=>{ [1,-1].forEach(side=>{
+    for (let mx=-1600+9; mx<1600; mx+=18){
+      const ya = side>0 ? y0+7 : y0-39, yb = ya+32, cx = mx+9;
+      if (NS.some(n=>Math.abs(cx-n)<16) || Math.abs(cx-820)<20 || inZone(cx,(ya+yb)/2) || inZone(cx,ya) || inZone(cx,yb)) continue;
+      if (EW.some(o=>o!==y0 && ya<o+8 && yb>o-8)) continue;
+      items.push({ y:(ya+yb)/2, draw:()=>{
+        const subj = Math.abs(cx)<1 && side>0 && y0===-23;
+        rect(mx,ya,mx+18,yb, subj ? "#86a454" : `rgb(${108+r()*22|0},${132+r()*20|0},${74+r()*14|0})`, "rgba(225,220,205,.55)", 1.2);
+        const front = side>0 ? ya+5 : yb-19, hx0 = mx+2.5+r()*1.5, hx1 = mx+15.5-r()*1.5;
+        rect(hx0+.7,front+.8,hx1+.7,front+14.8,"rgba(0,0,0,.25)");
+        const roof = r()<.5 ? ["#9a5537","#b26a48"] : r()<.5 ? ["#5b6168","#727a82"] : ["#bdb7aa","#d2cdc1"];
+        rect(hx0,front,hx1,front+14,roof[0]); rect(hx0,front,hx1,front+7,roof[1]);
+        rect((hx0+hx1)/2-.2,front,(hx0+hx1)/2+.2,front+14,"rgba(0,0,0,.18)");
+        if (subj || r()<.28){ const py = side>0 ? yb-8 : ya+2; rect(mx+4,py,mx+10,py+4,"#e8e4da"); rect(mx+4.6,py+.6,mx+9.4,py+3.4,"#33a6cf"); }
+        rect(mx+12, side>0?ya:front+14, mx+16, side>0?front:yb, "#b9b4a8");
+      }});
+      if (r()<.7){ const tx=mx+2+r()*14, ty= side>0 ? yb-2-r()*8 : ya+2+r()*8; items.push({ y:ty, tree:[tx,ty,2.5+r()*3] }); }
+    }
+  }); });
+  for (let i=0;i<70;i++) items.push({ y:0, tree:[park[0]+r()*(park[2]-park[0]), park[1]+r()*(park[3]-park[1]), 3+r()*4] });
+  for (let i=0;i<150;i++){ const a=r()*Math.PI*2, d=1.1+r()*.6; const tx=-120+Math.cos(a)*190*d, ty=470+Math.sin(a)*110*d; if (tx>reserve[0]&&tx<reserve[2]&&ty>reserve[1]&&ty<reserve[3]) items.push({ y:ty, tree:[tx,ty,3+r()*4] }); }
+  for (let i=0;i<500;i++){ const ex=EW[r()*EW.length|0]; items.push({ y:ex+10, tree:[-1600+r()*3200, ex+(r()<.5?-10:10), 2.5+r()*3] }); }
+  items.forEach(it=>{ if (it.tree) it.y = it.tree[1]; });
+  items.sort((a,b)=>b.y-a.y).forEach(it=>{
+    if (it.draw) return it.draw();
+    const [tx,ty,tr] = it.tree, q = pj(tx,ty), q2 = pj(tx+tr,ty); if (!q || !q2) return;
+    const rad = Math.abs(q2[0]-q[0]); if (rad < .6) return;
+    x.fillStyle="rgba(0,0,0,.28)"; x.beginPath(); x.ellipse(q[0]+rad*.35,q[1]+rad*.15,rad,rad*.55,0,0,7); x.fill();
+    const gg = x.createRadialGradient(q[0]-rad*.35,q[1]-rad*.5,rad*.1,q[0],q[1]-rad*.25,rad*1.1); gg.addColorStop(0,"#6f9a44"); gg.addColorStop(1,"#26431f");
+    x.fillStyle=gg; x.beginPath(); x.ellipse(q[0],q[1]-rad*.3,rad,rad*.8,0,0,7); x.fill();
+  });
+  g = x.createLinearGradient(0,hz,0,hz+H*.35); g.addColorStop(0,"rgba(214,224,229,.85)"); g.addColorStop(1,"rgba(214,224,229,0)"); x.fillStyle=g; x.fillRect(0,hz,W,H*.35);
+  const p = newPhotoState("Sample aerial.jpg", c, W, H, true);
+  p.cam = cam; p.cam0 = Object.assign({}, cam);
+  const L = (name, cat, mx, my, desc, school) => { const q = ll(mx,my); return { name, cat, lat:q[0], lng:q[1], desc, school:school||"" }; };
+  const sj = { address:"12 Sample Street, Perthville WA 6000, Australia", lat:PROP.lat, lng:PROP.lng, sample:true, places:[
+    L("Sample Lake Reserve","lake",-120,470,"lake and walking paths"),
+    L("Sample Park","park",165,105,"playground and grass"),
+    L("Sample Primary School","school",-155,205,"zoned primary","zoned"),
+    L("Sample Shopping Centre","shopping",425,775,"supermarket and cafes"),
+    L("Sample Station","train",820,1500,"train line to the city"),
+    L("Sample Golf Club","golf",-2400,5200,"18 holes")
+  ]};
+  sj.places = sj.places.map((q,i)=>{ const gd = geoDist(sj.lat, sj.lng, q.lat, q.lng); return Object.assign(q,{ key:q.name.toLowerCase(), dist:gd.d, dir:gd.dir }); }).sort((a,b)=>a.dist-b.dist);
+  p.sampleJob = sj;
+  const lot = [[-9,-16],[9,-16],[9,16],[-9,16]].map(a=>pj(a[0],a[1]));
+  const bs = { id:nid(), type:"poly", pts:lot, color:"#ffffff", width:3, glow:false, casing:true, dashed:[false,false,false,false], dots:false };
+  p.shapes.push(bs);
+  p.hl.on = true; p.hl.op = Math.max(p.hl.op, 35);
+  makeThumb(p); return p;
+}
+
+// ---------- boot ----------
+new ResizeObserver(()=>{ if (!userMoved) fit(); else requestDraw(); }).observe(stage);
+photos.push(makeSample()); cur=0;
+job = photos[0].sampleJob;
+(function(){ const p = photos[0];
+  const add = key => { const q = job.places.find(z=>z.key===key); const at = autoPoint(p, q.lat, q.lng); if (at) p.pins.push(makePin(p, { key, name:q.name, sub:fmtDist(q.dist) }, at)); };
+  ["sample park","sample primary school","sample lake reserve","sample shopping centre","sample station"].forEach(add);
+  const hat = autoPoint(p, job.lat, job.lng); if (hat) p.pins.push(makePin(p, { house:true, name:"12 Sample Street", showSub:false }, hat));
+  cur=0; tidyLabels(true);
+})();
+setTab(ptab);
+document.getElementById("sampleTag").hidden=false;
+setTool("select"); refreshAll();
+requestAnimationFrame(()=>{ fit(); });
+})();
+</script>
+
+</body></html>
