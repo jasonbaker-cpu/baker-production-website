@@ -30,6 +30,7 @@ Key facts, current as at 13 October 2026:
 
 - [Full price list](https://www.bakerproduction.com/pricing.html): Every package and service with prices, GST inclusive.
 - [Machine-readable price list](https://www.bakerproduction.com/pricing.md): The same price list as plain markdown.
+- [Drone rules for real estate in WA](https://www.bakerproduction.com/drone-rules-real-estate-wa.html): Guide for agents — CASA requirements for commercial drone photos, Perth airport no-fly zones, what to ask an operator.
 - [Frequently asked questions](https://www.bakerproduction.com/faq.html): Cost, turnaround, coverage, weather, access, virtual staging disclosure, drone rules.
 - [Areas we cover](https://www.bakerproduction.com/areas-we-cover.html): Every Perth suburb and region covered.
 - [Gallery](https://www.bakerproduction.com/gallery.html): Recent photography, drone, twilight and virtual editing work.
