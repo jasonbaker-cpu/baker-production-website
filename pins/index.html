@@ -1006,8 +1006,8 @@ function refreshPinsTab(){
   // 1. property / pin file
   const s1 = el(`<section class="sec"><h2><span>Property</span></h2></section>`);
   if (!job){
-    s1.appendChild(el(`<div class="callout"><p class="note" style="color:var(--fg)">Load the job's pin file to list the nearby places.</p><p class="note">It's in the job's Dropbox folder, in <b>Aerial - Drone Photography</b>: the <b>_pins.json</b> file, or the <b>_map.html</b> amenity map.</p></div>`));
-    const b = el(`<button class="btn primary" style="justify-content:center">Load pin file</button>`); b.onclick=()=>jobIn.click(); s1.appendChild(b);
+    s1.appendChild(el(`<div class="callout"><p class="note" style="color:var(--fg)">Load the job's amenity map to list the checked nearby places.</p><p class="note">It's the <b>_map.html</b> amenity map in the job's Dropbox folder, under <b>Aerial - Drone Photography</b>. The morning drone-map task makes it.</p></div>`));
+    const b = el(`<button class="btn primary" style="justify-content:center">Load amenity map</button>`); b.onclick=()=>jobIn.click(); s1.appendChild(b);
   } else {
     const r = el(`<div class="row" style="justify-content:space-between;align-items:flex-start"><div style="min-width:0"><div style="font-weight:600"></div><div class="note">${job.places.length} checked places${job.sample?" · sample":""}</div></div><button class="btn ghost" style="height:26px;padding:0 9px;font-size:12px;flex:none">Change</button></div>`);
     r.querySelector("div div").textContent = job.address; r.querySelector("button").onclick=()=>jobIn.click(); s1.appendChild(r);
