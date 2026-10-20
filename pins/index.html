@@ -158,6 +158,7 @@ input[type=color]{width:30px;height:26px;border:1px solid var(--line);border-rad
     <input type="file" id="fileIn" accept="image/jpeg,image/png,image/webp" multiple hidden>
     <input type="file" id="jobIn" accept=".json,.html,.htm,application/json,text/html" hidden>
     <input type="file" id="metaIn" accept="image/jpeg" hidden>
+    <input type="file" id="logoIn" accept="image/png,image/svg+xml,image/webp,image/jpeg" hidden>
   </header>
 
   <div class="main">
@@ -221,7 +222,7 @@ const DEFAULT_DISC = "Boundary lines are approximate and for illustration only."
 const prefs = Object.assign({
   outMode:"finals",            // finals = 3:2 centre crop, 3000 px wide (matches delivered aerials) | full
   finish:true, sky:true,
-  pinColor:BAKER_RED, pinScale:100, labelOpacity:90, labelFont:"Source Sans 3",
+  pinStyle:"grey", pinColor:"#9a9a9a", pinScale:100, labelOpacity:96, labelFont:"Source Sans 3", logo:"",
   lineColor:BAKER_RED, lineWidth:6.7, outside:"blur", blurAmt:40, darkAmt:35,
   discOn:false, discText:DEFAULT_DISC
 }, LS.get("prefs", {}));
@@ -287,7 +288,10 @@ function inFrame(p, q, m){ m = m||0; return !!q && q[0] >= -m && q[0] <= p.w+m &
 // Least-squares camera fit to clicked anchors {lat,lng,ox,oy} (original px).
 function solveCam(p, free){
   const cam = Object.assign({}, p.cam), A = p.anchors;
-  const resid = c => { const out=[]; for (const a of A){ const q = projectOrig(c, p.ow, p.oh, a.lat, a.lng); if (!q) return null; out.push(a.ox-q[0], a.oy-q[1]); } return out; };
+  // With a landmark clicked, the house counts less: the address point can sit ~10 m from the roof, which
+  // skews the heading by 2–3°. The far landmark sets the heading; the house still pins down height and tilt.
+  const wt = a => (A.length >= 2 && a.key === "__house") ? 0.3 : 1;
+  const resid = c => { const out=[]; for (const a of A){ const q = projectOrig(c, p.ow, p.oh, a.lat, a.lng); if (!q) return null; const w = wt(a); out.push((a.ox-q[0])*w, (a.oy-q[1])*w); } return out; };
   const step = { yaw:0.01, pitch:0.01, roll:0.01, h:0.2 };
   const clampStep = { yaw:8, pitch:6, roll:3, h:25 };
   for (let it=0; it<120; it++){
@@ -304,7 +308,7 @@ function solveCam(p, free){
   }
   const r = resid(cam); if (!r) return null;
   let e = 0; for (let i=0;i<r.length;i+=2) e = Math.max(e, Math.hypot(r[i], r[i+1]));
-  cam.err = e*p.k;  // worst miss in working px
+  cam.err = e*p.k;  // worst miss in working px (house weighted)
   return cam;
 }
 function gauss(M, b){
@@ -323,7 +327,8 @@ function realign(p){
     c.ready = true;
   }
   let free;
-  if (p.anchors.length >= 2) free = ["yaw","pitch","h","roll"];
+  if (p.anchors.length >= 3) free = ["yaw","pitch","h","roll"];
+  else if (p.anchors.length === 2) free = ["yaw","pitch","h"];
   else if (c.fromGimbal) free = ["yaw","pitch"];
   else if (p.horizon) free = ["yaw","h"];
   else free = ["yaw","pitch"];
@@ -528,18 +533,24 @@ const ICON_CHOICES = [["tree","Park / reserve"],["water","Lake / river"],["beach
 function roundRect(c,x,y,w,h,r){ r=Math.min(r,w/2,h/2); c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
 function drawIcon(c, name, cx, cy, size){ const f = ICONS[name] || ICONS.star; c.save(); c.translate(cx,cy); c.scale(size,size); c.fillStyle="#fff"; c.strokeStyle="#fff"; f(c); c.restore(); }
 
-// ================= Baker pins (measured from delivered finals, 3000 px wide) =================
+// ================= pins (measured from delivered finals, 3000 px wide) =================
+function pinColour(){ return prefs.pinStyle === "grey" ? (prefs.pinColor && prefs.pinColor !== BAKER_RED ? prefs.pinColor : "#9a9a9a") : (prefs.pinColor || BAKER_RED); }
+function shade(hex, pct){ const n=parseInt(hex.slice(1),16); const f=v=>Math.max(0,Math.min(255,Math.round(v + 255*pct/100))); return `rgb(${f(n>>16&255)},${f(n>>8&255)},${f(n&255)})`; }
+let _logo = null, _logoSrc = "";
+function logoImg(){ if (!prefs.logo) return null; if (_logoSrc !== prefs.logo){ _logoSrc = prefs.logo; _logo = new Image(); _logo.onload = ()=>requestDraw(); _logo.src = prefs.logo; } return _logo && _logo.complete && _logo.naturalWidth ? _logo : null; }
 // POI marker 125×170, house marker 212×290, label 105 tall, text 56, gap pin→text 36, right pad 28.
 function pinGeom(p, pin){
   const s = p.w/3000 * (prefs.pinScale/100);
   const house = pin.house;
-  const mw = (house ? 212 : 125)*s, mh = (house ? 290 : 170)*s, R = mw/2;
+  const grey = prefs.pinStyle === "grey";
+  // Baker red: measured from our finals. Grey: measured from the agency-logo style (bigger heads, house pin carries the logo).
+  const mw = (house ? (grey?245:212) : (grey?140:125))*s, mh = (house ? (grey?330:290) : (grey?190:170))*s, R = mw/2;
   const lift = house ? 0 : (pin.lift||0), flip = !house && !!pin.flip;   // flip: points up, label below the spot
   const tipY = flip ? pin.ey + lift : pin.ey - lift;
   const hx = pin.ex, hy = flip ? tipY + mh - R : tipY - mh + R;  // head centre
   const g = { s, mw, mh, R, hx, hy, house, lift, flip, tipY, box:[hx-R, flip ? tipY : tipY-mh, mw, mh] };
   if (!house){
-    const fs = 56*s, lh = 105*s;
+    const fs = (grey?58:56)*s, lh = (grey?108:105)*s;
     ctx.font = `400 ${fs}px "${prefs.labelFont}", "Source Sans 3", "Segoe UI", sans-serif`;
     const tw = ctx.measureText(pin.name||"").width;
     const lw = R + 36*s + tw + 28*s;
@@ -569,13 +580,20 @@ function drawPins(c, p){
       c.font = `400 ${L.fs}px "${prefs.labelFont}", "Source Sans 3", "Segoe UI", sans-serif`;
       c.fillText(pin.name||"", L.tx, L.y + L.h/2 + L.fs*0.04);
     }
-    c.fillStyle = prefs.pinColor;
+    const col = pinColour();
+    c.fillStyle = col;
     if (g.lift > 1){ // crowded pins sit higher on a stem; the dot still marks the exact spot
       c.strokeStyle = prefs.pinColor; c.lineWidth = 4*g.s; c.beginPath(); c.moveTo(pin.ex, pin.ey); c.lineTo(pin.ex, g.tipY); c.stroke();
       c.beginPath(); c.arc(pin.ex, pin.ey, 8*g.s, 0, 7); c.fill(); c.strokeStyle="#fff"; c.lineWidth=2.5*g.s; c.stroke();
     }
+    if (prefs.pinStyle === "grey"){ const gr = c.createLinearGradient(0, g.hy-g.R, 0, g.hy+g.R); gr.addColorStop(0, shade(col, 14)); gr.addColorStop(1, shade(col, -10)); c.fillStyle = gr; }
     markerPath(c, g, pin.ex, g.tipY); c.fill();
-    drawIcon(c, pin.house ? "house" : (pin.icon || "star"), g.hx, g.hy, g.R*(pin.house ? 0.62 : 0.6));
+    const logo = pin.house && logoImg();
+    if (pin.house && prefs.pinStyle === "grey"){ // white ring, then the agency logo (or the house icon)
+      c.strokeStyle = "#fff"; c.lineWidth = g.R*0.085; c.beginPath(); c.arc(g.hx, g.hy, g.R*0.86, 0, 7); c.stroke();
+    }
+    if (logo){ const box = g.R*1.12, k = Math.min(box/logo.width, box/logo.height), w = logo.width*k, h = logo.height*k; c.drawImage(logo, g.hx-w/2, g.hy-h/2, w, h); }
+    else drawIcon(c, pin.house ? "house" : (pin.icon || "star"), g.hx, g.hy, g.R*(pin.house ? (prefs.pinStyle==="grey"?0.55:0.62) : 0.6));
     c.restore();
   }
 }
@@ -822,6 +840,9 @@ function placePins(p, onlyAuto){
   if (!job) return;
   p.pins.forEach(pin=>{
     if (onlyAuto && pin.moved) return;
+    // The house pin goes where the editor clicked the roof (the address point can be ~10 m off the house).
+    const ha = pin.house && p.anchors.find(a=>a.key==="__house");
+    if (ha){ const q = toWork(p,[ha.ox,ha.oy]); pin.ex = q[0]; pin.ey = q[1]; pin.moved = false; return; }
     const ll = pin.house ? job : placeForKey(pin.key); if (!ll) return;
     const q = autoPoint(p, ll.lat, ll.lng); if (!q) return;
     pin.ex = q[0]; pin.ey = q[1]; pin.moved = false;
@@ -1076,7 +1097,7 @@ function refreshPinsTab(){
     d2.appendChild(row); steps.appendChild(s2e);
     s2.appendChild(steps);
     if (p.anchors.length){ const r = el(`<button class="btn ghost" style="align-self:flex-start;height:26px;font-size:12px">Clear line-up clicks</button>`); r.onclick=()=>{ commit(); p.anchors=[]; p.cam = makeCam(p.meta); refreshAll(); }; s2.appendChild(r); }
-    if (p.cam.ready && p.cam.err != null && p.anchors.length>=2 && p.cam.err > 25) s2.appendChild(el(`<p class="note" style="color:#e8c070">Clicks disagree by ${Math.round(p.cam.err)} px. Re-check you clicked the exact spot on each.</p>`));
+    if (p.cam.ready && p.cam.err != null && p.anchors.length>=2 && p.cam.err > 60) s2.appendChild(el(`<p class="note" style="color:#e8c070">Clicks disagree by ${Math.round(p.cam.err)} px. Re-check you clicked the exact spot on each.</p>`));
   }
   box.appendChild(s2);
   // places
@@ -1119,20 +1140,27 @@ function refreshPinsTab(){
   // style
   const s4 = el(`<section class="sec"><h2><span>Pin style</span></h2></section>`);
   const names = Object.keys(templates).sort();
-  const tr = el(`<div class="row"><label class="lbl" for="tplSel">Template</label><select id="tplSel"><option value="">Baker (red)</option></select></div>`);
+  const tr = el(`<div class="row"><label class="lbl" for="tplSel">Agency</label><select id="tplSel"><option value="">— no template —</option></select></div>`);
   names.forEach(n=>{ const o=document.createElement("option"); o.value=n; o.textContent=n; tr.querySelector("select").appendChild(o); });
   tr.querySelector("select").value = LS.get("tpl","");
-  tr.querySelector("select").onchange = ev=>{ const n = ev.target.value; LS.set("tpl", n); const t = n ? templates[n] : { pinColor:BAKER_RED, pinScale:100, labelOpacity:90 }; Object.assign(prefs, t); savePrefs(); refreshPinsTab(); requestDraw(); };
+  tr.querySelector("select").onchange = ev=>{ const n = ev.target.value; LS.set("tpl", n); if (n) Object.assign(prefs, templates[n]); savePrefs(); const q=P(); if(q) tidySides(q); refreshPinsTab(); requestDraw(); };
   s4.appendChild(tr);
-  const cr = el(`<div class="row"><label class="lbl" for="pinCol">Marker</label><input type="color" id="pinCol" value="${prefs.pinColor}"><button class="btn ghost" style="height:26px;font-size:12px" id="pinColReset">Baker red</button></div>`);
+  const sty = el(`<div class="row"><label class="lbl">Style</label><div class="seg"><button data-v="grey">Grey + logo</button><button data-v="red">Baker red</button></div></div>`);
+  sty.querySelectorAll("button").forEach(b=>{ b.setAttribute("aria-pressed", prefs.pinStyle===b.dataset.v); b.onclick=()=>{ prefs.pinStyle=b.dataset.v; prefs.pinColor = b.dataset.v==="grey" ? "#9a9a9a" : BAKER_RED; savePrefs(); const q=P(); if(q) tidySides(q); refreshPinsTab(); requestDraw(); }; });
+  s4.appendChild(sty);
+  const lr = el(`<div class="row"><label class="lbl">House logo</label><button class="btn wide" id="logoBtn">${prefs.logo ? "Change logo" : "Upload agency logo"}</button>${prefs.logo ? `<button class="btn ghost" id="logoX" style="flex:none">Remove</button>` : ""}</div>`);
+  lr.querySelector("#logoBtn").onclick = ()=>$("logoIn").click();
+  const lx = lr.querySelector("#logoX"); if (lx) lx.onclick = ()=>{ prefs.logo=""; savePrefs(); refreshPinsTab(); requestDraw(); };
+  s4.appendChild(lr);
+  if (prefs.pinStyle==="grey" && !prefs.logo) s4.appendChild(el(`<p class="note">Upload the agency's logo (PNG with a transparent background works best). Until then the house pin shows a house icon.</p>`));
+  const cr = el(`<div class="row"><label class="lbl" for="pinCol">Marker</label><input type="color" id="pinCol" value="${pinColour()}"></div>`);
   cr.querySelector("input").oninput = ev=>{ prefs.pinColor = ev.target.value; savePrefs(); requestDraw(); };
-  cr.querySelector("#pinColReset").onclick = ()=>{ prefs.pinColor = BAKER_RED; savePrefs(); refreshPinsTab(); requestDraw(); };
   s4.appendChild(cr);
   s4.appendChild(slider("pinScale","Size",60,160,5,prefs.pinScale,v=>v+"%",v=>{ prefs.pinScale=v; savePrefs(); const q=P(); if(q) tidySides(q); requestDraw(); }));
-  s4.appendChild(slider("lblOp","Label",60,100,1,prefs.labelOpacity,v=>v+"%",v=>{ prefs.labelOpacity=v; savePrefs(); requestDraw(); }));
-  const sv = el(`<div class="row"><input type="text" id="tplName" placeholder="Save as agency template"><button class="btn" style="flex:none">Save</button></div>`);
-  sv.querySelector("button").onclick = ()=>{ const n = sv.querySelector("input").value.trim(); if (!n){ toast("Type the agency name first"); return; } templates[n] = { pinColor:prefs.pinColor, pinScale:prefs.pinScale, labelOpacity:prefs.labelOpacity }; LS.set("templates", templates); LS.set("tpl", n); refreshPinsTab(); toast(`Saved template "${n}"`); };
+  const sv = el(`<div class="row"><input type="text" id="tplName" placeholder="Save as agency, e.g. Ray White Belmont"><button class="btn" style="flex:none">Save</button></div>`);
+  sv.querySelector("button").onclick = ()=>{ const n = sv.querySelector("input").value.trim(); if (!n){ toast("Type the agency name first"); return; } templates[n] = { pinStyle:prefs.pinStyle, pinColor:prefs.pinColor, pinScale:prefs.pinScale, labelOpacity:prefs.labelOpacity, logo:prefs.logo }; try{ LS.set("templates", templates); }catch(e){} LS.set("tpl", n); refreshPinsTab(); toast(`Saved "${n}"`); };
   s4.appendChild(sv);
+  s4.appendChild(el(`<p class="note">Agencies are saved in this browser, logo included.</p>`));
   box.appendChild(s4);
 }
 
@@ -1420,6 +1448,13 @@ document.addEventListener("dragover", e=>{ if ([...(e.dataTransfer?.types||[])].
 document.addEventListener("dragleave", ()=>{ dragDepth=Math.max(0,dragDepth-1); if(!dragDepth) drop.hidden=true; });
 document.addEventListener("drop", e=>{ e.preventDefault(); dragDepth=0; drop.hidden=true; if (e.dataTransfer?.files?.length) addFiles([...e.dataTransfer.files]); });
 document.addEventListener("paste", e=>{ const fs=[...(e.clipboardData?.files||[])]; if (fs.length) addFiles(fs); });
+$("logoIn").onchange = ()=>{
+  const f = $("logoIn").files[0]; $("logoIn").value=""; if (!f) return;
+  const rd = new FileReader(); rd.onload = ()=>{ const im = new Image(); im.onload = ()=>{ // shrink to 400 px so it fits in browser storage
+      const k = Math.min(1, 400/Math.max(im.width, im.height)), c = document.createElement("canvas"); c.width = Math.round(im.width*k); c.height = Math.round(im.height*k);
+      c.getContext("2d").drawImage(im,0,0,c.width,c.height); prefs.logo = c.toDataURL("image/png"); savePrefs(); refreshPinsTab(); requestDraw(); toast("Logo added to the house pin"); };
+    im.src = rd.result; }; rd.readAsDataURL(f);
+};
 $("metaIn").onchange = async ()=>{
   const f = $("metaIn").files[0]; $("metaIn").value=""; const p = P(); if (!f || !p) return;
   const m = await readDroneMeta(f);
