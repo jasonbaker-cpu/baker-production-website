@@ -434,7 +434,10 @@ async function readDroneMeta(file){
     // lined up with the streets on every test photo, so use it when the two roughly agree (gimbal in follow mode).
     const gy = g("GimbalYawDegree"), fy = g("FlightYawDegree"), pitch = g("GimbalPitchDegree"), h = g("RelativeAltitude");
     const dyaw = (gy!=null && fy!=null) ? Math.abs(((gy - fy) % 360 + 540) % 360 - 180) : 999;
-    const yaw = dyaw < 30 ? fy : gy;
+    // Mavic 3 Pro: gimbal and airframe each read a couple of degrees out, in opposite directions — the mean landed
+    // within 0.3° of the Perth CBD skyline 15 km away (Kingsley, Oct 2026), so average them when they're close.
+    const mid = gy + ((((fy - gy) % 360) + 540) % 360 - 180)/2;
+    const yaw = dyaw < 6 ? mid : dyaw < 30 ? fy : gy;
     if ([h,yaw,pitch].every(x=>x!=null && !isNaN(x)) && h > 2) meta.gimbal = { h, yaw, pitch, roll: g("GimbalRollDegree") || 0 };
     return meta;
   }catch(e){ return null; }
