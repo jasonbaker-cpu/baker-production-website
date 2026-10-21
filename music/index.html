@@ -53,6 +53,16 @@ a{color:var(--accent)}
 .removed li{color:var(--muted)}
 .removed s{color:var(--fg)}
 ul{margin:0;padding-left:18px}
+.ed{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px;z-index:20}
+.ed[hidden]{display:none}
+.edbox{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:22px;width:min(380px,100%);display:grid;gap:12px}
+.edbox h3{font-family:var(--display);margin:0;font-size:19px}
+.edbox input{font:15px var(--body);padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+.edrow{display:flex;gap:8px;justify-content:flex-end}
+.btn{font:600 14px var(--body);padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.ederr{color:#b3261e;font-size:13px;min-height:1em}
+.edbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -65,6 +75,18 @@ ul{margin:0;padding-left:18px}
   </header>
 
   <div class="rule"><b>For editors: so it never gets blocked on YouTube:</b> post it as a Short (under 3 min), export the video with no music, then add the song in the YouTube app with <b>Add sound</b>. If the song shows up in Add sound, it's licensed for Shorts. Never put a label song in during the edit and upload it, because a Short over 1 minute with a Content ID claim gets blocked worldwide. For full-length videos, upload as Unlisted first and only publish if Copyright checks comes back clear.</div>
+
+  <div class="edbar"><button class="btn" id="edOpen" type="button">Editors: usage log 🔒</button><span class="note">Log every song you use, so the same agent doesn't get the same track twice.</span></div>
+
+  <div class="ed" id="ed" hidden role="dialog" aria-modal="true" aria-labelledby="edT">
+    <form class="edbox" id="edForm">
+      <h3 id="edT">Editors only</h3>
+      <label for="edPass" class="note">Enter the editor passcode to open the music usage log.</label>
+      <input id="edPass" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div class="ederr" id="edErr"></div>
+      <div class="edrow"><button class="btn" type="button" id="edCancel">Cancel</button><button class="btn pri" type="submit">Open log</button></div>
+    </form>
+  </div>
 
   <div class="bar" role="toolbar" aria-label="Filter by mood">
     <button class="chip" data-m="All" aria-pressed="true" id="f-all">All</button>
@@ -224,6 +246,22 @@ document.getElementById('f-star').addEventListener('click',e=>{star=!star;e.curr
 q.addEventListener('input',render);
 document.querySelectorAll('th[data-k]').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.k;dir=key===k?-dir:1;key=k;render()}));
 render();
+
+(function(){
+  var LOCK={"salt":"kilaxGTyN34VNJzRL6CXSw==","iv":"a4q5LNTJ12VPVY7s","ct":"ocbRt5JFEq4nGR09GpjmTjzhRnjXCWpbSdL84lApWp+pCgCKOlhjyIzzpjqrvxfVPZUMx79HK7IgTgDW6pHVJI11sUVLiiYt6egnINErkjNRGEXybvl4L9HD2aW2v2vl+dIgtsS3vr4="};
+  var ed=document.getElementById('ed'),f=document.getElementById('edForm'),pw=document.getElementById('edPass'),er=document.getElementById('edErr');
+  function b64(x){return Uint8Array.from(atob(x),function(c){return c.charCodeAt(0)})}
+  document.getElementById('edOpen').onclick=function(){ed.hidden=false;er.textContent='';pw.value='';pw.focus()};
+  document.getElementById('edCancel').onclick=function(){ed.hidden=true};
+  ed.addEventListener('click',function(e){if(e.target===ed)ed.hidden=true});
+  f.addEventListener('submit',async function(e){e.preventDefault();er.textContent='Checking…';
+    try{var enc=new TextEncoder();var base=await crypto.subtle.importKey('raw',enc.encode(pw.value.trim().toLowerCase()),'PBKDF2',false,['deriveKey']);
+      var key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(LOCK.salt),iterations:200000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+      var url=new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(LOCK.iv)},key,b64(LOCK.ct)));
+      er.textContent='';ed.hidden=true;window.open(url,'_blank','noopener');
+    }catch(x){er.textContent='Wrong passcode. Check with Jason.'}
+  });
+})();
 </script>
 </body>
 </html>
