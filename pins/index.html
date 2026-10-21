@@ -523,7 +523,14 @@ function finishImage(base, p){
   // 1b. consistency: pull every photo to the same place — the median of 191 delivered finals (ground exposure, white balance, saturation, black/white points)
   normaliseLook(px, w, h);
   // 2. sky analysis on the graded image
-  const sky = (p.skyOn !== false) ? analyseSky(px, w, h) : null;
+  let sky = (p.skyOn !== false) ? analyseSky(px, w, h) : null;
+  // Keep a good real sky (blue with proper clouds): the editors only swap washed-out or blown skies.
+  p.skyKept = false;
+  if (sky && !p.skyForce){
+    let n=0, blue=0, clip=0; const hz = Math.max(4, Math.min(h-1, sky.b|0)), st = Math.max(1, Math.round(w/400));
+    for (let y=0; y<hz*0.85; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2]; n++; if (b > r + 28 && b > 120) blue++; if (r>242 && g>242 && b>242) clip++; }
+    if (n && blue/n > 0.45 && clip/n < 0.12){ sky = null; p.skyKept = true; }
+  }
   let prot = null, line = null;
   if (sky){
     line = x => sky.m*x + sky.b;
@@ -538,7 +545,7 @@ function finishImage(base, p){
   const g1 = gaussBlur(Y,w,h,1*scale+0.0001), g3 = gaussBlur(g1,w,h,Math.sqrt(Math.max(0.01,9-1))*scale), g10 = gaussBlur(g3,w,h,Math.sqrt(100-9)*scale), g30 = gaussBlur(g10,w,h,Math.sqrt(900-100)*scale);
   const G = BAND_GAINS;
   const wSky = new Float32Array(w*h);
-  if (sky){ for (let y=0;y<h;y++){ for (let x=0;x<w;x++){ const hz = line(x); if (y >= hz) continue; const t = y/Math.max(hz,1); const u = Math.min(1, Math.max(0,(1-t)/0.14)); const fade = u*u*(3-2*u); const pr = protAt(x,y); wSky[y*w+x] = fade * Math.min(1, pr*1.25); } } }
+  if (sky){ for (let y=0;y<h;y++){ for (let x=0;x<w;x++){ const hz = line(x); if (y >= hz) continue; const t = y/Math.max(hz,1); const ii=(y*w+x)*4, mx=Math.max(px[ii],px[ii+1],px[ii+2]), mn=Math.min(px[ii],px[ii+1],px[ii+2]), haze = mn > 185 && mx-mn < 40; const u = Math.min(1, Math.max(0,(1-t)/(haze ? 0.035 : 0.14))); const fade = u*u*(3-2*u); const pr = protAt(x,y); wSky[y*w+x] = fade * Math.min(1, pr*1.25); } } }
   const det20 = sky ? gaussBlur(Y,w,h,20*scale) : null;
   for (let y=0;y<h;y++){
     const hz = sky ? line(0) : 0;
@@ -960,7 +967,7 @@ function newPhoto(name, base, meta, sample){
     disc:{ on:prefs.discOn, text:prefs.discText }, undo:[], redo:[] };
   return p;
 }
-const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","outside","blurAmt","darkAmt","disc"];
+const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyForce","outside","blurAmt","darkAmt","disc"];
 function snapshotOf(p){ const o={}; SNAP_KEYS.forEach(k=>o[k]=p[k]); return JSON.stringify(o); }
 function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
 function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); ensureFinish(p); }
@@ -972,7 +979,7 @@ function updateUndo(){ const p=P(); $("undoBtn").disabled=!p||!p.undo.length; $(
 let finishing = 0;
 function ensureFinish(p){
   if (!p.finishOn || p.sample) return;
-  const key = p.skyOn ? "sky" : "nosky";
+  const key = p.skyOn ? (p.skyForce ? "skyF" : "sky") : "nosky";
   if (p.fin && p.finKey === key) return;
   if (p._finPending === key) return;
   p._finPending = key; finishing++; $("busy").hidden = false;
@@ -1500,7 +1507,8 @@ function refreshPhotoTab(){
     const f = el(`<label class="check"><input type="checkbox" ${p.finishOn?"checked":""}> Colour, contrast and sharpening</label>`);
     f.querySelector("input").onchange = ev=>{ commit(); p.finishOn = ev.target.checked; prefs.finish = p.finishOn; savePrefs(); ensureFinish(p); refreshStrip(); requestDraw(); };
     const sk = el(`<label class="check"><input type="checkbox" ${p.skyOn?"checked":""} ${p.finishOn?"":"disabled"}> Replace the sky</label>`);
-    sk.querySelector("input").onchange = ev=>{ commit(); p.skyOn = ev.target.checked; prefs.sky = p.skyOn; savePrefs(); ensureFinish(p); requestDraw(); };
+    sk.querySelector("input").onchange = ev=>{ commit(); p.skyOn = ev.target.checked; p.skyForce = ev.target.checked && p.skyKept; p.finKey = null; prefs.sky = p.skyOn; savePrefs(); ensureFinish(p); requestDraw(); };
+    if (p.skyKept && !p.skyForce) sk.appendChild(el(`<span class="note" style="display:block;margin-left:24px">This photo already has a good blue sky, so it was kept. Untick and tick again to replace it anyway.</span>`));
     s1.appendChild(f); s1.appendChild(sk);
     s1.appendChild(el(`<p class="note">Learned from our delivered aerials: brighter midtones, about 25% more colour, crisper detail, and the clean blue sky our editor uses. Hold <b>Hold for before</b> (or the \\ key) to compare.</p>`));
     box.appendChild(s1);
@@ -1683,12 +1691,13 @@ function parseJobFile(text){
     // both amenity-map generations: "var PROP=[..]; var M=[..]" and "const P=[..], ITEMS=[..]"
     const arrAfter = re => { const m = re.exec(tt); if (!m) return null; let i = m.index + m[0].length - 1, d = 0, q = null;
       for (let k=i; k<tt.length; k++){ const ch = tt[k]; if (q){ if (ch === "\\"){ k++; continue; } if (ch === q) q = null; continue; } if (ch === '"' || ch === "'"){ q = ch; continue; } if (ch === "[") d++; else if (ch === "]"){ d--; if (!d) return tt.slice(i, k+1); } } return null; };
-    const ps = arrAfter(/\b(?:PROP|P)\s*=\s*\[/), ms = arrAfter(/\b(?:M|ITEMS|PINS|PLACES)\s*=\s*\[/);
+    let ps = arrAfter(/\b(?:PROP|P)\s*=\s*\[/), ms = arrAfter(/\b(?:M|ITEMS|PINS|PLACES|A)\s*=\s*\[/);
+    if (!ps){ const po = tt.match(/\b(?:PROP|P)\s*=\s*(\{[^}]*\})/); if (po){ const o = JSON.parse(po[1]); ps = JSON.stringify([o.lat, o.lng]); } }
     if (!ps || !ms) throw new Error("That file isn't one of our amenity maps.");
-    const prop = JSON.parse(ps), M = JSON.parse(ms);
+    const prop = JSON.parse(ps), M = JSON.parse(ms).map(q=>Object.assign({}, q, { name: q.name || q.n, badge: q.badge || (q.kind==="zoned" ? "ZONED" : q.kind==="unverified" ? "unverified" : q.kind==="private" ? "private" : "") }));
     const am = tt.match(/<div class="addr">([\s\S]*?)<\/div>/) || tt.match(/<title>([^<–-]+?)\s*[–-]/);
     j = { address: am ? decodeEntities(am[1]).trim() : "Property", lat:prop[0], lng:prop[1],
-      places: M.map(q=>({ name:decodeEntities(q.name), cat:q.cat||q.type||"other", lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
+      places: M.map(q=>({ name:decodeEntities(q.name), cat:q.cat||q.type||(/school|college/i.test(q.name)?"school":/station/i.test(q.name)?"train":/park|reserve/i.test(q.name)?"park":"other"), lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
   }
   const seen = new Set();
   j.places = j.places.filter(q=>q.name && isFinite(q.lat) && isFinite(q.lng)).map(q=>{ const g = geoDist(j.lat, j.lng, q.lat, q.lng); let key = q.name.toLowerCase(); while (seen.has(key)) key += "+"; seen.add(key); return Object.assign(q, { key, dist:g.d, dir:g.dir, icon:iconForPlace(q.name, q.cat) }); }).sort((a,b)=>a.dist-b.dist);
