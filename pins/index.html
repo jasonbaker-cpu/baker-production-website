@@ -587,7 +587,7 @@ function pinGeom(p, pin){
     return g;
   }
   const mw = 141*s, mh = 200*s, R = mw/2;
-  g.lift = pin.lift||0; g.flip = !!pin.flip; g.mw = mw; g.mh = mh; g.R = R;
+  g.lift = 0; g.flip = !!pin.flip; /* editors never put pins on stems */ g.mw = mw; g.mh = mh; g.R = R;
   g.tipY = g.flip ? pin.ey + g.lift : pin.ey - g.lift;
   g.hx = pin.ex; g.hy = g.flip ? g.tipY + mh - R : g.tipY - mh + R;
   g.box = [g.hx-R, g.flip ? g.tipY : g.tipY-mh, mw, mh];
@@ -701,7 +701,7 @@ function tidySides(p){
   const house = p.pins.find(x=>x.house);
   const list = p.pins.filter(x=>!x.house).sort((a,b)=>a.ey-b.ey);   // farthest (top of frame) first: they have the least room
   const ov = (r,q) => { const ox = Math.min(r[2],q[2])-Math.max(r[0],q[0])+gap, oy = Math.min(r[3],q[3])-Math.max(r[1],q[1])+gap; return ox>0 && oy>0 ? ox*oy : 0; };
-  const K = boxed ? 16 : 9, st = boxed ? 70*s : step;
+  const K = boxed ? 16 : 1, st = boxed ? 70*s : step;
   const place = (pin, others) => {
     let best = null;
     for (let k=0;k<K;k++) for (const flip of boxed ? [false] : [false,true]) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : ["right","left"])){
@@ -1426,7 +1426,7 @@ function pinPanel(p, pin){
   const q = pin.key ? placeForKey(pin.key) : null;
   if (q) selSec.appendChild(el(`<p class="note">${escapeHtml((q.cat||"").replace(/_/g," "))} · ${fmtDist(q.dist)} ${q.dir}${q.desc ? " · "+escapeHtml(q.desc) : ""}</p>`));
   if (!pin.house){
-    selSec.appendChild(slider("pnLift","Lift",0,800,5,Math.round(pin.lift||0),v=>v,v=>{ pin.lift=v; pin.layoutLocked=true; requestDraw(); }, commit));
+    if (agency().kind !== "pin") selSec.appendChild(slider("pnLift","Lift",0,800,5,Math.round(pin.lift||0),v=>v,v=>{ pin.lift=v; pin.layoutLocked=true; requestDraw(); }, commit));
     const al = el(`<button class="btn ghost" style="align-self:flex-start;height:26px;font-size:12px">Auto layout all pins</button>`);
     al.onclick=()=>{ commit(); p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshPanel(); requestDraw(); };
     selSec.appendChild(al);
@@ -1685,5 +1685,3 @@ window.__bae = { imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return
 
 })();
 </script>
-
-</body></html>
