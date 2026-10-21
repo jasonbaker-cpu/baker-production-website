@@ -610,21 +610,21 @@ function drawIcon(c, name, cx, cy, size, R){ if (R){ const im = iconImg(name); i
 
 // ================= pins: one preset per agency, measured from the editors' delivered finals (3000 px wide) =================
 const AGENCIES = {
-  "red":         { name:"Red pins (Devon Kelly, Cooper Winter)",            kind:"pin",  color:"#E2181C", house:{ type:"pin", w:226, h:322, mark:"house" } },
-  "charcoal":    { name:"Charcoal pins (Grant Wilson, John O'Brien, Oliver Norris)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:236, h:330, mark:"house" } },
+  "red":         { name:"Red pins (Devon Kelly, Cooper Winter)",            kind:"pin",  color:"#E2181C", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
+  "charcoal":    { name:"Charcoal pins (Grant Wilson, John O'Brien, Oliver Norris)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   "grey-s":      { name:"Grey pins + S logo (Kasey Summers)",               kind:"pin",  color:"#9C9C9C", house:{ type:"pin", w:255, h:360, mark:"s", markR:.9, ring:true } },
   "black-photo": { name:"Black pins + agent photo (Jayden Cooke)",          kind:"pin",  color:"#060606", house:{ type:"pin", w:236, h:330, mark:"photo", markR:.69 } },
   "navy":        { name:"Navy pins + emblem (Biljana)",                     kind:"pin",  color:"#122068", scale:.88, house:{ type:"board", w:170, h:143, stem:300, mark:"emblem" } },
   "navy-h":      { name:"Navy pins + H board (Mario Condipodero)",          kind:"pin",  color:"#022048", house:{ type:"board", w:178, h:178, stem:240, mark:"hboard" } },
   "fn":          { name:"Blue pins + First National board (Suresh Sama)",   kind:"pin",  color:"#004480", scale:.88, house:{ type:"board", w:142, h:142, stem:250, mark:"fn" } },
-  "orange":      { name:"Orange pins (Raymond Chen)",                       kind:"pin",  color:"#F4783C", scale:.88, house:{ type:"pin", w:112, h:155, stem:215, mark:"house-black", color:"#FFFFFF" } },
+  "orange":      { name:"Orange pins (Raymond Chen)",                       kind:"pin",  color:"#F4783C", scale:.88, house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   "green-belle": { name:"Green pins + belle (Shane Garrett, Cory Garrett, Megan Topham)", kind:"pin", color:"#22644E", house:{ type:"pin", w:176, h:281, mark:"belle", markR:.91 } },
   "flags-p":     { name:"Red flags + P pin (Annique Woodford, Nic Pulvirenti, Stephanie Briers, Emma Scharf)", kind:"flag", color:"#FF2744", house:{ type:"pin", w:192, h:273, color:"#3C3C3C", mark:"p", markR:.85 } },
   "yellow":      { name:"Yellow labels + address (Gregory Swiatek, Shah Akbari)", kind:"ylab", color:"#F4DC00", house:{ type:"label" } },
   "pill-r":      { name:"Navy labels + R pin (Mandie Cubeddu)",             kind:"pill", color:"#223454", house:{ type:"pin", w:82, h:104, stem:190, mark:"r", markR:.9 } }
 };
 const HOUSE_STYLES = {
-  "":        { name:"Agency's own" },
+  "":        { name:"Default (ring, or the agency logo)" },
   classic:   { name:"Classic pin", house:{ type:"pin", w:226, h:322, mark:"house" } },
   ring:      { name:"Pin with white ring", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   white:     { name:"White pin on a post", house:{ type:"pin", w:150, h:208, stem:200, mark:"house-black", color:"#FFFFFF" } },
