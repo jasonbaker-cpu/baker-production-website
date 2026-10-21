@@ -425,7 +425,11 @@ async function readDroneMeta(file){
     const lat = g("GpsLatitude") ?? ex.lat, lng = g("GpsLongitude") ?? g("GpsLongtitude") ?? ex.lng;
     if (lat == null || lng == null) return null;
     meta.lat = lat; meta.lng = lng; meta.alt = ex.alt;
-    const h = g("RelativeAltitude"), yaw = g("GimbalYawDegree"), pitch = g("GimbalPitchDegree");
+    // DJI Fly drones (Mini 4 Pro) write GimbalYawDegree ~14° off true heading; the airframe heading (FlightYawDegree)
+    // lined up with the streets on every test photo, so use it when the two roughly agree (gimbal in follow mode).
+    const gy = g("GimbalYawDegree"), fy = g("FlightYawDegree"), pitch = g("GimbalPitchDegree"), h = g("RelativeAltitude");
+    const dyaw = (gy!=null && fy!=null) ? Math.abs(((gy - fy) % 360 + 540) % 360 - 180) : 999;
+    const yaw = dyaw < 30 ? fy : gy;
     if ([h,yaw,pitch].every(x=>x!=null && !isNaN(x)) && h > 2) meta.gimbal = { h, yaw, pitch, roll: g("GimbalRollDegree") || 0 };
     return meta;
   }catch(e){ return null; }
@@ -599,7 +603,7 @@ const ICONS = {
     c.beginPath(); c.moveTo(-.95,.68); c.quadraticCurveTo(0,.4,.95,.68); c.quadraticCurveTo(0,.52,-.95,.68); c.fill();
   }
 };
-const CAT_ICON = { park:"park", playground:"sport", reserve:"pine", regional_park:"pine", lake:"lake", river:"lake", marina:"lake", beach:"sand", school:"school", university:"school", tafe:"school", childcare:"child", library:"library", aquatic:"pool", recreation:"pool", sport:"track", stadium:"stadium", shopping:"shop", regional_shopping:"shop", train:"train", bus:"bus", hospital:"hospital", medical:"medical", golf:"golf", airport:"plane", city:"city", community:"hall", landmark:"star", other:"star" };
+const CAT_ICON = { transport:"train", education:"school", health:"hospital", leisure:"pool", park:"park", playground:"sport", reserve:"pine", regional_park:"pine", lake:"lake", river:"lake", marina:"lake", beach:"sand", school:"school", university:"school", tafe:"school", childcare:"child", library:"library", aquatic:"pool", recreation:"pool", sport:"track", stadium:"stadium", shopping:"shop", regional_shopping:"shop", train:"train", bus:"bus", hospital:"hospital", medical:"medical", golf:"golf", airport:"plane", city:"city", community:"hall", landmark:"star", other:"star" };
 const ICON_CHOICES = [["park","Park"],["pine","Reserve / bushland"],["picnic","Gardens / picnic"],["lake","Lake / wetland"],["sand","Beach"],["lounger","Beach / pool club"],["palm","Foreshore"],["school","School / uni"],["child","Childcare"],["library","Library"],["book","Books / learning"],["pool","Pool / leisure centre"],["swim","Swimming pool"],["sport","Playground / sport"],["track","Oval / track"],["field","Sports field"],["stadium","Stadium"],["arts","Arena / arts centre"],["racing","Racecourse"],["golf","Golf"],["shop","Shopping centre"],["mall","Shops / retail"],["bag","Shop"],["train","Train station"],["bus","Bus"],["hospital","Hospital"],["medical","Medical"],["hall","Community / hall"],["govt","Civic / government"],["civic","Town hall"],["gazebo","Pavilion"],["lookout","Lookout"],["beach","Beach (umbrella)"],["plane","Airport"],["city","City"],["star","Other"]];
 const NAME_ICON = [[/golf/i,"golf"],[/racecourse|turf club|raceway/i,"racing"],[/station/i,"train"],[/hospital/i,"hospital"],[/medical|clinic|health/i,"medical"],[/library/i,"library"],[/stadium|arena/i,"stadium"],[/aquatic|leisure|recreation centre|swim/i,"pool"],[/oval|sports? ground|reserve.*oval/i,"track"],[/beach/i,"sand"],[/lake|wetland|swamp|river/i,"lake"],[/foreshore/i,"palm"],[/lookout/i,"lookout"],[/playground/i,"sport"],[/early learning|childcare|child care|kindergarten|kindy|daycare/i,"child"],[/school|college|university|tafe|campus|montessori|grammar/i,"school"],[/shopping|plaza|westfield|forum|centro|marketplace|shopping city|village|dfo|outlet|homemaker|boulevard/i,"shop"],[/community centre|hall|club ?house/i,"hall"],[/gardens/i,"park"],[/bushland|nature reserve|regional park|reserve/i,"pine"],[/park/i,"park"]];
 function iconForPlace(name, cat){ for (const [re, ic] of NAME_ICON) if (re.test(name||"")) return ic; return CAT_ICON[cat] || "star"; }
@@ -823,6 +827,9 @@ function tidySides(p){
   const done = house ? [house] : [];
   for (const pin of list){ if (!pin.layoutLocked) place(pin, done.map(q=>pinParts(p,q))); done.push(pin); }
   for (let it=0; it<2; it++) for (const pin of list){ if (pin.layoutLocked) continue; place(pin, p.pins.filter(q=>q!==pin).map(q=>pinParts(p,q))); }
+  // flag anything still overlapping so the editor can drop a place (the finals never have overlapping labels)
+  p.pins.forEach(a=>{ a.clash = false; });
+  for (const a of p.pins) for (const b of p.pins){ if (a===b) continue; let o=0; for (const x of pinParts(p,a)) for (const y of pinParts(p,b)) { const ox = Math.min(x[2],y[2])-Math.max(x[0],y[0]), oy = Math.min(x[3],y[3])-Math.max(x[1],y[1]); if (ox > 6*s && oy > 6*s) o++; } if (o){ a.clash = b.clash = true; } }
 }
 
 // ================= scene =================
@@ -1320,6 +1327,8 @@ function refreshPinsTab(){
       }
     }
     s3.querySelector("#plCount").textContent = `${on} on photo`;
+    const cl = p.pins.filter(x=>x.clash && !x.house).map(x=>x.name);
+    if (cl.length) s3.appendChild(el(`<p class="warn">Labels overlap: ${escapeHtml(cl.join(", "))}. Untick one, or drag a pin to a clear spot. The finals never have overlapping labels.</p>`));
     fi.oninput = ()=>{ placeFilter = fi.value; const pos = fi.selectionStart; refreshPinsTab(); const n=$("plFilter"); n.focus(); n.setSelectionRange(pos,pos); };
     s3.appendChild(list);
     const ar = el(`<div class="row"><button class="btn wide" id="plRe">Re-place pins</button><button class="btn ghost" id="plClear" style="color:var(--danger)">Clear pins</button></div>`);
@@ -1671,12 +1680,15 @@ function parseJobFile(text){
     if (typeof o.lat !== "number" || !Array.isArray(o.pins)) throw new Error("This JSON has no property position or pins.");
     j = { address:o.address||"Property", lat:o.lat, lng:o.lng, places:o.pins.map(q=>({ name:q.name, cat:q.cat||"other", lat:q.lat, lng:q.lng, desc:q.desc||"", school:q.school||"" })) };
   } else {
-    const pm = tt.match(/var\s+PROP\s*=\s*(\[[^\]]+\])/), mm = tt.match(/var\s+M\s*=\s*(\[[\s\S]*?\]);\s*\n/);
-    if (!pm || !mm) throw new Error("That file isn't one of our amenity maps.");
-    const prop = JSON.parse(pm[1]), M = JSON.parse(mm[1]);
-    const am = tt.match(/<div class="addr">([\s\S]*?)<\/div>/);
+    // both amenity-map generations: "var PROP=[..]; var M=[..]" and "const P=[..], ITEMS=[..]"
+    const arrAfter = re => { const m = re.exec(tt); if (!m) return null; let i = m.index + m[0].length - 1, d = 0, q = null;
+      for (let k=i; k<tt.length; k++){ const ch = tt[k]; if (q){ if (ch === "\\"){ k++; continue; } if (ch === q) q = null; continue; } if (ch === '"' || ch === "'"){ q = ch; continue; } if (ch === "[") d++; else if (ch === "]"){ d--; if (!d) return tt.slice(i, k+1); } } return null; };
+    const ps = arrAfter(/\b(?:PROP|P)\s*=\s*\[/), ms = arrAfter(/\b(?:M|ITEMS|PINS|PLACES)\s*=\s*\[/);
+    if (!ps || !ms) throw new Error("That file isn't one of our amenity maps.");
+    const prop = JSON.parse(ps), M = JSON.parse(ms);
+    const am = tt.match(/<div class="addr">([\s\S]*?)<\/div>/) || tt.match(/<title>([^<–-]+?)\s*[–-]/);
     j = { address: am ? decodeEntities(am[1]).trim() : "Property", lat:prop[0], lng:prop[1],
-      places: M.map(q=>({ name:decodeEntities(q.name), cat:q.cat||"other", lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
+      places: M.map(q=>({ name:decodeEntities(q.name), cat:q.cat||q.type||"other", lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
   }
   const seen = new Set();
   j.places = j.places.filter(q=>q.name && isFinite(q.lat) && isFinite(q.lng)).map(q=>{ const g = geoDist(j.lat, j.lng, q.lat, q.lng); let key = q.name.toLowerCase(); while (seen.has(key)) key += "+"; seen.add(key); return Object.assign(q, { key, dist:g.d, dir:g.dir, icon:iconForPlace(q.name, q.cat) }); }).sort((a,b)=>a.dist-b.dist);
@@ -1790,7 +1802,7 @@ new ResizeObserver(()=>{ if (!userMoved) fit(); else requestDraw(); }).observe(s
   if (document.fonts) document.fonts.ready.then(()=>{ const q=P(); if (q) tidySides(q); requestDraw(); });
 })();
 // read-only hook for automated checks
-window.__bae = { imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { w:p.w, h:p.h, cam:p.cam, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house })) }; } };
+window.__bae = { imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { w:p.w, h:p.h, cam:p.cam, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
 
 })();
 </script>
