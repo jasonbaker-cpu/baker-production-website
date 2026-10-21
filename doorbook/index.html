@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#17573F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Doorbook">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<title>Jordan's Doorbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Layout: one-column field app, bottom tab bar, big thumb targets for use on the street */
+:root{
+  --bg:#F1F4F1; --surface:#FFFFFF; --ink:#13201A; --muted:#5E6D65; --line:#D9E0DB;
+  --brand:#17573F; --brand-ink:#FFFFFF; --brand-soft:#E1EEE7;
+  --sign:#F3C33A; --sign-ink:#2A2208;
+  --late:#C2412D; --late-soft:#FBE7E3; --today:#A86A00; --today-soft:#FCF0D6;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1613; --surface:#18221D; --ink:#E8EFEA; --muted:#93A39A; --line:#2A3730;
+  --brand:#5CC49A; --brand-ink:#08130E; --brand-soft:#1D3229;
+  --sign:#F3C33A; --sign-ink:#2A2208;
+  --late:#FF8A73; --late-soft:#3A1E19; --today:#F2B544; --today-soft:#3A2D12; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1613; --surface:#18221D; --ink:#E8EFEA; --muted:#93A39A; --line:#2A3730;
+  --brand:#5CC49A; --brand-ink:#08130E; --brand-soft:#1D3229;
+  --sign:#F3C33A; --sign-ink:#2A2208;
+  --late:#FF8A73; --late-soft:#3A1E19; --today:#F2B544; --today-soft:#3A2D12; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px)}
+body{margin:0}
+#gate{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+#gate .card{max-width:380px;width:100%;text-align:center;align-items:center}
+#gate h1{font-size:42px}
+.linkbtn{background:none;border:0;color:var(--brand);font-weight:600;padding:4px;text-decoration:underline}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 calc(92px + env(safe-area-inset-bottom,0px))}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:18px;padding-block:18px 8px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:.01em}
+h1{font-size:34px;line-height:1;font-weight:800;text-transform:uppercase}
+h2{font-size:22px;font-weight:700;text-transform:uppercase}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.muted{color:var(--muted)}
+.num{font-family:var(--display);font-variant-numeric:tabular-nums}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--sign);outline-offset:2px}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.plate{background:var(--sign);color:var(--sign-ink);font-family:var(--display);font-weight:800;font-size:13px;
+  letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;border-radius:3px;white-space:nowrap}
+.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-family:var(--display);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.stat.alert b{color:var(--late)}
+
+/* follow-up rows */
+.list{display:flex;flex-direction:column;gap:10px}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.row-head{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.row-head > div{min-width:0}
+.who{font-weight:600;font-size:17px}
+.addr{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+.task{display:flex;align-items:center;gap:8px;font-weight:600;flex-wrap:wrap}
+.pill{font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;white-space:nowrap;text-transform:uppercase;letter-spacing:.05em}
+.pill.late{background:var(--late-soft);color:var(--late)}
+.pill.today{background:var(--today-soft);color:var(--today)}
+.pill.soon{background:var(--brand-soft);color:var(--brand)}
+.grade{font-family:var(--display);font-weight:800;font-size:18px;width:32px;height:32px;border-radius:6px;display:grid;place-items:center;flex:none}
+.g-A{background:var(--sign);color:var(--sign-ink)}
+.g-B{background:var(--brand-soft);color:var(--brand)}
+.g-C{background:var(--line);color:var(--muted)}
+.template{background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px;font-size:14px;user-select:text}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:10px 14px;font-weight:600;min-height:44px}
+.btn.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.btn.sign{background:var(--sign);color:var(--sign-ink);border-color:var(--sign)}
+.btn.danger{color:var(--late)}
+.btn.grow{flex:1}
+.phone{font-variant-numeric:tabular-nums;font-weight:600;color:var(--brand);text-decoration:none}
+
+.empty{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--muted)}
+.empty strong{display:block;color:var(--ink);font-size:17px;margin-bottom:4px}
+
+/* knock counters */
+.counters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.counter{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.counter .big{font-family:var(--display);font-size:52px;font-weight:800;line-height:.9;font-variant-numeric:tabular-nums}
+.counter .of{font-size:13px;color:var(--muted);line-height:1.25}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--brand);border-radius:99px;transition:width .25s}
+.bar.hit i{background:var(--sign)}
+.tap{display:grid;grid-template-columns:34px 1fr;gap:6px}
+.tap .plus{background:var(--brand);color:var(--brand-ink);border:0;border-radius:10px;font-family:var(--display);font-size:26px;font-weight:800;min-height:56px}
+.tap .minus{background:transparent;border:1px solid var(--line);border-radius:10px;font-size:22px;color:var(--muted)}
+
+form.card,.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+input,select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:11px 12px;font-size:16px;text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink);width:100%}
+textarea{min-height:70px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:8px 14px;font-weight:600;min-height:40px;font-size:15px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.hint{font-size:13px;color:var(--muted)}
+
+/* score */
+.score{display:flex;flex-direction:column;gap:14px}
+.metric{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:baseline}
+.metric .label{font-weight:600}
+.metric .val{font-family:var(--display);font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.metric .bar{grid-column:1/-1}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:120px}
+.day{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.day .pair{display:flex;gap:3px;align-items:flex-end;height:80%;width:100%;justify-content:center}
+.day i{width:45%;max-width:16px;border-radius:3px 3px 0 0;min-height:2px}
+.day i.d{background:var(--brand)}
+.day i.c{background:var(--sign)}
+.day.now small{color:var(--ink);font-weight:600}
+.legend{display:flex;gap:14px;font-size:13px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;background:var(--brand)}
+.legend span.c::before{background:var(--sign)}
+.outcomes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.outcomes .btn{width:100%}
+.callback{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+.src{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.day small{font-size:11px;color:var(--muted);text-transform:uppercase}
+.day b{font-size:12px;font-variant-numeric:tabular-nums}
+
+/* nav */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);z-index:5;
+  display:grid;grid-template-columns:repeat(5,1fr);
+  padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px));
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs button{background:none;border:0;padding:10px 4px 12px;display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);position:relative}
+nav.tabs button svg{width:24px;height:24px}
+nav.tabs button[aria-current="page"]{color:var(--brand)}
+nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:0;left:25%;right:25%;height:3px;background:var(--brand);border-radius:0 0 3px 3px}
+.badge{position:absolute;top:6px;right:calc(50% - 22px);background:var(--late);color:#fff;font-family:var(--body);font-size:11px;font-weight:600;min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center;padding:0 5px}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(10,16,13,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg);width:100%;max-width:600px;max-height:88vh;overflow:auto;border-radius:18px 18px 0 0;
+  padding:18px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+  display:flex;flex-direction:column;gap:14px}
+.hist{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.hist div{display:grid;grid-template-columns:78px 1fr;gap:8px}
+.hist time{color:var(--muted);font-variant-numeric:tabular-nums}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);
+  padding:10px 16px;border-radius:99px;font-weight:600;z-index:30;font-size:14px;max-width:calc(100% - 32px);text-align:center}
+.daygroup{display:flex;flex-direction:column;gap:8px}
+.daygroup h3{font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.note-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px}
+.note-who{font-weight:600;color:var(--brand);background:none;border:0;padding:0;text-align:left;font-size:14px}
+.note-text{white-space:pre-wrap;overflow-wrap:anywhere}
+.k-door{background:var(--brand-soft);color:var(--brand)}
+.k-call{background:var(--today-soft);color:var(--today)}
+.k-note{background:var(--line);color:var(--ink)}
+.k-mine{background:var(--sign);color:var(--sign-ink)}
+.store-note{font-size:12px;color:var(--muted);text-align:center}
+section[hidden]{display:none}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow" id="dateline">Today</div>
+      <h1>Doorbook</h1>
+    </div>
+    <span class="plate">Jordan London</span>
+  </header>
+
+  <!-- TODAY -->
+  <section id="v-today" aria-labelledby="h-today">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div class="strip">
+        <div class="stat" id="st-due"><b>0</b><span>Due now</span></div>
+        <div class="stat"><b id="st-doors">0</b><span>Doors · calls</span></div>
+        <div class="stat"><b id="st-week">0</b><span>Done this wk</span></div>
+      </div>
+      <h2 id="h-today">Follow up first</h2>
+      <div class="list" id="due-list"></div>
+      <h2>Coming up</h2>
+      <div class="list" id="soon-list"></div>
+    </div>
+  </section>
+
+  <!-- KNOCK -->
+  <section id="v-knock" hidden aria-labelledby="h-knock">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <h2 id="h-knock">Prospecting today</h2>
+      <div class="counters">
+        <div class="counter">
+          <span class="eyebrow">Doors</span>
+          <span class="big" id="c-doors">0</span>
+          <span class="of" id="c-doors-of">of 50 target</span>
+          <div class="bar" id="b-doors"><i style="width:0"></i></div>
+          <div class="tap"><button class="minus" data-adj="doors:-1" aria-label="Remove a door">−</button><button class="plus" data-adj="doors:1" aria-label="Add a door">+1</button></div>
+        </div>
+        <div class="counter">
+          <span class="eyebrow">Chats</span>
+          <span class="big" id="c-convos">0</span>
+          <span class="of">real conversations</span>
+          <div class="bar" id="b-convos"><i style="width:0"></i></div>
+          <div class="tap"><button class="minus" data-adj="convos:-1" aria-label="Remove a chat">−</button><button class="plus" data-adj="convos:1" aria-label="Add a chat">+1</button></div>
+        </div>
+        <div class="counter">
+          <span class="eyebrow">Calls</span>
+          <span class="big" id="c-calls">0</span>
+          <span class="of"><span id="c-connects">0</span> spoke to</span>
+          <div class="bar" id="b-calls"><i style="width:0"></i></div>
+          <div class="tap"><button class="minus" data-adj="calls:-1" aria-label="Remove a call">−</button><button class="plus" data-adj="calls:1" aria-label="Add a call">+1</button></div>
+        </div>
+      </div>
+      <div class="hint">Calls to leads count themselves when you log the outcome. Use +1 for cold calls.</div>
+
+      <form class="card" id="lead-form" autocomplete="off">
+        <h2>Log a new lead</h2>
+        <div class="hint">Log it straight away, at the door or after the call. Saving books the follow-ups.</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span class="eyebrow">Where from?</span>
+          <div class="chips" id="f-src">
+            <button type="button" class="chip" data-s="door" aria-pressed="true">Door</button>
+            <button type="button" class="chip" data-s="call" aria-pressed="false">Call</button>
+            <button type="button" class="chip" data-s="open" aria-pressed="false">Open home</button>
+            <button type="button" class="chip" data-s="referral" aria-pressed="false">Referral</button>
+          </div>
+        </div>
+        <label for="f-name">Name<input id="f-name" placeholder="e.g. Sarah"></label>
+        <label for="f-addr">Address<input id="f-addr" placeholder="e.g. 14 Banksia St"></label>
+        <label for="f-phone">Mobile<input id="f-phone" type="tel" inputmode="tel" placeholder="04xx xxx xxx"></label>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span class="eyebrow">How soon could they move?</span>
+          <div class="chips" id="f-grade">
+            <button type="button" class="chip" data-g="A" aria-pressed="false">A · under 3 months</button>
+            <button type="button" class="chip" data-g="B" aria-pressed="true">B · 3 to 12 months</button>
+            <button type="button" class="chip" data-g="C" aria-pressed="false">C · later</button>
+          </div>
+        </div>
+        <label for="f-notes">Notes<textarea id="f-notes" placeholder="Kids, renos, why they'd move, what they asked"></textarea></label>
+        <button class="btn primary" type="submit">Save and book follow-ups</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- LEADS -->
+  <section id="v-leads" hidden aria-labelledby="h-leads">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <h2 id="h-leads">All leads</h2>
+      <input id="search" type="search" placeholder="Search name or street" aria-label="Search leads">
+      <div class="chips" id="filter">
+        <button class="chip" data-f="all" aria-pressed="true">All</button>
+        <button class="chip" data-f="A" aria-pressed="false">A</button>
+        <button class="chip" data-f="B" aria-pressed="false">B</button>
+        <button class="chip" data-f="C" aria-pressed="false">C</button>
+        <button class="chip" data-f="appraisal" aria-pressed="false">Appraisals</button>
+        <button class="chip" data-f="closed" aria-pressed="false">Closed</button>
+      </div>
+      <div class="list" id="lead-list"></div>
+    </div>
+  </section>
+
+  <!-- SCORE -->
+  <section id="v-score" hidden aria-labelledby="h-score">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <h2 id="h-score">This week</h2>
+      <div class="card score" id="score"></div>
+      <div class="card">
+        <span class="eyebrow">Doors and calls, last 7 days</span>
+        <div class="legend"><span>Doors</span><span class="c">Calls</span></div>
+        <div class="days" id="days"></div>
+      </div>
+      <div class="card">
+        <span class="eyebrow">The rules</span>
+        <div class="hist" style="gap:8px">
+          <div><b>Knock</b><span>Tue and Thu 3:30 to 5:30pm, Sat 10am to 12pm. 50 doors a session.</span></div>
+          <div><b>Log</b><span>Every chat gets logged at the door. No lead without a next date.</span></div>
+          <div><b>Call</b><span>Every call gets an outcome. No answer tries again tomorrow, a message tries again in 2 days.</span></div>
+          <div><b>Follow up</b><span>30 minutes each morning, before email. Clear the Today list.</span></div>
+          <div><b>Review</b><span>Check these numbers every Friday.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTES -->
+  <section id="v-notes" hidden aria-labelledby="h-notes">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <h2 id="h-notes">Notes</h2>
+      <form class="card" id="note-form" autocomplete="off">
+        <label for="n-text">Jot something down<textarea id="n-text" placeholder="e.g. Jarrah Rd: three homes mid-reno, knock again in Feb"></textarea></label>
+        <button class="btn primary" type="submit">Save note</button>
+      </form>
+      <input id="n-search" type="search" placeholder="Search notes, names or streets" aria-label="Search notes">
+      <div class="chips" id="n-filter">
+        <button class="chip" data-nf="all" aria-pressed="true">All</button>
+        <button class="chip" data-nf="lead" aria-pressed="false">Lead notes</button>
+        <button class="chip" data-nf="call" aria-pressed="false">Calls</button>
+        <button class="chip" data-nf="mine" aria-pressed="false">My notes</button>
+      </div>
+      <div class="list" id="note-list"></div>
+    </div>
+  </section>
+
+  <p class="store-note" id="store-note"></p>
+</div>
+
+<nav class="tabs" aria-label="Sections">
+  <button data-tab="today" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M8 14l2.5 2.5L16 12"/></svg>Today<span class="badge" id="nav-badge" hidden>0</span></button>
+  <button data-tab="knock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"/><path d="M2 21h20"/><circle cx="15" cy="12" r="1.2" fill="currentColor"/></svg>Prospect</button>
+  <button data-tab="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.8c1.6.8 2.7 2.6 3 5.2"/></svg>Leads</button>
+  <button data-tab="score"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V11M10 20V5M16 20v-7M22 20H2"/></svg>Score</button>
+  <button data-tab="notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h5"/></svg>Notes</button>
+</nav>
+
+<div id="sheet-root"></div>
+<div id="gate">
+  <div class="card">
+    <span class="plate">Jordan London</span>
+    <h1>Doorbook</h1>
+    <p class="muted" style="margin:0">Doors, calls, follow-ups and notes. Sign in to open your leads.</p>
+    <button class="btn primary" id="signin" style="width:100%">Sign in with Google</button>
+    <p class="hint" id="gate-msg" style="margin:0" role="status"></p>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+// ---------- constants ----------
+const TARGET = {doorsSession:50, doorsWeek:150, convosWeek:20, callsDay:10, callsWeek:30, connectsWeek:10, apprWeek:2};
+const SRC = {door:"Door", call:"Call", open:"Open home", referral:"Referral"};
+const STEPS = [
+  {label:"Send thank-you text", off:1, tpl:(f)=>`Hi ${f}, it's Jordan London. Great to meet you at your door today. If you ever want to know what your place is worth, just text me. Cheers, Jordan`},
+  {label:"Send something useful", off:3, tpl:(f)=>`Hi ${f}, Jordan here. A home near you just sold and I thought you'd want to know what it went for. Happy to send the details or do a free appraisal any time.`},
+  {label:"Phone call", off:7},
+];
+const CHECKIN = {A:7, B:30, C:60};
+const STATUS = {active:"Active", appraisal:"Appraisal booked", closed:"Closed"};
+
+// ---------- dates ----------
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const addDays=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return ymd(d)};
+const today=()=>ymd(new Date());
+const maxDate=(a,b)=>a>b?a:b;
+const weekStart=()=>{const d=new Date();const wd=(d.getDay()+6)%7;d.setDate(d.getDate()-wd);return ymd(d)};
+const fmtShort=s=>parse(s).toLocaleDateString("en-AU",{day:"numeric",month:"short"});
+const fmtDay=s=>parse(s).toLocaleDateString("en-AU",{weekday:"short"});
+const daysBetween=(a,b)=>Math.round((parse(b)-parse(a))/86400000);
+
+// ---------- state ----------
+const state={leads:new Map(), days:new Map(), tab:"today", filter:"all", q:"", grade:"B", src:"door", openId:null, notes:new Map(), nf:"all", nq:""};
+let store=null; // {saveLead, deleteLead, saveDay, mode}
+
+// ---------- storage (Firebase, signed-in users only) ----------
+const FB_CONFIG={apiKey:"AIzaSyC0ES1GZsgtl4_vC6Dpp-4aG-Iy4DtXlCE",authDomain:"baker-leads.firebaseapp.com",projectId:"baker-leads",
+  storageBucket:"baker-leads.firebasestorage.app",messagingSenderId:"544396406010",appId:"1:544396406010:web:9e7289e545fa0a0c8a6d43"};
+// Who can open Doorbook. Firestore rules must list the same emails (see README in this folder).
+const ALLOW=["admin@bakerproduction.com","jasonbaker@bakerproduction.com"];
+const COL={leads:"doorbook_leads",days:"doorbook_days",notes:"doorbook_notes"};
+const FBV="https://www.gstatic.com/firebasejs/10.12.2/";
+const noopStore={saveLead:async()=>{},deleteLead:async()=>{},saveDay:async()=>{},saveNote:async()=>{},deleteNote:async()=>{}};
+function fbStore(F,db){
+  const chains=new Map();
+  const queue=(key,fn)=>{const p=(chains.get(key)||Promise.resolve()).then(fn,fn).catch(e=>{toast(e&&e.code==="permission-denied"?"Not saved: this account doesn't have write access.":"Couldn't save. Check your connection.")});chains.set(key,p);return p};
+  const denied=e=>note(e&&e.code==="permission-denied"?"This account can't read Doorbook data yet. Check the Firestore rules.":"Sync paused. Reopen the app to reconnect.");
+  F.onSnapshot(F.collection(db,COL.leads),snap=>{const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));state.leads=m;render()},denied);
+  F.onSnapshot(F.collection(db,COL.days),snap=>{const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));if(pendingDay)m.set(pendingDay.d,pendingDay.v);state.days=m;render()},denied);
+  F.onSnapshot(F.collection(db,COL.notes),snap=>{const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));state.notes=m;render()},denied);
+  const set=(c,id,v)=>F.setDoc(F.doc(db,c,id),v), del=(c,id)=>F.deleteDoc(F.doc(db,c,id));
+  return {
+    saveLead:(id,l)=>{state.leads.set(id,l);render();return queue("l/"+id,()=>set(COL.leads,id,l))},
+    deleteLead:(id)=>{state.leads.delete(id);render();return queue("l/"+id,()=>del(COL.leads,id))},
+    saveDay:(d,v)=>{state.days.set(d,v);return queue("d/"+d,()=>set(COL.days,d,v))},
+    saveNote:(id,n)=>{state.notes.set(id,n);render();return queue("n/"+id,()=>set(COL.notes,id,n))},
+    deleteNote:(id)=>{state.notes.delete(id);render();return queue("n/"+id,()=>del(COL.notes,id))}};
+}
+
+// ---------- lead logic ----------
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const first=l=>(l.name||"").trim().split(/\s+/)[0]||"there";
+function stepLabel(l){return l.step<STEPS.length?STEPS[l.step].label:"Check-in call"}
+function nextDueAfter(l,doneStep){
+  const t=today();const s=doneStep+1;
+  if(s<STEPS.length) return maxDate(addDays(l.created,STEPS[s].off),addDays(t,1));
+  return addDays(t,CHECKIN[l.grade]||30);
+}
+function dueClass(due){const t=today();return due<t?"late":due===t?"today":"soon"}
+function dueText(due){const t=today();const n=daysBetween(t,due);
+  if(n<0) return n===-1?"1 day late":`${-n} days late`; if(n===0) return "Today"; if(n===1) return "Tomorrow"; return fmtShort(due)}
+function isOpen(l){return l.status!=="closed"}
+const isCallStep=l=>l.step>=2;
+
+async function completeStep(id){
+  const l={...state.leads.get(id)};const done=l.step;
+  l.history=[...(l.history||[]),{d:today(),t:"done",n:stepLabel(l)}];
+  l.nextDue=nextDueAfter(l,done);l.step=done+1;l.attempts=0;
+  await store.saveLead(id,l);toast(`Done. Next: ${stepLabel(l)}, ${dueText(l.nextDue).toLowerCase()}.`);
+}
+async function logCall(id,outcome,cbDate){
+  const l={...state.leads.get(id)};const t=today();const h=[...(l.history||[])];
+  const bump={calls:1};if(outcome==="spoke"||outcome==="callback")bump.connects=1;
+  adjustMany(bump);
+  if(outcome==="spoke"){
+    h.push({d:t,t:"call",n:"Call: spoke"});
+    if(isCallStep(l)||l.nextDue<=t){h.push({d:t,t:"done",n:stepLabel(l)});l.nextDue=nextDueAfter(l,l.step);l.step=l.step+1}
+    l.attempts=0;l.history=h;await store.saveLead(id,l);toast(`Logged. Next: ${stepLabel(l)}, ${dueText(l.nextDue).toLowerCase()}.`);return}
+  if(outcome==="noanswer"||outcome==="message"){
+    l.attempts=(l.attempts||0)+1;h.push({d:t,t:"call",n:outcome==="noanswer"?"Call: no answer":"Call: left a message"});
+    l.nextDue=addDays(t,outcome==="noanswer"?1:2);l.history=h;await store.saveLead(id,l);
+    toast(l.attempts>=3?"3 tries now. Send a text tomorrow instead.":`Logged. Trying again ${dueText(l.nextDue).toLowerCase()}.`);return}
+  if(outcome==="callback"){
+    if(!cbDate||cbDate<t){toast("Pick the day they asked you to call back.");adjustMany({calls:-1,connects:-1});return}
+    h.push({d:t,t:"call",n:`Call: asked to call back ${fmtShort(cbDate)}`});l.nextDue=cbDate;l.attempts=0;l.history=h;
+    await store.saveLead(id,l);toast(`Call back booked for ${fmtShort(cbDate)}.`);return}
+  if(outcome==="notint"){
+    h.push({d:t,t:"call",n:"Call: not interested"});h.push({d:t,t:"closed",n:"Lead closed"});l.status="closed";l.history=h;
+    await store.saveLead(id,l);toast("Logged and closed.");return}
+}
+async function snooze(id){const l={...state.leads.get(id)};l.nextDue=addDays(maxDate(l.nextDue,today()),1);await store.saveLead(id,l);toast("Moved to tomorrow.")}
+async function bookAppraisal(id){const l={...state.leads.get(id)};l.status="appraisal";l.grade="A";
+  l.history=[...(l.history||[]),{d:today(),t:"appraisal",n:"Appraisal booked"}];await store.saveLead(id,l);toast("Appraisal booked. Nice work.")}
+
+// ---------- counters ----------
+let pendingDay=null,dayTimer=null;
+function dayVal(d){return {doors:0,convos:0,calls:0,connects:0,...(state.days.get(d)||{})}}
+function adjust(key,delta){adjustMany({[key]:delta})}
+function adjustMany(deltas){
+  const d=today();const v={...dayVal(d)};for(const k in deltas)v[k]=Math.max(0,(v[k]||0)+deltas[k]);
+  state.days.set(d,v);pendingDay={d,v};render();
+  clearTimeout(dayTimer);dayTimer=setTimeout(()=>{const p=pendingDay;pendingDay=null;store.saveDay(p.d,p.v)},700);
+}
+
+// ---------- render ----------
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const smsHref=(phone,body)=>`sms:${phone.replace(/[^\d+]/g,"")}${body?`?&body=${encodeURIComponent(body)}`:""}`;
+const where=l=>[l.address,SRC[l.source||"door"]].filter(Boolean).join(" · ");
+function followRow(id,l,withActions){
+  const cls=dueClass(l.nextDue);const tpl=l.step<STEPS.length&&STEPS[l.step].tpl?STEPS[l.step].tpl(first(l)):null;
+  return `<article class="row" data-open="${id}">
+    <div class="row-head"><div><div class="who">${esc(l.name||"No name")}</div><div class="addr">${esc(where(l))}</div></div><span class="grade g-${l.grade}">${l.grade}</span></div>
+    <div class="task"><span>${esc(stepLabel(l))}</span><span class="pill ${cls}">${dueText(l.nextDue)}</span>${l.attempts?`<span class="pill soon">Try ${l.attempts+1}</span>`:""}</div>
+    ${withActions&&l.phone?`<div><a class="phone" href="tel:${esc(l.phone.replace(/\s/g,""))}">${esc(l.phone)}</a></div>`:""}
+    ${withActions&&tpl?`<div class="template">${esc(tpl)}</div>`:""}
+    ${withActions&&isCallStep(l)?`${l.attempts>=3?`<div class="hint">No luck after ${l.attempts} tries. Send a text, then tap Texted.</div>`:""}
+      <div class="outcomes">
+      <button class="btn primary" data-act="call" data-o="spoke" data-id="${id}">Spoke</button>
+      <button class="btn" data-act="call" data-o="noanswer" data-id="${id}">No answer</button>
+      <button class="btn" data-act="call" data-o="message" data-id="${id}">Left message</button>
+      ${l.attempts>=2?`<button class="btn" data-act="done" data-id="${id}">Texted</button>`:`<button class="btn" data-open-btn="${id}">Call back…</button>`}</div>`:""}
+    ${withActions&&!isCallStep(l)?`<div class="actions">
+      <button class="btn primary grow" data-act="done" data-id="${id}">Done</button>
+      ${tpl&&l.phone?`<a class="btn sign" style="text-decoration:none;display:inline-flex;align-items:center" href="${smsHref(l.phone,tpl)}">Text them</a>`:""}
+      ${tpl?`<button class="btn" data-act="copy" data-id="${id}">Copy</button>`:""}
+      <button class="btn" data-act="snooze" data-id="${id}">Tomorrow</button></div>
+      ${tpl?`<span class="hint">${l.phone?"Text them opens Messages with this filled in.":"No number saved, so copy it and paste it into Messages."} Tap Done once it's sent.</span>`:""}`:""}
+  </article>`;
+}
+
+function render(){
+  const t=today();
+  $("#dateline").textContent=new Date().toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long"});
+  const open=[...state.leads].filter(([,l])=>isOpen(l));
+  const due=open.filter(([,l])=>l.nextDue<=t).sort((a,b)=>a[1].nextDue.localeCompare(b[1].nextDue)||(a[1].grade.localeCompare(b[1].grade)));
+  const soon=open.filter(([,l])=>l.nextDue>t&&l.nextDue<=addDays(t,7)).sort((a,b)=>a[1].nextDue.localeCompare(b[1].nextDue));
+  const ws=weekStart();
+  let doneWk=0,apprWk=0;
+  state.leads.forEach(l=>(l.history||[]).forEach(h=>{if(h.d>=ws){if(h.t==="done")doneWk++;if(h.t==="appraisal")apprWk++}}));
+  const tv=dayVal(t);
+
+  // today
+  $("#st-due b").textContent=due.length;$("#st-due").classList.toggle("alert",due.some(([,l])=>l.nextDue<t));
+  $("#st-doors").textContent=`${tv.doors} · ${tv.calls}`;$("#st-week").textContent=doneWk;
+  const badge=$("#nav-badge");badge.hidden=!due.length;badge.textContent=due.length;
+  $("#due-list").innerHTML=due.length?due.map(([id,l])=>followRow(id,l,true)).join(""):
+    (state.leads.size?`<div class="empty"><strong>All clear</strong>Every follow-up due today is done. Go knock.</div>`:
+    `<div class="empty"><strong>No leads yet</strong>Log a chat on the Knock tab and its follow-ups land here on the right day.</div>`);
+  $("#soon-list").innerHTML=soon.length?soon.map(([id,l])=>followRow(id,l,false)).join(""):`<div class="empty">Nothing booked for the next 7 days.</div>`;
+
+  // knock
+  $("#c-doors").textContent=tv.doors;$("#c-convos").textContent=tv.convos;
+  const pd=Math.min(100,tv.doors/TARGET.doorsSession*100);
+  $("#b-doors i").style.width=pd+"%";$("#b-doors").classList.toggle("hit",pd>=100);
+  $("#b-convos i").style.width=Math.min(100,tv.convos/7*100)+"%";
+  $("#c-calls").textContent=tv.calls;$("#c-connects").textContent=tv.connects;
+  {const pc=Math.min(100,tv.calls/TARGET.callsDay*100);$("#b-calls i").style.width=pc+"%";$("#b-calls").classList.toggle("hit",pc>=100)}
+  $("#c-doors-of").textContent=tv.doors>=TARGET.doorsSession?"Target hit":`of ${TARGET.doorsSession} target`;
+
+  // leads
+  const q=state.q.toLowerCase();
+  const list=[...state.leads].filter(([,l])=>{
+    if(q&&!((l.name||"")+" "+(l.address||"")+" "+(l.phone||"")).toLowerCase().includes(q))return false;
+    const f=state.filter;if(f==="all")return isOpen(l);if(f==="closed")return l.status==="closed";
+    if(f==="appraisal")return l.status==="appraisal";return isOpen(l)&&l.grade===f;
+  }).sort((a,b)=>a[1].grade.localeCompare(b[1].grade)||a[1].nextDue.localeCompare(b[1].nextDue));
+  $("#lead-list").innerHTML=list.length?list.map(([id,l])=>`<article class="row" data-open="${id}" tabindex="0" role="button">
+     <div class="row-head"><div><div class="who">${esc(l.name||"No name")}</div><div class="addr">${esc(where(l))}</div></div><span class="grade g-${l.grade}">${l.grade}</span></div>
+     <div class="task">${l.status==="closed"?`<span class="muted">Closed</span>`:`<span>${esc(stepLabel(l))}</span><span class="pill ${dueClass(l.nextDue)}">${dueText(l.nextDue)}</span>`}${l.status==="appraisal"?`<span class="pill soon">Appraisal</span>`:""}</div></article>`).join(""):
+    `<div class="empty">${state.leads.size?"No leads match.":"<strong>No leads yet</strong>They appear here once you log a door."}</div>`;
+
+  // score
+  let doorsWk=0,convosWk=0,callsWk=0,connWk=0;state.days.forEach((v,d)=>{if(d>=ws&&d<=t){doorsWk+=v.doors||0;convosWk+=v.convos||0;callsWk+=v.calls||0;connWk+=v.connects||0}});
+  const overdue=open.filter(([,l])=>l.nextDue<t).length;
+  const m=(label,val,target,extra)=>`<div class="metric"><span class="label">${label}</span><span class="val">${val}${target?`<span class="muted" style="font-size:16px"> / ${target}</span>`:""}</span>${target?`<div class="bar${val>=target?" hit":""}"><i style="width:${Math.min(100,val/target*100)}%"></i></div>`:""}${extra?`<span class="hint" style="grid-column:1/-1">${extra}</span>`:""}</div>`;
+  $("#score").innerHTML=m("Doors knocked",doorsWk,TARGET.doorsWeek)+m("Door conversations",convosWk,TARGET.convosWeek)+
+    m("Calls made",callsWk,TARGET.callsWeek)+m("Spoke to",connWk,TARGET.connectsWeek,callsWk?`${Math.round(connWk/callsWk*100)}% of calls picked up`:"")+
+    m("Follow-ups done",doneWk,0,overdue?`<span style="color:var(--late);font-weight:600">${overdue} overdue right now</span>`:"None overdue")+
+    m("Appraisals booked",apprWk,TARGET.apprWeek);
+  const last=[...Array(7)].map((_,i)=>addDays(t,i-6));const mx=Math.max(1,...last.map(d=>Math.max(dayVal(d).doors,dayVal(d).calls)));
+  $("#days").innerHTML=last.map(d=>{const v=dayVal(d);return `<div class="day${d===t?" now":""}" title="${v.doors} doors, ${v.calls} calls"><b>${v.doors+v.calls||""}</b><div class="pair"><i class="d" style="height:${v.doors/mx*100}%"></i><i class="c" style="height:${v.calls/mx*100}%"></i></div><small>${fmtDay(d)}</small></div>`}).join("");
+
+  renderNotes();
+  if(state.openId) renderSheet();
+}
+function noteEntries(){
+  const out=[];
+  state.leads.forEach((l,id)=>{
+    if(l.notes) out.push({kind:"door",label:`From the ${(SRC[l.source||"door"]||"door").toLowerCase()}`,d:l.created,ts:0,text:l.notes,lead:id,l});
+    (l.history||[]).forEach((h,i)=>{
+      if(h.t==="note") out.push({kind:"note",label:"Lead note",d:h.d,ts:i+1,text:h.n,lead:id,l});
+      else if(h.t==="call") out.push({kind:"call",label:"Call",d:h.d,ts:i+1,text:h.n.replace(/^Call: /,""),lead:id,l});
+    });
+  });
+  state.notes.forEach((n,id)=>out.push({kind:"mine",label:"My note",d:n.d,ts:n.ts||0,text:n.text,noteId:id}));
+  return out;
+}
+function renderNotes(){
+  const q=state.nq.toLowerCase(),f=state.nf;
+  const items=noteEntries().filter(e=>{
+    if(f==="lead"&&!(e.kind==="door"||e.kind==="note"))return false;
+    if(f==="call"&&e.kind!=="call")return false;
+    if(f==="mine"&&e.kind!=="mine")return false;
+    if(q){const hay=(e.text+" "+(e.l?(e.l.name||"")+" "+(e.l.address||""):"")).toLowerCase();if(!hay.includes(q))return false}
+    return true;
+  }).sort((a,b)=>b.d.localeCompare(a.d)||(b.kind==="mine"&&a.kind==="mine"?b.ts-a.ts:0));
+  const box=$("#note-list");
+  if(!items.length){box.innerHTML=`<div class="empty">${noteEntries().length?"No notes match.":"<strong>No notes yet</strong>Notes from doors, calls and leads collect here, newest first."}</div>`;return}
+  const groups=[];items.forEach(e=>{const g=groups[groups.length-1];if(g&&g.d===e.d)g.items.push(e);else groups.push({d:e.d,items:[e]})});
+  const t=today();
+  box.innerHTML=groups.map(g=>`<div class="daygroup"><h3>${g.d===t?"Today":g.d===addDays(t,-1)?"Yesterday":parse(g.d).toLocaleDateString("en-AU",{weekday:"short",day:"numeric",month:"short"})}</h3>
+    ${g.items.map(e=>`<div class="note">
+      <div class="note-meta"><span class="pill k-${e.kind}">${e.label}</span>
+        ${e.lead?`<button class="note-who" data-open-btn="${e.lead}">${esc(e.l.name||e.l.address||"Lead")}</button><span class="muted">${esc(e.l.name?e.l.address:"")}</span>`:""}</div>
+      <div class="note-text">${esc(e.text)}</div>
+      ${e.noteId?`<div><button class="btn danger" data-delnote="${e.noteId}" style="min-height:36px;padding:6px 12px;font-size:14px">${state.confirmNote===e.noteId?"Tap again to delete":"Delete"}</button></div>`:""}
+    </div>`).join("")}</div>`).join("");
+}
+
+function renderSheet(){
+  const root=$("#sheet-root");const id=state.openId;const l=state.leads.get(id);
+  if(!l){root.innerHTML="";state.openId=null;return}
+  const hist=(l.history||[]).slice().reverse();
+  root.innerHTML=`<div class="scrim" data-close="1"><div class="sheet" role="dialog" aria-modal="true" aria-label="Lead details">
+    <div class="row-head"><div><h2>${esc(l.name||"No name")}</h2><div class="addr">${esc(where(l))}</div></div><button class="btn" data-close="1" aria-label="Close">Close</button></div>
+    ${l.phone?`<div class="actions" style="align-items:center"><a class="phone" href="tel:${esc(l.phone.replace(/\s/g,""))}">${esc(l.phone)}</a><a class="btn sign" style="text-decoration:none;display:inline-flex;align-items:center" href="${smsHref(l.phone,"")}">Text</a><button class="btn" data-act="copyphone" data-id="${id}">Copy number</button></div>`:""}
+    <div class="card">
+      <span class="eyebrow">Next step</span>
+      ${isOpen(l)?`<div class="task"><span>${esc(stepLabel(l))}</span><span class="pill ${dueClass(l.nextDue)}">${dueText(l.nextDue)}</span></div>
+      <div class="actions"><button class="btn primary grow" data-act="done" data-id="${id}">Mark done</button><button class="btn" data-act="snooze" data-id="${id}">Tomorrow</button></div>`:`<span class="muted">Closed. No more follow-ups.</span>`}
+    </div>
+    ${isOpen(l)?`<div class="card"><span class="eyebrow">Log a call</span>
+      <div class="outcomes">
+        <button class="btn primary" data-act="call" data-o="spoke" data-id="${id}">Spoke</button>
+        <button class="btn" data-act="call" data-o="noanswer" data-id="${id}">No answer</button>
+        <button class="btn" data-act="call" data-o="message" data-id="${id}">Left message</button>
+        <button class="btn danger" data-act="call" data-o="notint" data-id="${id}">Not interested</button>
+      </div>
+      <div class="callback"><label for="s-cb">They asked me to call back on<input id="s-cb" type="date" min="${today()}" value="${addDays(today(),7)}"></label>
+        <button class="btn" data-act="call" data-o="callback" data-id="${id}">Book it</button></div>
+      <span class="hint">Works for any call: your follow-up, a call back, or they rang you.</span></div>`:""}
+    <div class="card"><span class="eyebrow">How soon could they move?</span>
+      <div class="chips">${["A","B","C"].map(g=>`<button class="chip" data-act="grade" data-g="${g}" data-id="${id}" aria-pressed="${l.grade===g}">${g}</button>`).join("")}</div>
+      <span class="hint">A gets a call every week after day 7. B every month. C every two months.</span></div>
+    <div class="actions">
+      ${l.status!=="appraisal"&&isOpen(l)?`<button class="btn sign grow" data-act="appraisal" data-id="${id}">Booked appraisal</button>`:""}
+      ${isOpen(l)?`<button class="btn" data-act="close" data-id="${id}">Close lead</button>`:`<button class="btn" data-act="reopen" data-id="${id}">Reopen</button>`}
+    </div>
+    <div class="card"><label for="s-note">Add a note<textarea id="s-note" placeholder="What did they say?"></textarea></label>
+      <button class="btn" data-act="note" data-id="${id}">Save note</button></div>
+    ${l.notes?`<div class="card"><span class="eyebrow">From the door</span><div>${esc(l.notes)}</div></div>`:""}
+    <div class="card"><span class="eyebrow">History</span><div class="hist">
+      ${hist.map(h=>`<div><time>${fmtShort(h.d)}</time><span>${esc(h.n)}</span></div>`).join("")}
+      <div><time>${fmtShort(l.created)}</time><span>Met at the door</span></div></div></div>
+    <div class="actions"><button class="btn danger" data-act="delete" data-id="${id}">${state.confirmDel===id?"Tap again to delete for good":"Delete lead"}</button></div>
+  </div></div>`;
+}
+
+// ---------- events ----------
+function setTab(tab){state.tab=tab;document.querySelectorAll("section[id^=v-]").forEach(s=>s.hidden=s.id!=="v-"+tab);
+  document.querySelectorAll("nav.tabs button").forEach(b=>{if(b.dataset.tab===tab)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  window.scrollTo(0,0)}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
+
+let toastTimer;
+function toast(msg){let el=$(".toast");if(!el){el=document.createElement("div");el.className="toast";el.setAttribute("role","status");document.body.appendChild(el)}
+  el.textContent=msg;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,2600)}
+function note(msg){$("#store-note").textContent=msg}
+async function copy(text,ok){try{await navigator.clipboard.writeText(text);toast(ok)}catch(e){toast("Copy didn't work here. Press and hold the text to copy it.")}}
+
+document.addEventListener("click",async e=>{
+  const adj=e.target.closest("[data-adj]");if(adj){const [k,v]=adj.dataset.adj.split(":");adjust(k,Number(v));return}
+  const act=e.target.closest("[data-act]");
+  if(act){e.stopPropagation();const id=act.dataset.id;const l=state.leads.get(id);if(!l)return;
+    switch(act.dataset.act){
+      case "done": await completeStep(id);break;
+      case "snooze": await snooze(id);break;
+      case "call": {const cb=act.dataset.o==="callback"?($("#s-cb")||{}).value:null;await logCall(id,act.dataset.o,cb);break}
+      case "copy": copy(STEPS[l.step].tpl(first(l)),l.phone?`Copied. Paste it in Messages to ${l.phone}.`:"Copied. Paste it in Messages.");break;
+      case "copyphone": copy(l.phone,"Number copied.");break;
+      case "appraisal": await bookAppraisal(id);break;
+      case "grade": {const n={...l,grade:act.dataset.g};await store.saveLead(id,n);break}
+      case "close": {await store.saveLead(id,{...l,status:"closed",history:[...(l.history||[]),{d:today(),t:"closed",n:"Lead closed"}]});toast("Lead closed.");break}
+      case "reopen": {await store.saveLead(id,{...l,status:"active",nextDue:maxDate(l.nextDue,today()),history:[...(l.history||[]),{d:today(),t:"reopened",n:"Reopened"}]});break}
+      case "note": {const v=$("#s-note").value.trim();if(!v)return;await store.saveLead(id,{...l,history:[...(l.history||[]),{d:today(),t:"note",n:v}]});toast("Note saved.");break}
+      case "delete": if(state.confirmDel===id){state.confirmDel=null;state.openId=null;$("#sheet-root").innerHTML="";await store.deleteLead(id);toast("Lead deleted.")}else{state.confirmDel=id;renderSheet()}break;
+    }
+    if(state.openId) renderSheet();return}
+  if(e.target.closest("[data-close]")&&(e.target.dataset.close||e.target.closest("button[data-close]"))){state.openId=null;state.confirmDel=null;$("#sheet-root").innerHTML="";return}
+  const dn=e.target.closest("[data-delnote]");if(dn){const id=dn.dataset.delnote;if(state.confirmNote===id){state.confirmNote=null;await store.deleteNote(id);toast("Note deleted.")}else{state.confirmNote=id;renderNotes()}return}
+  const ob=e.target.closest("[data-open-btn]");if(ob){state.openId=ob.dataset.openBtn;state.confirmDel=null;renderSheet();const c=$("#s-cb");if(c)c.focus();return}
+  const open=e.target.closest("[data-open]");if(open&&!e.target.closest("a")){state.openId=open.dataset.open;state.confirmDel=null;renderSheet()}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&state.openId){state.openId=null;$("#sheet-root").innerHTML=""}
+  if(e.key==="Enter"&&e.target.matches("[data-open][role=button]")){state.openId=e.target.dataset.open;renderSheet()}});
+
+$("#f-grade").addEventListener("click",e=>{const b=e.target.closest("[data-g]");if(!b)return;state.grade=b.dataset.g;
+  $("#f-grade").querySelectorAll("[data-g]").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+$("#f-src").addEventListener("click",e=>{const b=e.target.closest("[data-s]");if(!b)return;state.src=b.dataset.s;
+  $("#f-src").querySelectorAll("[data-s]").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+$("#filter").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;state.filter=b.dataset.f;
+  $("#filter").querySelectorAll("[data-f]").forEach(x=>x.setAttribute("aria-pressed",x===b));render()});
+$("#search").addEventListener("input",e=>{state.q=e.target.value;render()});
+$("#n-search").addEventListener("input",e=>{state.nq=e.target.value;renderNotes()});
+$("#n-filter").addEventListener("click",e=>{const b=e.target.closest("[data-nf]");if(!b)return;state.nf=b.dataset.nf;
+  $("#n-filter").querySelectorAll("[data-nf]").forEach(x=>x.setAttribute("aria-pressed",x===b));renderNotes()});
+$("#note-form").addEventListener("submit",async e=>{e.preventDefault();const v=$("#n-text").value.trim();if(!v){toast("Type a note first.");return}
+  $("#n-text").value="";await store.saveNote(uid(),{text:v,d:today(),ts:Date.now()});toast("Note saved.")});
+
+$("#lead-form").addEventListener("submit",async e=>{
+  e.preventDefault();const address=$("#f-addr").value.trim(),name=$("#f-name").value.trim(),phone=$("#f-phone").value.trim();
+  if(!address&&!name&&!phone){toast("Add a name, address or number so you can find them again.");return}
+  const t=today();const l={name,address,phone,grade:state.grade,source:state.src,attempts:0,
+    notes:$("#f-notes").value.trim(),created:t,step:0,nextDue:addDays(t,STEPS[0].off),status:"active",history:[]};
+  const id=uid();
+  ["#f-name","#f-addr","#f-phone","#f-notes"].forEach(s=>$(s).value="");
+  if(state.src==="door")adjust("convos",1);else if(state.src==="call")adjustMany({calls:1,connects:1});
+  await store.saveLead(id,l);toast(`Saved. Thank-you text is due tomorrow.`);
+});
+
+// ---------- boot ----------
+store=noopStore;render();setTab("today");
+(async()=>{
+  const gate=$("#gate"),msg=$("#gate-msg"),btn=$("#signin");
+  let A,F,appMod;
+  try{[appMod,A,F]=await Promise.all([import(FBV+"firebase-app.js"),import(FBV+"firebase-auth.js"),import(FBV+"firebase-firestore.js")])}
+  catch(e){msg.textContent="Couldn't load sign-in. Check your connection and reopen.";btn.disabled=true;return}
+  const app=appMod.initializeApp(FB_CONFIG),auth=A.getAuth(app),db=F.getFirestore(app);
+  A.getRedirectResult(auth).catch(()=>{});
+  btn.addEventListener("click",async()=>{msg.textContent="Opening Google…";
+    try{await A.signInWithPopup(auth,new A.GoogleAuthProvider())}
+    catch(e){if(e&&(e.code==="auth/popup-blocked"||e.code==="auth/operation-not-supported-in-this-environment"||e.code==="auth/cancelled-popup-request")){A.signInWithRedirect(auth,new A.GoogleAuthProvider())}
+      else msg.textContent=e&&e.code==="auth/popup-closed-by-user"?"":"Sign-in didn't work. Try again."}});
+  let started=false;
+  A.onAuthStateChanged(auth,async u=>{
+    if(!u){gate.hidden=false;if(started)location.reload();return}
+    const email=(u.email||"").toLowerCase();
+    if(!ALLOW.includes(email)){await A.signOut(auth);gate.hidden=false;msg.textContent=`${email} doesn't have access. Ask Jason to add you.`;return}
+    gate.hidden=true;msg.textContent="";
+    if(!started){started=true;store=fbStore(F,db)}
+    $("#store-note").innerHTML=`Signed in as ${esc(email)} · <button class="linkbtn" id="signout">Sign out</button>`;
+    $("#signout").onclick=()=>A.signOut(auth);
+  });
+})();
+setInterval(()=>{if(today()!==state._last){state._last=today();render()}},60000);state._last=today();
+})();
+</script>
+
+</body>
+</html>

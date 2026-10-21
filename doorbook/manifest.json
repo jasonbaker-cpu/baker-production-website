@@ -1,0 +1,12 @@
+{
+  "name": "Doorbook",
+  "short_name": "Doorbook",
+  "description": "Doors, calls, follow-ups and notes.",
+  "start_url": "/doorbook/",
+  "scope": "/doorbook/",
+  "display": "standalone",
+  "background_color": "#F1F4F1",
+  "theme_color": "#17573F",
+  "orientation": "portrait",
+  "icons": [{ "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }]
+}
