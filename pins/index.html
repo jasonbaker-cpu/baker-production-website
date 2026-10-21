@@ -623,7 +623,15 @@ const AGENCIES = {
   "yellow":      { name:"Yellow labels + address (Gregory Swiatek, Shah Akbari)", kind:"ylab", color:"#F4DC00", house:{ type:"label" } },
   "pill-r":      { name:"Navy labels + R pin (Mandie Cubeddu)",             kind:"pill", color:"#223454", house:{ type:"pin", w:82, h:104, stem:190, mark:"r", markR:.9 } }
 };
-function agency(){ return AGENCIES[prefs.agency] || AGENCIES.red; }
+const HOUSE_STYLES = {
+  "":        { name:"Agency's own" },
+  classic:   { name:"Classic pin", house:{ type:"pin", w:226, h:322, mark:"house" } },
+  ring:      { name:"Pin with white ring", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
+  white:     { name:"White pin on a post", house:{ type:"pin", w:150, h:208, stem:200, mark:"house-black", color:"#FFFFFF" } },
+  board:     { name:"Square sign on a post", house:{ type:"board", w:170, h:170, stem:220, mark:"houseboard" } },
+  big:       { name:"Big pin", house:{ type:"pin", w:290, h:410, mark:"house" } }
+};
+function agency(){ const A = AGENCIES[prefs.agency] || AGENCIES.red, o = HOUSE_STYLES[prefs.houseStyle||""]; return o && o.house ? Object.assign({}, A, { house:o.house }) : A; }
 function pinColour(){ return prefs.pinColor || agency().color; }
 function houseColour(){ const h = agency().house; return h.color || pinColour(); }
 function shade(hex, pct){ const n=parseInt(hex.slice(1),16); const f=v=>Math.max(0,Math.min(255,Math.round(v + 255*pct/100))); return `rgb(${f(n>>16&255)},${f(n>>8&255)},${f(n&255)})`; }
@@ -716,6 +724,7 @@ function drawHouse(c, p, pin, g){
     const [x,y,w,h] = g.box;
     if (img) c.drawImage(img, x, y, w, h);
     else if (H.mark === "emblem") drawEmblem(c, x - w*.08, y, w, h);
+    else if (H.mark === "houseboard"){ c.save(); c.shadowColor = "rgba(0,0,0,.3)"; c.shadowBlur = 8*g.s; c.shadowOffsetY = 3*g.s; roundRect(c, x, y, w, h, 10*g.s); c.fillStyle = pinColour(); c.fill(); c.restore(); c.strokeStyle = "#fff"; c.lineWidth = 6*g.s; roundRect(c, x+9*g.s, y+9*g.s, w-18*g.s, h-18*g.s, 6*g.s); c.stroke(); drawIcon(c, "house", x+w/2, y+h/2, w*.38); }
     else drawHBoard(c, x, y, w, h);
     return;
   }
@@ -1330,10 +1339,15 @@ function refreshPinsTab(){
   asel.value = LS.get("tpl","") ? "tpl:"+LS.get("tpl","") : prefs.agency;
   asel.onchange = ev=>{ const v = ev.target.value;
     if (v.startsWith("tpl:")){ const n=v.slice(4); LS.set("tpl", n); Object.assign(prefs, templates[n]); }
-    else { LS.set("tpl",""); prefs.agency = v; prefs.pinColor = ""; prefs.logo = ""; }
+    else { LS.set("tpl",""); prefs.agency = v; prefs.pinColor = ""; prefs.logo = ""; prefs.houseStyle = ""; }
     savePrefs(); const q=P(); if(q) tidySides(q); refreshPinsTab(); requestDraw(); };
   s4.appendChild(ar2);
   s4.appendChild(el(`<p class="note">Each agency's look is copied from the editors' finals. Pick the agent's agency before placing pins.</p>`));
+  const hr = el(`<div class="row"><label class="lbl" for="hsSel">House pin</label><select id="hsSel"></select></div>`);
+  Object.entries(HOUSE_STYLES).forEach(([k,v])=>{ const o=document.createElement("option"); o.value=k; o.textContent=v.name; hr.querySelector("select").appendChild(o); });
+  hr.querySelector("select").value = prefs.houseStyle||"";
+  hr.querySelector("select").onchange = ev=>{ prefs.houseStyle = ev.target.value; savePrefs(); const q=P(); if(q) tidySides(q); requestDraw(); };
+  s4.appendChild(hr);
   const lr = el(`<div class="row"><label class="lbl">House mark</label><button class="btn wide" id="logoBtn">${prefs.logo ? "Change logo" : "Use a different logo / photo"}</button>${prefs.logo ? `<button class="btn ghost" id="logoX" style="flex:none">Reset</button>` : ""}</div>`);
   lr.querySelector("#logoBtn").onclick = ()=>$("logoIn").click();
   const lx = lr.querySelector("#logoX"); if (lx) lx.onclick = ()=>{ prefs.logo=""; savePrefs(); refreshPinsTab(); requestDraw(); };
@@ -1343,7 +1357,7 @@ function refreshPinsTab(){
   s4.appendChild(cr);
   s4.appendChild(slider("pinScale","Size",60,160,5,prefs.pinScale,v=>v+"%",v=>{ prefs.pinScale=v; savePrefs(); const q=P(); if(q) tidySides(q); requestDraw(); }));
   const sv = el(`<div class="row"><input type="text" id="tplName" placeholder="Save as a new agency, e.g. Ray White Belmont"><button class="btn" style="flex:none">Save</button></div>`);
-  sv.querySelector("button").onclick = ()=>{ const n = sv.querySelector("input").value.trim(); if (!n){ toast("Type the agency name first"); return; } templates[n] = { agency:prefs.agency, pinColor:prefs.pinColor, pinScale:prefs.pinScale, labelOpacity:prefs.labelOpacity, logo:prefs.logo }; try{ LS.set("templates", templates); }catch(e){} LS.set("tpl", n); refreshPinsTab(); toast(`Saved "${n}"`); };
+  sv.querySelector("button").onclick = ()=>{ const n = sv.querySelector("input").value.trim(); if (!n){ toast("Type the agency name first"); return; } templates[n] = { agency:prefs.agency, houseStyle:prefs.houseStyle||"", pinColor:prefs.pinColor, pinScale:prefs.pinScale, labelOpacity:prefs.labelOpacity, logo:prefs.logo }; try{ LS.set("templates", templates); }catch(e){} LS.set("tpl", n); refreshPinsTab(); toast(`Saved "${n}"`); };
   s4.appendChild(sv);
   box.insertBefore(s4, box.children[1] || null);
 }
