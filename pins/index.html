@@ -4,7 +4,7 @@
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="/favicon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Baker Aerial Editor</title>
+<title>Baker Aerial Editor</title><title>Baker Aerial Editor</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -505,6 +505,40 @@ function normaliseLook(px, w, h){
     px[i] = cl(Y+(r-Y)*ks,0,255); px[i+1] = cl(Y+(gg-Y)*ks,0,255); px[i+2] = cl(Y+(b-Y)*ks,0,255);
   }
 }
+// Dark-channel dehaze, limited to a band below the horizon and fading out toward the foreground.
+function dehazeBand(px, w, h, line){
+  const s = Math.max(1, Math.round(w/500)), sw = Math.floor(w/s), sh = Math.floor(h/s);
+  const hz0 = Math.max(0, Math.min(line(0), line(w))), band = 0.42*h;
+  if (hz0 > h*0.8) return;
+  // low-res dark channel
+  const D = new Float32Array(sw*sh);
+  for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ const i=((y*s)*w+x*s)*4; D[y*sw+x] = Math.min(px[i],px[i+1],px[i+2]); }
+  const r = 5, M = new Float32Array(sw*sh), T = new Float32Array(sw*sh);
+  for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ let m=255; for (let k=-r;k<=r;k++){ const xx=Math.min(sw-1,Math.max(0,x+k)); const v=D[y*sw+xx]; if (v<m) m=v; } T[y*sw+x]=m; }
+  for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ let m=255; for (let k=-r;k<=r;k++){ const yy=Math.min(sh-1,Math.max(0,y+k)); const v=T[yy*sw+x]; if (v<m) m=v; } M[y*sw+x]=m; }
+  const Mb = gaussBlur(M, sw, sh, 3);
+  // airlight: brightest ground haze in the first slice under the horizon
+  let ar=0, ag=0, ab=0, n=0; const vals=[];
+  for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ const Y=y*s, X=x*s, hz=line(X); if (Y<hz+2 || Y>hz+0.06*h) continue; vals.push(Mb[y*sw+x]); }
+  if (vals.length < 20) return; vals.sort((a,b)=>a-b); const thr = vals[Math.floor(vals.length*0.9)];
+  for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ const Y=y*s, X=x*s, hz=line(X); if (Y<hz+2 || Y>hz+0.06*h || Mb[y*sw+x]<thr) continue; const i=(Y*w+X)*4; ar+=px[i]; ag+=px[i+1]; ab+=px[i+2]; n++; }
+  if (!n) return; ar/=n; ag/=n; ab/=n; const A = Math.max(ar,ag,ab);
+  if (thr < 95) return;   // no real haze — leave it alone
+  const at = (x,y) => { const fx=Math.min(sw-1.001,x/s), fy=Math.min(sh-1.001,y/s), x0=fx|0, y0=fy|0, tx=fx-x0, ty=fy-y0, i=y0*sw+x0; return (Mb[i]*(1-tx)+Mb[i+1]*tx)*(1-ty)+(Mb[i+sw]*(1-tx)+Mb[i+sw+1]*tx)*ty; };
+  const strength = Math.min(0.9, Math.max(0.5, (thr-95)/80 + 0.5));
+  for (let y=Math.max(0, hz0|0); y<h; y++){
+    for (let x=0;x<w;x++){
+      const hz = line(x), d = (y-hz)/band; if (d < -0.02 || d > 1) continue;
+      const u = d < 0 ? 1 + d/0.02 : 1 - d; const wgt = u*u*(3-2*u);
+      const tmin = 0.28 + 0.27*Math.min(1, Math.max(0,d)/0.5), st2 = Math.min(0.97, strength + 0.25*(1-Math.min(1,Math.max(0,d)/0.3)));
+      const t = Math.max(tmin, 1 - st2*wgt*at(x,y)/A);
+      const i = (y*w+x)*4;
+      px[i]   = (px[i]  -ar)/t + ar - (1-t)*12;
+      px[i+1] = (px[i+1]-ag)/t + ag - (1-t)*10;
+      px[i+2] = (px[i+2]-ab)/t + ab - (1-t)*14;
+    }
+  }
+}
 function finishImage(base, p){
   const w = base.width, h = base.height;
   const ctx = base.getContext("2d"); const id = ctx.getImageData(0,0,w,h); const px = id.data;
@@ -524,6 +558,8 @@ function finishImage(base, p){
   normaliseLook(px, w, h);
   // 2. sky analysis on the graded image
   let sky = (p.skyOn !== false) ? analyseSky(px, w, h) : null;
+  // 2b. dehaze: distant ground just under the horizon goes milky grey into the sun — pull it back
+  if (sky && p.dehaze !== false) dehazeBand(px, w, h, x => sky.m*x + sky.b);
   // Keep a good real sky (blue with proper clouds): the editors only swap washed-out or blown skies.
   p.skyKept = false;
   if (sky && !p.skyForce){
