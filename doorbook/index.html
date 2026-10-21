@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Doorbook">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<title>Jordan's Doorbook</title>
+<title>Doorbook</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
 <style>
@@ -41,6 +41,9 @@ body{margin:0}
 #gate{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 #gate .card{max-width:380px;width:100%;text-align:center;align-items:center}
 #gate h1{font-size:42px}
+#agent-pick{max-width:200px;padding:6px 8px;font-size:14px;font-weight:600}
+.agent-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.agent-row > div{min-width:0;overflow-wrap:anywhere}
 .linkbtn{background:none;border:0;color:var(--brand);font-weight:600;padding:4px;text-decoration:underline}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
@@ -185,7 +188,10 @@ section[hidden]{display:none}
       <div class="eyebrow" id="dateline">Today</div>
       <h1>Doorbook</h1>
     </div>
-    <span class="plate">Jordan London</span>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:0">
+      <span class="plate" id="plate">Doorbook</span>
+      <select id="agent-pick" hidden aria-label="Choose an agent"></select>
+    </div>
   </header>
 
   <!-- TODAY -->
@@ -298,6 +304,16 @@ section[hidden]{display:none}
           <div><b>Review</b><span>Check these numbers every Friday.</span></div>
         </div>
       </div>
+      <div class="card" id="team" hidden>
+        <span class="eyebrow">Agents (only you see this)</span>
+        <div id="team-list"></div>
+        <form id="team-form" style="display:flex;flex-direction:column;gap:10px" autocomplete="off">
+          <label for="t-name">Agent name<input id="t-name" placeholder="e.g. Jordan London"></label>
+          <label for="t-email">Google email they sign in with<input id="t-email" type="email" placeholder="name@agency.com.au"></label>
+          <button class="btn primary" type="submit">Add agent</button>
+          <span class="hint">They get their own empty Doorbook. Nobody else sees their leads except you.</span>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -334,7 +350,7 @@ section[hidden]{display:none}
 <div id="sheet-root"></div>
 <div id="gate">
   <div class="card">
-    <span class="plate">Jordan London</span>
+    <span class="plate">Baker Production</span>
     <h1>Doorbook</h1>
     <p class="muted" style="margin:0">Doors, calls, follow-ups and notes. Sign in to open your leads.</p>
     <button class="btn primary" id="signin" style="width:100%">Sign in with Google</button>
@@ -348,9 +364,10 @@ section[hidden]{display:none}
 // ---------- constants ----------
 const TARGET = {doorsSession:50, doorsWeek:150, convosWeek:20, callsDay:10, callsWeek:30, connectsWeek:10, apprWeek:2};
 const SRC = {door:"Door", call:"Call", open:"Open home", referral:"Referral"};
+let AGENT={name:"",first:""};
 const STEPS = [
-  {label:"Send thank-you text", off:1, tpl:(f)=>`Hi ${f}, it's Jordan London. Great to meet you at your door today. If you ever want to know what your place is worth, just text me. Cheers, Jordan`},
-  {label:"Send something useful", off:3, tpl:(f)=>`Hi ${f}, Jordan here. A home near you just sold and I thought you'd want to know what it went for. Happy to send the details or do a free appraisal any time.`},
+  {label:"Send thank-you text", off:1, tpl:(f)=>`Hi ${f}, it's ${AGENT.name}. Great to meet you at your door today. If you ever want to know what your place is worth, just text me. Cheers, ${AGENT.first}`},
+  {label:"Send something useful", off:3, tpl:(f)=>`Hi ${f}, ${AGENT.first} here. A home near you just sold and I thought you'd want to know what it went for. Happy to send the details or do a free appraisal any time.`},
   {label:"Phone call", off:7},
 ];
 const CHECKIN = {A:7, B:30, C:60};
@@ -375,25 +392,32 @@ let store=null; // {saveLead, deleteLead, saveDay, mode}
 // ---------- storage (Firebase, signed-in users only) ----------
 const FB_CONFIG={apiKey:"AIzaSyC0ES1GZsgtl4_vC6Dpp-4aG-Iy4DtXlCE",authDomain:"baker-leads.firebaseapp.com",projectId:"baker-leads",
   storageBucket:"baker-leads.firebasestorage.app",messagingSenderId:"544396406010",appId:"1:544396406010:web:9e7289e545fa0a0c8a6d43"};
-// Who can open Doorbook. Firestore rules must list the same emails (see README in this folder).
-const ALLOW=["admin@bakerproduction.com","jasonbaker@bakerproduction.com"];
-const COL={leads:"doorbook_leads",days:"doorbook_days",notes:"doorbook_notes"};
+// Admins see every agent. Agents are listed in Firestore (doorbook_agents/<email>) and see only their own data.
+const ADMINS=["admin@bakerproduction.com","jasonbaker@bakerproduction.com"];
+const SEED_AGENTS=[{email:"jordan@raspa.com.au",name:"Jordan London"}];
 const FBV="https://www.gstatic.com/firebasejs/10.12.2/";
 const noopStore={saveLead:async()=>{},deleteLead:async()=>{},saveDay:async()=>{},saveNote:async()=>{},deleteNote:async()=>{}};
-function fbStore(F,db){
+let unsubs=[];
+function fbStore(F,db,agent){
+  unsubs.forEach(u=>u());unsubs=[];state.leads=new Map();state.days=new Map();state.notes=new Map();state.openId=null;$("#sheet-root").innerHTML="";
   const chains=new Map();
-  const queue=(key,fn)=>{const p=(chains.get(key)||Promise.resolve()).then(fn,fn).catch(e=>{toast(e&&e.code==="permission-denied"?"Not saved: this account doesn't have write access.":"Couldn't save. Check your connection.")});chains.set(key,p);return p};
-  const denied=e=>note(e&&e.code==="permission-denied"?"This account can't read Doorbook data yet. Check the Firestore rules.":"Sync paused. Reopen the app to reconnect.");
-  F.onSnapshot(F.collection(db,COL.leads),snap=>{const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));state.leads=m;render()},denied);
-  F.onSnapshot(F.collection(db,COL.days),snap=>{const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));if(pendingDay)m.set(pendingDay.d,pendingDay.v);state.days=m;render()},denied);
-  F.onSnapshot(F.collection(db,COL.notes),snap=>{const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));state.notes=m;render()},denied);
-  const set=(c,id,v)=>F.setDoc(F.doc(db,c,id),v), del=(c,id)=>F.deleteDoc(F.doc(db,c,id));
+  const queue=(key,fn)=>{const p=(chains.get(key)||Promise.resolve()).then(fn,fn).catch(e=>{toast(e&&e.code==="permission-denied"?"Not saved: this account doesn't have access.":"Couldn't save. Check your connection.")});chains.set(key,p);return p};
+  const denied=e=>note(e&&e.code==="permission-denied"?"This account can't read this Doorbook. Check the Firestore rules.":"Sync paused. Reopen the app to reconnect.");
+  const col=c=>F.collection(db,"doorbook",agent,c), ref=(c,id)=>F.doc(db,"doorbook",agent,c,id);
+  unsubs.push(F.onSnapshot(col("leads"),snap=>{const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));state.leads=m;render()},denied));
+  unsubs.push(F.onSnapshot(col("days"),snap=>{const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));if(pendingDay)m.set(pendingDay.d,pendingDay.v);state.days=m;render()},denied));
+  unsubs.push(F.onSnapshot(col("notes"),snap=>{const m=new Map();snap.forEach(d=>m.set(d.id,d.data()));state.notes=m;render()},denied));
+  render();
   return {
-    saveLead:(id,l)=>{state.leads.set(id,l);render();return queue("l/"+id,()=>set(COL.leads,id,l))},
-    deleteLead:(id)=>{state.leads.delete(id);render();return queue("l/"+id,()=>del(COL.leads,id))},
-    saveDay:(d,v)=>{state.days.set(d,v);return queue("d/"+d,()=>set(COL.days,d,v))},
-    saveNote:(id,n)=>{state.notes.set(id,n);render();return queue("n/"+id,()=>set(COL.notes,id,n))},
-    deleteNote:(id)=>{state.notes.delete(id);render();return queue("n/"+id,()=>del(COL.notes,id))}};
+    saveLead:(id,l)=>{state.leads.set(id,l);render();return queue("l/"+id,()=>F.setDoc(ref("leads",id),l))},
+    deleteLead:(id)=>{state.leads.delete(id);render();return queue("l/"+id,()=>F.deleteDoc(ref("leads",id)))},
+    saveDay:(d,v)=>{state.days.set(d,v);return queue("d/"+d,()=>F.setDoc(ref("days",d),v))},
+    saveNote:(id,n)=>{state.notes.set(id,n);render();return queue("n/"+id,()=>F.setDoc(ref("notes",id),n))},
+    deleteNote:(id)=>{state.notes.delete(id);render();return queue("n/"+id,()=>F.deleteDoc(ref("notes",id)))}};
+}
+function setAgent(email,name){
+  AGENT={email,name:name||email,first:(name||email).split(/[\s@]/)[0]};
+  $("#plate").textContent=AGENT.name;
 }
 
 // ---------- lead logic ----------
@@ -682,15 +706,47 @@ store=noopStore;render();setTab("today");
     try{await A.signInWithPopup(auth,new A.GoogleAuthProvider())}
     catch(e){if(e&&(e.code==="auth/popup-blocked"||e.code==="auth/operation-not-supported-in-this-environment"||e.code==="auth/cancelled-popup-request")){A.signInWithRedirect(auth,new A.GoogleAuthProvider())}
       else msg.textContent=e&&e.code==="auth/popup-closed-by-user"?"":"Sign-in didn't work. Try again."}});
-  let started=false;
+  let started=false,agents=new Map(),curAgent=null,confirmRm=null;
+  const pick=$("#agent-pick");
+  const openAgent=(email)=>{if(!email||email===curAgent)return;curAgent=email;const a=agents.get(email)||{};setAgent(email,a.name);
+    try{localStorage.setItem("doorbook.agent",email)}catch(e){}store=fbStore(F,db,email);pick.value=email};
+  const renderTeam=()=>{
+    const list=[...agents].sort((x,y)=>(x[1].name||"").localeCompare(y[1].name||""));
+    pick.innerHTML=list.map(([e,a])=>`<option value="${esc(e)}">${esc(a.name||e)}</option>`).join("");pick.hidden=!list.length;if(curAgent)pick.value=curAgent;
+    $("#team-list").innerHTML=list.length?list.map(([e,a])=>`<div class="agent-row"><div><b>${esc(a.name||e)}</b><div class="hint">${esc(e)}</div></div>
+      <button class="btn danger" data-rm="${esc(e)}" style="min-height:36px;padding:6px 12px;font-size:14px">${confirmRm===e?"Tap again":"Remove"}</button></div>`).join(""):`<div class="hint">No agents yet. Add one below.</div>`;
+  };
+  pick.addEventListener("change",()=>openAgent(pick.value));
+  $("#team-list").addEventListener("click",async e=>{const b=e.target.closest("[data-rm]");if(!b)return;const em=b.dataset.rm;
+    if(confirmRm!==em){confirmRm=em;renderTeam();return}confirmRm=null;
+    try{await F.deleteDoc(F.doc(db,"doorbook_agents",em));toast("Agent removed. Their data is kept.")}catch(err){toast("Couldn't remove. Check the Firestore rules.")}});
+  $("#team-form").addEventListener("submit",async e=>{e.preventDefault();const name=$("#t-name").value.trim(),email=$("#t-email").value.trim().toLowerCase();
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){toast("Add the email they sign in to Google with.");return}
+    try{await F.setDoc(F.doc(db,"doorbook_agents",email),{name:name||email,added:today()});$("#t-name").value="";$("#t-email").value="";
+      toast(`${name||email} added. Send them the link.`)}catch(err){toast("Couldn't add. Check the Firestore rules.")}});
   A.onAuthStateChanged(auth,async u=>{
     if(!u){gate.hidden=false;if(started)location.reload();return}
     const email=(u.email||"").toLowerCase();
-    if(!ALLOW.includes(email)){await A.signOut(auth);gate.hidden=false;msg.textContent=`${email} doesn't have access. Ask Jason to add you.`;return}
-    gate.hidden=true;msg.textContent="";
-    if(!started){started=true;store=fbStore(F,db)}
-    $("#store-note").innerHTML=`Signed in as ${esc(email)} · <button class="linkbtn" id="signout">Sign out</button>`;
-    $("#signout").onclick=()=>A.signOut(auth);
+    const signedIn=()=>{$("#store-note").innerHTML=`Signed in as ${esc(email)} · <button class="linkbtn" id="signout">Sign out</button>`;$("#signout").onclick=()=>A.signOut(auth)};
+    if(ADMINS.includes(email)){
+      gate.hidden=true;msg.textContent="";signedIn();if(started)return;started=true;$("#team").hidden=false;
+      let first=true;
+      F.onSnapshot(F.collection(db,"doorbook_agents"),async snap=>{
+        agents=new Map();snap.forEach(d=>agents.set(d.id,d.data()));
+        if(first&&snap.empty){first=false;for(const a of SEED_AGENTS){try{await F.setDoc(F.doc(db,"doorbook_agents",a.email),{name:a.name,added:today()})}catch(e){}}return}
+        first=false;renderTeam();
+        if(curAgent&&agents.has(curAgent)){setAgent(curAgent,agents.get(curAgent).name);return}
+        let saved=null;try{saved=localStorage.getItem("doorbook.agent")}catch(e){}
+        const next=agents.has(saved)?saved:[...agents.keys()][0];
+        if(next)openAgent(next);else{curAgent=null;$("#plate").textContent="No agents yet";state.leads=new Map();state.days=new Map();state.notes=new Map();render();setTab("score")}
+      },()=>note("Can't load the agent list. Check the Firestore rules."));
+      return;
+    }
+    let ok=false;
+    try{const d=await F.getDoc(F.doc(db,"doorbook_agents",email));if(d.exists()){ok=true;agents.set(email,d.data())}}catch(e){}
+    if(!ok){await A.signOut(auth);gate.hidden=false;msg.textContent=`${email} doesn't have access yet. Ask Jason to add you.`;return}
+    gate.hidden=true;msg.textContent="";signedIn();
+    if(!started){started=true;openAgent(email)}
   });
 })();
 setInterval(()=>{if(today()!==state._last){state._last=today();render()}},60000);state._last=today();
