@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Listing Video Music | Baker Production</title>
+<meta name="description" content="Pick a song for your Baker Production listing video.">
+<link rel="icon" type="image/png" href="/favicon.png?v=2">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one working sheet — header, filter bar, a single sortable table; Artlist library below */
+:root{
+  --bg:#f6f6f3; --panel:#ffffff; --fg:#1b1d1c; --muted:#6a6f6c; --line:#e2e3df; --accent:#8a6a2f; --accent-soft:#f5efe3;
+  --coastal:#2a6f97; --modern:#4b4f56; --hip:#a2541c; --lux:#7a5a12; --star:#a2541c;
+  --display:"Plus Jakarta Sans", system-ui, sans-serif; --body:"Inter", system-ui, -apple-system, sans-serif; --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121514; --panel:#1a1e1d; --fg:#e9ebe8; --muted:#9aa19d; --line:#2b302e; --accent:#c8a76a; --accent-soft:#2a241a;
+  --coastal:#7fb6d8; --modern:#b9bec6; --hip:#e09a62; --lux:#d8b660; --star:#e09a62; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121514; --panel:#1a1e1d; --fg:#e9ebe8; --muted:#9aa19d; --line:#2b302e; --accent:#c8a76a; --accent-soft:#2a241a;
+  --coastal:#7fb6d8; --modern:#b9bec6; --hip:#e09a62; --lux:#d8b660; --star:#e09a62; color-scheme:dark}
+*{box-sizing:border-box} img{max-width:100%} body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding-block:28px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(28px,4vw,40px);margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-family:var(--display);font-weight:500;font-size:22px;margin:0}
+.sub{color:var(--muted);max-width:70ch;margin:6px 0 0}
+.rule{background:var(--accent-soft);border-left:3px solid var(--accent);padding:12px 14px;border-radius:6px;max-width:80ch}
+.rule b{color:var(--accent)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font:500 13px var(--body);border:1px solid var(--line);background:var(--panel);color:var(--fg);padding:6px 12px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.chip:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input[type=search]{font:14px var(--body);padding:7px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);min-width:0;flex:1 1 180px;max-width:280px}
+.count{font:12px var(--mono);color:var(--muted);margin-left:auto}
+.tbl{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);cursor:pointer;user-select:none;white-space:nowrap;position:sticky;top:0;background:var(--panel)}
+tr:last-child td{border-bottom:0}
+td.n{font:12px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums;width:2.5em}
+.song{font-weight:600}
+.artist{color:var(--muted)}
+.mood{font:600 11px var(--body);letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:4px;border:1px solid currentColor;white-space:nowrap}
+.m-Coastal{color:var(--coastal)} .m-Modern{color:var(--modern)} .m-Hip{color:var(--hip)} .m-Luxury{color:var(--lux)}
+.voc{font:12px var(--mono);white-space:nowrap}
+.src{font-size:12px;color:var(--star);font-weight:600}
+.note{color:var(--muted);font-size:13px}
+a{color:var(--accent)}
+.removed{display:grid;gap:6px}
+.removed li{color:var(--muted)}
+.removed s{color:var(--fg)}
+ul{margin:0;padding-left:18px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <a href="/" aria-label="Baker Production home"><img src="/logo.avif" alt="Baker Production" style="height:34px;width:auto;margin-bottom:14px"></a>
+    <h1>Listing Video Music</h1>
+    <p class="sub">Pick the song for your listing video. Filter by the feel of the home, click any title to have a listen on YouTube, then send us the <b>song number</b> when you book (or reply to your booking email). Songs marked ★ feature in films from Australia's top agencies.</p>
+  </header>
+
+  <div class="rule"><b>For editors: so it never gets blocked on YouTube:</b> post it as a Short (under 3 min), export the video with no music, then add the song in the YouTube app with <b>Add sound</b>. If the song shows up in Add sound, it's licensed for Shorts. Never put a label song in during the edit and upload it, because a Short over 1 minute with a Content ID claim gets blocked worldwide. For full-length videos, upload as Unlisted first and only publish if Copyright checks comes back clear.</div>
+
+  <div class="bar" role="toolbar" aria-label="Filter by mood">
+    <button class="chip" data-m="All" aria-pressed="true" id="f-all">All</button>
+    <button class="chip" data-m="Coastal" aria-pressed="false" id="f-coastal">Coastal</button>
+    <button class="chip" data-m="Modern" aria-pressed="false" id="f-modern">Modern</button>
+    <button class="chip" data-m="Hip" aria-pressed="false" id="f-hip">Hip</button>
+    <button class="chip" data-m="Luxury" aria-pressed="false" id="f-lux">Luxury</button>
+    <button class="chip" aria-pressed="false" id="f-star">★ Top agency picks</button>
+    <button class="chip" aria-pressed="false" id="f-voice">Good under voiceover</button>
+    <input type="search" id="q" placeholder="Search song or artist" aria-label="Search song or artist">
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="tbl">
+    <table id="t">
+      <thead><tr><th data-k="i">#</th><th data-k="song">Song</th><th data-k="artist">Artist</th><th data-k="mood">Mood</th><th data-k="voc">Vocals</th><th data-k="use">Best for</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <section style="display:grid;gap:12px">
+    <h2>Licensed library: Musicbed</h2>
+    <p class="note" style="margin:0">Upbeat, groovy tracks from Musicbed in the same retro-funk style. Licensed library music, so it won't get blocked on YouTube or Instagram. Click a title to preview it on Musicbed.</p>
+    <div class="tbl">
+      <table style="min-width:600px">
+        <thead><tr><th>Song</th><th>Artist</th><th>Mood</th><th>BPM</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/guava/98996" target="_blank" rel="noopener">Guava</a></td><td class="artist">DELUXXE</td><td><span class="mood m-Coastal">Coastal</span></td><td class="voc">116</td><td class="note">Sunny nu-disco. Best groovy coastal pick. <a href="https://www.musicbed.com/songs/guava-instrumental/98997" target="_blank" rel="noopener">Instrumental</a></td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/lets-go-surfing/102011" target="_blank" rel="noopener">Let's Go Surfing</a></td><td class="artist">Beeches</td><td><span class="mood m-Coastal">Coastal</span></td><td class="voc">114</td><td class="note">Surf feel. <a href="https://www.musicbed.com/songs/lets-go-surfing-instrumental/102010" target="_blank" rel="noopener">Instrumental</a></td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/heres-to-the-good-times/96689" target="_blank" rel="noopener">Here's To The Good Times</a></td><td class="artist">Palm City</td><td><span class="mood m-Coastal">Coastal</span></td><td class="voc">158</td><td class="note">Fast and bright. <a href="https://www.musicbed.com/songs/heres-to-the-good-times-instrumental/96691" target="_blank" rel="noopener">Instrumental</a></td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/summertime/69991" target="_blank" rel="noopener">SUMMERTIME</a></td><td class="artist">SUNSCREEN</td><td><span class="mood m-Coastal">Coastal</span></td><td class="voc">170</td><td class="note">High energy summer reels.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/neon-disco-diva/102759" target="_blank" rel="noopener">Neon Disco Diva</a></td><td class="artist">Wessman Fade</td><td><span class="mood m-Modern">Modern</span></td><td class="voc">126</td><td class="note">Instrumental nu-disco. Good under voiceover.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/i-feel-like-a-million-instrumental/106617" target="_blank" rel="noopener">I Feel Like a Million (Instrumental)</a></td><td class="artist">Dam Dominici</td><td><span class="mood m-Modern">Modern</span></td><td class="voc">124</td><td class="note">Instrumental. Good under voiceover.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/disco-biscuit/44012" target="_blank" rel="noopener">Disco Biscuit</a></td><td class="artist">PRIZM</td><td><span class="mood m-Modern">Modern</span></td><td class="voc">120</td><td class="note">Disco groove.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/right-now/119358" target="_blank" rel="noopener">Right Now</a></td><td class="artist">Dazy Chain</td><td><span class="mood m-Modern">Modern</span></td><td class="voc">123</td><td class="note">Upbeat modern.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/funktown/102553" target="_blank" rel="noopener">Funktown</a></td><td class="artist">New Body Electric</td><td><span class="mood m-Hip">Hip</span></td><td class="voc">—</td><td class="note">Instrumental funk. Same artist as "Melt" in the main list.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/superfly-instrumental/67247" target="_blank" rel="noopener">Superfly (Instrumental)</a></td><td class="artist">Heartbreak Kid</td><td><span class="mood m-Hip">Hip</span></td><td class="voc">117</td><td class="note">Instrumental funk.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/groove-sailing-with-oohs-ahhs-instrumental/25437" target="_blank" rel="noopener">Groove Sailing (Instrumental)</a></td><td class="artist">Ma Baker</td><td><span class="mood m-Hip">Hip</span></td><td class="voc">118</td><td class="note">Smooth groove, light oohs.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/movimiento/102749" target="_blank" rel="noopener">Movimiento</a></td><td class="artist">DELUXXE</td><td><span class="mood m-Hip">Hip</span></td><td class="voc">125</td><td class="note">Latin guitar nu-disco, closest to Spring Rain.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/hola-hola-hola-dam-dominici-remix/74998" target="_blank" rel="noopener">Hola Hola Hola (Dam Dominici Remix)</a></td><td class="artist">Ivy States</td><td><span class="mood m-Hip">Hip</span></td><td class="voc">120</td><td class="note">Latin groove, claps.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/tomalo/73010" target="_blank" rel="noopener">Tómalo</a></td><td class="artist">Bella Rabbit</td><td><span class="mood m-Hip">Hip</span></td><td class="voc">100</td><td class="note">Latin. <a href="https://www.musicbed.com/songs/tomalo-instrumental/73015" target="_blank" rel="noopener">Instrumental</a></td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/superfine-feeling/67344" target="_blank" rel="noopener">Superfine Feeling</a></td><td class="artist">Rare Pleasure</td><td><span class="mood m-Luxury">Luxury</span></td><td class="voc">—</td><td class="note">Real 70s disco-soul, strings and wah guitar.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/absence-makes-the-heart-grow-fonder/61882" target="_blank" rel="noopener">Absence Makes the Heart Grow Fonder</a></td><td class="artist">Penny Lane</td><td><span class="mood m-Luxury">Luxury</span></td><td class="voc">—</td><td class="note">Vintage soul. <a href="https://www.musicbed.com/songs/absence-makes-the-heart-grow-fonder-instrumental/61897" target="_blank" rel="noopener">Instrumental</a></td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/hooked-on-the-boogie/60298" target="_blank" rel="noopener">Hooked on the Boogie</a></td><td class="artist">Inger Lise</td><td><span class="mood m-Luxury">Luxury</span></td><td class="voc">—</td><td class="note">Soul with congas.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/dance-the-night-away-remastered/61258" target="_blank" rel="noopener">Dance the Night Away</a></td><td class="artist">Dance People</td><td><span class="mood m-Luxury">Luxury</span></td><td class="voc">—</td><td class="note">Disco. <a href="https://www.musicbed.com/songs/dance-the-night-away-remastered-instrumental/61265" target="_blank" rel="noopener">Instrumental</a></td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/love-you-too-much-to-give-up-7-mix/85223" target="_blank" rel="noopener">Love You Too Much To Give Up</a></td><td class="artist">Eleanor Grant</td><td><span class="mood m-Luxury">Luxury</span></td><td class="voc">—</td><td class="note">80s soul-disco.</td></tr>
+          <tr><td><a class="song" href="https://www.musicbed.com/songs/baby-im-back/116712" target="_blank" rel="noopener">Baby, I'm Back!</a></td><td class="artist">Cassette Deck</td><td><span class="mood m-Luxury">Luxury</span></td><td class="voc">—</td><td class="note">Soul with congas.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section style="display:grid;gap:12px">
+    <h2>Licensed library: Artlist</h2>
+    <p class="note" style="margin:0">Fully licensed tracks we keep on hand. Safe on any channel, including paid ads.</p>
+    <div class="tbl">
+      <table style="min-width:560px">
+        <thead><tr><th>Song</th><th>Artist</th><th>Mood</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="song">Wait for Me (Instrumental)</td><td class="artist">Perle Blanche</td><td><span class="mood m-Coastal">Coastal</span></td><td class="note">Melodic tropical house. Big drops, so cut to the beat.</td></tr>
+          <tr><td class="song">Quantum Leap (No Backing Vocals)</td><td class="artist">Raz Burg</td><td><span class="mood m-Modern">Modern</span></td><td class="note">Driving electronic. Twilight, drone, new builds.</td></tr>
+          <tr><td class="song">Too Close (Instrumental)</td><td class="artist">Peter Spacey</td><td><span class="mood m-Hip">Hip</span></td><td class="note">Groovy pop-electronic with a quiet intro that's good for openers.</td></tr>
+          <tr><td class="song">Wandering</td><td class="artist">Sunny Fruit</td><td><span class="mood m-Hip">Hip</span></td><td class="note">Playful. Artlist's own real-estate pick for bright homes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+const S=[
+// [song, artist, mood, vocals, best for, youtube id, film source]
+["Alegría (Yuksek Remix)","Elia y Elizabeth","Hip","Vocal","Inner-city terraces, renovated character homes","2vrjMJMKHf0","Featured in a top agency film"],
+["Spring Rain","Silvetti","Hip","Instrumental","Bright family homes, upbeat walkthroughs","SMb2vm80R1s","Featured in a top agency film"],
+["Kings of Miami (Los Muchachos Theme)","Carlos José Alvarez","Hip","Instrumental","Bold modern homes, pool and entertaining","CfUwOwyXgKg","Featured in a top agency film"],
+["Dancing To The Beat","Clarence Murray","Hip","Vocal","Upbeat soul walkthroughs, character homes","7fAT33-Vh0g","Featured in a top agency film"],
+["Addicted","Bliss n Eso","Hip","Vocal","Punchy modern family homes","WTDzKK7kDRA","Featured in a top agency film"],
+["Groove Is in the Heart","Deee-Lite","Hip","Vocal","Fun, colourful renovations","etviGf1uWlg",""],
+["Ain't No Stoppin' Us Now","McFadden & Whitehead","Hip","Vocal","Feel-good family homes","i2FW1WJc0lg",""],
+["Got to Be Real","Cheryl Lynn","Hip","Vocal","Feel-good renovations","fI569nw0YUQ",""],
+["Le Freak","Chic","Hip","Vocal","Fun, fast social reels","7PC-AcrHEKU",""],
+["Good Times","Chic","Hip","Vocal","Laid-back groove walkthroughs","Er9xGRolrT4",""],
+["Ain't Nobody","Rufus & Chaka Khan","Hip","Vocal","Night shots, sleek apartments","BNirQXe8HOA",""],
+["Oye Como Va","Santana","Hip","Mostly instrumental","Warm Mediterranean-style homes","J7ATTjg7tpE",""],
+["Soul Makossa","Manu Dibango","Hip","Mostly instrumental","Character homes with personality","o0CeFX6E2yI",""],
+["Unbelievable","EMF","Hip","Vocal","Punchy openers, prestige homes with energy","sfCLt0kTd5E","Featured in a top agency film"],
+["September","Earth, Wind & Fire","Hip","Vocal","Feel-good family homes","Gs069dndIYk",""],
+["Get Lucky","Daft Punk ft. Pharrell Williams","Hip","Vocal","Bright renovations, young buyers","5NV6Rdv1a3I",""],
+["Lady (Hear Me Tonight)","Modjo","Hip","Vocal","Summer homes, pool reveals","mMfxI3r_LyA",""],
+["Music Sounds Better With You","Stardust","Hip","Light vocal","Upbeat walkthroughs","FQlAEiCb8m0",""],
+
+["Livin' Thing","Electric Light Orchestra","Luxury","Vocal","Prestige eastern-suburbs style homes","H48j3KGBomU","Featured in a top agency film"],
+["So Deep in Love","Eddy Giles","Luxury","Vocal","Warm period homes, slow gimbal moves","xJSDXusbHwk","Featured in a top agency film"],
+["Mr. Blue Sky","Electric Light Orchestra","Luxury","Vocal","Retro-prestige, big character homes","wuJIqmha2Hk",""],
+["Evil Woman","Electric Light Orchestra","Luxury","Vocal","Moody twilight, statement homes","nxz1DuVaRr8",""],
+["Love's Theme","Love Unlimited Orchestra","Luxury","Instrumental","Grand reveals, sweeping strings","n7YQGHHGoXg","Good under voiceover"],
+["I'm Gonna Love You Just a Little More Baby","Barry White","Luxury","Vocal","Master suites, evening light","x6AL1XnHJZs",""],
+["Let's Stay Together","Al Green","Luxury","Vocal","Warm family homes, gardens","XXx6RDzR6eM",""],
+["Teardrops","Womack & Womack","Luxury","Vocal","Warm, upbeat prestige homes","R8AOAap6_k4",""],
+["At Last","Etta James","Luxury","Vocal","Classic grand homes, slow pans","cZag0E32is0",""],
+["Fly Me to the Moon","Frank Sinatra","Luxury","Vocal","Classic grand homes","JYuyWrkwpok",""],
+["Feeling Good","Michael Bublé","Luxury","Vocal","Big statement reveals","b3XE0LcdBzM","Featured in a top agency film"],
+["La Vie en Rose","Louis Armstrong","Luxury","Vocal","Period homes, gardens","9n-hyA2-FDg",""],
+["Experience","Ludovico Einaudi","Luxury","Instrumental","Hero films, slow build","1e9B31FLT-s","Good under voiceover"],
+
+["Steal My Sunshine","Len","Coastal","Vocal","Fun summer reels, quick cuts","E1fzJ_AYajA",""],
+["Hot Fun in the Summertime","Sly & The Family Stone","Coastal","Vocal","Retro summer, beach houses","Bg0tFRea0wA",""],
+["Rock the Boat","The Hues Corporation","Coastal","Vocal","Waterfront, marina homes","iKr9wZpjBqE",""],
+["Dancing in the Moonlight","Toploader","Coastal","Vocal","Upbeat twilight coastal","0yBnIUX0QAE",""],
+["Lowdown","Boz Scaggs","Coastal","Vocal","Relaxed beachside, golden hour","I-hKBmTAADo",""],
+["Summer Madness","Kool & The Gang","Coastal","Instrumental","Sunset drone, ocean views","2SFt7JHwJeg","Good under voiceover"],
+["Breezin'","George Benson","Coastal","Instrumental","Light, easy coastal walkthroughs","zgxL-khJ--Q","Good under voiceover"],
+["Mas Que Nada","Sergio Mendes & Brasil '66","Coastal","Vocal","Summer homes, pool and alfresco","BrZBiqK0p9E",""],
+["The Girl from Ipanema","Stan Getz & João Gilberto","Coastal","Vocal","Calm beach apartments","sx0TLkdWFEU",""],
+["Love Balloon","Ocean Alley","Coastal","Vocal","Summer beach homes, laid-back surf feel","brBCM7NY0-M","Summer favourite"],
+["Confidence","Ocean Alley","Coastal","Vocal","Summer coastal, golden hour","PGGjXdlbW58",""],
+["Robbery","Lime Cordiale","Coastal","Vocal","Fun, bright beachside homes","AA9zNmjBdMM",""],
+["Booster Seat","Spacey Jane","Coastal","Vocal","Easy summer vibe, Perth-made","XxKuwlnx58g",""],
+["Sailing","Christopher Cross","Coastal","Vocal","Waterfront, marina, river homes","MEO6gYCFbr0",""],
+["Addicted to the Sunshine","Lime Cordiale","Coastal","Vocal","Upbeat summer beach homes","iUeubIPHH6o",""],
+["Sunny","Bobby Hebb","Coastal","Vocal","Bright, happy family homes","mVhy7JPqM7A",""],
+["Everybody Loves the Sunshine","Roy Ayers","Coastal","Light vocal","Slow, warm sunset shots","nC9dQOnUyao",""],
+["What a Fool Believes","The Doobie Brothers","Coastal","Vocal","Upbeat beach homes","ZK4_G4ZhvbA",""],
+["Lovely Day","Bill Withers","Coastal","Vocal","Morning light, family homes","bEeaS6fuUoA",""],
+
+["Melt","New Body Electric","Modern","Light vocal","Sleek modern homes, smooth gimbal","SMrvSEoaQjw","Featured in a top agency film"],
+["Something About Us","Daft Punk","Modern","Light vocal","Moody evening interiors","sOS9aOIXPEk",""],
+["Lose Yourself to Dance","Daft Punk","Modern","Vocal","Open-plan living, quick cuts","NF-kLy44Hls",""],
+["Midnight City","M83","Modern","Light vocal","Twilight, city views","dX3k_QDnzHE",""],
+["Innerbloom","RÜFÜS DU SOL","Modern","Vocal","Architectural homes, long moves","Tx9zMFodNtA",""],
+["Glue","Bicep","Modern","Mostly instrumental","Concrete and glass, drone","A7ZxRs45tTg","Good under voiceover"],
+["Opus","Eric Prydz","Modern","Instrumental","Big build to a drone reveal","iRA82xLsb_w","Good under voiceover"],
+["Gosh","Jamie xx","Modern","Mostly instrumental","Minimal new builds","hTGJfRPLe08","Good under voiceover"],
+["Ocean Drive","Duke Dumont","Modern","Vocal","Night drives, coastal apartments","KDxJlW6cxRk",""],
+["Feels Like We Only Go Backwards","Tame Impala","Modern","Vocal","Laid-back, Perth-made","wycjnCCgUes",""],
+["The Less I Know the Better","Tame Impala","Modern","Vocal","Groovy inner-city homes","sBzrzS1Ag_g",""]
+].map((r,i)=>({i:i+1,song:r[0],artist:r[1],mood:r[2],voc:r[3],use:r[4],yt:r[5],src:r[6]}));
+
+const tb=document.querySelector('#t tbody'), cnt=document.getElementById('count'), q=document.getElementById('q');
+let mood='All', voice=false, star=false, key='i', dir=1;
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const isStar=r=>r.src&&r.src!=='Good under voiceover';
+const okVoice=r=>/Instrumental/i.test(r.voc);
+function render(){
+  const term=q.value.trim().toLowerCase();
+  const rows=S.filter(r=>(mood==='All'||r.mood===mood)&&(!voice||okVoice(r))&&(!star||isStar(r))&&(!term||(r.song+' '+r.artist).toLowerCase().includes(term)))
+    .sort((a,b)=>(a[key]>b[key]?1:a[key]<b[key]?-1:0)*dir);
+  tb.innerHTML=rows.map(r=>{
+    const yt='https://www.youtube.com/watch?v='+r.yt;
+    const src=isStar(r)?`<div class="src">★ ${esc(r.src)}</div>`:'';
+    return `<tr><td class="n">${r.i}</td><td><a class="song" href="${yt}" target="_blank" rel="noopener">${esc(r.song)}</a>${src}</td><td class="artist">${esc(r.artist)}</td><td><span class="mood m-${r.mood}">${r.mood}</span></td><td class="voc">${esc(r.voc)}</td><td class="note">${esc(r.use)}</td></tr>`}).join('');
+  cnt.textContent=rows.length+' of '+S.length+' songs';
+}
+document.querySelectorAll('.chip[data-m]').forEach(b=>b.addEventListener('click',()=>{mood=b.dataset.m;document.querySelectorAll('.chip[data-m]').forEach(x=>x.setAttribute('aria-pressed',x===b));render()}));
+document.getElementById('f-voice').addEventListener('click',e=>{voice=!voice;e.currentTarget.setAttribute('aria-pressed',voice);render()});
+document.getElementById('f-star').addEventListener('click',e=>{star=!star;e.currentTarget.setAttribute('aria-pressed',star);render()});
+q.addEventListener('input',render);
+document.querySelectorAll('th[data-k]').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.k;dir=key===k?-dir:1;key=k;render()}));
+render();
+</script>
+</body>
+</html>
