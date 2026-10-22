@@ -1967,17 +1967,45 @@ function lotSnap(p, pts, ll){ const C=Object.assign({ on:true, R:2.5, rot:3, sc:
   for (const sc0 of SCs) for (let rt=-RT; rt<=RT+1e-9; rt+=0.5*Math.PI/180) for (let dx=-R; dx<=R+1e-6; dx+=st) for (let dy=-R; dy<=R+1e-6; dy+=st){ const q=[dx,dy,sc0,rt]; const v=score(tf(...q))-pen(q); if (v>bestS){ bestS=v; bp=q; } }
   for (let it=0; it<3; it++){ const s2=st/(2*(it+1)), r2=0.25*Math.PI/180/(it+1);
     for (const sc of (it? [1-C.sc/4,1,1+C.sc/4] : Array.from({length:13},(_,i)=>1-C.sc+i*C.sc/6))) for (const dr of [-r2,0,r2]) for (const ddx of [-s2,0,s2]) for (const ddy of [-s2,0,s2]){ const q=[bp[0]+ddx,bp[1]+ddy,it?bp[2]*sc:sc,bp[3]+dr]; const v=score(tf(...q))-pen(q); if (v>bestS){ bestS=v; bp=q; } } }
-  window.__lotSnap={ base, best:bestS, dx:bp[0]/ppm, dy:bp[1]/ppm, sc:bp[2], rt:bp[3]*180/Math.PI };
-  return bestS > base*C.gain ? tf(...bp) : null;
+  let P0 = bestS > base*C.gain ? tf(...bp) : pts.map(q=>q.slice());
+  // per-edge: slide and tilt each side onto its own fence line, then rebuild corners as intersections
+  const edgeScore=(a,b)=>{ const L=Math.hypot(b[0]-a[0],b[1]-a[1]); const ns=Math.max(10,Math.round(L/D)); const nx=-(b[1]-a[1])/L, ny=(b[0]-a[0])/L; const v=[];
+    for (let k=1;k<ns;k++){ const t=k/ns; if (t<0.1||t>0.9) continue; const r=resp((a[0]+(b[0]-a[0])*t)/D,(a[1]+(b[1]-a[1])*t)/D,nx,ny); if (r!=null) v.push(Math.min(r,50)); }
+    if (v.length<5) return 0; v.sort((u,w)=>u-w); return v[Math.floor(v.length*(C.edgeQ||0.3))]; };
+  const n=P0.length, lines=[], info=[];
+  for (let i=0;i<n;i++){ const a=P0[i], b=P0[(i+1)%n]; const L=Math.hypot(b[0]-a[0],b[1]-a[1]); const nx=-(b[1]-a[1])/L, ny=(b[0]-a[0])/L, ux=(b[0]-a[0])/L, uy=(b[1]-a[1])/L;
+    const s0=edgeScore(a,b); let best={s:s0,d:0,r:0};
+    const Dm = (C.edgeR||0.9)*ppm, stp=Math.max(1,0.05*ppm), mx=(a[0]+b[0])/2, my=(a[1]+b[1])/2;
+    for (let d=-Dm; d<=Dm+1e-6; d+=stp) for (const rd of [-1,-0.5,0,0.5,1]){ const r=rd*Math.PI/180, cs=Math.cos(r), sn=Math.sin(r);
+      const rot=(q)=>{ const x0=q[0]-mx, y0=q[1]-my; return [mx+x0*cs-y0*sn+nx*d, my+x0*sn+y0*cs+ny*d]; };
+      const s=edgeScore(rot(a),rot(b)) - 2.0*Math.abs(d)/ppm - 1.0*Math.abs(rd); if (s>best.s){ best={s,d,r}; } }
+    const ok = best.s > s0*1.15 + 1 && L > 2*ppm; info.push({ i, s0, s:best.s, d: ok? best.d/ppm : 0, r: ok? best.r*180/Math.PI : 0 });
+    const r=ok?best.r:0, d=ok?best.d:0, cs=Math.cos(r), sn=Math.sin(r); const rot=(q)=>{ const x0=q[0]-mx, y0=q[1]-my; return [mx+x0*cs-y0*sn+nx*d, my+x0*sn+y0*cs+ny*d]; };
+    lines.push([rot(a),rot(b)]); }
+  const P1=[]; for (let i=0;i<n;i++){ const e1=lines[(i-1+n)%n], e2=lines[i]; const [p1,p2]=e1, [p3,p4]=e2; const d1x=p2[0]-p1[0], d1y=p2[1]-p1[1], d2x=p4[0]-p3[0], d2y=p4[1]-p3[1]; const den=d1x*d2y-d1y*d2x;
+    let q; if (Math.abs(den) < 1e-6*Math.hypot(d1x,d1y)*Math.hypot(d2x,d2y)+1e-9 || Math.abs(den)/(Math.hypot(d1x,d1y)*Math.hypot(d2x,d2y)) < 0.17) q=[(p2[0]+p3[0])/2,(p2[1]+p3[1])/2];
+    else { const t=((p3[0]-p1[0])*d2y-(p3[1]-p1[1])*d2x)/den; q=[p1[0]+d1x*t, p1[1]+d1y*t]; }
+    const o=P0[i]; if (Math.hypot(q[0]-o[0],q[1]-o[1]) > 1.3*ppm) q=o.slice(); P1.push(q); }
+  window.__lotSnap={ base, best:bestS, dx:bp[0]/ppm, dy:bp[1]/ppm, sc:bp[2], rt:bp[3]*180/Math.PI, edges:info.map(e=>({d:+e.d.toFixed(2), r:+e.r.toFixed(2), s0:+e.s0.toFixed(1), s:+e.s.toFixed(1)})) };
+  return P1;
 }
 window.__bae = { setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit();
     try { const R=lotSnap(p, pts, ll); if (R) { pts.splice(0, pts.length, ...R); } } catch(e){ console.warn(e); }
+    try { const EO=window.__edgeOff; if (EO && Object.keys(EO).length){ const n=pts.length; let per_px=0, per_m=0; const mLat=111132.92, mLng=111412.84*Math.cos(ll[0][0]*Math.PI/180);
+        for (let i=0;i<ll.length;i++){ const a=ll[i], b=ll[(i+1)%ll.length]; per_m+=Math.hypot((b[0]-a[0])*mLat,(b[1]-a[1])*mLng); }
+        for (let i=0;i<n;i++){ const a=pts[i], b=pts[(i+1)%n]; per_px+=Math.hypot(b[0]-a[0],b[1]-a[1]); }
+        const ppm=per_px/per_m; let cx=0,cy=0; pts.forEach(q=>{cx+=q[0];cy+=q[1];}); cx/=n; cy/=n;
+        const L=[]; for (let i=0;i<n;i++){ const a=pts[i], b=pts[(i+1)%n]; const l=Math.hypot(b[0]-a[0],b[1]-a[1]); let nx=-(b[1]-a[1])/l, ny=(b[0]-a[0])/l; const mx=(a[0]+b[0])/2, my=(a[1]+b[1])/2; if ((mx+nx-cx)**2+(my+ny-cy)**2 < (mx-nx-cx)**2+(my-ny-cy)**2){ nx=-nx; ny=-ny; }
+          const d=(EO[i]||0)*ppm; L.push([[a[0]+nx*d,a[1]+ny*d],[b[0]+nx*d,b[1]+ny*d]]); }
+        const Q=[]; for (let i=0;i<n;i++){ const [p1,p2]=L[(i-1+n)%n], [p3,p4]=L[i]; const d1x=p2[0]-p1[0], d1y=p2[1]-p1[1], d2x=p4[0]-p3[0], d2y=p4[1]-p3[1]; const den=d1x*d2y-d1y*d2x;
+          if (Math.abs(den)/(Math.hypot(d1x,d1y)*Math.hypot(d2x,d2y)) < 0.17) Q.push([(p2[0]+p3[0])/2,(p2[1]+p3[1])/2]); else { const t=((p3[0]-p1[0])*d2y-(p3[1]-p1[1])*d2x)/den; Q.push([p1[0]+d1x*t, p1[1]+d1y*t]); } }
+        pts.splice(0, n, ...Q); } } catch(e){ console.warn(e); }
     let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; pts.forEach(q=>{ x0=Math.min(x0,q[0]); x1=Math.max(x1,q[0]); y0=Math.min(y0,q[1]); y1=Math.max(y1,q[1]); });
     const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3); const chh=cw/1.5;
     let cx=(x0+x1)/2-cw/2, cy=(y0+y1)/2-chh/2; cx=Math.max(0,Math.min(p.w-cw,cx)); cy=Math.max(0,Math.min(p.h-chh,cy)); const zf=p.w/cw;
     const col = prefs.agency==="grey-s" ? "#FFFFFF" : agency().color; const sh={ id:nid(), type:"poly", pts, color:col, width:17/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:72/(62*zf), lensWeight:wt>=700?600:400 }; p.shapes.push(sh); p.outside='blur'; p.blurAmt=Math.max(6, 15*cw/p.w); p._blur=null; p.pins.length=0;
     if (area){ p.texts.push({ id:nid(), link:sh.id, style:"area", color:"#ffffff", size:200, x:0, y:0, autoSize:true, lot:area, text:area+"m2", weight:wt||400, fitW:0.62, fitH:0.5 }); }
-    refreshAll(); return { crop:[cx,cy,cw,chh], w:p.w, h:p.h, snap:window.__lotSnap }; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { w:p.w, h:p.h, cam:p.cam, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
+    refreshAll(); return { crop:[cx,cy,cw,chh], w:p.w, h:p.h, snap:window.__lotSnap }; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { w:p.w, h:p.h, cam:p.cam, shapes:p.shapes.map(s=>s.pts.map(q=>q.map(Math.round))), snap:window.__lotSnap||null, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
 
 })();
 </script>
