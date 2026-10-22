@@ -573,6 +573,18 @@ function finishImage(base, p){
   normaliseLook(px, w, h);
   // 2. sky analysis on the graded image
   let sky = (p.skyOn !== false && !(window.__TUNE&&window.__TUNE.noSky)) ? analyseSky(px, w, h) : null;
+  // Sky can't sit below the true horizon: a washed-out sea or haze is not sky. Clamp to the camera's geometric horizon.
+  if (sky && p.cam && p.cam.ready && p.cam.pitch > -60){
+    const fpx = p.cam.f35*Math.hypot(p.ow,p.oh)/43.27, yO = p.oh/2 + fpx*Math.tan((p.cam.pitch+0.35)*DEG), geo = (yO - p.y0)*p.k + 0.004*h;
+    const xc = w/2, ydet = sky.m*xc + sky.b;
+    if (ydet > geo){ sky.b = geo - sky.m*xc; p.skyClamped = Math.round(ydet-geo);
+      // blown sea / haze band under the horizon: roll off the glare so it reads as water, not a white stripe
+      const TTs = Object.assign({}, TUNE, window.__TUNE||{}), hz = TTs.skyHz, y0 = Math.max(0, geo-0.012*h|0), y1 = Math.min(h, (ydet + 0.02*h)|0);
+      for (let y=y0; y<y1; y++){ const fy = 1; for (let x=0; x<w; x++){ const i=(y*w+x)*4, Y=(px[i]+px[i+1]+px[i+2])/3; if (Y<200) continue;
+        const t = Math.min(1,(Y-200)/40)*fy, k = 1 - 0.16*t;
+        px[i] = px[i]*k*(1-0.25*t) + hz[0]*0.82*0.25*t; px[i+1] = px[i+1]*k*(1-0.25*t) + hz[1]*0.86*0.25*t; px[i+2] = px[i+2]*k*(1-0.25*t) + Math.min(255,hz[2]*0.95)*0.25*t; } }
+    }
+  }
   // 2b. dehaze: distant ground just under the horizon goes milky grey into the sun — pull it back
   if (sky && p.dehaze !== false && !(Object.assign({},TUNE,window.__TUNE||{}).noDehaze)) dehazeBand(px, w, h, x => sky.m*x + sky.b);
   // Golden-hour / dawn sky: warm, not blue. Editors leave these alone — so do we.
@@ -911,13 +923,13 @@ function tidySides(p){
   const K = boxed ? 16 : 1, st = boxed ? 70*s : step;
   const place = (pin, others) => {
     let best = null;
-    for (let k=0;k<K;k++) for (const flip of boxed ? [false] : [false,true]) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : (flip ? ["right","left","bottom"] : ["right","left","top"]))){
+    for (let k=0;k<K;k++) for (const flip of [false]) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : ["right","left"])){
       if (boxed){ pin.off = side; pin.side = "right"; } else pin.side = side;
       pin.flip = flip; pin.lift = k*st;
       const parts = pinParts(p,pin), r = parts[0];
       const mg = 10*s, off = Math.max(0, mg-r[0]) + Math.max(0, r[2]-(p.w-mg)) + Math.max(0, mg-r[1]) + Math.max(0, r[3]-(p.h-mg));
       let o = 0; for (const q of others) for (const a of parts) for (const b of q) o += ov(a,b);
-      const score = off*20000 + o*8 + (k*(boxed?3000:9000) + (flip?5000:0))*s*s + (side==="left"?10:side==="top"||side==="bottom"?2500*s*s:0) + (boxed && side!==.5 ? 4000*s*s : 0);
+      const score = off*20000 + o*8 + (k*(boxed?3000:9000) + (flip?5000:0))*s*s + (side==="top"||side==="bottom"?2500*s*s:0) + (!boxed && side!==(pin.ex > p.w*0.68 ? "left" : "right") ? 6000*s*s : 0) + (boxed && side!==.5 ? 4000*s*s : 0);
       if (!best || score < best.score) best = { side, flip, lift:pin.lift, score };
     }
     if (boxed){ pin.off = best.side; pin.side = "right"; } else pin.side = best.side;
@@ -1905,28 +1917,35 @@ new ResizeObserver(()=>{ if (!userMoved) fit(); else requestDraw(); }).observe(s
 })();
 // read-only hook for automated checks
 
-function lotSnap(p, pts, ll){ if (window.__noSnap || !window.__useSnap) return null;
+function lotSnap(p, pts, ll){ const C=Object.assign({ on:false, R:2.5, rot:3, sc:0.04, mode:"ridge", pen:0.8, gain:1.08 }, window.__snapCfg||{}); if (!C.on || window.__noSnap) return null;
   const img = photoImage(p, false), D=4, W=Math.round(p.w/D), H=Math.round(p.h/D);
   const c=document.createElement("canvas"); c.width=W; c.height=H; const x=c.getContext("2d"); x.drawImage(img,0,0,W,H);
   const d=x.getImageData(0,0,W,H).data, g=new Float32Array(W*H);
   for (let i=0;i<W*H;i++) g[i]=0.3*d[i*4]+0.59*d[i*4+1]+0.11*d[i*4+2];
   const mLat=111132.92, mLng=111412.84*Math.cos(ll[0][0]*Math.PI/180);
   const m0=Math.hypot((ll[1][0]-ll[0][0])*mLat,(ll[1][1]-ll[0][1])*mLng), p0=Math.hypot(pts[1][0]-pts[0][0],pts[1][1]-pts[0][1]); const ppm=p0/m0;
-  const wr=Math.max(1.5, 0.3*ppm/D);           // ridge half-width ~0.3 m
+  const wr=Math.max(1.5, 0.3*ppm/D);
   const G=(X,Y)=>{ X=Math.round(X); Y=Math.round(Y); return (X>=0&&Y>=0&&X<W&&Y<H) ? g[Y*W+X] : null; };
   let cx=0,cy=0; pts.forEach(q=>{cx+=q[0];cy+=q[1];}); cx/=pts.length; cy/=pts.length;
-  const tf=(dx,dy,sc)=>pts.map(q=>[cx+dx+sc*(q[0]-cx), cy+dy+sc*(q[1]-cy)]);
-  const score=(P)=>{ let s=0,n=0; for (let i=0;i<P.length;i++){ const a=P[i], b=P[(i+1)%P.length]; const L=Math.hypot(b[0]-a[0],b[1]-a[1]); const ns=Math.max(8,Math.round(L/D/2)); const nx=-(b[1]-a[1])/L, ny=(b[0]-a[0])/L;
-      for (let k=1;k<ns;k++){ const t=k/ns; if (t<0.1||t>0.9) continue; const X=(a[0]+(b[0]-a[0])*t)/D, Y=(a[1]+(b[1]-a[1])*t)/D;
-        const c0=G(X,Y), l=G(X-nx*wr,Y-ny*wr), r=G(X+nx*wr,Y+ny*wr); if (c0==null||l==null||r==null) continue;
-        const ridge=Math.max(0, Math.min(l,r)-c0, c0-Math.max(l,r));   // thin line darker or lighter than BOTH sides
-        s+=Math.min(ridge,50); n++; } } return n? s/n : 0; };
-  const base=score(pts); let bestS=base, bp=[0,0,1]; const R=1.0*ppm, st=Math.max(D, 0.15*ppm);
-  for (let dx=-R; dx<=R+1e-6; dx+=st) for (let dy=-R; dy<=R+1e-6; dy+=st) for (const sc of [0.985,1,1.015]){ const v=score(tf(dx,dy,sc)) - 1.5*Math.hypot(dx,dy)/ppm; if (v>bestS){ bestS=v; bp=[dx,dy,sc]; } }
-  window.__lotSnap={ base, best:bestS, dx:bp[0]/ppm, dy:bp[1]/ppm, sc:bp[2] };
-  return bestS > base*1.12 ? tf(...bp) : null;
+  const tf=(dx,dy,sc,rt)=>{ const cs=Math.cos(rt), sn=Math.sin(rt); return pts.map(q=>{ const ux=q[0]-cx, uy=q[1]-cy; return [cx+dx+sc*(ux*cs-uy*sn), cy+dy+sc*(ux*sn+uy*cs)]; }); };
+  const resp=(X,Y,nx,ny)=>{ const c0=G(X,Y), l=G(X-nx*wr,Y-ny*wr), r=G(X+nx*wr,Y+ny*wr); if (c0==null||l==null||r==null) return null;
+    if (C.mode==="ridge") return Math.max(0, Math.min(l,r)-c0, c0-Math.max(l,r));
+    const ridge=Math.max(0, Math.min(l,r)-c0, c0-Math.max(l,r)); return ridge + 0.35*Math.abs(l-r); };
+  // per-edge score so one strong roof edge can't dominate: average of per-edge medians
+  const score=(P)=>{ let tot=0, ne=0; for (let i=0;i<P.length;i++){ const a=P[i], b=P[(i+1)%P.length]; const L=Math.hypot(b[0]-a[0],b[1]-a[1]); const ns=Math.max(8,Math.round(L/D/2)); const nx=-(b[1]-a[1])/L, ny=(b[0]-a[0])/L; const v=[];
+      for (let k=1;k<ns;k++){ const t=k/ns; if (t<0.08||t>0.92) continue; const r=resp((a[0]+(b[0]-a[0])*t)/D,(a[1]+(b[1]-a[1])*t)/D,nx,ny); if (r!=null) v.push(Math.min(r,50)); }
+      if (v.length>4){ v.sort((u,w)=>u-w); const m=v[Math.floor(v.length*0.6)]; tot+=m*Math.sqrt(L); ne+=Math.sqrt(L); } } return ne? tot/ne : 0; };
+  const pen=(bp)=>C.pen*(Math.hypot(bp[0],bp[1])/ppm) + (C.scPen||15)*Math.abs(bp[2]-1) + 0.3*Math.abs(bp[3]*180/Math.PI);
+  const base=score(pts); let bestS=base, bp=[0,0,1,0];
+  const R=C.R*ppm, st=Math.max(D, 0.25*ppm), RT=C.rot*Math.PI/180;
+  const SCs=[]; for (let s=1-C.sc; s<=1+C.sc+1e-9; s+=Math.max(0.01,C.sc/4)) SCs.push(s);
+  for (const sc0 of SCs) for (let rt=-RT; rt<=RT+1e-9; rt+=0.5*Math.PI/180) for (let dx=-R; dx<=R+1e-6; dx+=st) for (let dy=-R; dy<=R+1e-6; dy+=st){ const q=[dx,dy,sc0,rt]; const v=score(tf(...q))-pen(q); if (v>bestS){ bestS=v; bp=q; } }
+  for (let it=0; it<3; it++){ const s2=st/(2*(it+1)), r2=0.25*Math.PI/180/(it+1);
+    for (const sc of (it? [1-C.sc/4,1,1+C.sc/4] : Array.from({length:13},(_,i)=>1-C.sc+i*C.sc/6))) for (const dr of [-r2,0,r2]) for (const ddx of [-s2,0,s2]) for (const ddy of [-s2,0,s2]){ const q=[bp[0]+ddx,bp[1]+ddy,it?bp[2]*sc:sc,bp[3]+dr]; const v=score(tf(...q))-pen(q); if (v>bestS){ bestS=v; bp=q; } } }
+  window.__lotSnap={ base, best:bestS, dx:bp[0]/ppm, dy:bp[1]/ppm, sc:bp[2], rt:bp[3]*180/Math.PI };
+  return bestS > base*C.gain ? tf(...bp) : null;
 }
-window.__bae = { setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit();
+window.__bae = { setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit();
     try { const R=lotSnap(p, pts, ll); if (R) { pts.splice(0, pts.length, ...R); } } catch(e){ console.warn(e); }
     let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; pts.forEach(q=>{ x0=Math.min(x0,q[0]); x1=Math.max(x1,q[0]); y0=Math.min(y0,q[1]); y1=Math.max(y1,q[1]); });
     const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3); const chh=cw/1.5;
