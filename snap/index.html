@@ -490,8 +490,9 @@ function fuse(frames) {
       const lap = Math.abs(4 * g[k] - g[k - 1] - g[k + 1] - g[k - hw] - g[k + hw]);
       const r = s.r[k], gg = s.g[k], b = s.b[k], mu = (r + gg + b) / 3;
       const sat = Math.sqrt(((r - mu) ** 2 + (gg - mu) ** 2 + (b - mu) ** 2) / 3);
-      const well = Math.exp(-((r - .5) ** 2 + (gg - .5) ** 2 + (b - .5) ** 2) / (2 * 0.2 * 0.2));
-      wt[k] = Math.pow(lap + 1e-3, 0.6) * Math.pow(sat + 1e-3, 0.4) * Math.pow(well + 1e-6, 1.2);
+      const well = Math.exp(-((r - .5) ** 2 + (gg - .5) ** 2 + (b - .5) ** 2) / (2 * 0.22 * 0.22));
+      const mx = Math.max(r, gg, b), clip = mx > 0.97 ? 0.03 : mx > 0.92 ? 0.03 + 0.97 * (0.97 - mx) / 0.05 : 1;
+      wt[k] = Math.pow(lap + 1e-3, 0.6) * Math.pow(sat + 1e-3, 0.4) * Math.pow(well + 1e-6, 1.2) * clip;
     }
     return resizePlane(wt, hw, hh, w, h);
   });
@@ -538,17 +539,26 @@ function whiteBalance(im, strength) {
 
 function tone(im) {
   const n = im.w * im.h, Y = grayOf(im);
-  const hi = percentile(Y, 96), scale = Math.min(2.4, Math.max(0.85, 0.94 / Math.max(hi, 1e-3)));
+  const hi = percentile(Y, 92), scale = Math.min(2.4, Math.max(0.85, 0.92 / Math.max(hi, 1e-3)));
   const med = Math.min(0.95, Math.max(0.02, percentile(Y, 50) * scale));
   const gamma = Math.min(1.15, Math.max(0.55, Math.log(0.6) / Math.log(med)));
-  const knee = 0.88;
+  // large-scale brightness: where a whole area is bright (windows, sunlit walls) pull it down gently
+  // so it blends into the room instead of sitting as a flat white block
+  const B = boxBlur(Y, im.w, im.h, Math.max(6, Math.round(Math.max(im.w, im.h) * 0.03)));
+  const B2 = boxBlur(B, im.w, im.h, Math.max(6, Math.round(Math.max(im.w, im.h) * 0.03)));
+  const knee = 0.80;
   for (let i = 0; i < n; i++) {
     const y = Y[i] + 1e-5;
-    let t = Math.pow(Math.min(1, y * scale), gamma);
-    if (t > knee) t = knee + (1 - knee) * Math.tanh((t - knee) / (1 - knee));
+    let base = Math.min(1.5, B2[i] * scale);
+    let t = Math.pow(Math.min(1.6, y * scale), gamma);
+    if (base > 0.95) t *= Math.pow(0.95 / base, 0.6);         // only areas brighter than the room (windows, sun) are pulled down
+    if (t > knee) { const x = t - knee; t = knee + (1 - knee) * x / (x + (1 - knee)); }   // soft shoulder, never a hard clip
     t += 0.03 * (1 - t) * Math.exp(-t / 0.08);
     const k = t / y;
-    im.r[i] = Math.min(1, im.r[i] * k); im.g[i] = Math.min(1, im.g[i] * k); im.b[i] = Math.min(1, im.b[i] * k);
+    let r = im.r[i] * k, g = im.g[i] * k, b = im.b[i] * k;
+    const mx = Math.max(r, g, b);
+    if (mx > 1) { const f = (mx - 1) / mx; r += (t - r) * f; g += (t - g) * f; b += (t - b) * f; }   // fade to white, no hue shift
+    im.r[i] = Math.min(1, r); im.g[i] = Math.min(1, g); im.b[i] = Math.min(1, b);
   }
   return im;
 }
