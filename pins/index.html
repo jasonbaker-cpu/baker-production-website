@@ -536,6 +536,14 @@ function dehazeBand(px, w, h, line){
   for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ let m=255; for (let k=-r;k<=r;k++){ const xx=Math.min(sw-1,Math.max(0,x+k)); const v=D[y*sw+xx]; if (v<m) m=v; } T[y*sw+x]=m; }
   for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ let m=255; for (let k=-r;k<=r;k++){ const yy=Math.min(sh-1,Math.max(0,y+k)); const v=T[yy*sw+x]; if (v<m) m=v; } M[y*sw+x]=m; }
   const Mb = gaussBlur(M, sw, sh, 3);
+  // water / smooth sky under the line: flat and bluish — dehazing it blows it out, so leave it alone
+  const Lr = new Float32Array(sw*sh), Wm = new Float32Array(sw*sh);
+  for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ const i=((y*s)*w+x*s)*4; Lr[y*sw+x]=(px[i]+px[i+1]+px[i+2])/3; }
+  const Lb = gaussBlur(Lr, sw, sh, 1.2); const Td = new Float32Array(sw*sh); for (let i=0;i<Td.length;i++) Td[i]=Math.abs(Lr[i]-Lb[i]);
+  const Tx = gaussBlur(Td, sw, sh, 2.5);
+  for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ const j=y*sw+x, i=((y*s)*w+x*s)*4; const bl = px[i+2]-px[i]; Wm[j] = (Tx[j] < 4 && bl > 4) ? 1 : (Tx[j] < 2.2 ? 0.7 : 0); }
+  const Wb = gaussBlur(Wm, sw, sh, 3);
+  const wat = (x,y) => { const fx=Math.min(sw-1,x/s|0), fy=Math.min(sh-1,y/s|0); return Math.min(1, Wb[fy*sw+fx]*1.4); };
   // airlight: brightest ground haze in the first slice under the horizon
   let ar=0, ag=0, ab=0, n=0; const vals=[];
   for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ const Y=y*s, X=x*s, hz=line(X); if (Y<hz+2 || Y>hz+0.06*h) continue; vals.push(Mb[y*sw+x]); }
@@ -550,7 +558,7 @@ function dehazeBand(px, w, h, line){
       const hz = line(x), d = (y-hz)/band; if (d < -0.02 || d > 1) continue;
       const u = d < 0 ? 1 + d/0.02 : 1 - d; const wgt = u*u*(3-2*u);
       const tmin = 0.28 + 0.27*Math.min(1, Math.max(0,d)/0.5), st2 = Math.min(0.97, strength + 0.25*(1-Math.min(1,Math.max(0,d)/0.3)));
-      const t = Math.max(tmin, 1 - st2*wgt*at(x,y)/A);
+      const t = Math.max(tmin, 1 - st2*wgt*(1-wat(x,y))*at(x,y)/A);
       const i = (y*w+x)*4;
       px[i]   = (px[i]  -ar)/t + ar - (1-t)*12;
       px[i+1] = (px[i+1]-ag)/t + ag - (1-t)*10;
@@ -582,12 +590,11 @@ function finishImage(base, p){
   if (sky && p.cam && p.cam.ready && p.cam.pitch > -60){
     const fpx = p.cam.f35*Math.hypot(p.ow,p.oh)/43.27, yO = p.oh/2 + fpx*Math.tan((p.cam.pitch+0.35)*DEG), geo = (yO - p.y0)*p.k + 0.004*h;
     const xc = w/2, ydet = sky.m*xc + sky.b;
-    if (ydet > geo){ sky.b = geo - sky.m*xc; p.skyClamped = Math.round(ydet-geo);
-      // blown sea / haze band under the horizon: roll off the glare so it reads as water, not a white stripe
-      const TTs = Object.assign({}, TUNE, window.__TUNE||{}), hz = TTs.skyHz, y0 = Math.max(0, geo-0.012*h|0), y1 = Math.min(h, (ydet + 0.02*h)|0);
-      for (let y=y0; y<y1; y++){ const fy = 1; for (let x=0; x<w; x++){ const i=(y*w+x)*4, Y=(px[i]+px[i+1]+px[i+2])/3; if (Y<200) continue;
-        const t = Math.min(1,(Y-200)/40)*fy, k = 1 - 0.16*t;
-        px[i] = px[i]*k*(1-0.25*t) + hz[0]*0.82*0.25*t; px[i+1] = px[i+1]*k*(1-0.25*t) + hz[1]*0.86*0.25*t; px[i+2] = px[i+2]*k*(1-0.25*t) + Math.min(255,hz[2]*0.95)*0.25*t; } }
+    if (ydet > geo + 0.025*h){ sky.b = geo + 0.006*h - sky.m*xc; p.skyClamped = Math.round(ydet-geo);
+      // the blown band (glary sea / haze) between the true horizon and where the sky test stopped: compress highlights evenly so it reads as water
+      { const yA = Math.max(0,(geo-0.02*h)|0), yB = Math.min(h,(ydet+0.03*h)|0), fe = Math.max(2, 0.015*h);
+        for (let y=yA; y<yB; y++){ const v = Math.min(1,(y-yA)/fe, (yB-y)/fe); for (let x=0;x<w;x++){ const i=(y*w+x)*4, Y=(px[i]+px[i+1]+px[i+2])/3; const t = Math.min(1, Math.max(0,(Y-170)/70))*v; if (t<=0) continue;
+          const k = 1 - 0.3*t; px[i]*=k*(1-0.03*t); px[i+1]*=k; px[i+2]*=k*(1+0.02*t); } } }
     }
   }
   // 2b. dehaze: distant ground just under the horizon goes milky grey into the sun — pull it back
@@ -599,9 +606,9 @@ function finishImage(base, p){
   // Keep a good real sky (blue with proper clouds): the editors only swap washed-out or blown skies.
   p.skyKept = false;
   if (sky && p.skyKeepReal !== false){
-    let n=0, blue=0, clip=0; const hz = Math.max(4, Math.min(h-1, sky.b|0)), st = Math.max(1, Math.round(w/400));
-    for (let y=0; y<hz*0.85; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2]; n++; if (b > r + 28 && b > 120) blue++; if (r>242 && g>242 && b>242) clip++; }
-    if (n && blue/n > 0.45 && clip/n < 0.12){ p.skyKept = true; }
+    let n=0, blue=0, clip=0, cloudp=0; const hz = Math.max(4, Math.min(h-1, sky.b|0)), st = Math.max(1, Math.round(w/400));
+    for (let y=0; y<hz*0.85; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2]; n++; if (b > r + 28 && b > 120) blue++; else if (Math.min(r,g,b) > 165 && b >= r - 4 && !(r>242 && g>242 && b>242)) cloudp++; if (r>242 && g>242 && b>242) clip++; }
+    if (n && ((blue/n > 0.45 && clip/n < 0.12) || (blue/n > 0.2 && (blue+cloudp)/n > 0.85 && clip/n < 0.06))){ p.skyKept = true; }
   }
   let prot = null, line = null;
   if (sky){
@@ -613,6 +620,12 @@ function finishImage(base, p){
     sky.colLim = new Float32Array(sky.sw);
     for (let x=0;x<sky.sw;x++){ let y=0; const hz=Math.min(sky.sh,(sky.m*x*sky.s + sky.b)/sky.s); while (y<hz && prot[y*sky.sw+x] <= 0.35) y++; if (y>=hz){ sky.colLim[x]=hz; continue; } while (y<hz && prot[y*sky.sw+x] > 0.35) y++; sky.colLim[x]=y; }
     const cl2 = new Float32Array(sky.sw); for (let x=0;x<sky.sw;x++){ const v=[]; for (let k=-6;k<=6;k++){ const xx=Math.min(sky.sw-1,Math.max(0,x+k)); v.push(sky.colLim[xx]); } v.sort((a,b)=>a-b); cl2[x]=v[3]; } sky.colLim=cl2;
+    // fill narrow dips (< ~4% of width) that contain no texture: those are missed sky, not poles or towers
+    { const W2=sky.sw, maxW=Math.max(6, W2*0.04|0), L=sky.colLim;
+      for (let x=1; x<W2-1; x++){ if (L[x] >= L[x-1]-2) continue; let e=x; while (e<W2-1 && L[e] < L[x-1]-2) e++; if (e-x > maxW) { x=e; continue; }
+        const lvl = Math.min(L[x-1], L[Math.min(W2-1,e)]); let tx=0, n=0;
+        for (let xx=x; xx<e; xx++) for (let yy=L[xx]|0; yy<lvl; yy++){ tx += sky.tex[yy*W2+xx]; n++; }
+        if (!n || tx/n < 3.0) for (let xx=x; xx<e; xx++) L[xx]=lvl; x=e; } }
   }
   const protAt = (x,y) => { if (!prot) return 0; const fx = Math.min(sky.sw-1.001, x/sky.s), fy = Math.min(sky.sh-1.001, y/sky.s); const x0=fx|0, y0=fy|0, tx=fx-x0, ty=fy-y0, i=y0*sky.sw+x0; return (prot[i]*(1-tx)+prot[i+1]*tx)*(1-ty) + (prot[i+sky.sw]*(1-tx)+prot[i+sky.sw+1]*tx)*ty; };
   // 3. detail: band gains fitted to the finals (crisp fine detail, slightly flatter large-scale contrast)
@@ -668,6 +681,13 @@ function finishImage(base, p){
       px[i]=r; px[i+1]=g; px[i+2]=b;   // Uint8ClampedArray clamps
     }
   }
+  // soften the sky/land join: a short vertical blend across the horizon removes hard white lines
+  if (sky && line){ const r = Math.max(3, Math.round(0.006*h)), col = new Float32Array((4*r+2)*3);
+    for (let x=0; x<w; x++){ const cLim = sky.colLim ? sky.colLim[Math.min(sky.sw-1, (x/sky.s)|0)]*sky.s : 1e9, yb = Math.round(Math.min(line(x), cLim)), y0 = Math.max(1, yb-2*r), y1 = Math.min(h-2, yb+r); if (y1<=y0) continue; const n=y1-y0+1;
+      for (let k=0;k<n;k++){ const i=((y0+k)*w+x)*4; col[k*3]=px[i]; col[k*3+1]=px[i+1]; col[k*3+2]=px[i+2]; }
+      for (let k=0;k<n;k++){ const y=y0+k, d=Math.abs(y-yb)/(y<yb?2*r:r), wgt=Math.max(0,1-d); if (!wgt) continue; let a=0,b=0,cc=0,s=0;
+        for (let t=-r;t<=r;t++){ const kk=Math.min(n-1,Math.max(0,k+t)), g=1-Math.abs(t)/(r+1); a+=col[kk*3]*g; b+=col[kk*3+1]*g; cc+=col[kk*3+2]*g; s+=g; }
+        const i=(y*w+x)*4; px[i]=px[i]*(1-wgt)+a/s*wgt; px[i+1]=px[i+1]*(1-wgt)+b/s*wgt; px[i+2]=px[i+2]*(1-wgt)+cc/s*wgt; } } }
   const out = document.createElement("canvas"); out.width = w; out.height = h; out.getContext("2d").putImageData(id,0,0);
   return { canvas: out, sky };
 }
