@@ -507,9 +507,13 @@ function lookStats(px, w, h){
 }
 function normaliseLook(px, w, h){
   const s = lookStats(px, w, h), cl = (v,a,b)=>Math.max(a,Math.min(b,v)), TT = Object.assign({}, TUNE, window.__TUNE||{}), LOOK = Object.assign({}, LOOK0, { y:TT.lookY, lo:TT.lookLo, hi:TT.lookHi, bg:TT.lookBg, rg:TT.lookRg });
+  // Editors keep each photo's own exposure and cast, then lift it a touch, warm it and add saturation.
+  const RS = window.__rawSt, rel = !(window.__TUNE && window.__TUNE.lookY) && TT.relative !== false && RS;
+  if (rel){ LOOK.y = cl(RS.med + (TT.relY||10), 100, 158); LOOK.rg = cl(RS.rg + (TT.relRg||0.03), 0.98, 1.24); LOOK.bg = cl(RS.bg - (TT.relBg||0.04), 0.72, 1.0); }
+  const satT = rel ? cl(RS.sat + (TT.relSat||0.07), 0.2, 0.42) : (window.__TUNE&&window.__TUNE.sat||TUNE.sat);
   const kr = cl(Math.pow(LOOK.rg/s.rg, .7), .9, 1.1), kb = cl(Math.pow(LOOK.bg/s.bg, .7), .9, 1.1);
   const gam = cl(Math.log(LOOK.y/255)/Math.log(Math.max(5,s.med)/255), .7, 1.6), gm = 1 + (gam-1)*.9;
-  const ks = cl(Math.pow((window.__TUNE&&window.__TUNE.sat||TUNE.sat)/Math.max(.05,s.sat), .5), TT.ksMin||.88, 1.18);
+  const ks = cl(Math.pow(satT/Math.max(.05,s.sat), .5), TT.ksMin||.88, 1.25);
   // levels after gamma: nudge the 5th/95th percentiles halfway to the finals'
   const g = v => 255*Math.pow(v/255, gm), lo = g(s.lo), hi = g(s.hi);
   const lo2 = lo + (LOOK.lo-lo)*TT.lvlAmt, hi2 = hi + (LOOK.hi-hi)*TT.lvlAmt, a = (hi2-lo2)/Math.max(20,hi-lo), b0 = lo2 - a*lo;
@@ -557,6 +561,7 @@ function dehazeBand(px, w, h, line){
 function finishImage(base, p){
   const w = base.width, h = base.height;
   const ctx = base.getContext("2d"); const id = ctx.getImageData(0,0,w,h); const px = id.data;
+  window.__rawSt = lookStats(px, w, h);
   const L = lut(), N = LUT_N, N2 = N*N, sc = (N-1)/255;
   // 1. colour: 3D lookup table (offsets), trilinear
   for (let i=0;i<px.length;i+=4){
