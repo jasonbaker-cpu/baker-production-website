@@ -497,8 +497,8 @@ function analyseSky(img, w, h){
   const cloud = new Uint8Array(sw*sh); for (let i=0;i<d.length;i++){ const mn=Math.min(R[i],G[i],B[i]), mx=Math.max(R[i],G[i],B[i]); cloud[i] = (skyc[i] || (mn>105 && mx-mn<45 && B[i]>=R[i]-4 && Y[i] > topY*0.8)) ? 1 : 0; }
   return { m, b:b*s, s, sw, sh, skyc, tex, cloud };
 }
-const LOOK = { y:114, rg:1.075, bg:0.876, sat:0.29, lo:24, hi:210 };
-const TUNE = Object.assign({ fine:2.5, mid:1.35, sat:0.26, noDehaze:true, skyTop:[140,180,222], skyHz:[188,201,212], plateMix:0.95, realMix:0.9, farSoft:0.18, hzStart:0.5, hzAmt:0.9 }, (typeof window!=='undefined' && window.__TUNE) || {});
+const LOOK0 = { y:114, rg:1.075, bg:0.876, sat:0.29, lo:24, hi:210 }, LOOK = LOOK0;
+const TUNE = Object.assign({ fine:2.3, mid:1.35, sat:0.30, noDehaze:false, skyTop:[140,180,222], skyHz:[188,201,212], plateMix:0.95, realMix:0.9, farSoft:0, hzStart:0.5, hzAmt:0.9, lookY:108, lookLo:14, lookHi:210, lookBg:0.91, lookRg:1.075, lvlAmt:0.65 }, (typeof window!=='undefined' && window.__TUNE) || {});
 function lookStats(px, w, h){
   const st = Math.max(1, Math.round(Math.sqrt(w*h/120000))), ys=[]; let R=0,G=0,B=0,S=0,n=0;
   for (let y=Math.floor(h*.45); y<h; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2], Y=.299*r+.587*g+.114*b; ys.push(Y); if (Y>30 && Y<225){ R+=r; G+=g; B+=b; const mx=Math.max(r,g,b), mn=Math.min(r,g,b); S+=(mx-mn)/(mx+1e-3); n++; } }
@@ -506,14 +506,14 @@ function lookStats(px, w, h){
   return { med:q(.5), lo:q(.05), hi:q(.95), rg:R/Math.max(G,1), bg:B/Math.max(G,1), sat:S/Math.max(n,1) };
 }
 function normaliseLook(px, w, h){
-  const s = lookStats(px, w, h), cl = (v,a,b)=>Math.max(a,Math.min(b,v));
+  const s = lookStats(px, w, h), cl = (v,a,b)=>Math.max(a,Math.min(b,v)), TT = Object.assign({}, TUNE, window.__TUNE||{}), LOOK = Object.assign({}, LOOK0, { y:TT.lookY, lo:TT.lookLo, hi:TT.lookHi, bg:TT.lookBg, rg:TT.lookRg });
   const kr = cl(Math.pow(LOOK.rg/s.rg, .7), .9, 1.1), kb = cl(Math.pow(LOOK.bg/s.bg, .7), .9, 1.1);
   const gam = cl(Math.log(LOOK.y/255)/Math.log(Math.max(5,s.med)/255), .7, 1.6), gm = 1 + (gam-1)*.9;
-  const ks = cl(Math.pow((window.__TUNE&&window.__TUNE.sat||TUNE.sat)/Math.max(.05,s.sat), .5), .88, 1.18);
+  const ks = cl(Math.pow((window.__TUNE&&window.__TUNE.sat||TUNE.sat)/Math.max(.05,s.sat), .5), TT.ksMin||.88, 1.18);
   // levels after gamma: nudge the 5th/95th percentiles halfway to the finals'
   const g = v => 255*Math.pow(v/255, gm), lo = g(s.lo), hi = g(s.hi);
-  const lo2 = lo + (LOOK.lo-lo)*.5, hi2 = hi + (LOOK.hi-hi)*.5, a = (hi2-lo2)/Math.max(20,hi-lo), b0 = lo2 - a*lo;
-  const T = new Float32Array(256); for (let v=0; v<256; v++) T[v] = cl(a*g(v)+b0, 0, 255);
+  const lo2 = lo + (LOOK.lo-lo)*TT.lvlAmt, hi2 = hi + (LOOK.hi-hi)*TT.lvlAmt, a = (hi2-lo2)/Math.max(20,hi-lo), b0 = lo2 - a*lo;
+  const T = new Float32Array(256), SK = TT.curve||0; for (let v=0; v<256; v++){ let o = cl(a*g(v)+b0, 0, 255); if (SK){ const S = 127.5-127.5*Math.cos(Math.PI*o/255); o = o + SK*(S-o); } T[v] = o; }
   for (let i=0;i<px.length;i+=4){
     const r = T[cl(px[i]*kr,0,255)|0], gg = T[px[i+1]], b = T[cl(px[i+2]*kb,0,255)|0];
     const Y = .299*r+.587*gg+.114*b;
@@ -572,7 +572,7 @@ function finishImage(base, p){
   // 1b. consistency: pull every photo to the same place — the median of 191 delivered finals (ground exposure, white balance, saturation, black/white points)
   normaliseLook(px, w, h);
   // 2. sky analysis on the graded image
-  let sky = (p.skyOn !== false) ? analyseSky(px, w, h) : null;
+  let sky = (p.skyOn !== false && !(window.__TUNE&&window.__TUNE.noSky)) ? analyseSky(px, w, h) : null;
   // 2b. dehaze: distant ground just under the horizon goes milky grey into the sun — pull it back
   if (sky && p.dehaze !== false && !(Object.assign({},TUNE,window.__TUNE||{}).noDehaze)) dehazeBand(px, w, h, x => sky.m*x + sky.b);
   // Golden-hour / dawn sky: warm, not blue. Editors leave these alone — so do we.
@@ -640,7 +640,7 @@ function finishImage(base, p){
         let ww = wsE;
         { const o0=px[i], o1=px[i+1], o2=px[i+2], Yp = .299*o0+.587*o1+.114*o2, mn = Math.min(o0,o1,o2), mx = Math.max(o0,o1,o2);
           const bl = Math.min(1, Math.max(0, (o2 - o0 - 4)/22)) * Math.min(1, Math.max(0, (Yp - 120)/40)), cw = Math.min(1, Math.max(0, (mn - 175)/30)) * Math.min(1, Math.max(0, (40 - (mx-mn))/20));
-          const e = Math.abs(Y[j]-g1[j])*2.2; ww = Math.min(1, wsE/0.04) * Math.max(bl, cw) * Math.min(1, Math.max(0, (14 - e)/10)); }
+          const e = Math.abs(Y[j]-g1[j])*2.2; ww = (ws > 0.04 ? Math.min(1, ws/0.04) * Math.max(bl, cw) : Math.min(1, fz) * bl * (cw > 0.5 ? 0 : 1)) * Math.min(1, Math.max(0, (14 - e)/10)); }
         r = r*(1-ww) + sr*ww; g = g*(1-ww) + sg*ww; b = b*(1-ww) + sb*ww;
       } else if (ws > 0){
         const hzx = line(x), t = Math.min(1, (y/Math.max(hzx,1))/0.8) * (SKY_STOPS.length-1);
@@ -935,7 +935,7 @@ function tidySides(p){
 function hexA(hex, a){ const n=parseInt(hex.slice(1),16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
 function textMetrics(c, t, p){
   const s = p.w/3000, size = t.size*s;
-  const weight = t.style==="area" ? 300 : t.bold ? 700 : 400;
+  const weight = t.style==="area" ? (t.weight||300) : t.bold ? 700 : 400;
   c.font = `${weight} ${size}px "Source Sans 3", "Segoe UI", sans-serif`;
   const lines = String(t.text||" ").split("\n"), lh = size*1.12;
   let w=0; lines.forEach(l=>{ w=Math.max(w, c.measureText(l).width); });
@@ -1005,13 +1005,13 @@ function drawScene(c, p, opt){
 function fitAreaText(c, p, t, sh){
   const pts = sh.pts; let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity; pts.forEach(q=>{x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0]);y0=Math.min(y0,q[1]);y1=Math.max(y1,q[1]);});
   const s = p.w/3000; const bw = x1-x0, bh = y1-y0;
-  c.font = `300 100px "Source Sans 3", sans-serif`; const w100 = c.measureText(t.text||" ").width || 1;
-  const byW = 0.5*bw/w100*100, byH = 0.55*bh;
+  c.font = `${t.weight||300} 100px "Source Sans 3", sans-serif`; const w100 = c.measureText(t.text||" ").width || 1;
+  const byW = (t.fitW||0.5)*bw/w100*100, byH = (t.fitH||0.55)*bh;
   t.size = Math.max(20, Math.min(byW, byH)/s);
   if (!t.moved){ const ct = centroid(pts); t.x = ct[0]; t.y = ct[1]; }
 }
 function drawEdgeLengths(c, p, sh, s){
-  const fs = 62*s, ct = centroid(sh.pts);
+  const fs = 62*s*(sh.lensScale||1), ct = centroid(sh.pts);
   edgesOf(sh).forEach((e,i)=>{
     const txt = (sh.lens[i]||"").trim(); if (!txt) return;
     const mx=(e[0][0]+e[1][0])/2, my=(e[0][1]+e[1][1])/2;
@@ -1024,7 +1024,7 @@ function drawEdgeLengths(c, p, sh, s){
     }
     const off = fs*0.85 + sh.width*s*1.5;
     c.save(); c.translate(mx + nx*off, my + ny*off); c.rotate(ang);
-    c.font = `400 ${fs}px "Source Sans 3", sans-serif`; c.textAlign="center"; c.textBaseline="middle";
+    c.font = `${sh.lensWeight||400} ${fs}px "Source Sans 3", sans-serif`; c.textAlign="center"; c.textBaseline="middle";
     c.shadowColor="rgba(0,0,0,.7)"; c.shadowBlur=fs*.25; c.fillStyle="#fff"; c.fillText(txt, 0, 0); c.restore();
   });
 }
@@ -1904,7 +1904,36 @@ new ResizeObserver(()=>{ if (!userMoved) fit(); else requestDraw(); }).observe(s
   if (document.fonts) document.fonts.ready.then(()=>{ const q=P(); if (q) tidySides(q); requestDraw(); });
 })();
 // read-only hook for automated checks
-window.__bae = { setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { w:p.w, h:p.h, cam:p.cam, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
+
+function lotSnap(p, pts, ll){ if (window.__noSnap || !window.__useSnap) return null;
+  const img = photoImage(p, false), D=4, W=Math.round(p.w/D), H=Math.round(p.h/D);
+  const c=document.createElement("canvas"); c.width=W; c.height=H; const x=c.getContext("2d"); x.drawImage(img,0,0,W,H);
+  const d=x.getImageData(0,0,W,H).data, g=new Float32Array(W*H);
+  for (let i=0;i<W*H;i++) g[i]=0.3*d[i*4]+0.59*d[i*4+1]+0.11*d[i*4+2];
+  const mLat=111132.92, mLng=111412.84*Math.cos(ll[0][0]*Math.PI/180);
+  const m0=Math.hypot((ll[1][0]-ll[0][0])*mLat,(ll[1][1]-ll[0][1])*mLng), p0=Math.hypot(pts[1][0]-pts[0][0],pts[1][1]-pts[0][1]); const ppm=p0/m0;
+  const wr=Math.max(1.5, 0.3*ppm/D);           // ridge half-width ~0.3 m
+  const G=(X,Y)=>{ X=Math.round(X); Y=Math.round(Y); return (X>=0&&Y>=0&&X<W&&Y<H) ? g[Y*W+X] : null; };
+  let cx=0,cy=0; pts.forEach(q=>{cx+=q[0];cy+=q[1];}); cx/=pts.length; cy/=pts.length;
+  const tf=(dx,dy,sc)=>pts.map(q=>[cx+dx+sc*(q[0]-cx), cy+dy+sc*(q[1]-cy)]);
+  const score=(P)=>{ let s=0,n=0; for (let i=0;i<P.length;i++){ const a=P[i], b=P[(i+1)%P.length]; const L=Math.hypot(b[0]-a[0],b[1]-a[1]); const ns=Math.max(8,Math.round(L/D/2)); const nx=-(b[1]-a[1])/L, ny=(b[0]-a[0])/L;
+      for (let k=1;k<ns;k++){ const t=k/ns; if (t<0.1||t>0.9) continue; const X=(a[0]+(b[0]-a[0])*t)/D, Y=(a[1]+(b[1]-a[1])*t)/D;
+        const c0=G(X,Y), l=G(X-nx*wr,Y-ny*wr), r=G(X+nx*wr,Y+ny*wr); if (c0==null||l==null||r==null) continue;
+        const ridge=Math.max(0, Math.min(l,r)-c0, c0-Math.max(l,r));   // thin line darker or lighter than BOTH sides
+        s+=Math.min(ridge,50); n++; } } return n? s/n : 0; };
+  const base=score(pts); let bestS=base, bp=[0,0,1]; const R=1.0*ppm, st=Math.max(D, 0.15*ppm);
+  for (let dx=-R; dx<=R+1e-6; dx+=st) for (let dy=-R; dy<=R+1e-6; dy+=st) for (const sc of [0.985,1,1.015]){ const v=score(tf(dx,dy,sc)) - 1.5*Math.hypot(dx,dy)/ppm; if (v>bestS){ bestS=v; bp=[dx,dy,sc]; } }
+  window.__lotSnap={ base, best:bestS, dx:bp[0]/ppm, dy:bp[1]/ppm, sc:bp[2] };
+  return bestS > base*1.12 ? tf(...bp) : null;
+}
+window.__bae = { setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit();
+    try { const R=lotSnap(p, pts, ll); if (R) { pts.splice(0, pts.length, ...R); } } catch(e){ console.warn(e); }
+    let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; pts.forEach(q=>{ x0=Math.min(x0,q[0]); x1=Math.max(x1,q[0]); y0=Math.min(y0,q[1]); y1=Math.max(y1,q[1]); });
+    const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3); const chh=cw/1.5;
+    let cx=(x0+x1)/2-cw/2, cy=(y0+y1)/2-chh/2; cx=Math.max(0,Math.min(p.w-cw,cx)); cy=Math.max(0,Math.min(p.h-chh,cy)); const zf=p.w/cw;
+    const col = prefs.agency==="grey-s" ? "#FFFFFF" : agency().color; const sh={ id:nid(), type:"poly", pts, color:col, width:17/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:72/(62*zf), lensWeight:wt>=700?600:400 }; p.shapes.push(sh); p.outside='blur'; p.blurAmt=Math.max(6, 15*cw/p.w); p._blur=null; p.pins.length=0;
+    if (area){ p.texts.push({ id:nid(), link:sh.id, style:"area", color:"#ffffff", size:200, x:0, y:0, autoSize:true, lot:area, text:area+"m2", weight:wt||400, fitW:0.62, fitH:0.5 }); }
+    refreshAll(); return { crop:[cx,cy,cw,chh], w:p.w, h:p.h, snap:window.__lotSnap }; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { w:p.w, h:p.h, cam:p.cam, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
 
 })();
 </script>
