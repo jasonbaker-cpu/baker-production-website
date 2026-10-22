@@ -238,12 +238,12 @@ input[type=range] { width: 100%; accent-color: var(--gold); }
 .cam-zoom button { width: 36px; height: 36px; background: rgba(0,0,0,.35); font: 600 12px/1 var(--body); color: #fff; }
 .cam-zoom button small { font-size: 10px; }
 .cam-zoom button.on { width: 44px; height: 44px; margin: -4px 0; background: rgba(0,0,0,.55); color: #ffd60a; transform: none; box-shadow: none; font-size: 14px; }
-.cam-dial { position: absolute; left: 50%; bottom: -2px; width: min(150%, 760px); aspect-ratio: 640 / 360; transform: translateX(-50%) translateY(40%); z-index: 4; border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: radial-gradient(ellipse at 50% 100%, rgba(0,0,0,.62) 0, rgba(0,0,0,.48) 70%, rgba(0,0,0,.35) 100%); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity .2s, transform .25s cubic-bezier(.2,.9,.3,1); touch-action: none; overflow: hidden; }
-.cam-dial.open { opacity: 1; transform: translateX(-50%) translateY(18%); pointer-events: auto; }
+.cam-dial { position: absolute; left: 50%; bottom: -2px; width: min(118%, 560px); aspect-ratio: 640 / 360; transform: translateX(-50%) translateY(70%); z-index: 4; border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: radial-gradient(ellipse at 50% 100%, rgba(0,0,0,.62) 0, rgba(0,0,0,.48) 70%, rgba(0,0,0,.35) 100%); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity .2s, transform .25s cubic-bezier(.2,.9,.3,1); touch-action: none; overflow: hidden; }
+.cam-dial.open { opacity: 1; transform: translateX(-50%) translateY(52%); pointer-events: auto; }
 .cam-dial svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .cam-dial #camDialTicks { transition: transform .06s linear; }
 .cam-dial-ptr { position: absolute; left: 50%; top: 2.5%; width: 0; height: 0; transform: translateX(-50%); border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 11px solid #ffd60a; z-index: 2; }
-.cam-dial-read { position: absolute; left: 50%; top: 9%; transform: translateX(-50%); z-index: 2; color: #ffd60a; font: 700 17px/1 var(--body); text-align: center; white-space: nowrap; text-shadow: 0 1px 6px rgba(0,0,0,.6); }
+.cam-dial-read { position: absolute; left: 50%; top: 8%; transform: translateX(-50%); z-index: 2; color: #ffd60a; font: 700 15px/1 var(--body); text-align: center; white-space: nowrap; text-shadow: 0 1px 6px rgba(0,0,0,.6); }
 .cam-dial-read small { display: block; color: rgba(255,255,255,.7); font-size: 10px; letter-spacing: .08em; margin-top: 4px; }
 @media (prefers-reduced-motion: reduce) { .cam-dial, .cam-zoom { transition: none; } }
 </style>
