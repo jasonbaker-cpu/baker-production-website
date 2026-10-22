@@ -204,6 +204,27 @@ input[type=range] { width: 100%; accent-color: var(--gold); }
 .cam-zoomlab { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); z-index: 3; font: 800 44px/1 var(--display); color: #fff; text-shadow: 0 2px 16px rgba(0,0,0,.6); opacity: 0; pointer-events: none; }
 .cam-zoomlab.pop { animation: zpop .9s ease-out; }
 @keyframes zpop { 0% { opacity: 0; transform: translate(-50%,-50%) scale(.8); } 20% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 100% { opacity: 0; } }
+
+/* compact controls: portrait */
+.cam-bottom { padding-top: 8px; gap: 8px; }
+.cam-rooms button { padding: 6px 9px; font-size: 12px; }
+.shutter { width: 66px; height: 66px; }
+.shutter::after { width: 54px; height: 54px; }
+.cam-stack, .cam-stack img { width: 44px; height: 44px; }
+/* landscape (horizontal shots): controls become a slim column on the right, the frame fills the rest */
+@media (orientation: landscape) {
+  .cam { flex-direction: row; }
+  .cam-bottom { width: 96px; flex: none; padding: max(10px, env(safe-area-inset-top, 0px)) max(10px, env(safe-area-inset-right, 0px)) max(10px, env(safe-area-inset-bottom, 0px)) 8px; justify-content: center; gap: 10px; }
+  .cam-row { grid-template-columns: 1fr; grid-template-rows: auto auto auto; justify-items: center; gap: 14px; }
+  .cam-stack { justify-self: center; order: 3; }
+  .cam-note { display: none; }
+  .cam-rooms { flex-direction: column; justify-content: flex-start; max-height: 34vh; overflow-y: auto; overflow-x: hidden; order: 2; align-items: center; }
+  .cam-rooms button { padding: 5px 6px; font-size: 10px; }
+  .cam-top { right: 96px; padding-top: 10px; }
+  .cam-zoom { bottom: 54px; }
+  .cam-ev { bottom: 8px; }
+  .cam-hold { top: 58px; }
+}
 </style>
 
 <div class="app" id="app"></div>
@@ -1250,7 +1271,7 @@ function drawCamera() {
       <div class="cam-level" id="camLevel"><div class="ln"></div></div>
       <div class="cam-tilt num" id="camTilt"></div>
       <div class="cam-flash" id="camFlash"></div>
-      <div class="cam-hold" id="camHold"><i></i>Hold still · <span id="camCount">1</span> of 5</div>
+      <div class="cam-hold" id="camHold"><i></i>Hold still · <span id="camCount">1</span>/5</div>
       <div class="cam-zoomlab" id="camZoomLab">1×</div>
       <div class="cam-zoom" id="camZoom">${zoomChoices().map(z => `<button data-z="${z}" class="${z === cam.z ? "on" : ""}" aria-label="${z}x zoom">${z < 1 ? ".5" : z}<small>×</small></button>`).join("")}</div>
       <div class="cam-ev" id="camEv">${EVS.map(e => `<span>${e > 0 ? "+" + e : e === 0 ? "0" : "−" + (-e)}</span>`).join("")}</div>
@@ -1261,7 +1282,7 @@ function drawCamera() {
       <div class="cam-row">
         <div class="cam-stack" id="camStack"></div>
         <button class="shutter" id="camShutter" aria-label="Take photo"></button>
-        <div class="cam-note">Use a tripod or brace on a wall</div>
+        <div class="cam-note">Handheld OK · fast burst</div>
       </div>
     </div>
   </div>`;
@@ -1278,17 +1299,25 @@ function drawCamera() {
 }
 
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
+const nextFrame = (v) => new Promise(r => v.requestVideoFrameCallback ? v.requestVideoFrameCallback(() => r()) : requestAnimationFrame(() => r()));
 
 async function grabFrame() {
   const v = $("#camVideo");
-  if (window.ImageCapture && cam.track && (cam.digital || 1) === 1) {
+  if (false) {
     try { const ic = new ImageCapture(cam.track); const b = await ic.takePhoto(); if (b && b.size) return b; } catch {}
   }
   const k = cam.digital || 1, sw = v.videoWidth / k, sh = v.videoHeight / k;
   const c = document.createElement("canvas"); c.width = Math.round(sw); c.height = Math.round(sh);
   c.getContext("2d").drawImage(v, (v.videoWidth - sw) / 2, (v.videoHeight - sh) / 2, sw, sh, 0, 0, c.width, c.height);
-  return await new Promise(r => c.toBlob(r, "image/jpeg", 0.95));
+  return c;   // raw pixels now; JPEG encoding happens after the burst so frames come back-to-back
 }
+function thumbOf(c) {
+  const t = document.createElement("canvas"), s = 120 / Math.max(c.width, c.height);
+  t.width = Math.round(c.width * s); t.height = Math.round(c.height * s);
+  t.getContext("2d").drawImage(c, 0, 0, t.width, t.height);
+  return t.toDataURL("image/jpeg", 0.7);
+}
+const toBlob = (c) => new Promise(r => c.toBlob(r, "image/jpeg", 0.92));
 
 async function setEV(ev) {
   if (!cam.evCap || !cam.track) return false;
@@ -1313,14 +1342,14 @@ async function shootBracket() {
       const real = await setEV(EVS[i]);
       // viewfinder shows the exposure step even where the browser can't change it
       v.style.filter = `brightness(${Math.pow(2, EVS[i] * 0.45).toFixed(3)})`;
-      await wait(real ? 380 : 170);
-      const blob = await grabFrame();
-      cam.frames.push(blob);
+      if (real) await wait(70);          // let the new exposure land (~2 frames)
+      await nextFrame(v);                 // a fresh sensor frame, not the same one twice
+      const canvas = await grabFrame();
+      cam.frames.push(canvas);
       const f = $("#camFlash"); f.classList.remove("go"); void f.offsetWidth; f.classList.add("go");
-      const u = URL.createObjectURL(blob); thumbs.push(u);
+      const u = thumbOf(canvas); thumbs.push(u);
       stack.innerHTML = thumbs.map((t, k) => `<img src="${t}" alt="" style="z-index:${k};transform:rotate(${(k - 2) * 3}deg)">`).join("") + `<span class="n">${thumbs.length}</span>`;
       shutter.style.setProperty("--p", ((i + 1) / EVS.length * 100).toFixed(0));
-      await wait(110);
     }
   } catch (err) {
     cam.busy = false; shutter.classList.remove("busy"); shutter.disabled = false; hold.style.display = "none"; v.style.filter = ""; $("#camZoom").style.opacity = ""; $("#camZoom").style.pointerEvents = "";
@@ -1335,9 +1364,8 @@ async function shootBracket() {
   $("#camMerge").style.display = "grid";
   if (navigator.vibrate) try { navigator.vibrate(20); } catch {}
   await wait(1250);
-  const l = cam.listing, room = state.room, frames = cam.frames.slice();
+  const l = cam.listing, room = state.room, frames = await Promise.all(cam.frames.map(toBlob));
   closeCamera();
-  thumbs.forEach(t => setTimeout(() => URL.revokeObjectURL(t), 4000));
   addShot(l, frames, room);
   const p = l.photos[l.photos.length - 1];
   if (p) go({ name: "photo", listing: l.id, id: p.id });
