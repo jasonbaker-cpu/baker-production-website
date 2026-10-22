@@ -233,8 +233,8 @@ input[type=range] { width: 100%; accent-color: var(--gold); }
 .cam-frame video, .cam-frame .frozen { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 /* iPhone-style zoom: small round presets, active shows the exact value in yellow; press/slide pops a dial */
-.cam-zoom { background: rgba(0,0,0,.28); gap: 6px; padding: 5px; touch-action: none; transition: opacity .18s, transform .18s; }
-.cam-zoom.hide { opacity: 0; transform: translateX(-50%) translateY(8px); pointer-events: none; }
+.cam-zoom { background: rgba(0,0,0,.28); gap: 6px; padding: 5px; touch-action: none; -webkit-user-select: none; -webkit-touch-callout: none; transition: opacity .18s, transform .18s; }
+.cam-zoom.hide { opacity: 0; }
 .cam-zoom button { width: 36px; height: 36px; background: rgba(0,0,0,.35); font: 600 12px/1 var(--body); color: #fff; }
 .cam-zoom button small { font-size: 10px; }
 .cam-zoom button.on { width: 44px; height: 44px; margin: -4px 0; background: rgba(0,0,0,.55); color: #ffd60a; transform: none; box-shadow: none; font-size: 14px; }
@@ -1302,30 +1302,37 @@ function showDial(on) {
 function bindZoomDial() {
   const pill = $("#camZoom"), dial = $("#camDial");
   let start = null, moved = false, holdT = null;
+  const px = (e) => (e.touches ? e.touches[0].clientX : e.clientX);
   const down = (e) => {
     if (cam.busy) return;
-    start = { x: e.clientX, z: cam.z, btn: e.target.closest("button") }; moved = false;
-    holdT = setTimeout(() => { moved = true; showDial(true); }, 260);   // press-and-hold also opens it
-    e.currentTarget.setPointerCapture?.(e.pointerId);
+    start = { x: px(e), z: cam.z, btn: e.target.closest && e.target.closest("button"), fromDial: e.currentTarget === dial }; moved = false;
+    if (start.fromDial) { moved = true; showDial(true); }
+    else holdT = setTimeout(() => { moved = true; showDial(true); }, 220);   // press-and-hold opens the dial
+    // track the finger on the whole window so hiding/moving elements never drops the gesture (iOS)
+    window.addEventListener("pointermove", move, { passive: false });
+    window.addEventListener("pointerup", up); window.addEventListener("pointercancel", up);
+    window.addEventListener("touchmove", move, { passive: false });
+    window.addEventListener("touchend", up); window.addEventListener("touchcancel", up);
+    if (e.cancelable) e.preventDefault();
   };
-  const move = (e) => {
+  function move(e) {
     if (!start) return;
-    const dx = e.clientX - start.x;
-    if (!moved && Math.abs(dx) < 6) return;
+    if (e.cancelable) e.preventDefault();
+    const dx = px(e) - start.x;
+    if (!moved && Math.abs(dx) < 5) return;
     moved = true; clearTimeout(holdT); showDial(true);
-    setZoom(start.z * Math.pow(2, -dx / 110), { quiet: true });       // slide left = zoom in, like the iPhone dial
-  };
-  const up = () => {
+    setZoom(start.z * Math.pow(2, -dx / 110), { quiet: true });   // slide left = zoom in, like the iPhone dial
+  }
+  function up() {
     clearTimeout(holdT);
+    for (const [t, f] of [["pointermove", move], ["pointerup", up], ["pointercancel", up], ["touchmove", move], ["touchend", up], ["touchcancel", up]]) window.removeEventListener(t, f);
     if (start && !moved && start.btn) setZoom(+start.btn.dataset.z, { pop: true });
     start = null; showDial(false);
-  };
-  for (const el of [pill, dial]) {
-    el.addEventListener("pointerdown", down);
-    el.addEventListener("pointermove", move);
-    el.addEventListener("pointerup", up);
-    el.addEventListener("pointercancel", up);
   }
+  const opts = { passive: false };
+  if (window.PointerEvent) { pill.addEventListener("pointerdown", down, opts); dial.addEventListener("pointerdown", down, opts); }
+  else { pill.addEventListener("touchstart", down, opts); dial.addEventListener("touchstart", down, opts); }
+  pill.addEventListener("contextmenu", (e) => e.preventDefault());
 }
 
 // pinch to zoom: continuous, with the dial shown while pinching
