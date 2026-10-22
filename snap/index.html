@@ -225,6 +225,12 @@ input[type=range] { width: 100%; accent-color: var(--gold); }
   .cam-ev { bottom: 8px; }
   .cam-hold { top: 58px; }
 }
+
+.cam-view { display: grid; place-items: center; }
+.cam-turn { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); z-index: 3; font: 600 12px/1 var(--body); padding: 8px 12px; border-radius: 999px; background: rgba(0,0,0,.55); color: var(--gold); white-space: nowrap; }
+@media (orientation: landscape) { .cam-turn { display: none; } }
+.cam-frame { position: relative; overflow: hidden; background: #000; box-shadow: 0 0 0 1px rgba(255,255,255,.18); }
+.cam-frame video, .cam-frame .frozen { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 </style>
 
 <div class="app" id="app"></div>
@@ -1184,6 +1190,7 @@ async function openCamera(l) {
   } catch {}
   if (!hasRealWide()) cam.z = 0.5;
   drawCamera();
+  fitFrame();
   attachVideo();
   startLevel();
   document.addEventListener("keydown", camKeys);
@@ -1263,14 +1270,17 @@ function drawCamera() {
   const x = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   $("#layer").innerHTML = `
   <div class="cam" role="dialog" aria-label="Camera">
-    <div class="cam-top"><button class="cam-x" id="camClose" aria-label="Close camera">${x}</button><span class="spacer"></span><span class="cam-badge"><b>HDR</b> · 5 EXPOSURES</span></div>
+    <div class="cam-top"><button class="cam-x" id="camClose" aria-label="Close camera">${x}</button><span class="spacer"></span><span class="cam-badge"><b>HDR</b> · 5 EXP · 3:2</span></div>
     <div class="cam-view">
-      <video id="camVideo" playsinline muted autoplay></video>
-      <img class="frozen" id="camFrozen" alt="">
-      <div class="cam-grid"></div>
+      <div class="cam-frame" id="camFrame">
+        <video id="camVideo" playsinline muted autoplay></video>
+        <img class="frozen" id="camFrozen" alt="">
+        <div class="cam-grid"></div>
+        <div class="cam-flash" id="camFlash"></div>
+      </div>
       <div class="cam-level" id="camLevel"><div class="ln"></div></div>
       <div class="cam-tilt num" id="camTilt"></div>
-      <div class="cam-flash" id="camFlash"></div>
+      <div class="cam-turn" id="camTurn">↻ Turn sideways for 3:2 listing photos</div>
       <div class="cam-hold" id="camHold"><i></i>Hold still · <span id="camCount">1</span>/5</div>
       <div class="cam-zoomlab" id="camZoomLab">1×</div>
       <div class="cam-zoom" id="camZoom">${zoomChoices().map(z => `<button data-z="${z}" class="${z === cam.z ? "on" : ""}" aria-label="${z}x zoom">${z < 1 ? ".5" : z}<small>×</small></button>`).join("")}</div>
@@ -1299,6 +1309,15 @@ function drawCamera() {
 }
 
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
+// 3:2 framing (what realestate.com.au / Domain use): landscape 3:2 when the phone is sideways, 2:3 when upright
+function frameAspect() { const v = document.querySelector(".cam-view"); return v && v.clientWidth >= v.clientHeight ? 3 / 2 : 2 / 3; }
+function fitFrame() {
+  const v = document.querySelector(".cam-view"), f = $("#camFrame"); if (!v || !f) return;
+  const W = v.clientWidth, H = v.clientHeight, a = frameAspect();
+  let w = W, h = W / a; if (h > H) { h = H; w = H * a; }
+  f.style.width = Math.round(w) + "px"; f.style.height = Math.round(h) + "px";
+}
+window.addEventListener("resize", fitFrame);
 const nextFrame = (v) => new Promise(r => v.requestVideoFrameCallback ? v.requestVideoFrameCallback(() => r()) : requestAnimationFrame(() => r()));
 
 async function grabFrame() {
@@ -1306,7 +1325,12 @@ async function grabFrame() {
   if (false) {
     try { const ic = new ImageCapture(cam.track); const b = await ic.takePhoto(); if (b && b.size) return b; } catch {}
   }
-  const k = cam.digital || 1, sw = v.videoWidth / k, sh = v.videoHeight / k;
+  const k = cam.digital || 1;
+  let sw = v.videoWidth / k, sh = v.videoHeight / k;
+  // centre-crop to 3:2 on the long side, matching what the viewfinder shows
+  const want = 1.5, long = Math.max(sw, sh), short = Math.min(sw, sh);
+  if (long / short > want) { if (sw >= sh) sw = sh * want; else sh = sw * want; }
+  else { if (sw >= sh) sh = sw / want; else sw = sh / want; }
   const c = document.createElement("canvas"); c.width = Math.round(sw); c.height = Math.round(sh);
   c.getContext("2d").drawImage(v, (v.videoWidth - sw) / 2, (v.videoHeight - sh) / 2, sw, sh, 0, 0, c.width, c.height);
   return c;   // raw pixels now; JPEG encoding happens after the burst so frames come back-to-back
