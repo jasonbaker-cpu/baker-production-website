@@ -576,7 +576,7 @@ function finishImage(base, p){
   if (sky && p.dehaze !== false) dehazeBand(px, w, h, x => sky.m*x + sky.b);
   // Keep a good real sky (blue with proper clouds): the editors only swap washed-out or blown skies.
   p.skyKept = false;
-  if (sky && p.skyKeepReal){
+  if (sky && p.skyKeepReal !== false){
     let n=0, blue=0, clip=0; const hz = Math.max(4, Math.min(h-1, sky.b|0)), st = Math.max(1, Math.round(w/400));
     for (let y=0; y<hz*0.85; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2]; n++; if (b > r + 28 && b > 120) blue++; if (r>242 && g>242 && b>242) clip++; }
     if (n && blue/n > 0.45 && clip/n < 0.12){ sky = null; p.skyKept = true; }
@@ -587,6 +587,10 @@ function finishImage(base, p){
     // low-res protection mask (sky-coloured and smooth), blurred, sampled bilinearly later
     const m = new Float32Array(sky.sw*sky.sh); for (let i=0;i<m.length;i++) m[i] = (sky.skyc[i] && sky.tex[i]<3.0) || (sky.cloud[i] && sky.tex[i]<4.5) ? 1 : 0;
     prot = gaussBlur(m, sky.sw, sky.sh, 4);
+    // per column: the sky stops at the first clearly-not-sky pixel; never replace anything below it (stops leaks onto water/haze)
+    sky.colLim = new Float32Array(sky.sw);
+    for (let x=0;x<sky.sw;x++){ let y=0; const hz=Math.min(sky.sh,(sky.m*x*sky.s + sky.b)/sky.s); while (y<hz && prot[y*sky.sw+x] <= 0.35) y++; if (y>=hz){ sky.colLim[x]=hz; continue; } while (y<hz && prot[y*sky.sw+x] > 0.35) y++; sky.colLim[x]=y; }
+    const cl2 = new Float32Array(sky.sw); for (let x=0;x<sky.sw;x++){ const v=[]; for (let k=-6;k<=6;k++){ const xx=Math.min(sky.sw-1,Math.max(0,x+k)); v.push(sky.colLim[xx]); } v.sort((a,b)=>a-b); cl2[x]=v[3]; } sky.colLim=cl2;
   }
   const protAt = (x,y) => { if (!prot) return 0; const fx = Math.min(sky.sw-1.001, x/sky.s), fy = Math.min(sky.sh-1.001, y/sky.s); const x0=fx|0, y0=fy|0, tx=fx-x0, ty=fy-y0, i=y0*sky.sw+x0; return (prot[i]*(1-tx)+prot[i+1]*tx)*(1-ty) + (prot[i+sky.sw]*(1-tx)+prot[i+sky.sw+1]*tx)*ty; };
   // 3. detail: band gains fitted to the finals (crisp fine detail, slightly flatter large-scale contrast)
@@ -595,7 +599,7 @@ function finishImage(base, p){
   const g1 = gaussBlur(Y,w,h,1*scale+0.0001), g3 = gaussBlur(g1,w,h,Math.sqrt(Math.max(0.01,9-1))*scale), g10 = gaussBlur(g3,w,h,Math.sqrt(100-9)*scale), g30 = gaussBlur(g10,w,h,Math.sqrt(900-100)*scale);
   const G = BAND_GAINS;
   const wSky = new Float32Array(w*h);
-  if (sky){ for (let y=0;y<h;y++){ for (let x=0;x<w;x++){ const hz = line(x); if (y >= hz) continue; const t = y/Math.max(hz,1); const ii=(y*w+x)*4, mx=Math.max(px[ii],px[ii+1],px[ii+2]), mn=Math.min(px[ii],px[ii+1],px[ii+2]), haze = mn > 185 && mx-mn < 40; const u = Math.min(1, Math.max(0,(1-t)/(haze ? 0.035 : 0.14))); const fade = u*u*(3-2*u); const pr = protAt(x,y); wSky[y*w+x] = fade * Math.min(1, pr*1.25); } } }
+  if (sky){ for (let y=0;y<h;y++){ for (let x=0;x<w;x++){ const hz = line(x); if (y >= hz) continue; const t = y/Math.max(hz,1); const ii=(y*w+x)*4, mx=Math.max(px[ii],px[ii+1],px[ii+2]), mn=Math.min(px[ii],px[ii+1],px[ii+2]), haze = mn > 185 && mx-mn < 40; const u = Math.min(1, Math.max(0,(1-t)/(haze ? 0.035 : 0.14))); const fade = u*u*(3-2*u); const pr = protAt(x,y); const lim = sky.colLim[Math.min(sky.sw-1,(x/sky.s)|0)]*sky.s, dl = (lim - y)/(h*0.012); const cf = dl<=0 ? 0 : Math.min(1, dl); wSky[y*w+x] = fade * Math.min(1, pr*1.25) * cf; } } }
   const det20 = sky ? gaussBlur(Y,w,h,20*scale) : null;
   for (let y=0;y<h;y++){
     const hz = sky ? line(0) : 0;
@@ -612,7 +616,10 @@ function finishImage(base, p){
         // richer blue overhead, fading out toward the horizon
         const tb = Math.max(0, 1 - (y/Math.max(hzx,1))/0.75), kb = 0.38*tb*tb, cl = Math.min(1, Math.max(0, (Math.min(pr,pg,pb)-200)/40));
         const k2 = kb*(1-0.7*cl);
-        const sr = pr + (92-pr)*k2, sg = pg + (146-pg)*k2, sb = pb + (214-pb)*k2;
+        let sr = pr + (92-pr)*k2, sg = pg + (146-pg)*k2, sb = pb + (214-pb)*k2;
+        // last stretch above the horizon: fade the plate into a clean, smooth haze so squashed clouds don't show as smudges
+        const tz = Math.max(0, (y/Math.max(hzx,1) - 0.62)/0.38), hzw = tz*tz*(3-2*tz)*0.85;
+        sr += (214-sr)*hzw; sg += (226-sg)*hzw; sb += (238-sb)*hzw;
         r = r*(1-ws) + sr*ws; g = g*(1-ws) + sg*ws; b = b*(1-ws) + sb*ws;
       } else if (ws > 0){
         const hzx = line(x), t = Math.min(1, (y/Math.max(hzx,1))/0.8) * (SKY_STOPS.length-1);
@@ -872,7 +879,7 @@ function pinParts(p, pin){ // marker+label box, plus the stem as a thin box
   const g = pinGeom(p, pin); let x0=g.box[0], y0=g.box[1], x1=x0+g.box[2], y1=y0+g.box[3];
   if (g.label){ x0=Math.min(x0,g.label.x); x1=Math.max(x1,g.label.x+g.label.w); y0=Math.min(y0,g.label.y); y1=Math.max(y1,g.label.y+g.label.h); }
   const parts = [[x0,y0,x1,y1]];
-  if (g.lift > 1) parts.push([pin.ex-10*g.s, Math.min(pin.ey,g.tipY), pin.ex+10*g.s, Math.max(pin.ey,g.tipY)]);
+  if (g.lift > 1 || Math.abs(pin.ey-g.tipY) > 4) parts.push([pin.ex-10*g.s, Math.min(pin.ey,g.tipY), pin.ex+10*g.s, Math.max(pin.ey,g.tipY)]);
   return parts;
 }
 function tidySides(p){
@@ -900,7 +907,7 @@ function tidySides(p){
   for (let it=0; it<2; it++) for (const pin of list){ if (pin.layoutLocked) continue; place(pin, p.pins.filter(q=>q!==pin).map(q=>pinParts(p,q))); }
   // flag anything still overlapping so the editor can drop a place (the finals never have overlapping labels)
   p.pins.forEach(a=>{ a.clash = false; if (!a.house){ const r = pinParts(p,a)[0]; if (r[0] < -2 || r[2] > p.w+2 || r[1] < -2) a.clash = true; } });   // label hanging off the frame counts as a clash too
-  for (const a of p.pins) for (const b of p.pins){ if (a===b) continue; let o=0; for (const x of pinParts(p,a)) for (const y of pinParts(p,b)) { const ox = Math.min(x[2],y[2])-Math.max(x[0],y[0]), oy = Math.min(x[3],y[3])-Math.max(x[1],y[1]); if (ox > 6*s && oy > 6*s) o++; } if (o){ a.clash = b.clash = true; } }
+  for (const a of p.pins) for (const b of p.pins){ if (a===b) continue; let o=0; for (const x of pinParts(p,a)) for (const y of pinParts(p,b)) { const ox = Math.min(x[2],y[2])-Math.max(x[0],y[0]), oy = Math.min(x[3],y[3])-Math.max(x[1],y[1]); if (ox > -10*s && oy > -10*s) o++; } if (o){ a.clash = b.clash = true; } }
 }
 
 // ================= scene =================
@@ -1764,6 +1771,7 @@ function parseJobFile(text){
       places: M.map(q=>({ name:decodeEntities(q.name), cat:q.cat||q.type||(/school|college/i.test(q.name)?"school":/station/i.test(q.name)?"train":/park|reserve/i.test(q.name)?"park":"other"), lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
   }
   const seen = new Set();
+  j.places.forEach(q=>{ if (q.name){ if (/✓\s*ZONED|\bZONED\b/i.test(q.name) && !q.school) q.school='zoned'; q.name = String(q.name).replace(/\s*✓?\s*\(?\bZONED\b\)?\s*/ig,' ').replace(/\s*[✓✔]\s*$/,'').trim(); } });
   j.places = j.places.filter(q=>q.name && isFinite(q.lat) && isFinite(q.lng)).map(q=>{ const g = geoDist(j.lat, j.lng, q.lat, q.lng); let key = q.name.toLowerCase(); while (seen.has(key)) key += "+"; seen.add(key); return Object.assign(q, { key, dist:g.d, dir:g.dir, icon:iconForPlace(q.name, q.cat) }); }).sort((a,b)=>a.dist-b.dist);
   return j;
 }
