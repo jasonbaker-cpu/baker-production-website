@@ -980,7 +980,27 @@ function textMetrics(c, t, p){
   const bw = w+padX*2, bh = lines.length*lh + padY*2;
   return { size, weight, lines, lh, bw, bh, x:t.x-bw/2, y:t.y-bh/2, padX, padY };
 }
-function photoImage(p, before){ return (!before && p.finishOn && p.fin) ? p.fin : p.base; }
+const ADJ0 = { exp:0, con:0, hl:0, sh:0, warm:0, tint:0, sat:0 };
+function adjActive(a){ return a && Object.keys(ADJ0).some(k=>a[k]); }
+// Photo-only adjustments: applied to the picture underneath; pins, boundaries and text are drawn on top afterwards, untouched.
+function adjustedCanvas(src, a){
+  const w=src.width, h=src.height, c=document.createElement("canvas"); c.width=w; c.height=h; const x=c.getContext("2d"); x.drawImage(src,0,0);
+  const id=x.getImageData(0,0,w,h), d=id.data, cl=v=>v<0?0:v>255?255:v;
+  const ex=Math.pow(2,a.exp/100), con=1+a.con/100, hl=a.hl/100, sh=a.sh/100, sat=1+a.sat/100;
+  const T=new Float32Array(256);
+  for (let v=0;v<256;v++){ let t=v/255; t=Math.min(1,t*ex); t=0.5+(t-0.5)*con; t=Math.max(0,Math.min(1,t));
+    const wh=t*t*(3-2*t); t = t + sh*(1-wh)*t*(1-t)*1.6 + hl*wh*t*(1-t)*1.6; T[v]=cl(t*255); }
+  const wr=1+a.warm/400, wb=1-a.warm/400, tg=1-a.tint/400;
+  for (let i=0;i<d.length;i+=4){ let r=T[d[i]]*wr, g=T[d[i+1]]*tg, b=T[d[i+2]]*wb; const Y=.299*r+.587*g+.114*b; d[i]=cl(Y+(r-Y)*sat); d[i+1]=cl(Y+(g-Y)*sat); d[i+2]=cl(Y+(b-Y)*sat); }
+  x.putImageData(id,0,0); return c;
+}
+function photoImage(p, before){
+  const src = (!before && p.finishOn && p.fin) ? p.fin : p.base;
+  if (before || !adjActive(p.adj)) return src;
+  const key = JSON.stringify(p.adj) + (src===p.fin ? "f"+(p.finKey||"") : "b");
+  if (!p._adj || p._adjKey !== key){ p._adj = adjustedCanvas(src, p.adj); p._adjKey = key; }
+  return p._adj;
+}
 function blurredCopy(img, w, h, amt){ // cheap, cross-browser blur: shrink then scale back up twice
   const f = Math.max(2, amt/4);
   const a = document.createElement("canvas"); a.width = Math.max(1,Math.round(w/f)); a.height = Math.max(1,Math.round(h/f));
@@ -1000,7 +1020,7 @@ function drawScene(c, p, opt){
     polys.forEach(sh=>{ c.moveTo(sh.pts[0][0],sh.pts[0][1]); for(let i=1;i<sh.pts.length;i++) c.lineTo(sh.pts[i][0],sh.pts[i][1]); c.closePath(); });
     c.clip("evenodd");
     if (p.outside === "blur"){
-      const key = (opt.before?"b":"a") + p.blurAmt + (p.finishOn?"f":"");
+      const key = (opt.before?"b":"a") + p.blurAmt + (p.finishOn?"f":"") + (p._adjKey||"");
       if (!p._blur || p._blurKey !== key){ p._blur = blurredCopy(img, p.w, p.h, p.blurAmt*s); p._blurKey = key; }
       c.drawImage(p._blur, 0, 0, p.w, p.h);
     } else { c.fillStyle = hexA("#000000", p.darkAmt/100); c.fillRect(0,0,p.w,p.h); }
@@ -1093,10 +1113,10 @@ function newPhoto(name, base, meta, sample){
     pins:[], shapes:[], texts:[],
     finishOn: !sample && prefs.finish, skyOn: prefs.sky,
     outside: prefs.outside, blurAmt: prefs.blurAmt, darkAmt: prefs.darkAmt,
-    disc:{ on:prefs.discOn, text:prefs.discText }, undo:[], redo:[] };
+    disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0), undo:[], redo:[] };
   return p;
 }
-const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc"];
+const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj"];
 function snapshotOf(p){ const o={}; SNAP_KEYS.forEach(k=>o[k]=p[k]); return JSON.stringify(o); }
 function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
 function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); ensureFinish(p); }
@@ -1642,6 +1662,23 @@ function refreshPhotoTab(){
     s1.appendChild(el(`<p class="note">Learned from our delivered aerials: brighter midtones, about 25% more colour, crisper detail, and the clean blue sky our editor uses. Hold <b>Hold for before</b> (or the \\ key) to compare.</p>`));
     box.appendChild(s1);
   }
+  if (!p.sample){
+    if (!p.adj) p.adj = Object.assign({}, ADJ0);
+    const sa = el(`<section class="sec"><h2><span>Adjust photo</span></h2></section>`);
+    sa.appendChild(el(`<p class="note">Changes the picture only. Pins, boundary lines and text stay exactly as they are.</p>`));
+    const A = [["exp","Brightness"],["con","Contrast"],["hl","Highlights"],["sh","Shadows"],["warm","Warmth"],["tint","Tint"],["sat","Colour"]];
+    let tm=null; const redraw=()=>{ clearTimeout(tm); tm=setTimeout(()=>{ p._blur=null; refreshStrip(); requestDraw(); }, 60); };
+    A.forEach(([k,lab])=>sa.appendChild(slider("adj_"+k, lab, -100, 100, 1, p.adj[k]||0, v=>(v>0?"+":"")+v, v=>{ p.adj[k]=v; redraw(); }, commit)));
+    const rb = el(`<div class="row"><button class="btn">Reset</button><button class="btn">Copy to all photos</button></div>`);
+    rb.children[0].onclick=()=>{ commit(); p.adj=Object.assign({}, ADJ0); p._blur=null; refreshPhotoTab(); refreshStrip(); requestDraw(); };
+    rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample){ q.adj=Object.assign({}, p.adj); q._blur=null; } }); toast(`Copied to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
+    sa.appendChild(rb); box.appendChild(sa);
+    const sp = el(`<section class="sec"><h2><span>Project</span></h2></section>`);
+    sp.appendChild(el(`<p class="note">Save the whole job (pins, boundaries, text, adjustments) to reopen later. To reopen: add the same photos, then the project file.</p>`));
+    const pb = el(`<div class="row"><button class="btn">Save project</button></div>`);
+    pb.children[0].onclick=()=>{ const b=new Blob([projectJSON()],{type:"application/json"}); deliver(b, (job&&job.name?String(job.name).replace(/[^\w]+/g,"_"):"aerials")+".baker.json"); };
+    sp.appendChild(pb); box.appendChild(sp);
+  }
   const s2 = el(`<section class="sec"><h2><span>Size</span></h2></section>`);
   s2.appendChild(el(`<dl class="note" style="margin:0">${p.w} × ${p.h} px${p.k<1 ? ` · cropped 3:2 from ${p.ow} × ${p.oh}` : ""}</dl>`));
   const seg = el(`<div class="seg"><button data-v="finals">3000 × 2000 (finals)</button><button data-v="full">Full size</button></div>`);
@@ -1761,7 +1798,15 @@ async function decodeToWorking(file){
 const fileIn = $("fileIn");
 $("addBtn").onclick=()=>fileIn.click();
 fileIn.onchange=()=>{ addFiles([...fileIn.files]); fileIn.value=""; };
+function projectJSON(){ return JSON.stringify({ bakerProject:1, saved:new Date().toISOString(), job: job||null, agency: prefs.agency, photos: photos.filter(q=>!q.sample).map(q=>{ const o={ name:q.name }; SNAP_KEYS.forEach(k=>o[k]=q[k]); return o; }) }); }
+let pendingProject = null;
+function applyProject(){ if (!pendingProject) return 0; let n=0;
+  photos.forEach(q=>{ const s = pendingProject.photos.find(o=>o.name===q.name); if (!s) return; SNAP_KEYS.forEach(k=>{ if (s[k]!==undefined) q[k]=JSON.parse(JSON.stringify(s[k])); }); q.fin=null; q.finKey=null; q._blur=null; q._adj=null; ensureFinish(q); n++; });
+  return n; }
 async function addFiles(files){
+  const pf = []; for (const f of files){ if (/\.json$/i.test(f.name)){ try{ const o=JSON.parse(await f.text()); if (o && o.bakerProject){ pendingProject=o; if (o.job) job=o.job; if (o.agency) { prefs.agency=o.agency; savePrefs(); } pf.push(f); } }catch(e){} } }
+  files = files.filter(f=>!pf.includes(f));
+  if (pf.length && !files.length){ const n=applyProject(); refreshAll(); toast(n ? `Project restored on ${n} photo${n>1?"s":""}` : "Project loaded. Now add its photos."); return; }
   const jf = files.find(f=>/\.(json|html?)$/i.test(f.name)); if (jf) await loadJobFile(jf);
   const imgs = files.filter(f=>/^image\//.test(f.type) || /\.(jpe?g|png|webp)$/i.test(f.name));
   if (!imgs.length){ if (!jf) toast("Those files aren't photos. Use JPG, PNG or WebP."); return; }
@@ -1779,6 +1824,7 @@ async function addFiles(files){
       makeThumb(p); photos.push(p);
     }catch(err){ console.error(err); toast(`Couldn't open ${f.name}. RAW/DNG won't load; use the JPG.`); }
   }
+  if (pendingProject){ const n=applyProject(); if (n) toast(`Project restored on ${n} photo${n>1?"s":""}`); }
   $("busy").textContent = "Finishing photo…"; $("busy").hidden = !finishing;
   if (photos.length > first){
     selectPhoto(first);
@@ -1810,6 +1856,9 @@ $("metaIn").onchange = async ()=>{
 
 // ================= amenity map =================
 function decodeEntities(s){ const t = document.createElement("textarea"); t.innerHTML = s; return t.value; }
+function normType(t){ if (!t) return ""; t=String(t).toLowerCase();
+  const R=[[/train|station/,"train"],[/regional shopping/,"regional_shopping"],[/shopping|mall|plaza/,"shopping"],[/school|college/,"school"],[/golf/,"golf"],[/library/,"library"],[/aquatic|pool|swim/,"aquatic"],[/hospital/,"hospital"],[/national park|regional park|dam/,"regional_park"],[/beach/,"beach"],[/lake/,"lake"],[/nature reserve|bushland|trail|reserve/,"reserve"],[/botanic|park|oval/,"park"],[/recreation|sport/,"recreation"],[/child|kinder|daycare/,"childcare"],[/playground/,"playground"]];
+  for (const [re,c] of R) if (re.test(t)) return c; return "other"; }
 function parseJobFile(text){
   let j = null; const tt = text.trim();
   if (tt.startsWith("{")){
@@ -1821,12 +1870,12 @@ function parseJobFile(text){
     const arrAfter = re => { const m = re.exec(tt); if (!m) return null; let i = m.index + m[0].lastIndexOf("["), d = 0, q = null;
       for (let k=i; k<tt.length; k++){ const ch = tt[k]; if (q){ if (ch === "\\"){ k++; continue; } if (ch === q) q = null; continue; } if (ch === '"' || ch === "'"){ q = ch; continue; } if (ch === "[") d++; else if (ch === "]"){ d--; if (!d) return tt.slice(i, k+1); } } return null; };
     let ps = arrAfter(/\b(?:PROP|P|H)\s*=\s*\[/), ms = arrAfter(/\b(?:M|ITEMS|PINS|PLACES|A|R|pins)\s*=\s*\[\s*\{/);
-    if (!ps){ const po = tt.match(/\b(?:PROP|P)\s*=\s*(\{[^}]*\})/); if (po){ const o = JSON.parse(po[1]); ps = JSON.stringify([o.lat, o.lng]); } }
+    if (!ps){ const po = tt.match(/\b(?:PROP|P|H)\s*=\s*(\{[^}]*\})/); if (po){ const o = JSON.parse(po[1]); ps = JSON.stringify([o.lat, o.lng]); } }
     if (!ps || !ms) throw new Error("That file isn't one of our amenity maps.");
     const prop = JSON.parse(ps), M = JSON.parse(ms).map(q=>Object.assign({}, q, { name: q.name || q.n, badge: q.badge || (q.kind==="zoned" ? "ZONED" : q.kind==="unverified" ? "unverified" : q.kind==="private" ? "private" : "") }));
     const am = tt.match(/<div class="addr">([\s\S]*?)<\/div>/) || tt.match(/<title>([^<–-]+?)\s*[–-]/);
     j = { address: am ? decodeEntities(am[1]).trim() : "Property", lat:prop[0], lng:prop[1],
-      places: M.map(q=>({ name:decodeEntities(q.name), cat:q.cat||q.type||(/school|college/i.test(q.name)?"school":/station/i.test(q.name)?"train":/park|reserve/i.test(q.name)?"park":"other"), lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
+      places: M.map(q=>({ name:decodeEntities(q.name), cat:q.cat||normType(q.type)||(/school|college/i.test(q.name)?"school":/station/i.test(q.name)?"train":/park|reserve/i.test(q.name)?"park":"other"), lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
   }
   const seen = new Set();
   j.places.forEach(q=>{ if (q.name){ if (/✓\s*ZONED|\bZONED\b/i.test(q.name) && !q.school) q.school='zoned'; q.name = String(q.name).replace(/\s*✓?\s*\(?\bZONED\b\)?\s*/ig,' ').replace(/\s*[✓✔]\s*$/,'').trim(); } });
@@ -1989,7 +2038,8 @@ function lotSnap(p, pts, ll){ const C=Object.assign({ on:true, R:2.5, rot:3, sc:
   window.__lotSnap={ base, best:bestS, dx:bp[0]/ppm, dy:bp[1]/ppm, sc:bp[2], rt:bp[3]*180/Math.PI, edges:info.map(e=>({d:+e.d.toFixed(2), r:+e.r.toFixed(2), s0:+e.s0.toFixed(1), s:+e.s.toFixed(1)})) };
   return P1;
 }
-window.__bae = { setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit();
+function shadeHex(h,k){ const n=parseInt(h.slice(1),16); const f=v=>Math.round(v*k).toString(16).padStart(2,"0"); return "#"+f(n>>16&255)+f(n>>8&255)+f(n&255); }
+window.__bae = { project:()=>projectJSON(), setAdj:(o)=>{ const p=P(); if(!p) return false; p.adj=Object.assign({}, ADJ0, o); refreshAll(); return true; }, setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit();
     try { const R=lotSnap(p, pts, ll); if (R) { pts.splice(0, pts.length, ...R); } } catch(e){ console.warn(e); }
     try { const EO=window.__edgeOff; if (EO && Object.keys(EO).length){ const n=pts.length; let per_px=0, per_m=0; const mLat=111132.92, mLng=111412.84*Math.cos(ll[0][0]*Math.PI/180);
         for (let i=0;i<ll.length;i++){ const a=ll[i], b=ll[(i+1)%ll.length]; per_m+=Math.hypot((b[0]-a[0])*mLat,(b[1]-a[1])*mLng); }
@@ -2003,7 +2053,7 @@ window.__bae = { setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.hou
     let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; pts.forEach(q=>{ x0=Math.min(x0,q[0]); x1=Math.max(x1,q[0]); y0=Math.min(y0,q[1]); y1=Math.max(y1,q[1]); });
     const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3); const chh=cw/1.5;
     let cx=(x0+x1)/2-cw/2, cy=(y0+y1)/2-chh/2; cx=Math.max(0,Math.min(p.w-cw,cx)); cy=Math.max(0,Math.min(p.h-chh,cy)); const zf=p.w/cw;
-    const col = prefs.agency==="grey-s" ? "#FFFFFF" : agency().color; const sh={ id:nid(), type:"poly", pts, color:col, width:17/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:72/(62*zf), lensWeight:wt>=700?600:400 }; p.shapes.push(sh); p.outside='blur'; p.blurAmt=Math.max(6, 15*cw/p.w); p._blur=null; p.pins.length=0;
+    const col = prefs.agency==="grey-s" ? "#FFFFFF" : shadeHex(agency().color, 0.75); const sh={ id:nid(), type:"poly", pts, color:col, width:17/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:72/(62*zf), lensWeight:wt>=700?600:400 }; p.shapes.push(sh); p.outside='blur'; p.blurAmt=Math.max(6, 15*cw/p.w); p._blur=null; p.pins.length=0;
     if (area){ p.texts.push({ id:nid(), link:sh.id, style:"area", color:"#ffffff", size:200, x:0, y:0, autoSize:true, lot:area, text:area+"m2", weight:wt||400, fitW:0.62, fitH:0.5 }); }
     refreshAll(); return { crop:[cx,cy,cw,chh], w:p.w, h:p.h, snap:window.__lotSnap }; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { w:p.w, h:p.h, cam:p.cam, shapes:p.shapes.map(s=>s.pts.map(q=>q.map(Math.round))), snap:window.__lotSnap||null, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
 
