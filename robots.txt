@@ -8,6 +8,7 @@ Disallow: /schedule.html
 Disallow: /confirmation.html
 Disallow: /hq/
 Disallow: /doorbook/
+Disallow: /snap/
 Disallow: /leads-7x2k9q.html
 Disallow: /team/
 Disallow: /pins/
