@@ -575,6 +575,10 @@ function finishImage(base, p){
   let sky = (p.skyOn !== false) ? analyseSky(px, w, h) : null;
   // 2b. dehaze: distant ground just under the horizon goes milky grey into the sun — pull it back
   if (sky && p.dehaze !== false && !(Object.assign({},TUNE,window.__TUNE||{}).noDehaze)) dehazeBand(px, w, h, x => sky.m*x + sky.b);
+  // Golden-hour / dawn sky: warm, not blue. Editors leave these alone — so do we.
+  if (sky){ let r=0,b=0,n=0; const hz = Math.max(4, Math.min(h-1, sky.b|0)), st = Math.max(1, Math.round(w/300));
+    let g=0; for (let y=0; y<hz*0.8; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4; r+=px[i]; g+=px[i+1]; b+=px[i+2]; n++; }
+    if (n && (r - b)/n > 6 && (r+g+b)/(3*n) < 236) { p.skyWarm = true; sky = null; } }
   // Keep a good real sky (blue with proper clouds): the editors only swap washed-out or blown skies.
   p.skyKept = false;
   if (sky && p.skyKeepReal !== false){
