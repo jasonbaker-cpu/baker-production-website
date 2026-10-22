@@ -535,14 +535,14 @@ function dehazeBand(px, w, h, line){
   const r = 5, M = new Float32Array(sw*sh), T = new Float32Array(sw*sh);
   for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ let m=255; for (let k=-r;k<=r;k++){ const xx=Math.min(sw-1,Math.max(0,x+k)); const v=D[y*sw+xx]; if (v<m) m=v; } T[y*sw+x]=m; }
   for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ let m=255; for (let k=-r;k<=r;k++){ const yy=Math.min(sh-1,Math.max(0,y+k)); const v=T[yy*sw+x]; if (v<m) m=v; } M[y*sw+x]=m; }
-  const Mb = gaussBlur(M, sw, sh, 3);
+  const Mb = gaussBlur(M, sw, sh, 8);
   // water / smooth sky under the line: flat and bluish — dehazing it blows it out, so leave it alone
   const Lr = new Float32Array(sw*sh), Wm = new Float32Array(sw*sh);
   for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ const i=((y*s)*w+x*s)*4; Lr[y*sw+x]=(px[i]+px[i+1]+px[i+2])/3; }
   const Lb = gaussBlur(Lr, sw, sh, 1.2); const Td = new Float32Array(sw*sh); for (let i=0;i<Td.length;i++) Td[i]=Math.abs(Lr[i]-Lb[i]);
   const Tx = gaussBlur(Td, sw, sh, 2.5);
   for (let y=0;y<sh;y++) for (let x=0;x<sw;x++){ const j=y*sw+x, i=((y*s)*w+x*s)*4; const bl = px[i+2]-px[i]; Wm[j] = (Tx[j] < 4 && bl > 4) ? 1 : (Tx[j] < 2.2 ? 0.7 : 0); }
-  const Wb = gaussBlur(Wm, sw, sh, 3);
+  const Wb = gaussBlur(Wm, sw, sh, 12);
   const wat = (x,y) => { const fx=Math.min(sw-1,x/s|0), fy=Math.min(sh-1,y/s|0); return Math.min(1, Wb[fy*sw+fx]*1.4); };
   // airlight: brightest ground haze in the first slice under the horizon
   let ar=0, ag=0, ab=0, n=0; const vals=[];
@@ -552,12 +552,12 @@ function dehazeBand(px, w, h, line){
   if (!n) return; ar/=n; ag/=n; ab/=n; const A = Math.max(ar,ag,ab);
   if (thr < 95) return;   // no real haze — leave it alone
   const at = (x,y) => { const fx=Math.min(sw-1.001,x/s), fy=Math.min(sh-1.001,y/s), x0=fx|0, y0=fy|0, tx=fx-x0, ty=fy-y0, i=y0*sw+x0; return (Mb[i]*(1-tx)+Mb[i+1]*tx)*(1-ty)+(Mb[i+sw]*(1-tx)+Mb[i+sw+1]*tx)*ty; };
-  const strength = Math.min(0.9, Math.max(0.5, (thr-95)/80 + 0.5));
+  const strength = Math.min(0.6, Math.max(0.35, (thr-95)/100 + 0.35));
   for (let y=Math.max(0, hz0|0); y<h; y++){
     for (let x=0;x<w;x++){
       const hz = line(x), d = (y-hz)/band; if (d < -0.02 || d > 1) continue;
       const u = d < 0 ? 1 + d/0.02 : 1 - d; const wgt = u*u*(3-2*u);
-      const tmin = 0.28 + 0.27*Math.min(1, Math.max(0,d)/0.5), st2 = Math.min(0.97, strength + 0.25*(1-Math.min(1,Math.max(0,d)/0.3)));
+      const tmin = 0.55 + 0.25*Math.min(1, Math.max(0,d)/0.5), st2 = Math.min(0.7, strength + 0.1*(1-Math.min(1,Math.max(0,d)/0.3)));
       const t = Math.max(tmin, 1 - st2*wgt*(1-wat(x,y))*at(x,y)/A);
       const i = (y*w+x)*4;
       px[i]   = (px[i]  -ar)/t + ar - (1-t)*12;
@@ -590,7 +590,10 @@ function finishImage(base, p){
   if (sky && p.cam && p.cam.ready && p.cam.pitch > -60){
     const fpx = p.cam.f35*Math.hypot(p.ow,p.oh)/43.27, yO = p.oh/2 + fpx*Math.tan((p.cam.pitch+0.35)*DEG), geo = (yO - p.y0)*p.k + 0.004*h;
     const xc = w/2, ydet = sky.m*xc + sky.b;
-    if (ydet > geo + 0.025*h){ sky.b = geo + 0.006*h - sky.m*xc; p.skyClamped = Math.round(ydet-geo);
+    window.__skyDbg=(window.__skyDbg||[]);
+    let bandTex = 0; { const ya=Math.max(0,(geo/sky.s)|0), yb=Math.min(sky.sh,(ydet/sky.s)|0); let t=0,n=0; for (let y=ya;y<yb;y++) for (let x=0;x<sky.sw;x+=2){ t+=sky.tex[y*sky.sw+x]; n++; } bandTex = n ? t/n : 0; }
+    window.__skyDbg.push({ydet:Math.round(ydet),geo:Math.round(geo),bandTex:+bandTex.toFixed(2)});
+    if (ydet > geo + 0.012*h && bandTex < (Object.assign({},TUNE,window.__TUNE||{}).clampTex||2.0)){ sky.b = geo + 0.006*h - sky.m*xc; p.skyClamped = Math.round(ydet-geo);
       // the blown band (glary sea / haze) between the true horizon and where the sky test stopped: compress highlights evenly so it reads as water
       { const yA = Math.max(0,(geo-0.02*h)|0), yB = Math.min(h,(ydet+0.03*h)|0), fe = Math.max(2, 0.015*h);
         for (let y=yA; y<yB; y++){ const v = Math.min(1,(y-yA)/fe, (yB-y)/fe); for (let x=0;x<w;x++){ const i=(y*w+x)*4, Y=(px[i]+px[i+1]+px[i+2])/3; const t = Math.min(1, Math.max(0,(Y-170)/70))*v; if (t<=0) continue;
@@ -634,8 +637,16 @@ function finishImage(base, p){
   const g1 = gaussBlur(Y,w,h,1*scale+0.0001), g3 = gaussBlur(g1,w,h,Math.sqrt(Math.max(0.01,9-1))*scale), g10 = gaussBlur(g3,w,h,Math.sqrt(100-9)*scale), g30 = gaussBlur(g10,w,h,Math.sqrt(900-100)*scale);
   const G = BAND_GAINS, TT = Object.assign({}, TUNE, window.__TUNE||{}), TF = TT.fine, TM = TT.mid;
   const wSky = new Float32Array(w*h);
-  if (sky){ for (let y=0;y<h;y++){ for (let x=0;x<w;x++){ const hz = line(x); if (y >= hz) continue; const t = y/Math.max(hz,1); const ii=(y*w+x)*4, mx=Math.max(px[ii],px[ii+1],px[ii+2]), mn=Math.min(px[ii],px[ii+1],px[ii+2]), haze = mn > 185 && mx-mn < 40; const u = Math.min(1, Math.max(0,(1-t)/(haze ? 0.035 : 0.14))); const fade = u*u*(3-2*u); const pr = protAt(x,y); const lim = sky.colLim[Math.min(sky.sw-1,(x/sky.s)|0)]*sky.s, dl = (lim - y)/(h*0.012); const cf = dl<=0 ? 0 : Math.min(1, dl); wSky[y*w+x] = fade * Math.min(1, Math.sqrt(pr)*1.4) * cf; } } }
+  if (sky){ for (let y=0;y<h;y++){ for (let x=0;x<w;x++){ const hz = line(x); if (y >= hz) continue; const t = y/Math.max(hz,1); const ii=(y*w+x)*4, mx=Math.max(px[ii],px[ii+1],px[ii+2]), mn=Math.min(px[ii],px[ii+1],px[ii+2]), haze = mn > 185 && mx-mn < 40; const u = Math.min(1, Math.max(0,(1-t)/(haze ? 0.035 : 0.14))); const fade = u*u*(3-2*u); const pr = protAt(x,y); const lim = sky.colLim[Math.min(sky.sw-1,(x/sky.s)|0)]*sky.s, dl = (lim - y)/(h*0.012); const cf = (y > hz - 0.08*h && y < hz - 0.003*h) ? 1 : (dl<=0 ? 0 : Math.min(1, dl)); wSky[y*w+x] = fade * Math.min(1, Math.sqrt(pr)*1.4) * cf; } } }
   const det20 = sky ? gaussBlur(Y,w,h,20*scale) : null;
+  // land guard: just above the horizon, anything clearly darker than the sky a little higher up is land (hills, city towers), not sky — keep it
+  let refY = null;
+  if (sky){ refY = new Float32Array(w); const st=Math.max(1,(w/400)|0), tmp=new Float32Array(Math.ceil(w/st));
+    for (let xs=0,k=0; xs<w; xs+=st,k++){ const hz=line(xs), ya=Math.max(0,(hz-0.16*h)|0), yb=Math.max(ya+1,(hz-0.08*h)|0), v=[];
+      for (let y=ya;y<yb;y+=Math.max(1,((yb-ya)/24)|0)){ const j=y*w+xs; if (wSky[j]>0.3) v.push(Y[j]); }
+      v.sort((a,b)=>a-b); tmp[k] = v.length>3 ? v[(v.length*0.35)|0] : 255; }
+    const n=tmp.length, R=Math.max(2,(n*0.04)|0);
+    for (let k=0;k<n;k++){ let a=0,c=0; for (let t=-R;t<=R;t++){ const kk=Math.min(n-1,Math.max(0,k+t)); a+=tmp[kk]; c++; } const v=a/c; for (let x=k*st; x<Math.min(w,(k+1)*st); x++) refY[x]=v; } }
   let realRM = null;
   if (sky && p.skyKept){
     realRM = []; let last=[TT.skyTop[0],TT.skyTop[1],TT.skyTop[2]];
@@ -670,7 +681,7 @@ function finishImage(base, p){
         let ww = wsE;
         { const o0=px[i], o1=px[i+1], o2=px[i+2], Yp = .299*o0+.587*o1+.114*o2, mn = Math.min(o0,o1,o2), mx = Math.max(o0,o1,o2);
           const bl = Math.min(1, Math.max(0, (o2 - o0 - 4)/22)) * Math.min(1, Math.max(0, (Yp - 120)/40)), cw = Math.min(1, Math.max(0, (mn - 175)/30)) * Math.min(1, Math.max(0, (40 - (mx-mn))/20));
-          const e = Math.abs(Y[j]-g1[j])*2.2; ww = (ws > 0.04 ? Math.min(1, ws/0.04) * Math.max(bl, cw) : Math.min(1, fz) * bl * (cw > 0.5 ? 0 : 1)) * Math.min(1, Math.max(0, (14 - e)/10)); }
+          const e = Math.abs(Y[j]-g1[j])*2.2, gz = y > hzx - 0.08*h ? Math.min(1, Math.max(0, (Y[j] - (refY[x] - 22))/12)) : 1; ww = gz * (ws > 0.04 ? Math.min(1, ws/0.04) * Math.max(bl, cw) : Math.min(1, fz) * bl * (cw > 0.5 ? 0 : 1)) * Math.min(1, Math.max(0, (14 - e)/10)); }
         r = r*(1-ww) + sr*ww; g = g*(1-ww) + sg*ww; b = b*(1-ww) + sb*ww;
       } else if (ws > 0){
         const hzx = line(x), t = Math.min(1, (y/Math.max(hzx,1))/0.8) * (SKY_STOPS.length-1);
@@ -682,7 +693,7 @@ function finishImage(base, p){
     }
   }
   // soften the sky/land join: a short vertical blend across the horizon removes hard white lines
-  if (sky && line){ const r = Math.max(3, Math.round(0.006*h)), col = new Float32Array((4*r+2)*3);
+  if (sky && line && !(Object.assign({},TUNE,window.__TUNE||{}).noJoin)){ const r = Math.max(2, Math.round((Object.assign({},TUNE,window.__TUNE||{}).joinR||0.0025)*h)), col = new Float32Array((4*r+2)*3);
     for (let x=0; x<w; x++){ const cLim = sky.colLim ? sky.colLim[Math.min(sky.sw-1, (x/sky.s)|0)]*sky.s : 1e9, yb = Math.round(Math.min(line(x), cLim)), y0 = Math.max(1, yb-2*r), y1 = Math.min(h-2, yb+r); if (y1<=y0) continue; const n=y1-y0+1;
       for (let k=0;k<n;k++){ const i=((y0+k)*w+x)*4; col[k*3]=px[i]; col[k*3+1]=px[i+1]; col[k*3+2]=px[i+2]; }
       for (let k=0;k<n;k++){ const y=y0+k, d=Math.abs(y-yb)/(y<yb?2*r:r), wgt=Math.max(0,1-d); if (!wgt) continue; let a=0,b=0,cc=0,s=0;
@@ -747,19 +758,19 @@ function drawIcon(c, name, cx, cy, size, R){ if (R){ const im = iconImg(name); i
 
 // ================= pins: one preset per agency, measured from the editors' delivered finals (3000 px wide) =================
 const AGENCIES = {
-  "red":         { name:"Red pins (Devon Kelly, Cooper Winter)",            kind:"pin",  color:"#E2181C", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
-  "charcoal":    { name:"Charcoal pins (Grant Wilson, John O'Brien, Oliver Norris)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
+  "red":         { name:"Laurie Kelly — red pins (Devon, Daniel, Franklin; Cooper Winter)",            kind:"pin",  color:"#E2181C", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
+  "charcoal":    { name:"Raspa — charcoal pins (John O'Brien, Simon Raspa; Grant Wilson, Oliver Norris)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   "grey-s":      { name:"Grey pins + S logo (Kasey Summers, Semple)",               kind:"pin",  color:"#9C9C9C", house:{ type:"pin", w:255, h:360, mark:"s", markR:.9, ring:true } },
   "black-photo": { name:"Black pins + agent photo (Jayden Cooke)",          kind:"pin",  color:"#060606", house:{ type:"pin", w:236, h:330, mark:"photo", markR:.69 } },
   "navy":        { name:"Navy pins + emblem (Biljana)",                     kind:"pin",  color:"#122068", scale:.88, house:{ type:"board", w:170, h:143, stem:300, mark:"emblem" } },
-  "navy-h":      { name:"Navy pins + H board (Mario Condipodero)",          kind:"pin",  color:"#022048", house:{ type:"board", w:178, h:178, stem:240, mark:"hboard" } },
+  "navy-h":      { name:"Harcourts — navy pins + H board (Tim Fidock, Mario Condipodero)",          kind:"pin",  color:"#022048", house:{ type:"board", w:178, h:178, stem:240, mark:"hboard" } },
   "fn":          { name:"Blue pins + First National board (Suresh Sama, Nish Jayant)",   kind:"pin",  color:"#004480", scale:.88, house:{ type:"board", w:142, h:142, stem:250, mark:"fn" } },
   "orange":      { name:"Orange pins (Raymond Chen)",                       kind:"pin",  color:"#F4783C", scale:.88, house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   "green-belle": { name:"Green pins + belle (Shane Garrett, Cory Garrett, Megan Topham)", kind:"pin", color:"#22644E", house:{ type:"pin", w:176, h:281, mark:"belle", markR:.91 } },
   "flags-p":     { name:"Red flags + P pin (Professionals: Annique Woodford, Nic Pulvirenti, Stephanie Briers, Emma Scharf, James Kennedy)", kind:"flag", color:"#FF2744", house:{ type:"pin", w:192, h:273, color:"#3C3C3C", mark:"p", markR:.85 } },
   "yellow":      { name:"Yellow labels + address (Gregory Swiatek, Shah Akbari)", kind:"ylab", color:"#F4DC00", house:{ type:"label" } },
   "pill-r":      { name:"Navy labels + R pin (Mandie Cubeddu)",             kind:"pill", color:"#223454", house:{ type:"pin", w:82, h:104, stem:190, mark:"r", markR:.9 } },
-  "realty-plus": { name:"Teal pins + Realty Plus board (Tracy Garbes)",     kind:"pin",  color:"#7ACCD6", scale:.88, house:{ type:"board", w:220, h:183, stem:170, mark:"realty" } },
+  "realty-plus": { name:"Realty Plus — teal pins + board (Tracy Garbes, Leonie Adam)",     kind:"pin",  color:"#7ACCD6", scale:.88, house:{ type:"board", w:220, h:183, stem:170, mark:"realty" } },
   "peard":       { name:"Navy pins + Peard board (Wesley Majeks)",          kind:"pin",  color:"#0E2357", scale:.88, house:{ type:"board", w:285, h:111, stem:160, mark:"peard" } },
   "mallison":    { name:"Navy pins + Mallison logo (Oshi Thilakarathna)",   kind:"pin",  color:"#0B2A4F", scale:.88, house:{ type:"board", w:300, h:69, stem:180, mark:"mallison" } }
 };
