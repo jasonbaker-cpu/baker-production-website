@@ -652,7 +652,7 @@ function finishImage(base, p){
   const det20 = sky ? gaussBlur(Y,w,h,20*scale) : null;
   // land guard: just above the horizon, anything clearly darker than the sky a little higher up is land (hills, city towers), not sky — keep it
   let Tm = null; if (sky){ const d = new Float32Array(w*h); for (let k=0;k<d.length;k++) d[k] = Math.abs(Y[k]-g3[k]); Tm = gaussBlur(d, w, h, 5*scale+0.5); }
-  let landTop = null;
+  let landTop = null, landTrend = null, landEnv = null, rowTone = null;
   let refY = null;
   if (sky){ refY = new Float32Array(w); const st=Math.max(1,(w/400)|0), tmp=new Float32Array(Math.ceil(w/st));
     for (let xs=0,k=0; xs<w; xs+=st,k++){ const hz=line(xs), ya=Math.max(0,(hz-0.16*h)|0), yb=Math.max(ya+1,(hz-0.08*h)|0), v=[];
@@ -662,14 +662,32 @@ function finishImage(base, p){
     for (let k=0;k<n;k++){ let a=0,c=0; for (let t=-R;t<=R;t++){ const kk=Math.min(n-1,Math.max(0,k+t)); a+=tmp[kk]; c++; } const v=a/c; for (let x=k*st; x<Math.min(w,(k+1)*st); x++) refY[x]=v; } }
   if (sky && SKYP && SKYP.direct){
     const d2 = new Float32Array(w*h); for (let k=0;k<d2.length;k++) d2[k] = Math.abs(Y[k]-g3[k]); const T2 = gaussBlur(d2, w, h, 1.5*scale+0.3);
-    const Yb = g1, maxUp = 0.05*h, gapMax = Math.max(3, 0.004*h); landTop = new Float32Array(w);
+    const Yb = g1, maxUp = 0.05*h, gapMax = 2; landTop = new Float32Array(w);
     for (let x=0;x<w;x++){ const hz=line(x); let top=hz, gap=0;
-      for (let y=Math.floor(hz-0.0015*h); y>Math.max(0,hz-maxUp); y--){ const j=y*w+x; const up = hz - y, land = (up < 0.004*h && Yb[j] < refY[x]-12) || (T2[j] > 2.6 && Yb[j] < refY[x]+4);
+      for (let y=Math.floor(hz-0.0015*h); y>Math.max(0,hz-maxUp); y--){ const j=y*w+x; const up = hz - y, land = (up < 0.004*h && Yb[j] < refY[x]-12) || (Yb[j] < refY[x]-45) || (T2[j] > 2.6 && Yb[j] < refY[x]-6);
         if (land){ top=y; gap=0; } else if (++gap > gapMax) break; }
+      if (top >= hz - 0.0015*h - 1){ let y = Math.max(0, Math.floor(hz)); const yMax = Math.min(h-2, hz + 0.03*h);
+        while (y < yMax){ const j=y*w+x; if (T2[j] >= 1.8 || Yb[j] < refY[x] - 15) break; y++; } if (y > hz + 2) top = y; }
       landTop[x]=top; }
-    { const R = Math.max(5, Math.round(0.02*w)), lt2 = new Float32Array(w), buf=[];
+    { const R = Math.max(5, Math.round(0.01*w)), lt2 = new Float32Array(w), buf=[];
       for (let x=0;x<w;x++){ buf.length=0; for (let k=-R;k<=R;k+=2) buf.push(landTop[Math.min(w-1,Math.max(0,x+k))]); buf.sort((a,b)=>a-b); lt2[x]=buf[buf.length>>1]; }
-      const lt3 = new Float32Array(w); for (let x=0;x<w;x++){ let a=0,n=0; for (let k=-24;k<=24;k+=2){ a+=lt2[Math.min(w-1,Math.max(0,x+k))]; n++; } lt3[x]=a/n; } landTop = lt3; } }
+      const lt3 = new Float32Array(w); for (let x=0;x<w;x++){ let a=0,n=0; for (let k=-12;k<=12;k+=2){ a+=lt2[Math.min(w-1,Math.max(0,x+k))]; n++; } lt3[x]=a/n; }
+      // cap soft bulges: the edge may rise at most ~12px above its broad trend unless the bulge is crisp detail (towers)
+      const W2 = Math.round(0.06*w), pre = new Float64Array(w+1); for (let x=0;x<w;x++) pre[x+1]=pre[x]+lt3[x];
+      for (let x=0;x<w;x++){ const a0=Math.max(0,x-W2), a1=Math.min(w,x+W2+1), trend=(pre[a1]-pre[a0])/(a1-a0), cap = trend - 0.006*h;
+        void cap; }
+      landTrend = new Float32Array(w); for (let x=0;x<w;x++){ const a0=Math.max(0,x-W2), a1=Math.min(w,x+W2+1); landTrend[x]=Math.max(lt3[x], (pre[a1]-pre[a0])/(a1-a0)); }
+      window.__ltDbg = (window.__ltDbg||[]).concat([{h, hz:[0,500,1000,1500,2000,2500].map(x=>Math.round(line(x*w/3000))), lt:[0,500,1000,1500,2000,2500].map(x=>Math.round(lt3[Math.round(x*w/3000)])), refY:[0,1500].map(x=>Math.round(refY[Math.round(x*w/3000)]))}]);
+      landTop = lt3;
+      // envelope: the highest land nearby, smoothed - the new sky never comes below this, so nothing near the horizon is ever cut out
+      { const Rw = Math.round(0.04*w), env = new Float32Array(w);
+        for (let x=0;x<w;x++){ let m=1e9; for (let k=-Rw;k<=Rw;k+=3){ const v=lt3[Math.min(w-1,Math.max(0,x+k))]; if (v<m) m=v; } env[x]=m; }
+        const Rs = Math.round(0.02*w), pe = new Float64Array(w+1); for (let x=0;x<w;x++) pe[x+1]=pe[x]+env[x];
+        landEnv = new Float32Array(w); for (let x=0;x<w;x++){ const a0=Math.max(0,x-Rs), a1=Math.min(w,x+Rs+1); landEnv[x]=Math.min(env[x], (pe[a1]-pe[a0])/(a1-a0)); }
+        // per-row mean of the original sky between the envelope fade and the land, for tone matching
+        rowTone = new Float32Array(h*3).fill(-1);
+        for (let y=0;y<h;y++){ let a=0,b2=0,c=0,n=0; for (let x=0;x<w;x+=4){ if (y > landEnv[x] - 0.05*h && y < landEnv[x] + 0.035*h && Y[y*w+x] > refY[x] - 30){ const i=(y*w+x)*4; a+=px[i]; b2+=px[i+1]; c+=px[i+2]; n++; } } if (n>20){ rowTone[y*3]=a/n; rowTone[y*3+1]=b2/n; rowTone[y*3+2]=c/n; } }
+      } } }
   let realRM = null;
   if (sky && p.skyKept){
     realRM = []; let last=[TT.skyTop[0],TT.skyTop[1],TT.skyTop[2]];
@@ -685,7 +703,7 @@ function finishImage(base, p){
       const addF = add*(1 - TT.farSoft*fw);
       let r = px[i]+addF, g = px[i+1]+addF, b = px[i+2]+addF;
       if (fw > 0 && ws < 0.5){ const hk = 0.5*TT.farSoft*fw*(1-ws); r += (TT.skyHz[0]-r)*hk; g += (TT.skyHz[1]-g)*hk; b += (TT.skyHz[2]-b)*hk; }
-      const abv = line && SKYP && (y < line(x) - 3 || (landTop && y < landTop[x])); let fz = 0; if (abv){ const u = Math.min(1, Math.max(0, (1 - y/Math.max(line(x),1))/0.14)); fz = u*u*(3-2*u); if (landTop && y >= line(x) - 3 && y < landTop[x] + 0.007*h) fz = 1; }
+      const abv = line && SKYP && (y < line(x) - 3 || (landTop && y < landTop[x] + 1)); let fz = 0; if (abv){ const u = Math.min(1, Math.max(0, (1 - y/Math.max(line(x),1))/0.14)); fz = u*u*(3-2*u); if (landTop && y >= line(x) - 3) fz = 1; }
       if ((ws > 0 || fz > 0) && SKYP){ const wsE = Math.max(ws, fz);
         // plate: horizon of the plate sits on the photo's horizon; clouds squashed at most 2x toward the horizon
         const hzx = line(x), sx = w/SKYP.w, PB = SKYP.direct ? 0.985 : 0.94, sy = SKYP.direct ? Math.max(0.2, hzx/(SKYP.h*PB)) : Math.max(sx/2, hzx/(SKYP.h*0.98));
@@ -698,17 +716,19 @@ function finishImage(base, p){
         const gr = TT.skyTop[0]+(TT.skyHz[0]-TT.skyTop[0])*tq, gg = TT.skyTop[1]+(TT.skyHz[1]-TT.skyTop[1])*tq, gb = TT.skyTop[2]+(TT.skyHz[2]-TT.skyTop[2])*tq;
         const pm = rmS ? TT.realMix : TT.plateMix;
         let sr = gr + (pr-rm[0])*pm, sg = gg + (pg-rm[1])*pm, sb = gb + (pb-rm[2])*pm;
-        if (SKYP.direct && !rmS){ sr = pr; sg = pg; sb = pb; }
+        if (SKYP.direct && !rmS){ if (y >= hzx - 2){ const q = SKYP.rm[SKYP.h-2]; sr=q[0]; sg=q[1]; sb=q[2]; } else { sr = pr; sg = pg; sb = pb; } }
         // last stretch above the horizon: fade the plate into a clean, smooth haze so squashed clouds don't show as smudges
         const tz = Math.max(0, (y/Math.max(hzx,1) - TT.hzStart)/(1-TT.hzStart)), hzw = (SKYP.direct && !rmS) ? 0 : tz*tz*(3-2*tz)*TT.hzAmt;
         sr += (TT.skyHz[0]-sr)*hzw; sg += (TT.skyHz[1]-sg)*hzw; sb += (TT.skyHz[2]-sb)*hzw;
         let ww = wsE;
         { const dz = (hzx - y)/h, GZ = (Object.assign({},TUNE,window.__TUNE||{}).gz||0.045);
           if (SKYP.direct && !rmS){
-            const lt = landTop ? landTop[x] : hzx; const FB = (Object.assign({},TUNE,window.__TUNE||{}).fadeB||0.014)*h; const u = (lt + 1 - y)/Math.max(2, FB);   // sky above the land edge, 2-px blend
+            const top = landEnv[x] - 0.004*h, FL = 0.03*h, u = (top - y)/FL;
             ww = u >= 1 ? 1 : (u <= 0 ? 0 : u*u*(3-2*u));
-            { const Yo = (r+g+b)/3, Ys = (sr+sg+sb)/3; if (ww > 0 && ww < 1) ww = Math.max(ww, Math.min(1, Math.max(0, (Yo - Ys - 2)/18)));
-              else if (ww <= 0 && y >= lt){ const below = (y - lt)/(0.007*h); if (below < 1) ww = Math.min(1, Math.max(0, (Yo - Ys - 6)/20)) * (1 - below) * 0.9; } }   // glare rim just under the land edge   // never let original glare show brighter than the new sky
+            // original sky near the horizon (between the fade and the land) is toned toward the new sky instead of cut out
+            if (ww < 1 && y < landEnv[x] + 0.035*h && rowTone[y*3] >= 0){ const q = SKYP.rm[SKYP.h-2], tY = (rowTone[y*3]+rowTone[y*3+1]+rowTone[y*3+2])/3, skyish = Math.min(1, Math.max(0, (Y[j] - (tY - 22))/18)),
+                kt = 0.8 * skyish * Math.min(1, Math.max(0, (landEnv[x] + 0.035*h - y)/(0.015*h)));
+              r += (q[0]-rowTone[y*3])*kt; g += (q[1]-rowTone[y*3+1])*kt; b += (q[2]-rowTone[y*3+2])*kt; }
           } else {
           const o0=px[i], o1=px[i+1], o2=px[i+2], Yp = .299*o0+.587*o1+.114*o2, mn = Math.min(o0,o1,o2), mx = Math.max(o0,o1,o2);
           const bl = Math.min(1, Math.max(0, (o2 - o0 - 4)/22)) * Math.min(1, Math.max(0, (Yp - 120)/40)), cw = Math.min(1, Math.max(0, (mn - 175)/30)) * Math.min(1, Math.max(0, (40 - (mx-mn))/20));
@@ -720,6 +740,9 @@ function finishImage(base, p){
         const dd = 0.45*(Y[j]-det20[j]);
         r = r*(1-ws) + (s0[0]*(1-f)+s1[0]*f + dd)*ws; g = g*(1-ws) + (s0[1]*(1-f)+s1[1]*f + dd)*ws; b = b*(1-ws) + (s0[2]*(1-f)+s1[2]*f + dd)*ws;
       }
+      if (false && landTop && SKYP && SKYP.direct){ const HB = (Object.assign({},TUNE,window.__TUNE||{}).hazeB||0.009)*h, d = (y - landTrend[x])/HB;
+        if (d > -2.2 && d < 2.2){ const hc = SKYP.rm[SKYP.h-2], al = (Object.assign({},TUNE,window.__TUNE||{}).hazeA||0.5)*Math.exp(-d*d*(d<0?0.6:1.4));
+          r += (hc[0]-r)*al; g += (hc[1]-g)*al; b += (hc[2]-b)*al; } }
       px[i]=r; px[i+1]=g; px[i+2]=b;   // Uint8ClampedArray clamps
     }
   }
@@ -1006,7 +1029,7 @@ function tidySides(p){
   for (const pin of list){ if (!pin.layoutLocked) place(pin, done.map(q=>pinParts(p,q))); done.push(pin); }
   for (let it=0; it<2; it++) for (const pin of list){ if (pin.layoutLocked) continue; place(pin, p.pins.filter(q=>q!==pin).map(q=>pinParts(p,q))); }
   // flag anything still overlapping so the editor can drop a place (the finals never have overlapping labels)
-  p.pins.forEach(a=>{ a.clash = false; if (!a.house){ const m = 0.006*p.h; for (const r of pinParts(p,a)) if (r[0] < m || r[2] > p.w-m || r[1] < m) a.clash = true; } });   // any part touching the frame edge counts as a clash   // label hanging off the frame counts as a clash too
+  p.pins.forEach(a=>{ a.clash = false; if (!a.house){ const m = 0.012*p.h; for (const r of pinParts(p,a)) if (r[0] < m || r[2] > p.w-m || r[1] < 1.6*m) a.clash = true; } });   // any part touching the frame edge counts as a clash   // label hanging off the frame counts as a clash too
   for (const a of p.pins) for (const b of p.pins){ if (a===b) continue; let o=0; for (const x of pinParts(p,a)) for (const y of pinParts(p,b)) { const ox = Math.min(x[2],y[2])-Math.max(x[0],y[0]), oy = Math.min(x[3],y[3])-Math.max(x[1],y[1]); if (ox > -10*s && oy > -10*s) o++; } if (o){ a.clash = b.clash = true; } }
 }
 
