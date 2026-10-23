@@ -651,10 +651,11 @@ function finishImage(base, p){
   if (sky){ for (let y=0;y<h;y++){ for (let x=0;x<w;x++){ const hz = line(x); if (y >= hz) continue; const t = y/Math.max(hz,1); const ii=(y*w+x)*4, mx=Math.max(px[ii],px[ii+1],px[ii+2]), mn=Math.min(px[ii],px[ii+1],px[ii+2]), haze = mn > 185 && mx-mn < 40; const u = Math.min(1, Math.max(0,(1-t)/(haze ? 0.035 : 0.14))); const fade = u*u*(3-2*u); const pr = protAt(x,y); const lim = sky.colLim[Math.min(sky.sw-1,(x/sky.s)|0)]*sky.s, dl = (lim - y)/(h*0.012); const cf = (y > hz - 0.08*h && y < hz - 0.003*h) ? 1 : (dl<=0 ? 0 : Math.min(1, dl)); wSky[y*w+x] = fade * Math.min(1, Math.sqrt(pr)*1.4) * cf; } } }
   const det20 = sky ? gaussBlur(Y,w,h,20*scale) : null;
   // land guard: just above the horizon, anything clearly darker than the sky a little higher up is land (hills, city towers), not sky — keep it
+  let Tm = null; if (sky){ const d = new Float32Array(w*h); for (let k=0;k<d.length;k++) d[k] = Math.abs(Y[k]-g3[k]); Tm = gaussBlur(d, w, h, 5*scale+0.5); }
   let refY = null;
   if (sky){ refY = new Float32Array(w); const st=Math.max(1,(w/400)|0), tmp=new Float32Array(Math.ceil(w/st));
     for (let xs=0,k=0; xs<w; xs+=st,k++){ const hz=line(xs), ya=Math.max(0,(hz-0.16*h)|0), yb=Math.max(ya+1,(hz-0.08*h)|0), v=[];
-      for (let y=ya;y<yb;y+=Math.max(1,((yb-ya)/24)|0)){ const j=y*w+xs; if (wSky[j]>0.3) v.push(Y[j]); }
+      for (let y=ya;y<yb;y+=Math.max(1,((yb-ya)/24)|0)){ const j=y*w+xs; if (SKYP && SKYP.direct ? true : wSky[j]>0.3) v.push(Y[j]); }
       v.sort((a,b)=>a-b); tmp[k] = v.length>3 ? v[(v.length*0.35)|0] : 255; }
     const n=tmp.length, R=Math.max(2,(n*0.04)|0);
     for (let k=0;k<n;k++){ let a=0,c=0; for (let t=-R;t<=R;t++){ const kk=Math.min(n-1,Math.max(0,k+t)); a+=tmp[kk]; c++; } const v=a/c; for (let x=k*st; x<Math.min(w,(k+1)*st); x++) refY[x]=v; } }
@@ -691,9 +692,18 @@ function finishImage(base, p){
         const tz = Math.max(0, (y/Math.max(hzx,1) - TT.hzStart)/(1-TT.hzStart)), hzw = (SKYP.direct && !rmS) ? 0 : tz*tz*(3-2*tz)*TT.hzAmt;
         sr += (TT.skyHz[0]-sr)*hzw; sg += (TT.skyHz[1]-sg)*hzw; sb += (TT.skyHz[2]-sb)*hzw;
         let ww = wsE;
-        { const o0=px[i], o1=px[i+1], o2=px[i+2], Yp = .299*o0+.587*o1+.114*o2, mn = Math.min(o0,o1,o2), mx = Math.max(o0,o1,o2);
+        { const dz = (hzx - y)/h, GZ = (Object.assign({},TUNE,window.__TUNE||{}).gz||0.045);
+          if (SKYP.direct && !rmS){
+            if (dz >= GZ) ww = 1;                                   // open sky: solid, no cloud leaks
+            else if (dz <= 0.0015) ww = 0;
+            else { const tx = Math.min(1, Math.max(0, (Tm[j] - 1.6)/1.6)), dk = Math.min(1, Math.max(0, ((refY[x] - 22) - Y[j])/12)), gz = 1 - dk*Math.max(tx, dz < 0.012 ? 1 : 0);   // land = darker than the sky AND detailed (smooth dark = cloud)
+                   const e = Math.abs(Y[j]-g1[j])*2.2, tg = Math.min(1, Math.max(0, (18 - e)/12));
+                   const top = Math.min(1, (dz - 0.0015)/0.004); ww = gz * Math.max(tg, Y[j] > refY[x] + 6 ? 1 : 0) * top;
+                   if (dz > GZ*0.75) ww = Math.max(ww, (dz - GZ*0.75)/(GZ*0.25)); }
+          } else {
+          const o0=px[i], o1=px[i+1], o2=px[i+2], Yp = .299*o0+.587*o1+.114*o2, mn = Math.min(o0,o1,o2), mx = Math.max(o0,o1,o2);
           const bl = Math.min(1, Math.max(0, (o2 - o0 - 4)/22)) * Math.min(1, Math.max(0, (Yp - 120)/40)), cw = Math.min(1, Math.max(0, (mn - 175)/30)) * Math.min(1, Math.max(0, (40 - (mx-mn))/20));
-          const e = Math.abs(Y[j]-g1[j])*2.2, gz = y > hzx - 0.08*h ? Math.min(1, Math.max(0, (Y[j] - (refY[x] - 22))/12)) : 1; ww = gz * (ws > 0.04 ? Math.min(1, ws/0.04) * Math.max(bl, cw) : Math.min(1, fz) * bl * (cw > 0.5 ? 0 : 1)) * Math.min(1, Math.max(0, (14 - e)/10)); }
+          const e = Math.abs(Y[j]-g1[j])*2.2, gz = y > hzx - 0.08*h ? Math.min(1, Math.max(0, (Y[j] - (refY[x] - 22))/12)) : 1; ww = gz * (ws > 0.04 ? Math.min(1, ws/0.04) * Math.max(bl, cw) : Math.min(1, fz) * bl * (cw > 0.5 ? 0 : 1)) * Math.min(1, Math.max(0, (14 - e)/10)); } }
         r = r*(1-ww) + sr*ww; g = g*(1-ww) + sg*ww; b = b*(1-ww) + sb*ww;
       } else if (ws > 0){
         const hzx = line(x), t = Math.min(1, (y/Math.max(hzx,1))/0.8) * (SKY_STOPS.length-1);
@@ -706,7 +716,7 @@ function finishImage(base, p){
   }
   // soften the sky/land join: a short vertical blend across the horizon removes hard white lines
   if (sky && line && !(Object.assign({},TUNE,window.__TUNE||{}).noJoin)){ const r = Math.max(2, Math.round((Object.assign({},TUNE,window.__TUNE||{}).joinR||0.0025)*h)), col = new Float32Array((4*r+2)*3);
-    for (let x=0; x<w; x++){ const cLim = sky.colLim ? sky.colLim[Math.min(sky.sw-1, (x/sky.s)|0)]*sky.s : 1e9, yb = Math.round(Math.min(line(x), cLim)), y0 = Math.max(1, yb-2*r), y1 = Math.min(h-2, yb+r); if (y1<=y0) continue; const n=y1-y0+1;
+    for (let x=0; x<w; x++){ const cLim = (sky.colLim && !(SKYP && SKYP.direct)) ? sky.colLim[Math.min(sky.sw-1, (x/sky.s)|0)]*sky.s : 1e9, yb = Math.round(Math.min(line(x), cLim)), y0 = Math.max(1, yb-2*r), y1 = Math.min(h-2, yb+r); if (y1<=y0) continue; const n=y1-y0+1;
       for (let k=0;k<n;k++){ const i=((y0+k)*w+x)*4; col[k*3]=px[i]; col[k*3+1]=px[i+1]; col[k*3+2]=px[i+2]; }
       for (let k=0;k<n;k++){ const y=y0+k, d=Math.abs(y-yb)/(y<yb?2*r:r), wgt=Math.max(0,1-d); if (!wgt) continue; let a=0,b=0,cc=0,s=0;
         for (let t=-r;t<=r;t++){ const kk=Math.min(n-1,Math.max(0,k+t)), g=1-Math.abs(t)/(r+1); a+=col[kk*3]*g; b+=col[kk*3+1]*g; cc+=col[kk*3+2]*g; s+=g; }
@@ -761,7 +771,7 @@ const ICONS = {
 };
 const CAT_ICON = { transport:"train", education:"school", health:"hospital", leisure:"pool", park:"park", playground:"sport", reserve:"pine", regional_park:"pine", lake:"lake", river:"lake", marina:"lake", beach:"sand", school:"school", university:"school", tafe:"school", childcare:"child", library:"library", aquatic:"pool", recreation:"pool", sport:"track", stadium:"stadium", shopping:"shop", regional_shopping:"shop", train:"train", bus:"bus", hospital:"hospital", medical:"medical", golf:"golf", airport:"plane", city:"city", community:"hall", landmark:"star", other:"star" };
 const ICON_CHOICES = [["park","Park"],["pine","Reserve / bushland"],["picnic","Gardens / picnic"],["lake","Lake / wetland"],["sand","Beach"],["lounger","Beach / pool club"],["palm","Foreshore"],["school","School / uni"],["child","Childcare"],["library","Library"],["book","Books / learning"],["pool","Pool / leisure centre"],["swim","Swimming pool"],["sport","Playground / sport"],["track","Oval / track"],["field","Sports field"],["stadium","Stadium"],["arts","Arena / arts centre"],["racing","Racecourse"],["golf","Golf"],["shop","Shopping centre"],["mall","Shops / retail"],["bag","Shop"],["train","Train station"],["bus","Bus"],["hospital","Hospital"],["medical","Medical"],["hall","Community / hall"],["govt","Civic / government"],["civic","Town hall"],["gazebo","Pavilion"],["lookout","Lookout"],["beach","Beach (umbrella)"],["plane","Airport"],["city","City"],["star","Other"]];
-const NAME_ICON = [[/golf/i,"golf"],[/racecourse|turf club|raceway/i,"racing"],[/station/i,"train"],[/hospital/i,"hospital"],[/medical|clinic|health/i,"medical"],[/library/i,"library"],[/stadium|arena/i,"stadium"],[/aquatic|leisure|recreation centre|swim/i,"pool"],[/oval|sports? ground|reserve.*oval/i,"track"],[/beach/i,"sand"],[/lake|wetland|swamp|river/i,"lake"],[/foreshore/i,"palm"],[/lookout/i,"lookout"],[/playground/i,"sport"],[/early learning|childcare|child care|kindergarten|kindy|daycare/i,"child"],[/school|college|university|tafe|campus|montessori|grammar/i,"school"],[/shopping|plaza|westfield|forum|centro|marketplace|shopping city|village|dfo|outlet|homemaker|boulevard/i,"shop"],[/community centre|hall|club ?house/i,"hall"],[/gardens/i,"park"],[/bushland|nature reserve|regional park|reserve/i,"pine"],[/park/i,"park"]];
+const NAME_ICON = [[/golf/i,"golf"],[/racecourse|turf club|raceway/i,"racing"],[/station/i,"train"],[/hospital/i,"hospital"],[/medical|clinic|health/i,"medical"],[/library/i,"library"],[/stadium|arena/i,"stadium"],[/aquatic|leisure|recreation centre|swim/i,"pool"],[/oval|sports? ground|reserve.*oval/i,"track"],[/early learning|childcare|child care|kindergarten|kindy|daycare/i,"child"],[/school|college|university|tafe|campus|montessori|grammar/i,"school"],[/shopping|plaza|westfield|forum|centro|marketplace|shopping city|dfo|outlet|homemaker/i,"shop"],[/beach/i,"sand"],[/\blake\b|wetland|swamp|river/i,"lake"],[/foreshore/i,"palm"],[/lookout/i,"lookout"],[/playground/i,"sport"],[/early learning|childcare|child care|kindergarten|kindy|daycare/i,"child"],[/school|college|university|tafe|campus|montessori|grammar/i,"school"],[/shopping|plaza|westfield|forum|centro|marketplace|shopping city|village|dfo|outlet|homemaker|boulevard/i,"shop"],[/community centre|hall|club ?house/i,"hall"],[/gardens/i,"park"],[/bushland|nature reserve|regional park|reserve/i,"pine"],[/park/i,"park"]];
 function iconForPlace(name, cat){ for (const [re, ic] of NAME_ICON) if (re.test(name||"")) return ic; return CAT_ICON[cat] || "star"; }
 const _icoImg = {};
 function iconImg(name){ const src = ICON_BMP[name]; if (!src) return null; let im = _icoImg[name]; if (!im){ im = _icoImg[name] = new Image(); im.onload = ()=>{ if (typeof requestDraw === "function") requestDraw(); }; im.src = src; } return im.complete && im.naturalWidth ? im : null; }
@@ -1156,7 +1166,7 @@ function ensureFinish(p){
   if (p._finPending === key) return;
   p._finPending = key; finishing++; $("busy").hidden = false;
   setTimeout(()=>{
-    try{ const r = finishImage(p.base, p); p.fin = r.canvas; p.finKey = key; p._blur = null; makeThumb(p); }
+    try{ const r = finishImage(p.base, p); p.fin = r.canvas; p.finKey = key; p._blur = null; p.skyLine = r.sky ? { m:r.sky.m, b:r.sky.b, h:p.base.height } : null; clampPinsToLand(p); makeThumb(p); }
     catch(err){ console.error(err); p.finishOn = false; toast("The finish couldn't run on this photo. It's shown unfinished."); }
     p._finPending = null; finishing--; if (!finishing) $("busy").hidden = true;
     refreshStrip(); requestDraw();
@@ -1214,7 +1224,10 @@ function allPlaces(){
 }
 function placeForKey(key){ return allPlaces().find(q=>q.key===key); }
 function iconFor(q){ return iconForPlace(q.name, q.cat) !== "star" ? iconForPlace(q.name, q.cat) : (ICON_BMP[q.icon]||ICONS[q.icon] ? q.icon : "star"); }
-function autoPoint(p, lat, lng){ const q = projectW(p, lat, lng); return inFrame(p, q, 2) ? q : null; }
+function landY(p, x){ const L = p.skyLine; if (!L) return -1e9; return L.m*x + L.b + 0.008*L.h; }
+// A place beyond the horizon still gets its pin tip on land, never in the sky
+function clampPinsToLand(p){ let ch=false; (p.pins||[]).forEach(pin=>{ if (pin.house || pin.moved) return; const y = landY(p, pin.ex); if (pin.ey < y){ pin.ey = y; ch=true; } }); if (ch) tidySides(p); }
+function autoPoint(p, lat, lng){ const q = projectW(p, lat, lng); if (!inFrame(p, q, 2)) return null; const y = landY(p, q[0]); if (q[1] < y) q[1] = y; return q; }
 function placePins(p, onlyAuto){
   if (!job) return;
   p.pins.forEach(pin=>{
