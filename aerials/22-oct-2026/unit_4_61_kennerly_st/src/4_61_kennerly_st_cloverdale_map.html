@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4/61 Kennerly St, Cloverdale WA 6105 – 360° Amenities</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{--bg:#1c1c1e;--fg:#f5f5f7;--muted:#a1a1a6;--home:#D4537E;--amen:#185FA5;--zoned:#0F6E56;--unv:#B8860B;--priv:#185FA5}
+html,body{margin:0;height:100%;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+#hdr{position:absolute;top:0;left:0;right:0;z-index:1000;background:rgba(20,20,22,.94);color:var(--fg);display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 16px}
+#hdr h1{margin:0;font-size:17px;font-weight:600}
+#hdr .meta{font-size:12px;color:var(--muted);margin-top:2px}
+#hdr .brand{text-align:right;font-size:12px;line-height:1.3;white-space:nowrap}
+#hdr .brand b{font-size:13px}
+#map{position:absolute;top:58px;bottom:0;left:0;right:0}
+.pin{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.home{width:34px;height:34px;border-radius:50%;background:var(--home);border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 1px 6px rgba(0,0,0,.6)}
+.badge{display:inline-block;background:#333;color:#fff;border-radius:4px;padding:1px 6px;font-size:11px;font-weight:700;margin-right:6px}
+.zb{display:inline-block;background:var(--zoned);color:#fff;border-radius:4px;padding:1px 6px;font-size:11px;margin-left:4px}
+.leaflet-popup-content{font-size:13px;line-height:1.4}
+.lbl{background:rgba(255,255,255,.95);border:none;border-radius:4px;font-size:11px;font-weight:600;padding:2px 6px;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+#legend{position:absolute;left:10px;bottom:22px;z-index:1000;background:rgba(255,255,255,.95);border-radius:6px;padding:8px 10px;font-size:12px;line-height:1.7}
+#legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px;border:1px solid #fff}
+@media (max-width:600px){#hdr .brand{display:none} #hdr h1{font-size:15px}}
+</style></head><body>
+<div id="hdr"><div><h1>🏠 4/61 Kennerly St, Cloverdale WA 6105</h1><div class="meta">Unit · City of Belmont · Zoned: Cloverdale Primary School ✓ / Belmont City College ✓</div></div>
+<div class="brand"><b>Baker Production Pty Ltd</b><br>Real Estate Photography</div></div>
+<div id="map"></div>
+<div id="legend"><i style="background:var(--home)"></i>Property<br><i style="background:var(--zoned)"></i>Zoned school<br><i style="background:var(--amen)"></i>Amenity / private school</div>
+<script>
+const P=[-31.9591749,115.9476462];
+const A=[{"n": "Rosedale Gardens", "lat": -31.9564893, "lng": 115.94693830000001, "dir": "N", "k": "amenity", "note": "310 m N \u00b7 Pocket park off Harriet Pl", "d": 306, "ds": "310 m"}, {"n": "Hoffman Park", "lat": -31.960747999999995, "lng": 115.9503161, "dir": "SE", "k": "amenity", "note": "310 m SE \u00b7 Local park & open grass", "d": 307, "ds": "310 m"}, {"n": "Hoskin Park", "lat": -31.9595248, "lng": 115.9514192, "dir": "E", "k": "amenity", "note": "360 m E \u00b7 Pocket park between Hoskin St", "d": 358, "ds": "360 m"}, {"n": "Middleton Park", "lat": -31.9551162, "lng": 115.9519816, "dir": "NE", "k": "amenity", "note": "610 m NE \u00b7 Park, shaded playground & dog-friendly oval", "d": 609, "ds": "610 m"}, {"n": "Miles Park", "lat": -31.9585688, "lng": 115.9411386, "dir": "W", "k": "amenity", "note": "620 m W \u00b7 Oval, fenced playground & basketball court", "d": 618, "ds": "620 m"}, {"n": "Arlunya Park", "lat": -31.963257499999994, "lng": 115.9422802, "dir": "SW", "k": "amenity", "note": "680 m SW \u00b7 Neighbourhood park, new play equipment", "d": 680, "ds": "680 m"}, {"n": "Notre Dame Catholic Primary School", "lat": -31.9559979, "lng": 115.9412308, "dir": "NW", "k": "private", "note": "700 m NW \u00b7 Catholic primary school", "d": 701, "ds": "700 m"}, {"n": "Cloverdale Early Education and Care", "lat": -31.965314999999997, "lng": 115.949644, "dir": "S", "k": "amenity", "note": "710 m S \u00b7 Childcare centre", "d": 708, "ds": "710 m"}, {"n": "Forster Park", "lat": -31.9683195, "lng": 115.94528210000001, "dir": "S", "k": "amenity", "note": "1.0 km S \u00b7 Fenced dog park, playground, BMX & pump track", "d": 1041, "ds": "1.0 km"}, {"n": "Cloverdale Primary School", "lat": -31.9593146, "lng": 115.93641869999999, "dir": "W", "k": "zoned", "note": "1.1 km W \u00b7 Zoned government primary school", "d": 1059, "ds": "1.1 km"}, {"n": "Alta-1 Belmont", "lat": -31.948601399999998, "lng": 115.94625129999999, "dir": "N", "k": "private", "note": "1.2 km N \u00b7 Independent school", "d": 1183, "ds": "1.2 km"}, {"n": "P H Dod Reserve", "lat": -31.969788700000002, "lng": 115.9514192, "dir": "S", "k": "amenity", "note": "1.2 km S \u00b7 Local reserve", "d": 1233, "ds": "1.2 km"}, {"n": "Belmont City College", "lat": -31.958040199999996, "lng": 115.93414299999999, "dir": "W", "k": "zoned", "note": "1.3 km W \u00b7 Zoned government secondary school", "d": 1280, "ds": "1.3 km"}, {"n": "Ruth Faulkner Library", "lat": -31.9628782, "lng": 115.9341921, "dir": "W", "k": "amenity", "note": "1.3 km W \u00b7 Library at the Belmont Hub", "d": 1334, "ds": "1.3 km"}, {"n": "Belmont Forum", "lat": -31.964962, "lng": 115.93491360000002, "dir": "SW", "k": "amenity", "note": "1.4 km SW \u00b7 Shopping centre", "d": 1363, "ds": "1.4 km"}, {"n": "Faulkner Park", "lat": -31.961585, "lng": 115.93338530000001, "dir": "W", "k": "amenity", "note": "1.4 km W \u00b7 Lakes, fountains, BBQs & toddler playground", "d": 1372, "ds": "1.4 km"}, {"n": "Volcano Playground", "lat": -31.9606712, "lng": 115.9326173, "dir": "W", "k": "amenity", "note": "1.4 km W \u00b7 Fully fenced landmark playground", "d": 1428, "ds": "1.4 km"}, {"n": "Redcliffe Park", "lat": -31.9460945, "lng": 115.9482803, "dir": "N", "k": "amenity", "note": "1.5 km N \u00b7 Ovals, playgrounds & plane spotting", "d": 1456, "ds": "1.5 km"}, {"n": "Belmont Oasis Leisure Centre", "lat": -31.960246199999997, "lng": 115.9313455, "dir": "W", "k": "amenity", "note": "1.5 km W \u00b7 Aquatic & leisure centre", "d": 1542, "ds": "1.5 km"}, {"n": "Gerry Archer Sports & Recreation Facility", "lat": -31.973095999999998, "lng": 115.94735039999999, "dir": "S", "k": "amenity", "note": "1.5 km S \u00b7 Athletics track & sports oval", "d": 1548, "ds": "1.5 km"}, {"n": "Wicca Reserve", "lat": -31.9680977, "lng": 115.9314629, "dir": "SW", "k": "amenity", "note": "1.8 km SW \u00b7 Playground & dog exercise area", "d": 1821, "ds": "1.8 km"}, {"n": "Abernethy Park", "lat": -31.976256399999997, "lng": 115.95363640000001, "dir": "S", "k": "amenity", "note": "2.0 km S \u00b7 Park", "d": 1982, "ds": "2.0 km"}, {"n": "Peachey Park", "lat": -31.9768565, "lng": 115.9407181, "dir": "S", "k": "amenity", "note": "2.1 km S \u00b7 Bike-skills track, playground & dog area", "d": 2072, "ds": "2.1 km"}, {"n": "St Maria Goretti's Catholic School", "lat": -31.93908, "lng": 115.9437801, "dir": "N", "k": "private", "note": "2.3 km N \u00b7 Catholic primary school", "d": 2264, "ds": "2.3 km"}, {"n": "Tomato Lake", "lat": -31.975106499999995, "lng": 115.9323867, "dir": "SW", "k": "amenity", "note": "2.3 km SW \u00b7 Lake, 1.6 km loop path, playgrounds & cafe", "d": 2283, "ds": "2.3 km"}, {"n": "DFO Perth", "lat": -31.938440699999997, "lng": 115.94864749999999, "dir": "N", "k": "amenity", "note": "2.3 km N \u00b7 Outlet shopping centre", "d": 2307, "ds": "2.3 km"}, {"n": "Centenary Park", "lat": -31.9448007, "lng": 115.9293141, "dir": "NW", "k": "amenity", "note": "2.4 km NW \u00b7 Lake, playground & walking loop", "d": 2355, "ds": "2.4 km"}, {"n": "Peet Park", "lat": -31.969436299999998, "lng": 115.924995, "dir": "SW", "k": "amenity", "note": "2.4 km SW \u00b7 Footy oval & playground", "d": 2422, "ds": "2.4 km"}, {"n": "Selby Park", "lat": -31.9352131, "lng": 115.94091999999999, "dir": "N", "k": "amenity", "note": "2.7 km N \u00b7 Off-leash dog park & playground", "d": 2739, "ds": "2.7 km"}, {"n": "Australian Islamic College Kewdale", "lat": -31.9806276, "lng": 115.93269980000001, "dir": "SW", "k": "private", "note": "2.8 km SW \u00b7 Independent school", "d": 2771, "ds": "2.8 km"}, {"n": "Redcliffe Station", "lat": -31.93357, "lng": 115.95007, "dir": "N", "k": "amenity", "note": "2.9 km N \u00b7 Train station, Airport line", "d": 2856, "ds": "2.9 km"}, {"n": "Adachi Park", "lat": -31.9489584, "lng": 115.91809180000001, "dir": "W", "k": "amenity", "note": "3.0 km W \u00b7 Swan River foreshore, boat ramp & paths", "d": 3011, "ds": "3.0 km"}, {"n": "Airport Central Station", "lat": -31.944109999999995, "lng": 115.97483, "dir": "NE", "k": "amenity", "note": "3.1 km NE \u00b7 Train station, Airport line / Perth Airport T1", "d": 3063, "ds": "3.1 km"}, {"n": "Ascot Racecourse", "lat": -31.936662, "lng": 115.92143890000001, "dir": "NW", "k": "amenity", "note": "3.5 km NW \u00b7 Racecourse & event venue", "d": 3519, "ds": "3.5 km"}, {"n": "Garvey Park", "lat": -31.922023900000003, "lng": 115.94429439999999, "dir": "N", "k": "amenity", "note": "4.1 km N \u00b7 Swan River park, cafe & parkrun", "d": 4143, "ds": "4.1 km"}, {"n": "Carlisle Station", "lat": -31.980934599999998, "lng": 115.91125760000001, "dir": "SW", "k": "amenity", "note": "4.2 km SW \u00b7 Train station, Armadale / Thornlie\u2013Cockburn lines", "d": 4200, "ds": "4.2 km"}, {"n": "Maylands Peninsula Public Golf Course", "lat": -31.9419503, "lng": 115.9024031, "dir": "NW", "k": "amenity", "note": "4.7 km NW \u00b7 Nearest public golf course", "d": 4679, "ds": "4.7 km"}];
+const COL={amenity:'#185FA5',private:'#185FA5',zoned:'#0F6E56',unverified:'#B8860B'};
+const sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Imagery © Esri'});
+const ref=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:19});
+const sat2=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Imagery © Esri'});
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'});
+const labelled=L.layerGroup([sat,ref]);
+const map=L.map('map',{layers:[labelled]});
+L.control.layers({'Satellite with labels':labelled,'Satellite clean':sat2,'Street (OSM)':osm},null,{position:'topright'}).addTo(map);
+L.marker(P,{icon:L.divIcon({className:'',html:'<div class="home">🏠</div>',iconSize:[34,34],iconAnchor:[17,17]}),zIndexOffset:1000})
+ .addTo(map).bindPopup('<b>🏠 4/61 Kennerly St, Cloverdale WA 6105</b><br>Unit · City of Belmont · Zoned: Cloverdale Primary School ✓ / Belmont City College ✓');
+const near=[];
+A.forEach(a=>{
+  const c=COL[a.k]||COL.amenity;
+  const close=a.d<400;
+  const m=L.marker([a.lat,a.lng],{icon:L.divIcon({className:'',html:'<div class="pin" style="background:'+c+'"></div>',iconSize:[26,26],iconAnchor:[13,26],popupAnchor:[0,-24]}),zIndexOffset:close?2000:0,title:'['+a.dir+'] '+a.n}).addTo(map);
+  m.bindPopup('<span class="badge">'+a.dir+'</span><b>'+a.n+'</b>'+(a.k==='zoned'?'<span class="zb">✓ ZONED</span>':'')+'<br>'+a.note);
+  if(close){
+    L.polyline([P,[a.lat,a.lng]],{color:'#fff',weight:2,dashArray:'5 5',opacity:.9}).addTo(map);
+    const side=(a.dir==='N'||a.dir==='S')?(a.dir==='N'?'top':'bottom'):(a.lng>=P[1]?'right':'left');
+    const off={right:[12,-14],left:[-12,-14],top:[0,-28],bottom:[0,4]}[side];
+    m.bindTooltip('['+a.dir+'] '+a.n+' · '+a.ds,{permanent:true,direction:side,offset:off,className:'lbl'});
+  }
+  if(a.d<=1500) near.push([a.lat,a.lng]);
+});
+near.push(P);
+map.fitBounds(L.latLngBounds(near),{padding:[40,40],maxZoom:15});
+window.__pinCount=A.length;
+</script></body></html>

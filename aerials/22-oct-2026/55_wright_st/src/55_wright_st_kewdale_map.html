@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>55 Wright St Kewdale</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{--bg:#111418;--fg:#f3f3f3;--muted:#a8adb4}
+html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg)}
+#hdr{position:absolute;top:0;left:0;right:0;z-index:1000;background:rgba(17,20,24,.92);color:var(--fg);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+#hdr h1{margin:0;font-size:17px;font-weight:600}
+#hdr .meta{font-size:12px;color:var(--muted);margin-top:2px}
+#hdr .brand{text-align:right;font-size:12px;line-height:1.3;white-space:nowrap}
+#hdr .brand b{font-size:13px}
+#map{position:absolute;top:0;bottom:0;left:0;right:0}
+.pin{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.home{font-size:26px;line-height:26px;text-align:center;filter:drop-shadow(0 1px 3px rgba(0,0,0,.7))}
+.badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;margin-right:6px}
+.zb{background:#0F6E56}
+.lbl{background:rgba(17,20,24,.88);color:#fff;border:0;font-size:11px;font-weight:600;padding:3px 6px;border-radius:4px}
+.lbl:before{display:none}
+.legend{background:rgba(17,20,24,.9);color:#fff;padding:8px 10px;border-radius:6px;font-size:12px;line-height:1.7}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px;border:1px solid #fff}
+@media (max-width:600px){#hdr{flex-direction:column;align-items:flex-start;padding:8px 16px}#hdr .brand{text-align:left}}
+</style></head><body>
+<div id="map"></div>
+<div id="hdr"><div><h1>🏠 55 Wright St, Kewdale WA 6105</h1><div class="meta">City of Belmont &middot; Zoned: Carlisle Primary School ✓ &middot; Belmont City College ✓</div></div>
+<div class="brand"><b>Baker Production Pty Ltd</b><br>Real Estate Photography</div></div>
+<script>
+const P=[-31.9716704,115.924429];
+const A=[{"name": "Peet Park", "kind": "amenity", "lat": -31.969436299999998, "lng": 115.924995, "d": 254, "dir": "N", "notes": "254 m N \u00b7 Footy/cricket oval, playground, toilets"}, {"name": "St Kilda Reserve", "kind": "amenity", "lat": -31.963674299999994, "lng": 115.9231702, "d": 895, "dir": "N", "notes": "895 m N \u00b7 Playground, dog area, outdoor gym"}, {"name": "Adachi Park", "kind": "amenity", "lat": -31.9489584, "lng": 115.91809180000001, "d": 2590, "dir": "N", "notes": "2.6 km N \u00b7 Swan River foreshore, boat ramp, river paths"}, {"name": "Centenary Park", "kind": "amenity", "lat": -31.9448007, "lng": 115.9293141, "d": 3017, "dir": "N", "notes": "3.0 km N \u00b7 Lake park, playground, community centre"}, {"name": "Ascot Racecourse", "kind": "amenity", "lat": -31.936662, "lng": 115.92143890000001, "d": 3894, "dir": "N", "notes": "3.9 km N \u00b7 Perth's premier racecourse and event venue"}, {"name": "Wicca Reserve", "kind": "amenity", "lat": -31.9680977, "lng": 115.9314629, "d": 773, "dir": "NE", "notes": "773 m NE \u00b7 Playground, dog exercise area"}, {"name": "Belmont Forum Shopping Centre", "kind": "amenity", "lat": -31.964962, "lng": 115.93491360000002, "d": 1238, "dir": "NE", "notes": "1.2 km NE \u00b7 Main local shopping centre"}, {"name": "Wright St - Belmont Forum Shopping Ctr (bus stop)", "kind": "amenity", "lat": -31.963519999999995, "lng": 115.93461, "d": 1319, "dir": "NE", "notes": "1.3 km NE \u00b7 Major bus stop, multiple routes"}, {"name": "Ruth Faulkner Library", "kind": "amenity", "lat": -31.9628782, "lng": 115.9341921, "d": 1342, "dir": "NE", "notes": "1.3 km NE \u00b7 City of Belmont library at Belmont Hub"}, {"name": "Faulkner Park", "kind": "amenity", "lat": -31.961585, "lng": 115.93338530000001, "d": 1402, "dir": "NE", "notes": "1.4 km NE \u00b7 Lakes, BBQs, home of Volcano Playground"}, {"name": "Belmont Oasis Leisure Centre", "kind": "amenity", "lat": -31.960246199999997, "lng": 115.9313455, "d": 1426, "dir": "NE", "notes": "1.4 km NE \u00b7 Aquatic and leisure centre"}, {"name": "Belmont Skate Park", "kind": "amenity", "lat": -31.959019599999998, "lng": 115.93141500000002, "d": 1551, "dir": "NE", "notes": "1.6 km NE \u00b7 Large lit skate park"}, {"name": "Belmont City College", "kind": "zoned", "lat": -31.958040199999996, "lng": 115.93414299999999, "d": 1768, "dir": "NE", "notes": "1.8 km NE \u00b7 Zoned government secondary school"}, {"name": "Notre Dame Catholic Primary School", "kind": "private", "lat": -31.9559979, "lng": 115.9412308, "d": 2353, "dir": "NE", "notes": "2.4 km NE \u00b7 Catholic primary school"}, {"name": "Redcliffe Station", "kind": "amenity", "lat": -31.93357, "lng": 115.95007000000001, "d": 4870, "dir": "NE", "notes": "4.9 km NE \u00b7 Airport line, with shuttles to T3/T4"}, {"name": "Peachey Park", "kind": "amenity", "lat": -31.9768565, "lng": 115.9407181, "d": 1641, "dir": "E", "notes": "1.6 km E \u00b7 Bike skills trail, playground, BBQs"}, {"name": "Forster Park", "kind": "amenity", "lat": -31.9683195, "lng": 115.94528210000001, "d": 2002, "dir": "E", "notes": "2.0 km E \u00b7 Fenced dog park, BMX track, playground"}, {"name": "Abby Campbell Park", "kind": "amenity", "lat": -31.974155799999995, "lng": 115.92793789999998, "d": 431, "dir": "SE", "notes": "431 m SE \u00b7 Local neighbourhood park"}, {"name": "Tomato Lake", "kind": "amenity", "lat": -31.976892600000003, "lng": 115.9335065, "d": 1034, "dir": "SE", "notes": "1.0 km SE \u00b7 Lake walk trails, playgrounds, cafe, BBQs"}, {"name": "Australian Islamic College Kewdale", "kind": "private", "lat": -31.9806276, "lng": 115.93269980000001, "d": 1264, "dir": "SE", "notes": "1.3 km SE \u00b7 Independent K-12 college"}, {"name": "Nance Park", "kind": "amenity", "lat": -31.982471, "lng": 115.9371664, "d": 1697, "dir": "SE", "notes": "1.7 km SE \u00b7 Local park and playground"}, {"name": "Carlisle Reserve", "kind": "amenity", "lat": -31.981211300000002, "lng": 115.9286909, "d": 1132, "dir": "S", "notes": "1.1 km S \u00b7 Sports oval, playground, cricket nets"}, {"name": "Parnham Park", "kind": "amenity", "lat": -31.981668399999997, "lng": 115.92153309999999, "d": 1142, "dir": "S", "notes": "1.1 km S \u00b7 Oval, playground, toilets"}, {"name": "Carlisle Primary School", "kind": "zoned", "lat": -31.973645200000004, "lng": 115.92226129999999, "d": 300, "dir": "SW", "notes": "300 m SW \u00b7 Zoned government primary school"}, {"name": "Holy Name Early Learning and Care Centre", "kind": "amenity", "lat": -31.976217, "lng": 115.92080849999999, "d": 609, "dir": "SW", "notes": "609 m SW \u00b7 Nearest childcare centre"}, {"name": "Fletcher Park", "kind": "amenity", "lat": -31.975368199999995, "lng": 115.91916810000001, "d": 644, "dir": "SW", "notes": "644 m SW \u00b7 Fenced oval, playground, half-court"}, {"name": "Carlisle Station", "kind": "amenity", "lat": -31.980934599999998, "lng": 115.91125760000001, "d": 1613, "dir": "SW", "notes": "1.6 km SW \u00b7 Armadale & Thornlie-Cockburn lines"}, {"name": "Oats Street Station", "kind": "amenity", "lat": -31.987013899999997, "lng": 115.91605749999998, "d": 1877, "dir": "SW", "notes": "1.9 km SW \u00b7 Armadale & Thornlie-Cockburn lines, bus interchange"}, {"name": "Hawaiian's Park Centre", "kind": "amenity", "lat": -31.984486099999994, "lng": 115.90171409999999, "d": 2572, "dir": "SW", "notes": "2.6 km SW \u00b7 Shopping centre (Coles, Kmart)"}, {"name": "Curtin University", "kind": "amenity", "lat": -32.0054649, "lng": 115.8919818, "d": 4840, "dir": "SW", "notes": "4.8 km SW \u00b7 Bentley campus"}, {"name": "Koolbardi Park", "kind": "amenity", "lat": -31.974672499999997, "lng": 115.9095592, "d": 1442, "dir": "W", "notes": "1.4 km W \u00b7 Nature playground, fenced dog park, skate area"}, {"name": "St Clare's School", "kind": "private", "lat": -31.971218300000004, "lng": 115.90871109999998, "d": 1484, "dir": "W", "notes": "1.5 km W \u00b7 Independent Catholic girls' secondary school"}, {"name": "Mineral Resources Park", "kind": "amenity", "lat": -31.972723799999994, "lng": 115.90800420000001, "d": 1554, "dir": "W", "notes": "1.6 km W \u00b7 West Coast Eagles home ground"}, {"name": "Victoria Park Station", "kind": "amenity", "lat": -31.971655000000002, "lng": 115.90222019999999, "d": 2095, "dir": "W", "notes": "2.1 km W \u00b7 Armadale line"}, {"name": "Burswood Park", "kind": "amenity", "lat": -31.9636392, "lng": 115.89152, "d": 3230, "dir": "W", "notes": "3.2 km W \u00b7 Swan River parkland and shared paths"}, {"name": "Wilson Park", "kind": "amenity", "lat": -31.9636699, "lng": 115.91559459999999, "d": 1218, "dir": "NW", "notes": "1.2 km NW \u00b7 Upgraded park precinct, playground, pump track"}, {"name": "St Augustine's Primary School", "kind": "private", "lat": -31.960131, "lng": 115.90658089999998, "d": 2115, "dir": "NW", "notes": "2.1 km NW \u00b7 Catholic primary school"}, {"name": "Eastgate Shopping Centre", "kind": "amenity", "lat": -31.9560158, "lng": 115.90802279999998, "d": 2326, "dir": "NW", "notes": "2.3 km NW \u00b7 Neighbourhood shopping centre"}, {"name": "Maylands Peninsula Public Golf Course", "kind": "amenity", "lat": -31.9419503, "lng": 115.9024031, "d": 3898, "dir": "NW", "notes": "3.9 km NW \u00b7 Nearest public golf course"}, {"name": "Optus Stadium", "kind": "amenity", "lat": -31.950749199999997, "lng": 115.88879879999998, "d": 4085, "dir": "NW", "notes": "4.1 km NW \u00b7 Perth's major stadium"}];
+const COL={amenity:'#185FA5',zoned:'#0F6E56',private:'#185FA5',unverified:'#B8860B'};
+const sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles &copy; Esri'});
+const sat2=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles &copy; Esri'});
+const ref=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:19});
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'});
+const labelled=L.layerGroup([sat,ref]);
+const map=L.map('map',{layers:[labelled],zoomControl:false});
+L.control.zoom({position:'bottomright'}).addTo(map);
+L.control.layers({'Satellite with labels':labelled,'Satellite clean':sat2,'Street (OSM)':osm},null,{position:'topright'}).addTo(map);
+map.getContainer().querySelector('.leaflet-top.leaflet-right').style.marginTop='70px';
+L.marker(P,{icon:L.divIcon({className:'',html:'<div class="home">🏠</div>',iconSize:[28,28],iconAnchor:[14,14]}),zIndexOffset:1000})
+ .bindPopup('<b>🏠 55 Wright St, Kewdale WA 6105</b><br>City of Belmont &middot; Zoned: Carlisle Primary School ✓ &middot; Belmont City College ✓').addTo(map);
+const near=[P];
+A.forEach((a,i)=>{
+  const c=COL[a.kind];
+  const close=a.d<320;
+  const m=L.marker([a.lat,a.lng],{icon:L.divIcon({className:'',html:`<div class="pin" style="background:${c}"></div>`,iconSize:[26,26],iconAnchor:[13,26],popupAnchor:[0,-24]}),zIndexOffset:close?2000:0});
+  const z=a.kind==='zoned'?'<span class="badge zb">✓ ZONED</span>':'';
+  m.bindPopup(`<span class="badge" style="background:${c}">${a.dir}</span><b>${a.name}</b><br>${z}${a.notes}`);
+  if(close){
+    L.polyline([P,[a.lat,a.lng]],{color:'#fff',weight:2,dashArray:'5 5',opacity:.9}).addTo(map);
+    m.bindTooltip(`[${a.dir}] ${a.name} · ${a.d} m`,{permanent:true,direction:a.lng<P[1]?'left':'right',offset:a.lng<P[1]?[-14,-14]:[14,-14],className:'lbl'});
+  }
+  m.addTo(map);
+  if(a.d<=1500) near.push([a.lat,a.lng]);
+});
+map.fitBounds(L.latLngBounds(near),{paddingTopLeft:[40,100],paddingBottomRight:[40,40],maxZoom:15});
+const lg=L.control({position:'bottomleft'});
+lg.onAdd=()=>{const d=L.DomUtil.create('div','legend');d.innerHTML='<div><span style="color:#D4537E">●</span> 🏠 Property</div><div><i style="background:#185FA5"></i>Amenity</div><div><i style="background:#0F6E56"></i>Zoned school</div>';return d;};
+lg.addTo(map);
+window.__pins=A.length;
+</script></body></html>

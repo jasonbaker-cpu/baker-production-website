@@ -1,0 +1,128 @@
+{
+ "days": [
+  {
+   "id": "22-oct-2026",
+   "label": "Thu 22 Oct 2026",
+   "gallery": "22-oct-2026/",
+   "jobs": [
+    {
+     "slug": "14_country_club_ave",
+     "addr": "14 Country Club Ave, Roleystone",
+     "who": "Tim Fidock \u00b7 Harcourts",
+     "agency": "navy-h",
+     "full": false,
+     "src": "22-oct-2026/14_country_club_ave/src/",
+     "map": "14_country_club_ave_roleystone_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261022143357_0271_D.jpg",
+      "DJI_20261022143418_0272_D.jpg",
+      "DJI_20261022143431_0273_D.jpg",
+      "DJI_20261022143458_0274_D.jpg",
+      "DJI_20261022143553_0275_D.jpg",
+      "DJI_20261022143633_0276_D.jpg"
+     ]
+    },
+    {
+     "slug": "14_country_club_ave__nadir",
+     "addr": "14 Country Club Ave, Roleystone \u2014 top-down",
+     "who": "Tim Fidock \u00b7 Harcourts",
+     "agency": "navy-h",
+     "full": true,
+     "src": "22-oct-2026/14_country_club_ave/src-top/",
+     "map": "14_country_club_ave_roleystone_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261022143333_0270_D.jpg"
+     ]
+    },
+    {
+     "slug": "8a_coogan_close",
+     "addr": "8A Coogan Close, Yangebup",
+     "who": "Simon Raspa \u00b7 Raspa",
+     "agency": "charcoal",
+     "full": false,
+     "src": "22-oct-2026/8a_coogan_close/src/",
+     "map": "8a_coogan_cl_yangebup_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261022165004_0277_D.jpg",
+      "DJI_20261022165026_0278_D.jpg",
+      "DJI_20261022165047_0279_D.jpg",
+      "DJI_20261022165122_0280_D.jpg",
+      "DJI_20261022165153_0281_D.jpg",
+      "DJI_20261022165208_0282_D.jpg"
+     ]
+    },
+    {
+     "slug": "14b_bohemia_st",
+     "addr": "14B Bohemia St, Spearwood",
+     "who": "Leonie Adam \u00b7 Realty Plus",
+     "agency": "realty-plus",
+     "full": false,
+     "src": "22-oct-2026/14b_bohemia_st/src/",
+     "map": "14b_bohemia_st_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261022175242_0285_D.jpg",
+      "DJI_20261022175300_0286_D.jpg",
+      "DJI_20261022175318_0287_D.jpg",
+      "DJI_20261022175338_0288_D.jpg",
+      "DJI_20261022175356_0289_D.jpg",
+      "DJI_20261022175447_0290_D.jpg"
+     ]
+    },
+    {
+     "slug": "14b_bohemia_st__nadir",
+     "addr": "14B Bohemia St, Spearwood \u2014 top-down",
+     "who": "Leonie Adam \u00b7 Realty Plus",
+     "agency": "realty-plus",
+     "full": true,
+     "src": "22-oct-2026/14b_bohemia_st/src-top/",
+     "map": "14b_bohemia_st_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261022175204_0283_D.jpg"
+     ]
+    },
+    {
+     "slug": "unit_4_61_kennerly_st",
+     "addr": "4/61 Kennerly St, Cloverdale",
+     "who": "Daniel Kelly \u00b7 Laurie Kelly",
+     "agency": "red",
+     "full": false,
+     "src": "22-oct-2026/unit_4_61_kennerly_st/src/",
+     "map": "4_61_kennerly_st_cloverdale_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261022192555_0291_D.jpg",
+      "DJI_20261022192614_0292_D.jpg",
+      "DJI_20261022192622_0293_D.jpg",
+      "DJI_20261022192639_0294_D.jpg",
+      "DJI_20261022192654_0295_D.jpg",
+      "DJI_20261022192710_0296_D.jpg",
+      "DJI_20261022192729_0297_D.jpg"
+     ]
+    },
+    {
+     "slug": "55_wright_st",
+     "addr": "55 Wright St, Kewdale",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
+     "agency": "red",
+     "full": false,
+     "src": "22-oct-2026/55_wright_st/src/",
+     "map": "55_wright_st_kewdale_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261022201342_0300_D.jpg",
+      "DJI_20261022201357_0301_D.jpg",
+      "DJI_20261022201416_0302_D.jpg",
+      "DJI_20261022201442_0303_D.jpg",
+      "DJI_20261022201508_0304_D.jpg",
+      "DJI_20261022201523_0305_D.jpg"
+     ]
+    }
+   ]
+  }
+ ]
+}

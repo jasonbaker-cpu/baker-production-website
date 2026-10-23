@@ -140,12 +140,20 @@ input[type=color]{width:30px;height:26px;border:1px solid var(--line);border-rad
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 .step .row select{flex:1;width:auto}
+
+.days .card{width:min(720px,100%)}
+.days h3{margin:6px 0 2px;font-size:15px}
+.days .job{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-top:6px}
+.days .job small{display:block;opacity:.7}
+.days .job .btn{flex:none}
+.days .note{opacity:.7;font-size:13px}
 </style>
 
 <div class="app">
   <header>
     <div class="brand"><h1>Baker Aerial Editor</h1><span>Drone finish, pins, lot boundaries</span></div>
     <div class="group">
+      <button class="btn" id="daysBtn" title="Open a job from a previous day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Previous days</button>
       <button class="btn" id="addBtn" title="Add photos (or drop / paste them)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add photos</button>
       <button class="btn icon ghost" id="undoBtn" title="Undo (⌘Z)" aria-label="Undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
       <button class="btn icon ghost" id="redoBtn" title="Redo (⇧⌘Z)" aria-label="Redo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/></svg></button>
@@ -596,7 +604,8 @@ function finishImage(base, p){
   // 1b. consistency: pull every photo to the same place — the median of 191 delivered finals (ground exposure, white balance, saturation, black/white points)
   normaliseLook(px, w, h);
   // 2. sky analysis on the graded image
-  let sky = (p.skyOn !== false && !(window.__TUNE&&window.__TUNE.noSky)) ? analyseSky(px, w, h) : null;
+  const straightDown = p.cam && typeof p.cam.pitch === 'number' && p.cam.pitch < -65;   // top-downs never have sky
+  let sky = (p.skyOn !== false && !straightDown && !(window.__TUNE&&window.__TUNE.noSky)) ? analyseSky(px, w, h) : null;
   // Sky can't sit below the true horizon: a washed-out sea or haze is not sky. Clamp to the camera's geometric horizon.
   if (sky && p.cam && p.cam.ready && p.cam.pitch > -60){
     const fpx = p.cam.f35*Math.hypot(p.ow,p.oh)/43.27, yO = p.oh/2 + fpx*Math.tan((p.cam.pitch+0.35)*DEG), geo = (yO - p.y0)*p.k + 0.004*h;
@@ -2129,6 +2138,52 @@ window.__bae = { project:()=>projectJSON(), setAdj:(o)=>{ const p=P(); if(!p) re
     const col = prefs.agency==="grey-s" ? "#FFFFFF" : shadeHex(agency().color, 0.75); const sh={ id:nid(), type:"poly", pts, color:col, width:17/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:72/(62*zf), lensWeight:wt>=700?600:400 }; p.shapes.push(sh); p.outside='blur'; p.blurAmt=Math.max(6, 15*cw/p.w); p._blur=null; p.pins.length=0;
     if (area){ p.texts.push({ id:nid(), link:sh.id, style:"area", color:"#ffffff", size:200, x:0, y:0, autoSize:true, lot:area, text:area+"m2", weight:wt||400, fitW:0.62, fitH:0.5 }); }
     refreshAll(); return { crop:[cx,cy,cw,chh], w:p.w, h:p.h, snap:window.__lotSnap }; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { w:p.w, h:p.h, cam:p.cam, shapes:p.shapes.map(s=>s.pts.map(q=>q.map(Math.round))), snap:window.__lotSnap||null, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
+
+// ---- Previous days: open any published job (original photos + saved edits + map) in one click
+const DAYS_ROOT = /^https?:$/.test(location.protocol) ? "/aerials/" : "https://bakerproduction.com/aerials/";
+async function openRemoteJob(entry){
+  try{
+    if (photos.some(q=>!q.sample) && !confirm("Close the photos you have open and load "+entry.addr+"?")) return;
+    photos = []; job = null; pendingProject = null; cur = -1;
+    prefs.outMode = entry.full ? "full" : "finals"; savePrefs();
+    $("busy").hidden = false; $("busy").textContent = "Downloading "+entry.addr+"…";
+    const base = DAYS_ROOT + entry.src;
+    const get = async (name, type) => { const r = await fetch(base + encodeURIComponent(name)); if (!r.ok) throw new Error(name+" "+r.status); return new File([await r.blob()], name, { type }); };
+    const files = [];
+    if (entry.map) files.push(await get(entry.map, entry.map.endsWith(".json") ? "application/json" : "text/html"));
+    files.push(await get(entry.project || "project.json", "application/json"));
+    for (let i=0;i<entry.photos.length;i++){ $("busy").textContent = `Downloading photo ${i+1} of ${entry.photos.length}…`; files.push(await get(entry.photos[i], "image/jpeg")); }
+    // the map loads first so places are ready, then the saved project, then the photos
+    const mapF = files[0] && !/project\.json$/.test(files[0].name) && entry.map ? files.shift() : null;
+    if (mapF) await loadJobFile(mapF);
+    await addFiles(files);
+    if (entry.agency){ prefs.agency = entry.agency; savePrefs(); }
+    refreshAll(); requestDraw();
+    toast(entry.addr + " opened. Edit, then Export.");
+  }catch(err){ console.error(err); $("busy").hidden = true; toast("Couldn't open that job: " + err.message); }
+}
+async function showDays(){
+  let idx;
+  try{ const r = await fetch(DAYS_ROOT + "index.json", { cache:"no-store" }); idx = await r.json(); }
+  catch(e){ toast("Couldn't load the list of previous days."); return; }
+  const m = el(`<div class="modal days" role="dialog" aria-label="Previous days"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>Previous days</b><button class="btn" data-x>Close</button></div><p class="note">Open a job to tweak pins, boundary or the photo itself (Photo tab → Adjust), then Export. Top-down shots open on their own.</p><div class="list"></div></div></div>`);
+  const list = m.querySelector(".list");
+  (idx.days||[]).forEach(d=>{
+    list.appendChild(el(`<h3>${d.label}</h3>`));
+    if (d.gallery){ const g = el(`<a class="note" target="_blank" href="${DAYS_ROOT + d.gallery}">View finished photos</a>`); list.appendChild(g); }
+    d.jobs.forEach(j=>{ const row = el(`<div class="job"><div><b>${j.addr}</b><small>${j.who||""} · ${j.photos.length} photo${j.photos.length>1?"s":""}${j.full?" · top-down":""}</small></div><button class="btn">Open</button></div>`);
+      row.querySelector("button").onclick = ()=>{ m.remove(); openRemoteJob(j); }; list.appendChild(row); });
+  });
+  if (!(idx.days||[]).length) list.appendChild(el(`<p class="note">Nothing published yet.</p>`));
+  m.querySelector("[data-x]").onclick = ()=>m.remove(); m.onclick = e=>{ if (e.target===m) m.remove(); };
+  document.body.appendChild(m);
+}
+$("daysBtn").onclick = showDays;
+// deep link: /pins/?open=<day>/<slug>
+(async()=>{ const q = new URLSearchParams(location.search).get("open"); if (!q) return;
+  try{ const r = await fetch(DAYS_ROOT + "index.json", { cache:"no-store" }); const idx = await r.json(); const [day, slug] = q.split("/");
+    const d = (idx.days||[]).find(x=>x.id===day); const j = d && d.jobs.find(x=>x.slug===slug); if (j) openRemoteJob(j); else toast("That job isn't published.");
+  }catch(e){ toast("Couldn't open that job."); } })();
 
 })();
 </script>
