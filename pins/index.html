@@ -315,7 +315,7 @@ const prefs = Object.assign({
   outMode:"finals",            // finals = 3:2 centre crop, 3000 px wide (matches delivered aerials) | full
   finish:true, sky:true,
   agency:"red", pinColor:"", pinScale:100, labelOpacity:86, labelFont:"Source Sans 3", logo:"",
-  lineColor:BAKER_RED, lineWidth:6.7, outside:"blur", blurAmt:40, darkAmt:35,
+  lineColor:BAKER_RED, lineWidth:6.7, outside:"blur", blurAmt:45, darkAmt:35,
   discOn:false, discText:DEFAULT_DISC
 }, LS.get("prefs", {}));
 if (prefs.pinStyle !== undefined || prefs.v !== 2){ delete prefs.pinStyle; prefs.pinColor = ""; prefs.labelOpacity = 86; prefs.agency = prefs.agency || "red"; prefs.v = 2; }  // old grey/red looks retired
@@ -1110,15 +1110,14 @@ function drawScene(c, p, opt){
   if (opt.hide) return;
   const s = p.w/3000;
   const polys = p.shapes.filter(x=>x.type==="poly" && x.pts.length>=3);
-  if (polys.length && p.outside !== "none"){
+  if (polys.length){   // a boundary photo is always blurred outside the lot
     c.save(); c.beginPath(); c.rect(0,0,p.w,p.h);
     polys.forEach(sh=>{ c.moveTo(sh.pts[0][0],sh.pts[0][1]); for(let i=1;i<sh.pts.length;i++) c.lineTo(sh.pts[i][0],sh.pts[i][1]); c.closePath(); });
     c.clip("evenodd");
-    if (p.outside === "blur"){
-      const key = (opt.before?"b":"a") + p.blurAmt + (p.finishOn?"f":"") + (p._adjKey||"");
-      if (!p._blur || p._blurKey !== key){ p._blur = blurredCopy(img, p.w, p.h, p.blurAmt*s); p._blurKey = key; }
+    { const key = (opt.before?"b":"a") + p.blurAmt + (p.finishOn?"f":"") + (p._adjKey||"");
+      if (!p._blur || p._blurKey !== key){ p._blur = blurredCopy(img, p.w, p.h, Math.max(35, p.blurAmt||45)*s); p._blurKey = key; }
       c.drawImage(p._blur, 0, 0, p.w, p.h);
-    } else { c.fillStyle = hexA("#000000", p.darkAmt/100); c.fillRect(0,0,p.w,p.h); }
+    }
     c.restore();
   }
   for (const sh of p.shapes){
@@ -1179,6 +1178,14 @@ function drawEdgeLengths(c, p, sh, s){
     c.font = `${sh.lensWeight||400} ${fs}px "Source Sans 3", sans-serif`; c.textAlign="center"; c.textBaseline="middle";
     c.shadowColor="rgba(0,0,0,.7)"; c.shadowBlur=fs*.25; c.fillStyle="#fff"; c.fillText(txt, 0, 0); c.restore();
   });
+}
+
+// 3:2 export box for a boundary photo shot at 4:3: frames the lot (same rule as the auto edit)
+function lotCrop(p){
+  const polys = p.shapes.filter(x=>x.type==="poly" && x.pts.length>=3); if (!polys.length || Math.abs(p.w/p.h-1.5) < 0.01) return null;
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; polys.forEach(sh=>sh.pts.forEach(q=>{ x0=Math.min(x0,q[0]); y0=Math.min(y0,q[1]); x1=Math.max(x1,q[0]); y1=Math.max(y1,q[1]); }));
+  const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3); const ch=cw/1.5;
+  let cx=(x0+x1)/2-cw/2, cy=(y0+y1)/2-ch/2; cx=Math.max(0,Math.min(p.w-cw,cx)); cy=Math.max(0,Math.min(p.h-ch,cy)); return [cx,cy,cw,ch];
 }
 
 // ================= landmarks (coordinates from TomTom, 21 Oct 2026) =================
@@ -1248,6 +1255,8 @@ function draw(){
   ctx.setTransform(view.s*dpr,0,0,view.s*dpr,view.tx*dpr,view.ty*dpr);
   ctx.imageSmoothingQuality="high";
   drawScene(ctx, p, { hide:hideGfx, before:showBefore });
+  { const cr = !hideGfx && lotCrop(p); if (cr){ const k=1/view.s; ctx.save(); ctx.fillStyle="rgba(0,0,0,.45)"; ctx.beginPath(); ctx.rect(0,0,p.w,p.h); ctx.rect(cr[0],cr[1],cr[2],cr[3]); ctx.fill("evenodd");
+    ctx.strokeStyle="#f2b33d"; ctx.lineWidth=2*k; ctx.setLineDash([8*k,6*k]); ctx.strokeRect(cr[0],cr[1],cr[2],cr[3]); ctx.setLineDash([]); ctx.font=`600 ${14*k}px system-ui`; ctx.fillStyle="#f2b33d"; ctx.fillText("Export area · 3:2", cr[0]+8*k, cr[1]+20*k); ctx.restore(); } }
   if (hideGfx || showBefore) return;
   const k = 1/view.s;
   if (sel && sel.kind==="pin"){ const pin = p.pins.find(x=>x.id===sel.id); if (pin){ const r = pinRect(p,pin), pad=6*k; ctx.save(); ctx.strokeStyle="#f2b33d"; ctx.lineWidth=1.6*k; ctx.setLineDash([5*k,4*k]); ctx.strokeRect(r[0]-pad,r[1]-pad,r[2]-r[0]+pad*2,r[3]-r[1]+pad*2); ctx.restore(); } }
@@ -1640,11 +1649,8 @@ function refreshBoundaryTab(){
   if (sh && sh.type==="poly"){ if (!sel){ sel={kind:"shape", id:sh.id}; requestDraw(); } box.appendChild(fixSection(p, sh)); }
   if (sh) box.appendChild(shapeSection(p, sh));
   const s2 = el(`<section class="sec"><h2><span>Outside the lot</span></h2></section>`);
-  const seg = el(`<div class="seg"><button data-v="blur">Blur</button><button data-v="darken">Darken</button><button data-v="none">None</button></div>`);
-  seg.querySelectorAll("button").forEach(bt=>{ bt.setAttribute("aria-pressed", p.outside===bt.dataset.v); bt.onclick=()=>{ commit(); p.outside=bt.dataset.v; prefs.outside=p.outside; savePrefs(); refreshBoundaryTab(); requestDraw(); }; });
-  s2.appendChild(seg);
-  if (p.outside==="blur") s2.appendChild(slider("blurAmt","Blur",10,120,2,p.blurAmt,v=>v,v=>{ p.blurAmt=v; prefs.blurAmt=v; savePrefs(); p._blur=null; requestDraw(); }, commit));
-  if (p.outside==="darken") s2.appendChild(slider("darkAmt","Darkness",0,80,1,p.darkAmt,v=>v+"%",v=>{ p.darkAmt=v; prefs.darkAmt=v; savePrefs(); requestDraw(); }, commit));
+  s2.appendChild(el(`<p class="note">Always blurred outside the lot.</p>`));
+  s2.appendChild(slider("blurAmt","Blur",35,120,2,Math.max(35,p.blurAmt||45),v=>v,v=>{ p.blurAmt=v; prefs.blurAmt=v; savePrefs(); p._blur=null; requestDraw(); }, commit));
   box.appendChild(s2);
   const s3 = el(`<section class="sec"><h2><span>Disclaimer</span></h2></section>`);
   const dc = el(`<label class="check"><input type="checkbox" ${p.disc.on?"checked":""}> Show on photos with a boundary</label>`);
@@ -2000,6 +2006,8 @@ function renderFull(p){
     const c=document.createElement("canvas"); c.width=p.w; c.height=p.h;
     const x=c.getContext("2d"); x.imageSmoothingQuality="high";
     const keep = ctx.font; drawScene(x, p, { hide:false }); ctx.font = keep;
+    const cr = lotCrop(p);
+    if (cr){ const o=document.createElement("canvas"); o.width=3000; o.height=2000; const ox=o.getContext("2d"); ox.imageSmoothingQuality="high"; ox.drawImage(c, cr[0],cr[1],cr[2],cr[3], 0,0,3000,2000); o.toBlob(b=>res(b), "image/jpeg", 0.95); return; }
     c.toBlob(b=>res(b), "image/jpeg", 0.95);
   });
 }
@@ -2157,7 +2165,7 @@ window.__bae = { project:()=>projectJSON(), setAdj:(o)=>{ const p=P(); if(!p) re
     let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; pts.forEach(q=>{ x0=Math.min(x0,q[0]); x1=Math.max(x1,q[0]); y0=Math.min(y0,q[1]); y1=Math.max(y1,q[1]); });
     const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3); const chh=cw/1.5;
     let cx=(x0+x1)/2-cw/2, cy=(y0+y1)/2-chh/2; cx=Math.max(0,Math.min(p.w-cw,cx)); cy=Math.max(0,Math.min(p.h-chh,cy)); const zf=p.w/cw;
-    const col = prefs.agency==="grey-s" ? "#FFFFFF" : shadeHex(agency().color, 0.75); const sh={ id:nid(), type:"poly", pts, color:col, width:17/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:72/(62*zf), lensWeight:wt>=700?600:400 }; p.shapes.push(sh); p.outside='blur'; p.blurAmt=Math.max(6, 15*cw/p.w); p._blur=null; p.pins.length=0;
+    const col = prefs.agency==="grey-s" ? "#FFFFFF" : shadeHex(agency().color, 0.75); const sh={ id:nid(), type:"poly", pts, color:col, width:17/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:72/(62*zf), lensWeight:wt>=700?600:400 }; p.shapes.push(sh); p.outside='blur'; p.blurAmt=45; p._blur=null; p.pins.length=0;
     if (area){ p.texts.push({ id:nid(), link:sh.id, style:"area", color:"#ffffff", size:200, x:0, y:0, autoSize:true, lot:area, text:area+"m2", weight:wt||400, fitW:0.62, fitH:0.5 }); }
     refreshAll(); return { crop:[cx,cy,cw,chh], w:p.w, h:p.h, snap:window.__lotSnap }; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { w:p.w, h:p.h, cam:p.cam, shapes:p.shapes.map(s=>s.pts.map(q=>q.map(Math.round))), snap:window.__lotSnap||null, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
 
@@ -2280,6 +2288,7 @@ $("fixJump").onclick = ()=>{ const p=P(); if(!p) return; const sh=p.shapes.find(
   sel={kind:"shape", id:sh.id}; const tb=$("tabBtnBoundary"); if (tb) tb.click(); refreshBoundaryTab(); requestDraw();
   setTimeout(()=>{ const f=document.querySelector(".fixb"); if (f) f.scrollIntoView({behavior:"smooth", block:"start"}); }, 80); };
 setInterval(()=>{ const p=P(), b=$("fixJump"); if (b) b.hidden = !(p && p.shapes.some(x=>x.type==="poly")); }, 600);
+window.__bae.renderOut = async ()=>{ const p=P(); await fontsReady(); await waitFinished(p); const b=await renderFull(p); return await new Promise(res=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(b); }); };
 
 })();
 </script>
