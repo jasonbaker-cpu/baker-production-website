@@ -40,6 +40,7 @@ html{padding-top:env(safe-area-inset-top,0px)}
 body{margin:0}
 #gate{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 #gate .card{max-width:380px;width:100%;text-align:center;align-items:center}
+#gate-help[hidden]{display:none!important}
 #gate h1{font-size:42px}
 #agent-pick{max-width:200px;padding:6px 8px;font-size:14px;font-weight:600}
 .agent-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
@@ -355,6 +356,10 @@ section[hidden]{display:none}
     <p class="muted" style="margin:0">Doors, calls, follow-ups and notes. Sign in to open your leads.</p>
     <button class="btn primary" id="signin" style="width:100%">Sign in with Google</button>
     <p class="hint" id="gate-msg" style="margin:0" role="status"></p>
+    <div id="gate-help" hidden style="display:flex;flex-direction:column;gap:10px;width:100%">
+      <p class="hint" style="margin:0;text-align:left">Google didn't open. This happens when the link is opened inside another app. Tap <b>•••</b> or the share button and choose <b>Open in Safari</b>, then sign in there.</p>
+      <button class="btn" id="signin-redirect" style="width:100%">Sign in on a full page instead</button>
+    </div>
   </div>
 </div>
 
@@ -701,11 +706,22 @@ store=noopStore;render();setTab("today");
   try{[appMod,A,F]=await Promise.all([import(FBV+"firebase-app.js"),import(FBV+"firebase-auth.js"),import(FBV+"firebase-firestore.js")])}
   catch(e){msg.textContent="Couldn't load sign-in. Check your connection and reopen.";btn.disabled=true;return}
   const app=appMod.initializeApp(FB_CONFIG),auth=A.getAuth(app),db=F.getFirestore(app);
-  A.getRedirectResult(auth).catch(()=>{});
-  btn.addEventListener("click",async()=>{msg.textContent="Opening Google…";
-    try{await A.signInWithPopup(auth,new A.GoogleAuthProvider())}
-    catch(e){if(e&&(e.code==="auth/popup-blocked"||e.code==="auth/operation-not-supported-in-this-environment"||e.code==="auth/cancelled-popup-request")){A.signInWithRedirect(auth,new A.GoogleAuthProvider())}
-      else msg.textContent=e&&e.code==="auth/popup-closed-by-user"?"":"Sign-in didn't work. Try again."}});
+  const help=$("#gate-help");
+  const provider=()=>{const p=new A.GoogleAuthProvider();p.setCustomParameters({prompt:"select_account"});return p};
+  const fail=e=>{const c=(e&&e.code)||"";
+    msg.textContent=c==="auth/unauthorized-domain"?"This web address isn't approved for sign-in yet. Ask Jason to add it in Firebase.":
+      c==="auth/network-request-failed"?"No connection. Check your signal and try again.":
+      `Sign-in didn't work${c?` (${c.replace("auth/","")})`:""}. Try again.`};
+  A.getRedirectResult(auth).catch(fail);
+  const redirect=()=>{msg.textContent="Taking you to Google…";A.signInWithRedirect(auth,provider()).catch(fail)};
+  $("#signin-redirect").addEventListener("click",redirect);
+  btn.addEventListener("click",async()=>{msg.textContent="Opening Google…";help.hidden=true;
+    const stuck=setTimeout(()=>{msg.textContent="";help.hidden=false},5000);
+    try{await A.signInWithPopup(auth,provider());clearTimeout(stuck);help.hidden=true;msg.textContent=""}
+    catch(e){clearTimeout(stuck);const c=(e&&e.code)||"";
+      if(c==="auth/popup-blocked"||c==="auth/operation-not-supported-in-this-environment"){redirect();return}
+      if(c==="auth/popup-closed-by-user"||c==="auth/cancelled-popup-request"){msg.textContent="";return}
+      fail(e)}});
   let started=false,agents=new Map(),curAgent=null,confirmRm=null;
   const pick=$("#agent-pick");
   const openAgent=(email)=>{if(!email||email===curAgent)return;curAgent=email;const a=agents.get(email)||{};setAgent(email,a.name);
