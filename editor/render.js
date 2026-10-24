@@ -293,7 +293,11 @@ function photoImage(p, before){
   if (!p._adj || p._adjKey !== key){ p._adj = adjustedCanvas(src, p.adj); p._adjKey = key; }
   return p._adj;
 }
-function blurredCopy(img, w, h, amt){ // cheap, cross-browser blur: shrink then scale back up twice
+function blurredCopy(img, w, h, amt, sigma){
+  if (sigma){ try{ const pad=Math.ceil(sigma*3), c=document.createElement("canvas"); c.width=w; c.height=h; const x=c.getContext("2d");
+      if ("filter" in x){ const t=document.createElement("canvas"); t.width=w+2*pad; t.height=h+2*pad; const tx=t.getContext("2d");
+        tx.drawImage(img,pad,pad,w,h); tx.drawImage(img,0,0,1,h,0,pad,pad,h); tx.drawImage(img,w-1,0,1,h,w+pad,pad,pad,h); tx.drawImage(t,pad,pad,w,1,pad,0,w,pad); tx.drawImage(t,pad,pad+h-1,w,1,pad,h+pad,w,pad);   // edge-extend so borders don't go dark
+        x.filter=`blur(${sigma}px)`; x.drawImage(t,-pad,-pad); x.filter="none"; return c; } }catch(e){} } // cheap, cross-browser blur: shrink then scale back up twice
   const f = Math.max(2, amt/4);
   const a = document.createElement("canvas"); a.width = Math.max(1,Math.round(w/f)); a.height = Math.max(1,Math.round(h/f));
   const ax = a.getContext("2d"); ax.imageSmoothingQuality="high"; ax.drawImage(img,0,0,a.width,a.height);
@@ -312,7 +316,8 @@ function drawScene(c, p, opt){
     polys.forEach(sh=>{ c.moveTo(sh.pts[0][0],sh.pts[0][1]); for(let i=1;i<sh.pts.length;i++) c.lineTo(sh.pts[i][0],sh.pts[i][1]); c.closePath(); });
     c.clip("evenodd");
     { const key = (opt.before?"b":"a") + p.blurAmt + (p.finishOn?"f":"") + (p._adjKey||"");
-      if (!p._blur || p._blurKey !== key){ p._blur = blurredCopy(img, p.w, p.h, Math.max(35, p.blurAmt||45)*s); p._blurKey = key; }
+      const cr = lotCrop(p), fw = cr ? cr[2] : p.w, sig = fw * 0.0028 * Math.max(35, p.blurAmt||45) / 45;   // ~0.28% of the delivered frame width, smooth gaussian (matches Jason's reference)
+      if (!p._blur || p._blurKey !== key + "|" + Math.round(sig)){ p._blur = blurredCopy(img, p.w, p.h, Math.max(35, p.blurAmt||45)*s, sig); p._blurKey = key + "|" + Math.round(sig); }
       c.drawImage(p._blur, 0, 0, p.w, p.h);
     }
     c.restore();
