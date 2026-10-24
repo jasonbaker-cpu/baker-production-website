@@ -1,6 +1,76 @@
 {
  "days": [
   {
+   "id": "23-oct-2026",
+   "label": "Fri 23 Oct 2026",
+   "gallery": "23-oct-2026/",
+   "jobs": [
+    {
+     "slug": "28_george_st",
+     "addr": "28 George St, Belmont",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
+     "agency": "red",
+     "full": false,
+     "src": "23-oct-2026/28_george_st/src/",
+     "map": "28george_st_belmont_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261023143023_0307_D.JPG",
+      "DJI_20261023143042_0308_D.JPG",
+      "DJI_20261023143109_0309_D.JPG",
+      "DJI_20261023143127_0310_D.JPG",
+      "DJI_20261023143147_0311_D.JPG",
+      "DJI_20261023143246_0312_D.JPG"
+     ]
+    },
+    {
+     "slug": "28_george_st__nadir",
+     "addr": "28 George St, Belmont \u2014 top-down",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
+     "agency": "red",
+     "full": true,
+     "src": "23-oct-2026/28_george_st/src-top/",
+     "map": "28george_st_belmont_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261023142938_0306_D.JPG"
+     ]
+    },
+    {
+     "slug": "13_riviera_vista",
+     "addr": "13 Riviera Vista, Port Kennedy",
+     "who": "Leonie Adam \u00b7 Realty Plus",
+     "agency": "realty-plus",
+     "full": false,
+     "src": "23-oct-2026/13_riviera_vista/src/",
+     "map": "13_riviera_vista_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261023193538_0103_D.jpg",
+      "DJI_20261023193600_0104_D.jpg",
+      "DJI_20261023193613_0105_D.jpg",
+      "DJI_20261023193632_0106_D.jpg",
+      "DJI_20261023193659_0107_D.jpg",
+      "DJI_20261023193714_0108_D.jpg",
+      "DJI_20261023193728_0109_D.jpg"
+     ]
+    },
+    {
+     "slug": "13_riviera_vista__nadir",
+     "addr": "13 Riviera Vista, Port Kennedy \u2014 top-down",
+     "who": "Leonie Adam \u00b7 Realty Plus",
+     "agency": "realty-plus",
+     "full": true,
+     "src": "23-oct-2026/13_riviera_vista/src-top/",
+     "map": "13_riviera_vista_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261023193507_0102_D.jpg"
+     ]
+    }
+   ]
+  },
+  {
    "id": "22-oct-2026",
    "label": "Thu 22 Oct 2026",
    "gallery": "22-oct-2026/",
