@@ -78,7 +78,9 @@ async def main():
                     if ok and ok.get('crop'): report[ph]['cropbox']=ok['crop']
                     if ok and ok.get('crop'):
                         from PIL import Image
-                        im=Image.open(fn); kx=im.width/ok['w']; cx,cy,cw,ch=[v*kx for v in ok['crop']]
+                        im=Image.open(fn)
+                        if abs(im.width/im.height-1.5)<0.01: continue   # editor already exported the 3:2 lot crop
+                        kx=im.width/ok['w']; cx,cy,cw,ch=[v*kx for v in ok['crop']]
                         im.crop((round(cx),round(cy),round(cx+cw),round(cy+ch))).resize((3000,2000),Image.LANCZOS).save(fn,quality=93)
                     continue
                 st = job.get('steps',{}).get(ph,{})
