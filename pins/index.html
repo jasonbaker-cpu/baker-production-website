@@ -4,7 +4,7 @@
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="/favicon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Baker Aerial Editor</title><title>Baker Aerial Editor</title>
+<title>Baker Aerial Editor</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1065,12 +1065,16 @@ function tidySides(p){
 
 // ================= scene =================
 function hexA(hex, a){ const n=parseInt(hex.slice(1),16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
+// area label: "560m2" / "560m²" → big "560m" + small raised "2"
+function areaSplit(txt){ const m = String(txt||"").match(/^(.*?m)(2|²)$/); return m ? [m[1], "2"] : [String(txt||" "), ""]; }
+function areaWidth(c, txt, size, weight){ const [a,b] = areaSplit(txt); c.font = `${weight} ${size}px "Source Sans 3", "Segoe UI", sans-serif`; let w = c.measureText(a).width;
+  if (b){ c.font = `${weight} ${size*0.42}px "Source Sans 3", "Segoe UI", sans-serif`; w += size*0.03 + c.measureText(b).width; } return w; }
 function textMetrics(c, t, p){
   const s = p.w/3000, size = t.size*s;
-  const weight = t.style==="area" ? (t.weight||300) : t.bold ? 700 : 400;
+  const weight = t.style==="area" ? (t.weight||700) : t.bold ? 700 : 400;
   c.font = `${weight} ${size}px "Source Sans 3", "Segoe UI", sans-serif`;
   const lines = String(t.text||" ").split("\n"), lh = size*1.12;
-  let w=0; lines.forEach(l=>{ w=Math.max(w, c.measureText(l).width); });
+  let w=0; lines.forEach(l=>{ w=Math.max(w, t.style==="area" ? areaWidth(c,l,size,weight) : c.measureText(l).width); }); c.font = `${weight} ${size}px "Source Sans 3", "Segoe UI", sans-serif`;
   const padX = t.style==="pill" ? size*.55 : 0, padY = t.style==="pill" ? size*.3 : 0;
   const bw = w+padX*2, bh = lines.length*lh + padY*2;
   return { size, weight, lines, lh, bw, bh, x:t.x-bw/2, y:t.y-bh/2, padX, padY };
@@ -1146,7 +1150,10 @@ function drawScene(c, p, opt){
       const ly = m.y + m.padY + m.lh*(i+.5);
       if (t.style!=="pill"){ c.shadowColor="rgba(0,0,0,.45)"; c.shadowBlur=m.size*(t.style==="area"?.06:.18); c.shadowOffsetY=m.size*.02; }
       c.globalAlpha = t.style==="area" ? 0.95 : 1;
-      c.fillStyle=t.color; c.fillText(l, t.x, ly);
+      c.fillStyle=t.color;
+      if (t.style==="area"){ const [a,b] = areaSplit(l); if (b){ const W = areaWidth(c,l,m.size,m.weight); c.textAlign="left"; c.font=`${m.weight} ${m.size}px "Source Sans 3", "Segoe UI", sans-serif`; const wa=c.measureText(a).width, x0=t.x-W/2; c.fillText(a, x0, ly);
+          c.font=`${m.weight} ${m.size*0.42}px "Source Sans 3", "Segoe UI", sans-serif`; c.fillText(b, x0+wa+m.size*0.03, ly - m.size*0.24); c.textAlign="center"; } else c.fillText(l, t.x, ly); }
+      else c.fillText(l, t.x, ly);
     });
     c.restore();
   }
@@ -1161,7 +1168,7 @@ function drawScene(c, p, opt){
 function fitAreaText(c, p, t, sh){
   const pts = sh.pts; let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity; pts.forEach(q=>{x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0]);y0=Math.min(y0,q[1]);y1=Math.max(y1,q[1]);});
   const s = p.w/3000; const bw = x1-x0, bh = y1-y0;
-  c.font = `${t.weight||300} 100px "Source Sans 3", sans-serif`; const w100 = c.measureText(t.text||" ").width || 1;
+  const w100 = areaWidth(c, t.text||" ", 100, t.weight||700) || 1;
   const byW = (t.fitW||0.5)*bw/w100*100, byH = (t.fitH||0.55)*bh;
   t.size = Math.max(20, Math.min(byW, byH)/s);
   if (!t.moved){ const ct = centroid(pts); t.x = ct[0]; t.y = ct[1]; }
@@ -2171,7 +2178,7 @@ window.__bae = { project:()=>projectJSON(), setAdj:(o)=>{ const p=P(); if(!p) re
     const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3); const chh=cw/1.5;
     let cx=(x0+x1)/2-cw/2, cy=(y0+y1)/2-chh/2; cx=Math.max(0,Math.min(p.w-cw,cx)); cy=Math.max(0,Math.min(p.h-chh,cy)); const zf=p.w/cw;
     const col = prefs.agency==="grey-s" ? "#FFFFFF" : shadeHex(agency().color, 0.75); const sh={ id:nid(), type:"poly", pts, color:col, width:17/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:1.5*72/(62*zf), lensWeight:wt>=700?600:400 }; p.shapes.push(sh); p.outside='blur'; p.blurAmt=45; p._blur=null; p.pins.length=0;
-    if (area){ p.texts.push({ id:nid(), link:sh.id, style:"area", color:"#ffffff", size:200, x:0, y:0, autoSize:true, lot:area, text:area+"m2", weight:wt||300, fitW:0.72, fitH:0.55 }); }
+    if (area){ p.texts.push({ id:nid(), link:sh.id, style:"area", color:"#ffffff", size:200, x:0, y:0, autoSize:true, lot:area, text:area+"m2", weight:wt||700, fitW:0.72, fitH:0.55 }); }
     refreshAll(); return { crop:[cx,cy,cw,chh], w:p.w, h:p.h, snap:window.__lotSnap }; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { w:p.w, h:p.h, cam:p.cam, shapes:p.shapes.map(s=>s.pts.map(q=>q.map(Math.round))), snap:window.__lotSnap||null, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
 
 // ---- Previous days: open any published job (original photos + saved edits + map) in one click
