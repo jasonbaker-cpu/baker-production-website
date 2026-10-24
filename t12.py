@@ -70,7 +70,7 @@ async def main():
                     fmt=lambda v: f"{v:.2f}m"
                     lens=[(fmt(math.dist(P[i],P[(i+1)%len(P)])) if math.dist(P[i],P[(i+1)%len(P)])>=1.5 else '') for i in range(len(P))]
                     area=round(abs(sum(P[i][0]*P[(i+1)%len(P)][1]-P[(i+1)%len(P)][0]*P[i][1] for i in range(len(P))))/2)
-                    wt=700 if job.get('agency') in ('flags-p','red','grey-s','orange','realty-plus') else 400
+                    wt=300   # Jason's chosen look (24 Oct): thin, large lot size like his 560m2 reference, for every agency
                     rg = job.get('reg',{}).get(ph,[0,0])
                     ok = await pg.evaluate("([ll,a,b,l,ar,w])=>window.__bae.addLot(ll,a,b,l,ar,w)", [ll, rg[0], rg[1], lens, area, wt]); print('  lot', ph, ok, area, lens)
                     await pg.wait_for_timeout(500); report[ph]=await pg.evaluate("window.__bae.photo()")
