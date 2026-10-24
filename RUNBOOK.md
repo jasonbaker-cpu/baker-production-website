@@ -59,16 +59,12 @@ python3 runjobs.py e2e/run_<day-id>.json
 ```
 `day-id` looks like `23-oct-2026`.
 
-## 5. Check (always)
-1. For each top-down: `python3 edgeruler.py <slug>__nadir`.
-2. Have an independent subagent read the `qc/er_*` strips and return the fence offset per edge, in JSON.
-3. Put any edge more than 0.3 m off into `edgeOff` in `days/<day-id>.json`. Re-run prep_day and that `__nadir` job.
-4. Make contact sheets and look at every photo yourself, plus an independent subagent QC of the horizon band.
-5. Fix or flag:
-   - wrong agency pin style
-   - pins clipped or overlapping
-   - halo, fog or ghosting at the horizon
-   - lot area different from the title
+## 5. Check (always — the fence check is mandatory, publishing refuses without it)
+1. For every top-down: `python3 edgeruler.py <slug>__nadir` (strips in qc/er_<slug>__nadir_*.jpg, UP = outside lot).
+2. Spawn a NEW independent subagent (it must not see your earlier conclusions) to read the strips and return per-edge fence offsets as JSON {"<slug>":[{"edge","offset_m","confidence"}]}.
+3. `python3 fencefix.py <day-id> checks.json` — records e2e/fence_<slug>__nadir.json; edges >0.3 m off (med/high confidence) go into edgeOff.
+4. If any FIX: `python3 prep_day.py <day-id>`, re-run only those `__nadir` jobs, edgeruler again, a fresh independent check, fencefix again. Repeat until PASS (max 3 rounds; if still failing, publish with SKIP_FENCE=1 and flag it in the report).
+5. Contact sheets: look at every photo yourself + an independent subagent QC of the horizon band. Fix or flag: wrong agency pin style, clipped/overlapping pins, horizon halo/fog/ghosting, lot area vs title mismatch.
 
 ## 6. Publish
 ```

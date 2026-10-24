@@ -39,6 +39,10 @@ for slug, m in META.items():
         j = by_slug.get(variant)
         if not j: continue
         full = bool(j.get('full'))
+        if full and not os.environ.get('SKIP_FENCE'):
+            fp = f'{SP}e2e/fence_{variant}.json'
+            if not os.path.exists(fp) or not json.load(open(fp)).get('pass'):
+                sys.exit(f'STOP: {variant} has no passing fence check ({fp}). Run edgeruler + independent fence check + fencefix.py first.')
         src_dir = f'{OUT}{slug}/src{"-top" if full else ""}/'; shutil.rmtree(src_dir, ignore_errors=True); os.makedirs(src_dir)
         proj = json.load(open(f'{SP}e2e/{variant}/{variant}.baker.json'))
         names = []
