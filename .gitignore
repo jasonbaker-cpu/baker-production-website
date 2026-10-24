@@ -1,0 +1,9 @@
+batch/
+e2e/*/
+e2e/*.err
+final_aerials/
+sat/*.jpg
+reg_all.json
+qc/
+aerial-editor.html
+__pycache__/
