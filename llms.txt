@@ -31,6 +31,7 @@ Key facts, current as at 22 October 2026:
 - [Full price list](https://www.bakerproduction.com/pricing.html): Every package and service with prices, GST inclusive.
 - [Machine-readable price list](https://www.bakerproduction.com/pricing.md): The same price list as plain markdown.
 - [Drone rules for real estate in WA](https://www.bakerproduction.com/drone-rules-real-estate-wa.html): Guide for agents — CASA requirements for commercial drone photos, Perth airport no-fly zones, what to ask an operator.
+- [Best time of day to photograph a house in Perth](https://www.bakerproduction.com/best-time-to-photograph-a-house-perth.html): Interactive guide — live Perth sun planner by facing and date, best times for fronts, interiors, pools, drone and twilight.
 - [2D vs 3D floor plans](https://www.bakerproduction.com/2d-vs-3d-floor-plans.html): Guide — what 2D and 3D floor plans show buyers, when 3D is worth it, site plans, area disclaimers, cost.
 - [Virtual staging disclosure](https://www.bakerproduction.com/virtual-staging-disclosure-australia.html): Guide — what WA agents must disclose when listing photos are virtually staged or edited (Australian Consumer Law, WA Code of Conduct).
 - [Airbnb and short-stay photography Perth](https://www.bakerproduction.com/airbnb-photography-perth.html): Listing photos for Airbnb hosts and short-stay managers — shot list, prep, prices from the standard rate card.
