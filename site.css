@@ -1424,3 +1424,11 @@ a.lp-chip:hover { border-color: var(--color-accent); color: var(--color-text); }
   .lp-table-compare td[data-label]::before { content: attr(data-label); display: block; font-size: 11px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--color-accent); font-weight: 600; margin-bottom: 2px; }
   .lp-table-compare td[data-label] + td[data-label] { margin-top: 10px; }
 }
+
+/* Nav never wraps: labels stay on one line, and the menu switches to the hamburger before it runs out of room (iPad landscape, small laptops) */
+.nav-logo-text, .nav-links a, .nav-cta { white-space: nowrap; }
+@media (max-width: 1240px) {
+  .nav-links { display: none; }
+  .nav-cta.desktop-only { display: none; }
+  .nav-hamburger { display: block; }
+}
