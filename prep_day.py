@@ -38,6 +38,7 @@ for j in D['jobs']:
         run.append(dict(base, slug=j['slug'] + '__nadir', photos=[n0], poly=j['poly'], full=1,
                         snap={'on': True, 'mode': 'ridge', 'sc': 0.0, 'R': 2.5, 'rot': 3},
                         edgeOff=j.get('edgeOff', {}), cams={n0: cams[n0]} if n0 in cams else {}))
+        if j.get('pxpoly'): run[-1].update(pxpoly=j['pxpoly'], nosnap=1); run[-1].pop('snap', None)   # boundary hand-traced on the fences
     else:
         run.append(dict(base, slug=j['slug'], photos=ph, cams={f: cams[f] for f in ph if f in cams}))
     meta[j['slug']] = {'addr': j['addr'], 'who': j.get('who', '')}

@@ -63,7 +63,7 @@ for slug, m in META.items():
         n = os.path.basename(f); im = Image.open(f).convert('RGB')
         big = im.copy(); big.thumbnail((2400, 2400)); big.save(f'{d}/{n}', quality=84, optimize=True, progressive=True)
         t = im.copy(); t.thumbnail((720, 720)); t.save(f'{d}/t/{n}', quality=78, optimize=True)
-        items.append(f'<a href="{slug}/{n}" target="_blank"><img loading="lazy" src="{slug}/t/{n}" alt=""></a>')
+        v = int(os.path.getmtime(f)); items.append(f'<a href="{slug}/{n}?v={v}" target="_blank"><img loading="lazy" src="{slug}/t/{n}?v={v}" alt=""></a>')   # ?v= so phones don't show an old cached edit
     edits = ''.join(f'<a class="ed" href="/pins/?open={day}/{x["slug"]}">Edit{" top-down" if x["full"] else ""}</a>' for x in jobs_idx if x['slug'] in (slug, slug + '__nadir'))
     secs.append(f'<section><h2>{html.escape(m["addr"])}</h2><p>{html.escape(m["who"])} · {len(items)} photos {edits}</p><div class="g">{"".join(items)}</div></section>')
 

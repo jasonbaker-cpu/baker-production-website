@@ -4,7 +4,7 @@ from playwright.async_api import async_playwright
 SP=os.path.dirname(os.path.abspath(__file__))+'/'
 OUT=SP+'e2e/'
 F=SP+'fonts/'
-ff=''.join(f"@font-face{{font-family:'Source Sans 3';font-weight:{w};src:url(data:font/woff2;base64,{base64.b64encode(open(F+f'source-sans-3-latin-{w}-normal.woff2','rb').read()).decode()}) format('woff2');}}" for w in (300,400,700))+f"@font-face{{font-family:'Open Sans';font-weight:400;src:url(data:font/woff2;base64,{base64.b64encode(open(F+'open-sans-latin-400-normal.woff2','rb').read()).decode()}) format('woff2');}}"
+ff=''.join(f"@font-face{{font-family:'Source Sans 3';font-weight:{w};src:url(data:font/woff2;base64,{base64.b64encode(open(F+f'source-sans-3-latin-{w}-normal.woff2','rb').read()).decode()}) format('woff2');}}" for w in (300,400,700))+''.join(f"@font-face{{font-family:'Open Sans';font-weight:{w};src:url(data:font/woff2;base64,{base64.b64encode(open(F+f'open-sans-latin-{w}-normal.woff2','rb').read()).decode()}) format('woff2');}}" for w in (400,700))
 srv=subprocess.Popen(['python3','-m','http.server','8765','--bind','127.0.0.1'],cwd=SP,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 time.sleep(1)
 JOBS=json.loads(sys.argv[1]) if len(sys.argv)>1 else []
@@ -33,7 +33,7 @@ async def main():
         html=open(SP+'aerial-editor.html').read()
         open(SP+'e2e/page.html','w').write('<!doctype html><html><head><meta charset=utf-8><style>'+ff+'html,body{margin:0}[hidden]{display:none!important}</style></head><body>'+html+'</body></html>')
         await pg.goto('http://127.0.0.1:8765/e2e/page.html')
-        await pg.evaluate("Promise.all([document.fonts.load('400 40px \"Source Sans 3\"'),document.fonts.load('400 40px \"Open Sans\"')])"); await pg.wait_for_timeout(800)
+        await pg.evaluate("Promise.all([document.fonts.load('400 40px \"Source Sans 3\"'),document.fonts.load('400 40px \"Open Sans\"'),document.fonts.load('700 40px \"Open Sans\"')])"); await pg.wait_for_timeout(800)
         if JOBS and JOBS[0].get('tune'): await pg.evaluate('t=>{window.__TUNE=t}', JOBS[0]['tune'])
         report={}
         for job in JOBS:
@@ -70,9 +70,9 @@ async def main():
                     fmt=lambda v: f"{v:.2f}m"
                     lens=[(fmt(math.dist(P[i],P[(i+1)%len(P)])) if math.dist(P[i],P[(i+1)%len(P)])>=1.5 else '') for i in range(len(P))]
                     area=round(abs(sum(P[i][0]*P[(i+1)%len(P)][1]-P[(i+1)%len(P)][0]*P[i][1] for i in range(len(P))))/2)
-                    wt=400   # Jason (25 Oct): identical to his 560m2 reference: regular Open Sans, full-size 2
+                    wt=700   # Jason (25 Oct): bold Open Sans lot size with a real ² (like his 195m² example)
                     rg = job.get('reg',{}).get(ph,[0,0])
-                    ok = await pg.evaluate("([ll,a,b,l,ar,w])=>window.__bae.addLot(ll,a,b,l,ar,w)", [ll, rg[0], rg[1], lens, area, wt]); print('  lot', ph, ok, area, lens)
+                    ok = await pg.evaluate("([ll,a,b,l,ar,w,px])=>window.__bae.addLot(ll,a,b,l,ar,w,px)", [ll, rg[0], rg[1], lens, area, wt, job.get('pxpoly')]); print('  lot', ph, ok, area, lens)
                     await pg.wait_for_timeout(500); report[ph]=await pg.evaluate("window.__bae.photo()")
                     os.makedirs(OUT+job.get('slug','x'),exist_ok=True); fn=OUT+job.get('slug','x')+'/'+os.path.basename(ph).rsplit('.',1)[0]+'.jpg'; await export(pg, job.get('slug','x')+'/'+os.path.basename(ph).rsplit('.',1)[0]+'.jpg')
                     if ok and ok.get('crop'): report[ph]['cropbox']=ok['crop']

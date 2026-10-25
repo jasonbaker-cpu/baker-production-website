@@ -264,12 +264,12 @@ function tidySides(p){
 function hexA(hex, a){ const n=parseInt(hex.slice(1),16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
 // area label: "560m2" / "560m²" → big "560m" + small raised "2"
 const AREA_FONT = '"Open Sans", "Segoe UI", sans-serif';   // matches Jason's 560m2 reference
-function areaSplit(txt, sup){ if (!sup) return [String(txt||" "), ""]; const m = String(txt||"").match(/^(.*?m)(2|²)$/); return m ? [m[1], "2"] : [String(txt||" "), ""]; }
+function areaSplit(txt, sup){ if (!sup) return [String(txt||" ").replace(/m2$/,"m\u00B2"), ""]; const m = String(txt||"").match(/^(.*?m)(2|²)$/); return m ? [m[1], "2"] : [String(txt||" "), ""]; }
 function areaWidth(c, txt, size, weight, sup){ const [a,b] = areaSplit(txt, sup); c.font = `${weight} ${size}px ${AREA_FONT}`; let w = c.measureText(a).width;
   if (b){ c.font = `${weight} ${size*0.42}px ${AREA_FONT}`; w += size*0.03 + c.measureText(b).width; } return w; }
 function textMetrics(c, t, p){
   const s = p.w/3000, size = t.size*s;
-  const weight = t.style==="area" ? (t.weight||400) : t.bold ? 700 : 400;
+  const weight = t.style==="area" ? (t.weight||700) : t.bold ? 700 : 400;
   c.font = `${weight} ${size}px ${t.style==="area" ? AREA_FONT : '"Source Sans 3", "Segoe UI", sans-serif'}`;
   const lines = String(t.text||" ").split("\n"), lh = size*1.12;
   let w=0; lines.forEach(l=>{ w=Math.max(w, t.style==="area" ? areaWidth(c,l,size,weight,t.sup) : c.measureText(l).width); }); c.font = `${weight} ${size}px ${t.style==="area" ? AREA_FONT : '"Source Sans 3", "Segoe UI", sans-serif'}`;
@@ -350,7 +350,7 @@ function drawScene(c, p, opt){
       c.globalAlpha = t.style==="area" ? 0.95 : 1;
       c.fillStyle=t.color;
       if (t.style==="area"){ const [a,b] = areaSplit(l, t.sup); if (b){ const W = areaWidth(c,l,m.size,m.weight,true); c.textAlign="left"; c.font=`${m.weight} ${m.size}px ${AREA_FONT}`; const wa=c.measureText(a).width, x0=t.x-W/2; c.fillText(a, x0, ly);
-          c.font=`${m.weight} ${m.size*0.42}px ${AREA_FONT}`; c.fillText(b, x0+wa+m.size*0.03, ly - m.size*0.24); c.textAlign="center"; } else c.fillText(l, t.x, ly); }
+          c.font=`${m.weight} ${m.size*0.42}px ${AREA_FONT}`; c.fillText(b, x0+wa+m.size*0.03, ly - m.size*0.24); c.textAlign="center"; } else c.fillText(a, t.x, ly); }
       else c.fillText(l, t.x, ly);
     });
     c.restore();
@@ -366,7 +366,7 @@ function drawScene(c, p, opt){
 function fitAreaText(c, p, t, sh){
   const pts = sh.pts; let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity; pts.forEach(q=>{x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0]);y0=Math.min(y0,q[1]);y1=Math.max(y1,q[1]);});
   const s = p.w/3000; const bw = x1-x0, bh = y1-y0;
-  const w100 = areaWidth(c, t.text||" ", 100, t.weight||400, t.sup) || 1;
+  const w100 = areaWidth(c, t.text||" ", 100, t.weight||700, t.sup) || 1;
   const byW = (t.fitW||0.5)*bw/w100*100, byH = (t.fitH||0.55)*bh;
   t.size = Math.max(20, Math.min(byW, byH)/s);
   if (!t.moved){ const ct = centroid(pts); t.x = ct[0]; t.y = ct[1]; }
