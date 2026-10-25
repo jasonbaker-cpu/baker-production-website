@@ -124,7 +124,8 @@ input.bt-range:focus-visible{outline:2px solid var(--gold);outline-offset:4px;bo
 /* today strip */
 .bt-today{max-width:1320px;margin:0 auto;padding:0 24px 110px}
 .bt-today-g{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:22px;overflow:hidden;margin-top:30px}
-.bt-today-g div{background:var(--ink);padding:26px 22px}
+.bt-today-g>div{background:var(--ink);padding:26px 22px}
+.bt-mini{display:none}
 .bt-today-g .n{font:300 clamp(26px,3vw,38px)/1 var(--font-display);letter-spacing:-.03em}
 .bt-today-g .l{font:600 11px/1.4 var(--font-display);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:12px}
 .bt-today-g .d{font:400 13px/1.5 var(--font-body);color:rgba(255,255,255,.55);margin-top:8px}
@@ -167,13 +168,22 @@ input.bt-range:focus-visible{outline:2px solid var(--gold);outline-offset:4px;bo
 
 @media (max-width:980px){
   .bt-story{grid-template-columns:1fr;padding:0 0 60px}
-  .bt-stage{top:64px;height:46svh;min-height:300px;border-radius:0;border-left:0;border-right:0;z-index:3}
-  .bt-steps{padding:6vh 24px 20vh}
-  .bt-step{min-height:62vh}
+  .bt-stage{display:none}
+  .bt-steps{padding:8px 20px 40px}
+  .bt-step{min-height:0;opacity:1;padding:0 0 52px}
+  .bt-step h3{margin-top:12px}
   .bt-step p{color:rgba(255,255,255,.82)}
+  .bt-mini{display:block;position:relative;aspect-ratio:4/3;border-radius:18px;overflow:hidden;border:1px solid var(--line);margin-bottom:20px;background:#111}
+  .bt-mini svg{width:100%;height:100%;display:block}
+  .bt-mini .bt-clock{left:16px;bottom:14px;font-size:40px}
+  .bt-mini .bt-pill{position:absolute;top:12px;right:12px}
+  .bt-answer{padding:64px 20px 32px}
+  .bt-planner{padding:72px 20px 80px}
+  .bt-today{padding:0 20px 80px}
+  .bt-today-g>div{padding:20px 18px}
   .bt-grid{grid-template-columns:1fr}
   .bt-today-g{grid-template-columns:1fr 1fr}
-  .bt-today-g div:last-child{grid-column:1/-1}
+  .bt-today-g>div:last-child{grid-column:1/-1}
   .bt-types{grid-template-columns:1fr}
   .bt-seasons{grid-template-columns:1fr}
   .bt-season{min-height:0;padding:24px}
@@ -502,7 +512,7 @@ function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k i
 function Scene(host,opts){
   opts=opts||{};uid++;var id='s'+uid,i;
   var W=1200,H=800,HZ=opts.horizon||560;
-  var svg=el('svg',{viewBox:'0 0 '+W+' '+H,preserveAspectRatio:opts.slice?'xMidYMax slice':'xMidYMid slice'},host);
+  var svg=el('svg',{viewBox:'0 0 '+W+' '+H,preserveAspectRatio:opts.top?'xMidYMin slice':(opts.slice?'xMidYMax slice':'xMidYMid slice')},host);
   var defs=el('defs',{},svg);
   var g=el('linearGradient',{id:id+'sky',x1:0,y1:0,x2:0,y2:1},defs);
   var st=[el('stop',{offset:'0'},g),el('stop',{offset:'.6'},g),el('stop',{offset:'1'},g)];
@@ -626,8 +636,15 @@ var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce
 var NOW=Date.now(), TODAY=perthMidnight(NOW), TD=dayData(TODAY);
 
 /* ================= Hero (live) ================= */
-var hero=Scene(document.getElementById('heroScene'),{slice:true,horizon:600});
-function heroLayout(){var r=window.innerWidth/window.innerHeight;hero.shift(r>1.15?'translate(330 30) scale(.86)':'translate(160 0)');}heroLayout();window.addEventListener('resize',heroLayout);
+var heroPortrait=window.innerWidth/window.innerHeight<1, heroHost=document.getElementById('heroScene');
+function buildHero(){
+  heroHost.innerHTML='';heroPortrait=window.innerWidth/window.innerHeight<1;
+  hero=heroPortrait?Scene(heroHost,{top:true,horizon:330}):Scene(heroHost,{slice:true,horizon:600});
+  var r=window.innerWidth/window.innerHeight;
+  hero.shift(heroPortrait?'translate(600 370) scale(.44) translate(-600 -370)':(r>1.15?'translate(330 30) scale(.86)':'translate(160 0)'));
+}
+var hero;buildHero();
+window.addEventListener('resize',function(){if((window.innerWidth/window.innerHeight<1)!==heroPortrait){buildHero();heroTick();}});
 function heroTick(){
   var now=Date.now(), s=stateFor(now,270), d=dayData(perthMidnight(now)), m=perthMin(now), txt;
   hero.update(s);
@@ -643,6 +660,7 @@ heroTick();setInterval(heroTick,30000);
 
 /* ================= Scrolly story ================= */
 var story=Scene(document.getElementById('storyScene'),{horizon:580});
+function storyFit(){var st=document.getElementById('storyStage'),r=st.clientWidth/Math.max(1,st.clientHeight);story.shift(r<1.4?'translate(600 620) scale('+Math.max(.62,Math.min(1,r/1.4)).toFixed(2)+') translate(-600 -620)':'');}storyFit();window.addEventListener('resize',storyFit);
 var KEYS={dawn:TD.rise-22,morning:TD.rise+150,noon:TD.noon,afternoon:TD.noon+190,golden:TD.set-38,twilight:TD.set+14};
 var steps=[].slice.call(document.querySelectorAll('.bt-step'));
 var stepMins=steps.map(function(s){return KEYS[s.dataset.key];});
@@ -670,6 +688,14 @@ function onStoryScroll(){
 function loop(){raf=0;var d=targetMin-curMin;curMin+=d*0.14;if(Math.abs(d)<0.2)curMin=targetMin;renderStory(curMin);if(curMin!==targetMin)raf=requestAnimationFrame(loop);}
 document.getElementById('storyClockSub').textContent='Today in Perth · '+fmtDate(TODAY);
 renderStory(curMin);steps[0].classList.add('on');
+/* mobile: a static scene per step instead of the pinned stage */
+steps.forEach(function(st,i){
+  var box=document.createElement('div');box.className='bt-mini';box.setAttribute('aria-hidden','true');
+  st.insertBefore(box,st.firstChild);
+  var sc=Scene(box,{horizon:580}), m=stepMins[i], s=stateFor(at(TODAY,m),270);sc.update(s);
+  var c=document.createElement('div');c.className='bt-clock';c.innerHTML=fmt(m)+'<small>West-facing home</small>';box.appendChild(c);
+  var pill=document.createElement('span');pill.className='bt-pill gold';pill.textContent=sunLabel(s,m);box.appendChild(pill);
+});
 window.addEventListener('scroll',onStoryScroll,{passive:true});window.addEventListener('resize',onStoryScroll);
 
 /* ================= Planner ================= */
