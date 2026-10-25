@@ -1449,3 +1449,10 @@ a.lp-chip:hover { border-color: var(--color-accent); color: var(--color-text); }
 }
 /* Related cards: no lone orphan card on tablet */
 @media (min-width: 700px) and (max-width: 1100px) { .lp-links { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Mobile polish (25 Oct): balanced headings (no lone last word), phone numbers never split */
+h1, h2, h3 { text-wrap: balance; }
+a[href^="tel:"] { white-space: nowrap; }
+/* Two same-colour sections in a row read as one big gap: drop the second one's top padding */
+.lp-sec:not(.lp-sec-warm):not(.lp-sec-dark) + .lp-sec:not(.lp-sec-warm):not(.lp-sec-dark),
+.lp-sec-warm + .lp-sec-warm, .lp-sec-dark + .lp-sec-dark { padding-top: 0; }

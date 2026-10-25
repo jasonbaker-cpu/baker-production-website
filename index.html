@@ -229,11 +229,12 @@
     }
     .hero-sub {
       font-family: var(--font-body); font-size: 17px; line-height: 1.6;
-      color: rgba(255,255,255,0.65); margin-bottom: 40px; max-width: 480px;
+      color: rgba(255,255,255,0.88); margin-bottom: 40px; max-width: 480px; text-shadow: 0 1px 12px rgba(0,0,0,0.55);
       opacity: 0; transform: translateY(16px);
       animation: heroFadeUp 0.6s var(--ease-confident) 0.6s forwards;
     }
     @keyframes heroFadeUp { to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 480px) { .contact-method-value { font-size: clamp(14px, 4vw, 17px); } }
 
     .hero-cta {
       display: inline-block;
@@ -1644,7 +1645,7 @@
           <div class="contact-method-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
           <div>
             <div class="contact-method-label">Email us</div>
-            <div class="contact-method-value">admin@bakerproduction.com</div>
+            <div class="contact-method-value">admin@<wbr>bakerproduction.com</div>
           </div>
         </a>
         <a href="https://www.instagram.com/_bakerproduction/?hl=en" target="_blank" rel="noopener" class="contact-method reveal reveal-right" style="transition-delay:0.4s;">
