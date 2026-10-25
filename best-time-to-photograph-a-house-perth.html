@@ -26,12 +26,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="site.css?v=20261025">
+<link rel="stylesheet" href="site.css?v=20261025b">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"The best time of day to photograph a house in Perth","description":"Pick which way the house faces and a date, and watch Perth's real sun move across it. Best times for fronts, backyards, drone and twilight.","url":"https://www.bakerproduction.com/best-time-to-photograph-a-house-perth.html","mainEntityOfPage":"https://www.bakerproduction.com/best-time-to-photograph-a-house-perth.html","inLanguage":"en-AU","datePublished":"2026-10-24","dateModified":"2026-10-24","image":"https://www.bakerproduction.com/img/gal-day-to-dusk-1.webp","author":{"@type":"Organization","name":"Baker Production","url":"https://www.bakerproduction.com/"},"publisher":{"@id":"https://www.bakerproduction.com/#business"},"about":["Real estate photography","Twilight photography","Sun position"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.bakerproduction.com/index.html"},{"@type":"ListItem","position":2,"name":"Real Estate Photography Perth","item":"https://www.bakerproduction.com/real-estate-photography-perth.html"},{"@type":"ListItem","position":3,"name":"Best time to photograph a house","item":"https://www.bakerproduction.com/best-time-to-photograph-a-house-perth.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the best time of day to photograph a house?","acceptedAnswer":{"@type":"Answer","text":"When the sun is on the front of the house and behind the photographer. In Perth that means mid-morning for an east-facing home, mid-afternoon for a west-facing home, and almost any time of day for a north-facing home. South-facing fronts get little or no direct sun for much of the year, so they are shot in even light or at twilight."}},{"@type":"Question","name":"What time should twilight photos be booked in Perth?","acceptedAnswer":{"@type":"Answer","text":"The shooter arrives before sunset and the hero frame is taken in the 20 to 30 minutes after it, when the sky still holds colour and the interior lights balance with it. Sunset in Perth is around 5:20pm in mid-winter and past 7:20pm in mid-summer, so the booking time moves through the year."}},{"@type":"Question","name":"Is midday a bad time for real estate photos?","acceptedAnswer":{"@type":"Answer","text":"For exteriors it is the hardest light: in a Perth summer the sun is over 80 degrees high at noon, which flattens the facade and throws dark bands under the eaves. Midday is fine for interiors and is often the best time for pools, which look bluest with a high sun."}},{"@type":"Question","name":"What is the best time to photograph a south-facing house in Perth?","acceptedAnswer":{"@type":"Answer","text":"From roughly late March to late September the sun never reaches a south-facing front, so it sits in shade all day. Shoot it in bright, even light, or make the front a twilight shot where the sky and the house lights do the work. In summer a south-facing front catches early-morning and late-afternoon sun."}},{"@type":"Question","name":"What is the best time for drone photos in Perth?","acceptedAnswer":{"@type":"Answer","text":"Morning, in most of the warmer months. The afternoon sea breeze usually arrives from early to mid afternoon and can push wind beyond what a small drone holds steady in. Calm mornings give sharper stills and smoother video."}},{"@type":"Question","name":"What happens if it's overcast or raining on shoot day?","acceptedAnswer":{"@type":"Answer","text":"Overcast and light rain are usually fine. Interiors are unaffected, and exteriors get a sky replacement so they still look clean and bright. If conditions are genuinely rough, such as heavy rain or storms, Baker Production reschedules at no extra cost."}}]}]}</script>
 <style>
 /* ---- page-local: best time to shoot ---- */
 .bt{--ink:#0b0d14;--ink-2:#121624;--line:rgba(255,255,255,.1);--mute:rgba(255,255,255,.62);--gold:#c8a76a;--gold-2:#b8975a}
 .bt-dark{background:var(--ink);color:#fff}
+.bt .lp-crumbs{max-width:none;margin:0;background:var(--ink);padding:22px max(20px,calc((100% - 860px)/2 + 24px)) 0;color:rgba(255,255,255,.45)}.bt .lp-crumbs a{color:rgba(255,255,255,.7)}.bt .lp-crumbs a:hover{color:var(--gold)}
 .bt-hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden;background:#0b0d14;color:#fff}
 .bt-hero .bt-scene{position:absolute;inset:0}
 .bt-hero .bt-scene svg{width:100%;height:100%;display:block}
@@ -78,6 +79,8 @@
 /* planner */
 .bt-planner{max-width:1320px;margin:0 auto;padding:110px 24px 120px}
 .bt-h2{font:300 clamp(32px,4.4vw,56px)/1.04 var(--font-display);letter-spacing:-.03em;margin:14px 0 0;max-width:18ch}
+#todayTitle{max-width:none}#todayTitle strong{white-space:nowrap}
+.bt-today-g .n{white-space:nowrap}
 .bt-h2 strong{font-weight:600}
 .bt-intro{font:400 17px/1.65 var(--font-body);color:var(--mute);max-width:56ch;margin:18px 0 0}
 .bt-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:22px;margin-top:44px}
@@ -817,7 +820,7 @@ document.getElementById('playBtn').addEventListener('click',function(){if(playin
 renderPlan();
 
 /* ================= Today strip ================= */
-document.getElementById('todayTitle').innerHTML='Today&rsquo;s timetable &middot; <strong>'+fmtDate(TODAY)+'</strong>';
+document.getElementById('todayTitle').innerHTML='Today&rsquo;s timetable <strong>&middot; '+fmtDate(TODAY)+'</strong>';
 document.getElementById('tdRise').textContent=fmt(TD.rise);
 document.getElementById('tdNoon').textContent=fmt(TD.noon);
 document.getElementById('tdNoonD').innerHTML='Sun at its highest &mdash; '+Math.round(TD.noonEl)+'&deg;.';
