@@ -69,7 +69,22 @@ async def main():
                     P=[xy(q) for q in ll]
                     fmt=lambda v: f"{v:.2f}m"
                     lens=[(fmt(math.dist(P[i],P[(i+1)%len(P)])) if math.dist(P[i],P[(i+1)%len(P)])>=1.5 else '') for i in range(len(P))]
+                    # curved frontages come as runs of short chords: label the arc once (total length, on its middle chord); drop slivers < 3 m
+                    E=[math.dist(P[i],P[(i+1)%len(P)]) for i in range(len(P))]
+                    hd=lambda i: math.atan2(P[(i+1)%len(P)][1]-P[i][1], P[(i+1)%len(P)][0]-P[i][0])
+                    turn=lambda i: abs((hd((i+1)%len(P))-hd(i)+math.pi)%(2*math.pi)-math.pi)
+                    i=0; n=len(P)
+                    while i<n:
+                        j=i
+                        while j+1<n and E[j]<8 and E[j+1]<8 and turn(j)<math.radians(40): j+=1
+                        if j-i>=2:
+                            for k in range(i,j+1): lens[k]=''
+                            lens[(i+j)//2]=fmt(sum(E[i:j+1]))
+                        i=j+1
+                    lens=[('' if E[k]<max(3,0.04*sum(E)) else v) for k,v in enumerate(lens)]
                     area=round(abs(sum(P[i][0]*P[(i+1)%len(P)][1]-P[(i+1)%len(P)][0]*P[i][1] for i in range(len(P))))/2)
+                    if job.get('lens') and len(job['lens'])==len(P): lens=[(fmt(v) if v else '') for v in job['lens']]   # side lengths from the title/strata plan beat the cadastre
+                    if job.get('area'): area=int(job['area'])   # lot size from the title/plan
                     wt=700   # Jason (25 Oct): bold Open Sans lot size with a real ² (like his 195m² example)
                     rg = job.get('reg',{}).get(ph,[0,0])
                     ok = await pg.evaluate("([ll,a,b,l,ar,w,px])=>window.__bae.addLot(ll,a,b,l,ar,w,px)", [ll, rg[0], rg[1], lens, area, wt, job.get('pxpoly')]); print('  lot', ph, ok, area, lens)
@@ -96,6 +111,8 @@ async def main():
                     PRI=['train','shopping','regional shopping','school','library','aquatic','sport','golf','hospital','regional park','lake','beach','park','reserve','transport','community','childcare','playground']
                     rank=lambda c: PRI.index(c) if c in PRI else 99
                     cands=sorted([(rank(cat.split('·')[0].strip()), i, nm, cat.split('·')[0].strip()) for i,(nm,cat) in enumerate(names)])
+                    import re as _re   # never auto-pick childcare/kindy/driving/dance schools (Jason's amenity rules)
+                    cands=[c for c in cands if not _re.search(r'child ?care|early learning|kindergarten|kindy|daycare|driving school|dance', c[2], _re.I) and c[3]!='childcare']
                     MUST=[m.lower() for m in job.get('must',[])]
                     cands=sorted(cands, key=lambda c:(0 if any(m in c[2].lower() for m in MUST) else 1, c[0], c[1]))
                     cands=[(-1 if any(m in c[2].lower() for m in MUST) else c[0],)+tuple(c[1:]) for c in cands]

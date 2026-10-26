@@ -21,6 +21,17 @@ Chromium is already installed for Playwright (`/opt/pw-browsers`).
   - strata answer and land size
 
 ## 2. Get the files (Dropbox connector)
+**Use everything in the job's Dropbox folder, not just the photos (Jason, 26 Oct).** Before editing, read every non-photo file in the
+job folder (all subfolders, e.g. `Aerial - Drone Photography` and `Floorplan or Drone`):
+- `*_qa.txt` / `*_directions.txt` / `*_map.html`: the amenity list for pins (three map formats exist; the editor reads all of them).
+- Certificate of Title, Survey-Strata Plan, deposited plan, agent sketches, screenshots, emails saved as images: these set the
+  lot size, side lengths and lot shape. Title/plan figures beat the cadastre: put them in the day file as `"area"` and `"lens"`
+  (lens in edge order). If the agent says a site is being subdivided, make one job per lot (`<slug>_lot1`, `<slug>_lot2`),
+  each with only its own boundary, area and side lengths, and its own places file centred on that lot.
+- Booking "specific boundaries or land features to mark" → `must`.
+- Check the drone files really are this address: GPS in the DNG must be within ~150 m of the address. If a folder holds another
+  job's flight (same file names/content hash as another folder), stop and tell Jason; don't edit it.
+- Skip ground-level frames (RelativeAltitude ≈ 0).
 - Raw folder: `Raw Files/<Photographer>/<DD-MM-YYYY>/<address>/Aerial - Drone Photography`. Search for the address with the Dropbox tool.
 - Get `download_link` for the DJI files plus the `*_map.html` and any title or strata PDFs, then `curl` them into `batch/<slug>/raw/`.
 - Slug: the street part of the address, lowercase, with underscores (e.g. `28_george_st`).
@@ -51,6 +62,8 @@ Chromium is already installed for Playwright (`/opt/pw-browsers`).
 - If the Mac can't be reached, skip satellite and cadastre. Pins still work from the drone data. Note it in the report and leave out boundaries unless a title or strata plan gives one.
 
 ## 4. Run
+Every oblique photo is levelled automatically in `prep_day.py` (`straighten.py`: skyline fitted, rotated + zoomed, camera roll/zoom carried into the editor). The highest straight-down shot is used for the boundary. Texture defaults are the natural look (fine 1.3 / mid 1.0 / LUT 20%); don't raise them.
+
 ```
 # days/<day-id>.json  — see prep_day.py docstring (slug, addr, who, agency, photos dir, map, poly, must)
 echo '[{"slug":"<slug>","photos":[...jpgs...]}, ...]' > e2e/reg.json && python3 regall.py e2e/reg.json   # satellite line-up (skips jobs without sat)

@@ -482,7 +482,7 @@ function parseJobFile(text){
     // both amenity-map generations: "var PROP=[..]; var M=[..]" and "const P=[..], ITEMS=[..]"
     const arrAfter = re => { const m = re.exec(tt); if (!m) return null; let i = m.index + m[0].lastIndexOf("["), d = 0, q = null;
       for (let k=i; k<tt.length; k++){ const ch = tt[k]; if (q){ if (ch === "\\"){ k++; continue; } if (ch === q) q = null; continue; } if (ch === '"' || ch === "'"){ q = ch; continue; } if (ch === "[") d++; else if (ch === "]"){ d--; if (!d) return tt.slice(i, k+1); } } return null; };
-    let ps = arrAfter(/\b(?:PROP|P|H)\s*=\s*\[/), ms = arrAfter(/\b(?:M|ITEMS|PINS|PLACES|A|R|pins)\s*=\s*\[\s*\{/);
+    let ps = arrAfter(/\b(?:PROP|P|H)\s*=\s*\[\s*-?\d/), ms = arrAfter(/\b(?:M|ITEMS|PINS|PLACES|A|R|P|pins)\s*=\s*\[\s*\{/);
     if (!ps){ const po = tt.match(/\b(?:PROP|P|H)\s*=\s*(\{[^}]*\})/); if (po){ const o = JSON.parse(po[1]); ps = JSON.stringify([o.lat, o.lng]); } }
     if (!ps || !ms) throw new Error("That file isn't one of our amenity maps.");
     const prop = JSON.parse(ps), M = JSON.parse(ms).map(q=>Object.assign({}, q, { name: q.name || q.n, badge: q.badge || (q.kind==="zoned" ? "ZONED" : q.kind==="unverified" ? "unverified" : q.kind==="private" ? "private" : "") }));

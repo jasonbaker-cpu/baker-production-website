@@ -163,7 +163,7 @@ async function readDroneMeta(file){
     const ex = readExif(buf);
     const txt = new TextDecoder("latin1").decode(buf);
     const g = k => { const m = txt.match(new RegExp("drone-dji:"+k+"\\s*(?:=\\s*\"|>)\\s*([+-]?[\\d.]+)")); return m ? parseFloat(m[1]) : null; };
-    const meta = { f35: ex.f35 || 24 };
+    const zm = txt.match(/baker:Zoom\s*=\s*"([\d.]+)"/), meta = { f35: (ex.f35 || 24) * (zm ? parseFloat(zm[1]) : 1) };   // levelled photos are zoomed in slightly
     const lat = g("GpsLatitude") ?? ex.lat, lng = g("GpsLongitude") ?? g("GpsLongtitude") ?? ex.lng;
     if (lat == null || lng == null) return null;
     meta.lat = lat; meta.lng = lng; meta.alt = ex.alt;
@@ -232,7 +232,8 @@ function analyseSky(img, w, h){
   return { m, b:b*s, s, sw, sh, skyc, tex, cloud };
 }
 const LOOK0 = { y:114, rg:1.075, bg:0.876, sat:0.29, lo:24, hi:210 }, LOOK = LOOK0;
-const TUNE = Object.assign({ fine:2.3, mid:1.35, sat:0.30, noDehaze:false, skyTop:[140,180,222], skyHz:[188,201,212], plateMix:0.95, realMix:0.9, farSoft:0, hzStart:0.5, hzAmt:0.9, lookY:108, lookLo:14, lookHi:210, lookBg:0.91, lookRg:1.075, lvlAmt:0.65 }, (typeof window!=='undefined' && window.__TUNE) || {});
+const TUNE = Object.assign({ fine:1.3, mid:1.0, sat:0.30, lutMix:0.2, relSat:0.03,   // 26 Oct: natural texture (was fine 2.3 / mid 1.35 / full LUT = crunchy)
+  noDehaze:false, skyTop:[140,180,222], skyHz:[188,201,212], plateMix:0.95, realMix:0.9, farSoft:0, hzStart:0.5, hzAmt:0.9, lookY:108, lookLo:14, lookHi:210, lookBg:0.91, lookRg:1.075, lvlAmt:0.65 }, (typeof window!=='undefined' && window.__TUNE) || {});
 function lookStats(px, w, h){
   const st = Math.max(1, Math.round(Math.sqrt(w*h/120000))), ys=[]; let R=0,G=0,B=0,S=0,n=0;
   for (let y=Math.floor(h*.45); y<h; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2], Y=.299*r+.587*g+.114*b; ys.push(Y); if (Y>30 && Y<225){ R+=r; G+=g; B+=b; const mx=Math.max(r,g,b), mn=Math.min(r,g,b); S+=(mx-mn)/(mx+1e-3); n++; } }
@@ -305,7 +306,7 @@ function finishImage(base, p){
   const w = base.width, h = base.height;
   const ctx = base.getContext("2d"); const id = ctx.getImageData(0,0,w,h); const px = id.data;
   window.__rawSt = lookStats(px, w, h);
-  const L = lut(), N = LUT_N, N2 = N*N, sc = (N-1)/255;
+  const L = lut(), N = LUT_N, N2 = N*N, sc = (N-1)/255, LM = (Object.assign({},TUNE,window.__TUNE||{})).lutMix ?? 1;
   // 1. colour: 3D lookup table (offsets), trilinear
   for (let i=0;i<px.length;i+=4){
     const r=px[i], g=px[i+1], b=px[i+2];
@@ -314,7 +315,7 @@ function finishImage(base, p){
     const o000=(ir*N2+ig*N+ib)*3, o100=o000+N2*3, o010=o000+N*3, o001=o000+3, o110=o100+N*3, o101=o100+3, o011=o010+3, o111=o110+3;
     for (let c=0;c<3;c++){
       const v = (((L[o000+c]*(1-tb)+L[o001+c]*tb)*(1-tg) + (L[o010+c]*(1-tb)+L[o011+c]*tb)*tg)*(1-tr) + ((L[o100+c]*(1-tb)+L[o101+c]*tb)*(1-tg) + (L[o110+c]*(1-tb)+L[o111+c]*tb)*tg)*tr);
-      px[i+c] = px[i+c] + v;
+      px[i+c] = px[i+c] + v*LM;
     }
   }
   // 1b. consistency: pull every photo to the same place — the median of 191 delivered finals (ground exposure, white balance, saturation, black/white points)

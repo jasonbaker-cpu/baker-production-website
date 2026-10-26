@@ -11,6 +11,8 @@ days/<day-id>.json = {"label": "Thu 22 Oct 2026", "jobs": [
   }]}
 Cameras: uses reg_all.json (satellite registration) where it beat the drone's own numbers; otherwise the drone data."""
 import json, sys, glob, re, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); sys.path.insert(0, 'pipeline')
+from straighten import level_file, level_flight   # 26 Oct: every drone photo is levelled before editing
 day = sys.argv[1]
 D = json.load(open(f'days/{day}.json'))
 REG = json.load(open('reg_all.json')) if os.path.exists('reg_all.json') else {}
@@ -27,14 +29,26 @@ for j in D['jobs']:
     for f in ph:
         r = REG.get(f)
         if r and 'cam' in r and r.get('sc', 0) >= r.get('sc0', 0): cams[f] = r['cam']
+    # level the horizon on every oblique shot; the satellite-registered camera gets the same roll/zoom
+    lv = {}
+    LF = level_flight(ph, os.path.join(os.path.dirname(os.path.dirname(ph[0])), 'lvl'))
+    for f in ph:
+        nf, ang, zm = LF[f]
+        if nf != f:
+            lv[nf] = f
+            if f in cams: c = dict(cams.pop(f)); c['roll'] = c.get('roll', 0) + ang; c['f35'] = c.get('f35', 24) * zm; cams[nf] = c
+    ph = [next((n for n, o in lv.items() if o == f), f) for f in ph]
     nad = [f for f in ph if pitch(f) < -75]
     base = {'map': j['map'], 'agency': j.get('agency', 'red')}
     if j.get('must'): base['must'] = j['must']
     if j.get('plain'): base['plain'] = 1
+    for k in ('area', 'lens'):   # from the title / strata plan / agent's sketch in Dropbox
+        if j.get(k): base[k] = j[k]
     if j.get('poly') and nad:
         obl = [f for f in ph if f not in nad]
         run.append(dict(base, slug=j['slug'], photos=obl, poly=j['poly'], cams={f: cams[f] for f in obl if f in cams}))
-        n0 = nad[0]   # the first straight-down shot gets the boundary; extra low top-downs are dropped
+        alt = lambda f: float((re.search(r'RelativeAltitude="([-+\d.]+)"', open(f,'rb').read(400000).decode('latin1')) or [0,'0'])[1])
+        n0 = max(nad, key=alt)   # the highest straight-down shot gets the boundary (whole lot in frame); extra low top-downs are dropped
         run.append(dict(base, slug=j['slug'] + '__nadir', photos=[n0], poly=j['poly'], full=1,
                         snap={'on': True, 'mode': 'ridge', 'sc': 0.0, 'R': 2.5, 'rot': 3},
                         edgeOff=j.get('edgeOff', {}), cams={n0: cams[n0]} if n0 in cams else {}))
