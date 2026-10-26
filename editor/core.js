@@ -326,7 +326,10 @@ function finishImage(base, p){
   let sky = (p.skyOn !== false && !straightDown && !(window.__TUNE&&window.__TUNE.noSky)) ? analyseSky(px, w, h) : null;
   // Sky can't sit below the true horizon: a washed-out sea or haze is not sky. Clamp to the camera's geometric horizon.
   if (sky && p.cam && p.cam.ready && p.cam.pitch > -60){
-    const fpx = p.cam.f35*Math.hypot(p.ow,p.oh)/43.27, yO = p.oh/2 + fpx*Math.tan((p.cam.pitch+0.35)*DEG), geo = (yO - p.y0)*p.k + 0.004*h;
+    // 26 Oct: use the drone's recorded gimbal tilt here, not the map-registered camera (that one is tuned to put pins right and can be
+    // a few degrees off as a horizon — the portal loads it before finishing, which clamped the sky ~130 px too high and left a grey band)
+    const gP = (p.meta && p.meta.gimbal && isFinite(p.meta.gimbal.pitch)) ? p.meta.gimbal.pitch : p.cam.pitch, gF = (p.meta && p.meta.f35) || p.cam.f35;
+    const fpx = gF*Math.hypot(p.ow,p.oh)/43.27, yO = p.oh/2 + fpx*Math.tan((gP+0.35)*DEG), geo = (yO - p.y0)*p.k + 0.004*h;
     const xc = w/2, ydet = sky.m*xc + sky.b;
     window.__skyDbg=(window.__skyDbg||[]);
     let bandTex = 0; { const ya=Math.max(0,(geo/sky.s)|0), yb=Math.min(sky.sh,(ydet/sky.s)|0); let t=0,n=0; for (let y=ya;y<yb;y++) for (let x=0;x<sky.sw;x+=2){ t+=sky.tex[y*sky.sw+x]; n++; } bandTex = n ? t/n : 0; }
