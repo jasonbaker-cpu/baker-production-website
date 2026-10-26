@@ -468,7 +468,7 @@ async function readDroneMeta(file){
     const ex = readExif(buf);
     const txt = new TextDecoder("latin1").decode(buf);
     const g = k => { const m = txt.match(new RegExp("drone-dji:"+k+"\\s*(?:=\\s*\"|>)\\s*([+-]?[\\d.]+)")); return m ? parseFloat(m[1]) : null; };
-    const meta = { f35: ex.f35 || 24 };
+    const zm = txt.match(/baker:Zoom\s*=\s*"([\d.]+)"/), meta = { f35: (ex.f35 || 24) * (zm ? parseFloat(zm[1]) : 1) };   // levelled photos are zoomed in slightly
     const lat = g("GpsLatitude") ?? ex.lat, lng = g("GpsLongitude") ?? g("GpsLongtitude") ?? ex.lng;
     if (lat == null || lng == null) return null;
     meta.lat = lat; meta.lng = lng; meta.alt = ex.alt;
@@ -537,7 +537,8 @@ function analyseSky(img, w, h){
   return { m, b:b*s, s, sw, sh, skyc, tex, cloud };
 }
 const LOOK0 = { y:114, rg:1.075, bg:0.876, sat:0.29, lo:24, hi:210 }, LOOK = LOOK0;
-const TUNE = Object.assign({ fine:2.3, mid:1.35, sat:0.30, noDehaze:false, skyTop:[140,180,222], skyHz:[188,201,212], plateMix:0.95, realMix:0.9, farSoft:0, hzStart:0.5, hzAmt:0.9, lookY:108, lookLo:14, lookHi:210, lookBg:0.91, lookRg:1.075, lvlAmt:0.65 }, (typeof window!=='undefined' && window.__TUNE) || {});
+const TUNE = Object.assign({ fine:1.3, mid:1.0, sat:0.30, lutMix:0.2, relSat:0.03,   // 26 Oct: natural texture (was fine 2.3 / mid 1.35 / full LUT = crunchy)
+  noDehaze:false, skyTop:[140,180,222], skyHz:[188,201,212], plateMix:0.95, realMix:0.9, farSoft:0, hzStart:0.5, hzAmt:0.9, lookY:108, lookLo:14, lookHi:210, lookBg:0.91, lookRg:1.075, lvlAmt:0.65 }, (typeof window!=='undefined' && window.__TUNE) || {});
 function lookStats(px, w, h){
   const st = Math.max(1, Math.round(Math.sqrt(w*h/120000))), ys=[]; let R=0,G=0,B=0,S=0,n=0;
   for (let y=Math.floor(h*.45); y<h; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2], Y=.299*r+.587*g+.114*b; ys.push(Y); if (Y>30 && Y<225){ R+=r; G+=g; B+=b; const mx=Math.max(r,g,b), mn=Math.min(r,g,b); S+=(mx-mn)/(mx+1e-3); n++; } }
@@ -610,7 +611,7 @@ function finishImage(base, p){
   const w = base.width, h = base.height;
   const ctx = base.getContext("2d"); const id = ctx.getImageData(0,0,w,h); const px = id.data;
   window.__rawSt = lookStats(px, w, h);
-  const L = lut(), N = LUT_N, N2 = N*N, sc = (N-1)/255;
+  const L = lut(), N = LUT_N, N2 = N*N, sc = (N-1)/255, LM = (Object.assign({},TUNE,window.__TUNE||{})).lutMix ?? 1;
   // 1. colour: 3D lookup table (offsets), trilinear
   for (let i=0;i<px.length;i+=4){
     const r=px[i], g=px[i+1], b=px[i+2];
@@ -619,7 +620,7 @@ function finishImage(base, p){
     const o000=(ir*N2+ig*N+ib)*3, o100=o000+N2*3, o010=o000+N*3, o001=o000+3, o110=o100+N*3, o101=o100+3, o011=o010+3, o111=o110+3;
     for (let c=0;c<3;c++){
       const v = (((L[o000+c]*(1-tb)+L[o001+c]*tb)*(1-tg) + (L[o010+c]*(1-tb)+L[o011+c]*tb)*tg)*(1-tr) + ((L[o100+c]*(1-tb)+L[o101+c]*tb)*(1-tg) + (L[o110+c]*(1-tb)+L[o111+c]*tb)*tg)*tr);
-      px[i+c] = px[i+c] + v;
+      px[i+c] = px[i+c] + v*LM;
     }
   }
   // 1b. consistency: pull every photo to the same place — the median of 191 delivered finals (ground exposure, white balance, saturation, black/white points)
@@ -833,7 +834,7 @@ const ICONS = {
 };
 const CAT_ICON = { transport:"train", education:"school", health:"hospital", leisure:"pool", park:"park", playground:"sport", reserve:"pine", regional_park:"pine", lake:"lake", river:"lake", marina:"lake", beach:"sand", school:"school", university:"school", tafe:"school", childcare:"child", library:"library", aquatic:"pool", recreation:"pool", sport:"track", stadium:"stadium", shopping:"shop", regional_shopping:"shop", train:"train", bus:"bus", hospital:"hospital", medical:"medical", golf:"golf", airport:"plane", city:"city", community:"hall", landmark:"star", other:"star" };
 const ICON_CHOICES = [["park","Park"],["pine","Reserve / bushland"],["picnic","Gardens / picnic"],["lake","Lake / wetland"],["sand","Beach"],["lounger","Beach / pool club"],["palm","Foreshore"],["school","School / uni"],["child","Childcare"],["library","Library"],["book","Books / learning"],["pool","Pool / leisure centre"],["swim","Swimming pool"],["sport","Playground / sport"],["track","Oval / track"],["field","Sports field"],["stadium","Stadium"],["arts","Arena / arts centre"],["racing","Racecourse"],["golf","Golf"],["shop","Shopping centre"],["mall","Shops / retail"],["bag","Shop"],["train","Train station"],["bus","Bus"],["hospital","Hospital"],["medical","Medical"],["hall","Community / hall"],["govt","Civic / government"],["civic","Town hall"],["gazebo","Pavilion"],["lookout","Lookout"],["beach","Beach (umbrella)"],["plane","Airport"],["city","City"],["star","Other"]];
-const NAME_ICON = [[/golf/i,"golf"],[/racecourse|turf club|raceway/i,"racing"],[/station/i,"train"],[/hospital/i,"hospital"],[/medical|clinic|health/i,"medical"],[/library/i,"library"],[/stadium|arena/i,"stadium"],[/aquatic|leisure|recreation centre|swim/i,"pool"],[/oval|sports? ground|reserve.*oval/i,"track"],[/early learning|childcare|child care|kindergarten|kindy|daycare/i,"child"],[/school|college|university|tafe|campus|montessori|grammar/i,"school"],[/shopping|plaza|westfield|forum|centro|marketplace|shopping city|dfo|outlet|homemaker|(park|town|city|village|square|central) centre|\biga\b|woolworths|coles|aldi|foods? market|supermarket/i,"shop"],[/beach/i,"sand"],[/\blake\b|wetland|swamp|river|\bdam\b|reservoir/i,"lake"],[/foreshore/i,"palm"],[/lookout/i,"lookout"],[/playground/i,"sport"],[/early learning|childcare|child care|kindergarten|kindy|daycare/i,"child"],[/school|college|university|tafe|campus|montessori|grammar/i,"school"],[/shopping|plaza|westfield|forum|centro|marketplace|shopping city|village|dfo|outlet|homemaker|boulevard/i,"shop"],[/community centre|hall|club ?house/i,"hall"],[/gardens/i,"park"],[/bushland|nature reserve|regional park|reserve/i,"pine"],[/park/i,"park"]];
+const NAME_ICON = [[/golf/i,"golf"],[/racecourse|turf club|raceway/i,"racing"],[/station/i,"train"],[/hospital/i,"hospital"],[/medical|clinic|health/i,"medical"],[/library/i,"library"],[/stadium|arena/i,"stadium"],[/aquatic|leisure|recreation centre|swim/i,"pool"],[/oval|sports? ground|reserve.*oval/i,"track"],[/skate ?park|skatepark/i,"sport"],[/early learning|childcare|child care|kindergarten|kindy|daycare/i,"child"],[/school|college|university|tafe|campus|montessori|grammar/i,"school"],[/shopping|plaza|westfield|forum|centro|marketplace|shopping city|dfo|outlet|homemaker|(park|town|city|village|square|central) centre|\biga\b|woolworths|coles|aldi|foods? market|supermarket/i,"shop"],[/beach/i,"sand"],[/\blake\b|wetland|swamp|river|\bdam\b|reservoir/i,"lake"],[/foreshore/i,"palm"],[/lookout/i,"lookout"],[/playground/i,"sport"],[/skate ?park|skatepark/i,"sport"],[/early learning|childcare|child care|kindergarten|kindy|daycare/i,"child"],[/school|college|university|tafe|campus|montessori|grammar/i,"school"],[/shopping|plaza|westfield|forum|centro|marketplace|shopping city|village|dfo|outlet|homemaker|boulevard/i,"shop"],[/community centre|hall|club ?house/i,"hall"],[/gardens/i,"park"],[/bushland|nature reserve|regional park|reserve/i,"pine"],[/park/i,"park"]];
 function iconForPlace(name, cat){ for (const [re, ic] of NAME_ICON) if (re.test(name||"")) return ic; return CAT_ICON[cat] || "star"; }
 const _icoImg = {};
 function iconImg(name){ const src = ICON_BMP[name]; if (!src) return null; let im = _icoImg[name]; if (!im){ im = _icoImg[name] = new Image(); im.onload = ()=>{ if (typeof requestDraw === "function") requestDraw(); }; im.src = src; } return im.complete && im.naturalWidth ? im : null; }
@@ -844,6 +845,7 @@ function drawIcon(c, name, cx, cy, size, R){ if (R){ const im = iconImg(name); i
 const AGENCIES = {
   "red":         { name:"Laurie Kelly — red pins (Devon, Daniel, Franklin; Cooper Winter)",            kind:"pin",  color:"#E2181C", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   "charcoal":    { name:"Raspa — charcoal pins (John O'Brien, Simon Raspa; Grant Wilson, Oliver Norris)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
+  "c21":         { name:"Century 21 — dark grey pins (Josh Brockhurst)", kind:"pin", color:"#252526", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   "grey-s":      { name:"Grey pins + S logo (Kasey Summers, Semple)",               kind:"pin",  color:"#9C9C9C", house:{ type:"pin", w:255, h:360, mark:"s", markR:.9, ring:true } },
   "black-photo": { name:"Black pins + agent photo (Jayden Cooke)",          kind:"pin",  color:"#060606", house:{ type:"pin", w:236, h:330, mark:"photo", markR:.69 } },
   "navy":        { name:"Navy pins + emblem (Biljana)",                     kind:"pin",  color:"#122068", scale:.88, house:{ type:"board", w:170, h:143, stem:300, mark:"emblem" } },
@@ -1173,6 +1175,15 @@ function fitAreaText(c, p, t, sh){
   const byW = (t.fitW||0.5)*bw/w100*100, byH = (t.fitH||0.55)*bh;
   t.size = Math.max(20, Math.min(byW, byH)/s);
   if (!t.moved){ const ct = centroid(pts); t.x = ct[0]; t.y = ct[1]; }
+  // irregular lots (battleaxe, curved corners): move to the roomiest spot and shrink until the text sits clear of every edge
+  if (!t.moved && pts.length > 4){
+    const inside = (x,y)=>{ let c=false; for (let i=0,j=pts.length-1;i<pts.length;j=i++){ const a=pts[i], b=pts[j]; if ((a[1]>y)!==(b[1]>y) && x < (b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]) c=!c; } return c; };
+    const segD = (x,y)=>{ let m=1e9; for (let i=0;i<pts.length;i++){ const a=pts[i], b=pts[(i+1)%pts.length], dx=b[0]-a[0], dy=b[1]-a[1], L=dx*dx+dy*dy||1, u=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/L)); m=Math.min(m, Math.hypot(x-a[0]-u*dx, y-a[1]-u*dy)); } return m; };
+    let best=null; const N=28; for (let i=1;i<N;i++) for (let j=1;j<N;j++){ const x=x0+bw*i/N, y=y0+bh*j/N; if (!inside(x,y)) continue; const d=segD(x,y); if (!best||d>best[2]) best=[x,y,d]; }
+    if (best){ t.x=best[0]; t.y=best[1];
+      const fits = sz => { c.font = `${t.weight||700} ${sz*s}px ${AREA_FONT}`; const w = areaWidth(c, t.text||" ", sz*s, t.weight||700, t.sup)*1.08, h = sz*s*0.8;
+        for (let a=0;a<=8;a++) for (let b=0;b<=4;b++){ const x=t.x-w/2+w*a/8, y=t.y-h/2+h*b/4; if (!inside(x,y) || segD(x,y) < 0.05*h) return false; } return true; };
+      let sz=t.size; while (sz>30 && !fits(sz)) sz*=0.92; t.size=sz; } }
 }
 function drawEdgeLengths(c, p, sh, s){
   const fs = 62*s*(sh.lensScale||1), ct = centroid(sh.pts);
@@ -1992,7 +2003,7 @@ function parseJobFile(text){
     // both amenity-map generations: "var PROP=[..]; var M=[..]" and "const P=[..], ITEMS=[..]"
     const arrAfter = re => { const m = re.exec(tt); if (!m) return null; let i = m.index + m[0].lastIndexOf("["), d = 0, q = null;
       for (let k=i; k<tt.length; k++){ const ch = tt[k]; if (q){ if (ch === "\\"){ k++; continue; } if (ch === q) q = null; continue; } if (ch === '"' || ch === "'"){ q = ch; continue; } if (ch === "[") d++; else if (ch === "]"){ d--; if (!d) return tt.slice(i, k+1); } } return null; };
-    let ps = arrAfter(/\b(?:PROP|P|H)\s*=\s*\[/), ms = arrAfter(/\b(?:M|ITEMS|PINS|PLACES|A|R|pins)\s*=\s*\[\s*\{/);
+    let ps = arrAfter(/\b(?:PROP|P|H)\s*=\s*\[\s*-?\d/), ms = arrAfter(/\b(?:M|ITEMS|PINS|PLACES|A|R|P|pins)\s*=\s*\[\s*\{/);
     if (!ps){ const po = tt.match(/\b(?:PROP|P|H)\s*=\s*(\{[^}]*\})/); if (po){ const o = JSON.parse(po[1]); ps = JSON.stringify([o.lat, o.lng]); } }
     if (!ps || !ms) throw new Error("That file isn't one of our amenity maps.");
     const prop = JSON.parse(ps), M = JSON.parse(ms).map(q=>Object.assign({}, q, { name: q.name || q.n, badge: q.badge || (q.kind==="zoned" ? "ZONED" : q.kind==="unverified" ? "unverified" : q.kind==="private" ? "private" : "") }));

@@ -1,6 +1,144 @@
 {
  "days": [
   {
+   "id": "24-oct-2026",
+   "label": "Sat 24 Oct 2026",
+   "gallery": "24-oct-2026/",
+   "jobs": [
+    {
+     "slug": "10_belches_lp",
+     "addr": "10 Belches Lp, Seville Grove",
+     "who": "Lou Smith \u00b7 Harcourts",
+     "agency": "navy-h",
+     "full": false,
+     "src": "24-oct-2026/10_belches_lp/src/",
+     "map": "10_belches_lp_seville_grove_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261024152412_0111_D.jpg",
+      "DJI_20261024152431_0112_D.jpg",
+      "DJI_20261024152450_0113_D.jpg",
+      "DJI_20261024152509_0114_D.jpg",
+      "DJI_20261024152527_0115_D.jpg",
+      "DJI_20261024152546_0116_D.jpg",
+      "DJI_20261024152601_0117_D.jpg"
+     ]
+    },
+    {
+     "slug": "10_belches_lp__nadir",
+     "addr": "10 Belches Lp, Seville Grove \u2014 top-down",
+     "who": "Lou Smith \u00b7 Harcourts",
+     "agency": "navy-h",
+     "full": true,
+     "src": "24-oct-2026/10_belches_lp/src-top/",
+     "map": "10_belches_lp_seville_grove_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261024152338_0110_D.jpg"
+     ]
+    },
+    {
+     "slug": "3_midi_terrace",
+     "addr": "3 Midi Terrace, Hillarys",
+     "who": "Josh Brockhurst \u00b7 Century 21",
+     "agency": "c21",
+     "full": false,
+     "src": "24-oct-2026/3_midi_terrace/src/",
+     "map": "3_midi_tce_hillarys_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261024182213_0120_D.jpg",
+      "DJI_20261024182231_0121_D.jpg",
+      "DJI_20261024182249_0122_D.jpg",
+      "DJI_20261024182316_0123_D.jpg",
+      "DJI_20261024182336_0124_D.jpg",
+      "DJI_20261024182429_0125_D.jpg",
+      "DJI_20261024182514_0126_D.jpg",
+      "DJI_20261024182554_0127_D.jpg"
+     ]
+    },
+    {
+     "slug": "3_midi_terrace__nadir",
+     "addr": "3 Midi Terrace, Hillarys \u2014 top-down",
+     "who": "Josh Brockhurst \u00b7 Century 21",
+     "agency": "c21",
+     "full": true,
+     "src": "24-oct-2026/3_midi_terrace/src-top/",
+     "map": "3_midi_tce_hillarys_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261024182143_0119_D.jpg"
+     ]
+    },
+    {
+     "slug": "13_angelo_st_lot1",
+     "addr": "Lot 1, 13 Angelo St, Armadale",
+     "who": "Grant Wilson \u00b7 Armadale Real Estate",
+     "agency": "charcoal",
+     "full": false,
+     "src": "24-oct-2026/13_angelo_st_lot1/src/",
+     "map": "lot1_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261024141500_0016_D.jpg",
+      "DJI_20261024141516_0017_D.jpg",
+      "DJI_20261024141529_0018_D.jpg",
+      "DJI_20261024141545_0019_D.jpg",
+      "DJI_20261024141558_0020_D.jpg",
+      "DJI_20261024141613_0021_D.jpg",
+      "DJI_20261024141640_0022_D.jpg",
+      "DJI_20261024141657_0023_D.jpg"
+     ]
+    },
+    {
+     "slug": "13_angelo_st_lot1__nadir",
+     "addr": "Lot 1, 13 Angelo St, Armadale \u2014 top-down",
+     "who": "Grant Wilson \u00b7 Armadale Real Estate",
+     "agency": "charcoal",
+     "full": true,
+     "src": "24-oct-2026/13_angelo_st_lot1/src-top/",
+     "map": "lot1_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261024141419_0013_D.jpg"
+     ]
+    },
+    {
+     "slug": "13_angelo_st_lot2",
+     "addr": "Lot 2, 13 Angelo St, Armadale",
+     "who": "Grant Wilson \u00b7 Armadale Real Estate",
+     "agency": "charcoal",
+     "full": false,
+     "src": "24-oct-2026/13_angelo_st_lot2/src/",
+     "map": "lot2_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261024141500_0016_D.jpg",
+      "DJI_20261024141516_0017_D.jpg",
+      "DJI_20261024141529_0018_D.jpg",
+      "DJI_20261024141545_0019_D.jpg",
+      "DJI_20261024141558_0020_D.jpg",
+      "DJI_20261024141613_0021_D.jpg",
+      "DJI_20261024141640_0022_D.jpg",
+      "DJI_20261024141657_0023_D.jpg"
+     ]
+    },
+    {
+     "slug": "13_angelo_st_lot2__nadir",
+     "addr": "Lot 2, 13 Angelo St, Armadale \u2014 top-down",
+     "who": "Grant Wilson \u00b7 Armadale Real Estate",
+     "agency": "charcoal",
+     "full": true,
+     "src": "24-oct-2026/13_angelo_st_lot2/src-top/",
+     "map": "lot2_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261024141419_0013_D.jpg"
+     ]
+    }
+   ]
+  },
+  {
    "id": "23-oct-2026",
    "label": "Fri 23 Oct 2026",
    "gallery": "23-oct-2026/",
