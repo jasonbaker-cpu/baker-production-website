@@ -109,5 +109,9 @@ Push-notify him.
    by hand: if a second source puts the place >250 m away, fix the coordinate (a council page or street address beats both) and the spelling.
 3. **Portal parity.** After `mkday.py`, run `python3 parity.py <day> <run.json>`. It renders the 3000 px files the portal loads and
    compares them with the gallery. Anything but `PARITY PASS` = don't publish; look at `qc/parity_<day>.jpg`.
+   Then replay the portal itself: serve the website repo (`python3 -m http.server 8766 --directory <website repo>`) and run
+   `node portalcheck.js <day> <slug> <slug> ...`. It opens `/pins/?open=<day>/<slug>` exactly as a VA does (saved project, registered
+   camera) and saves every finished photo to `qc/portal/<day>_<slug>.jpg`. Look at every sheet: no grey bands/boxes above the horizon.
+   (26 Oct: the portal finished photos with the registered camera and clamped the sky ~130 px too high; the batch never showed it.)
 4. **Places.** At most 4 places per photo. Small parks, reserves and playgrounds only within 1.5 km. Nothing beyond 6 km unless it's
    a station, regional shopping centre, hospital, beach, regional park, golf course or lake.
