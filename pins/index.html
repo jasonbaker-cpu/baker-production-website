@@ -593,10 +593,10 @@ function dehazeBand(px, w, h, line){
   if (thr < 95) return;   // no real haze — leave it alone
   const at = (x,y) => { const fx=Math.min(sw-1.001,x/s), fy=Math.min(sh-1.001,y/s), x0=fx|0, y0=fy|0, tx=fx-x0, ty=fy-y0, i=y0*sw+x0; return (Mb[i]*(1-tx)+Mb[i+1]*tx)*(1-ty)+(Mb[i+sw]*(1-tx)+Mb[i+sw+1]*tx)*ty; };
   const strength = Math.min(0.6, Math.max(0.35, (thr-95)/100 + 0.35));
-  for (let y=Math.max(0, hz0|0); y<h; y++){
+  for (let y=Math.max(0, (hz0 - 0.5*band)|0); y<h; y++){
     for (let x=0;x<w;x++){
-      const hz = line(x), d = (y-hz)/band; if (d < -0.02 || d > 1) continue;
-      const u = d < 0 ? 1 + d/0.02 : 1 - d; const wgt = u*u*(3-2*u);
+      const hz = line(x), d = (y-hz)/band; if (d < -0.5 || d > 1) continue;   // 26 Oct: fade over 0.5 band above the line (was 0.02 = seam through hills)
+      const u = d < 0 ? 1 + d/0.5 : 1 - d; const wgt = u*u*(3-2*u);
       const tmin = 0.55 + 0.25*Math.min(1, Math.max(0,d)/0.5), st2 = Math.min(0.7, strength + 0.1*(1-Math.min(1,Math.max(0,d)/0.3)));
       const t = Math.max(tmin, 1 - st2*wgt*(1-wat(x,y))*at(x,y)/A);
       const i = (y*w+x)*4;
@@ -683,7 +683,7 @@ function finishImage(base, p){
   const det20 = sky ? gaussBlur(Y,w,h,20*scale) : null;
   // land guard: just above the horizon, anything clearly darker than the sky a little higher up is land (hills, city towers), not sky — keep it
   let Tm = null; if (sky){ const d = new Float32Array(w*h); for (let k=0;k<d.length;k++) d[k] = Math.abs(Y[k]-g3[k]); Tm = gaussBlur(d, w, h, 5*scale+0.5); }
-  let landTop = null, landTrend = null, landEnv = null, rowTone = null;
+  let landTop = null, landTrend = null, landEnv = null, rowTone = null, landLoc = null;
   let refY = null;
   if (sky){ refY = new Float32Array(w); const st=Math.max(1,(w/400)|0), tmp=new Float32Array(Math.ceil(w/st));
     for (let xs=0,k=0; xs<w; xs+=st,k++){ const hz=line(xs), ya=Math.max(0,(hz-0.16*h)|0), yb=Math.max(ya+1,(hz-0.08*h)|0), v=[];
@@ -715,6 +715,12 @@ function finishImage(base, p){
         for (let x=0;x<w;x++){ let m=1e9; for (let k=-Rw;k<=Rw;k+=3){ const v=lt3[Math.min(w-1,Math.max(0,x+k))]; if (v<m) m=v; } env[x]=m; }
         const Rs = Math.round(0.02*w), pe = new Float64Array(w+1); for (let x=0;x<w;x++) pe[x+1]=pe[x]+env[x];
         landEnv = new Float32Array(w); for (let x=0;x<w;x++){ const a0=Math.max(0,x-Rs), a1=Math.min(w,x+Rs+1); landEnv[x]=Math.min(env[x], (pe[a1]-pe[a0])/(a1-a0)); }
+        // smooth fade line (26 Oct): the envelope has hard steps beside tall features, which showed as grey boxes of old sky.
+        // Two box passes (triangle, ~5% of width) turn every step into a gentle ramp; the plateau over a hill stays put.
+        { const Rb = Math.max(4, Math.round(0.025*w)); let src = landEnv;
+          for (let pass=0; pass<2; pass++){ const p2 = new Float64Array(w+1); for (let x=0;x<w;x++) p2[x+1]=p2[x]+src[x];
+            const o = new Float32Array(w); for (let x=0;x<w;x++){ const a0=Math.max(0,x-Rb), a1=Math.min(w,x+Rb+1); o[x]=(p2[a1]-p2[a0])/(a1-a0); } src = o; }
+          landLoc = src; }
         // per-row mean of the original sky between the envelope fade and the land, for tone matching
         rowTone = new Float32Array(h*3).fill(-1);
         for (let y=0;y<h;y++){ let a=0,b2=0,c=0,n=0; for (let x=0;x<w;x+=4){ if (y > landEnv[x] - 0.05*h && y < landEnv[x] + 0.035*h && Y[y*w+x] > refY[x] - 30){ const i=(y*w+x)*4; a+=px[i]; b2+=px[i+1]; c+=px[i+2]; n++; } } if (n>20){ rowTone[y*3]=a/n; rowTone[y*3+1]=b2/n; rowTone[y*3+2]=c/n; } }
@@ -729,8 +735,9 @@ function finishImage(base, p){
     const hz = sky ? line(0) : 0;
     for (let x=0;x<w;x++){
       const j = y*w+x, i = j*4, ws = wSky[j];
-      const above = line ? (y < line(x) - 2) : false; const add = (above ? (G[0]*TF*(Y[j]-g1[j]) + G[1]*(g1[j]-g3[j])) : (G[0]*TF*(Y[j]-g1[j]) + G[1]*TM*(g1[j]-g3[j]) + G[2]*(g3[j]-g10[j]) + G[3]*(g10[j]-g30[j]))) * (1-ws);
-      let fw = 0; if (line){ const dy = (y - line(x))/(h*0.12); if (dy > -0.02 && dy < 1) fw = dy<0 ? 1 : (1-dy)*(1-dy); }
+      const aw = line ? Math.min(1, Math.max(0, (line(x) - 2 - y)/(0.05*h))) : 0;   // 26 Oct: blend sky/land detail over 5% of height (was a hard switch at the line)
+      const add = (aw*(G[0]*TF*(Y[j]-g1[j]) + G[1]*(g1[j]-g3[j])) + (1-aw)*(G[0]*TF*(Y[j]-g1[j]) + G[1]*TM*(g1[j]-g3[j]) + G[2]*(g3[j]-g10[j]) + G[3]*(g10[j]-g30[j]))) * (1-ws);
+      let fw = 0; if (line){ const dy = (y - line(x))/(h*0.12); if (dy > -0.6 && dy < 1){ if (dy >= 0) fw = (1-dy)*(1-dy); else { const u = 1 + dy/0.6; fw = u*u*(3-2*u); } } }   // 26 Oct: fade out above the line (was a hard stop = ruled seam through hills)
       const addF = add*(1 - TT.farSoft*fw);
       let r = px[i]+addF, g = px[i+1]+addF, b = px[i+2]+addF;
       if (fw > 0 && ws < 0.5){ const hk = 0.5*TT.farSoft*fw*(1-ws); r += (TT.skyHz[0]-r)*hk; g += (TT.skyHz[1]-g)*hk; b += (TT.skyHz[2]-b)*hk; }
@@ -754,8 +761,13 @@ function finishImage(base, p){
         let ww = wsE;
         { const dz = (hzx - y)/h, GZ = (Object.assign({},TUNE,window.__TUNE||{}).gz||0.045);
           if (SKYP.direct && !rmS){
-            const top = landEnv[x] - 0.004*h, FL = 0.03*h, u = (top - y)/FL;
-            ww = u >= 1 ? 1 : (u <= 0 ? 0 : u*u*(3-2*u));
+            // 26 Oct: two fade lengths. Bright haze is replaced over a short distance (no grey dome over the sea);
+            // anything darker than the sky (hazy hills) keeps the long, gentle fade so hills are never clipped.
+            const top = (landLoc ? landLoc[x] : landEnv[x]) - 0.004*h, uS = (top - y)/(0.012*h), uL = (top - y)/(0.03*h);
+            const wS = uS >= 1 ? 1 : (uS <= 0 ? 0 : uS*uS*(3-2*uS)), wL = uL >= 1 ? 1 : (uL <= 0 ? 0 : uL*uL*(3-2*uL));
+            const tYb = (rowTone && rowTone[y*3] >= 0) ? (rowTone[y*3]+rowTone[y*3+1]+rowTone[y*3+2])/3 : refY[x];
+            const brt = Math.min(1, Math.max(0, (g1[j] - (Math.min(tYb, refY[x]) - 28))/16));
+            ww = wL + (wS - wL)*brt;
             // original sky near the horizon (between the fade and the land) is toned toward the new sky instead of cut out
             if (ww < 1 && y < landEnv[x] + 0.035*h && rowTone[y*3] >= 0){ const q = SKYP.rm[SKYP.h-2], tY = (rowTone[y*3]+rowTone[y*3+1]+rowTone[y*3+2])/3, skyish = Math.min(1, Math.max(0, (g3[j] - (tY - 22))/18)),
                 kt = 0.8 * skyish * Math.min(1, Math.max(0, (landEnv[x] + 0.035*h - y)/(0.015*h)));
@@ -834,7 +846,7 @@ const ICONS = {
 };
 const CAT_ICON = { transport:"train", education:"school", health:"hospital", leisure:"pool", park:"park", playground:"sport", reserve:"pine", regional_park:"pine", lake:"lake", river:"lake", marina:"lake", beach:"sand", school:"school", university:"school", tafe:"school", childcare:"child", library:"library", aquatic:"pool", recreation:"pool", sport:"track", stadium:"stadium", shopping:"shop", regional_shopping:"shop", train:"train", bus:"bus", hospital:"hospital", medical:"medical", golf:"golf", airport:"plane", city:"city", community:"hall", landmark:"star", other:"star" };
 const ICON_CHOICES = [["park","Park"],["pine","Reserve / bushland"],["picnic","Gardens / picnic"],["lake","Lake / wetland"],["sand","Beach"],["lounger","Beach / pool club"],["palm","Foreshore"],["school","School / uni"],["child","Childcare"],["library","Library"],["book","Books / learning"],["pool","Pool / leisure centre"],["swim","Swimming pool"],["sport","Playground / sport"],["track","Oval / track"],["field","Sports field"],["stadium","Stadium"],["arts","Arena / arts centre"],["racing","Racecourse"],["golf","Golf"],["shop","Shopping centre"],["mall","Shops / retail"],["bag","Shop"],["train","Train station"],["bus","Bus"],["hospital","Hospital"],["medical","Medical"],["hall","Community / hall"],["govt","Civic / government"],["civic","Town hall"],["gazebo","Pavilion"],["lookout","Lookout"],["beach","Beach (umbrella)"],["plane","Airport"],["city","City"],["star","Other"]];
-const NAME_ICON = [[/golf/i,"golf"],[/racecourse|turf club|raceway/i,"racing"],[/station/i,"train"],[/hospital/i,"hospital"],[/medical|clinic|health/i,"medical"],[/library/i,"library"],[/stadium|arena/i,"stadium"],[/aquatic|leisure|recreation centre|swim/i,"pool"],[/oval|sports? ground|reserve.*oval/i,"track"],[/skate ?park|skatepark/i,"sport"],[/early learning|childcare|child care|kindergarten|kindy|daycare/i,"child"],[/school|college|university|tafe|campus|montessori|grammar/i,"school"],[/shopping|plaza|westfield|forum|centro|marketplace|shopping city|dfo|outlet|homemaker|(park|town|city|village|square|central) centre|\biga\b|woolworths|coles|aldi|foods? market|supermarket/i,"shop"],[/beach/i,"sand"],[/\blake\b|wetland|swamp|river|\bdam\b|reservoir/i,"lake"],[/foreshore/i,"palm"],[/lookout/i,"lookout"],[/playground/i,"sport"],[/skate ?park|skatepark/i,"sport"],[/early learning|childcare|child care|kindergarten|kindy|daycare/i,"child"],[/school|college|university|tafe|campus|montessori|grammar/i,"school"],[/shopping|plaza|westfield|forum|centro|marketplace|shopping city|village|dfo|outlet|homemaker|boulevard/i,"shop"],[/community centre|hall|club ?house/i,"hall"],[/gardens/i,"park"],[/bushland|nature reserve|regional park|reserve/i,"pine"],[/park/i,"park"]];
+const NAME_ICON = [[/golf/i,"golf"],[/\bzoo\b|wildlife|sanctuary|reptile|animal park/i,"park"],[/racecourse|turf club|raceway/i,"racing"],[/station/i,"train"],[/hospital/i,"hospital"],[/medical|clinic|health/i,"medical"],[/library/i,"library"],[/stadium|arena/i,"stadium"],[/aquatic|leisure|recreation centre|swim/i,"pool"],[/oval|sports? ground|reserve.*oval/i,"track"],[/skate ?park|skatepark/i,"sport"],[/early learning|childcare|child care|kindergarten|kindy|daycare/i,"child"],[/school|college|university|tafe|campus|montessori|grammar/i,"school"],[/shopping|plaza|westfield|forum|centro|marketplace|shopping city|dfo|outlet|homemaker|(park|town|city|village|square|central) centre|\biga\b|woolworths|coles|aldi|foods? market|supermarket/i,"shop"],[/beach/i,"sand"],[/\blake\b|wetland|swamp|river|\bdam\b|reservoir/i,"lake"],[/foreshore/i,"palm"],[/lookout/i,"lookout"],[/playground/i,"sport"],[/skate ?park|skatepark/i,"sport"],[/early learning|childcare|child care|kindergarten|kindy|daycare/i,"child"],[/school|college|university|tafe|campus|montessori|grammar/i,"school"],[/shopping|plaza|westfield|forum|centro|marketplace|shopping city|village|dfo|outlet|homemaker|boulevard/i,"shop"],[/community centre|hall|club ?house/i,"hall"],[/gardens/i,"park"],[/bushland|nature reserve|regional park|reserve/i,"pine"],[/park/i,"park"]];
 function iconForPlace(name, cat){ for (const [re, ic] of NAME_ICON) if (re.test(name||"")) return ic; return CAT_ICON[cat] || "star"; }
 const _icoImg = {};
 function iconImg(name){ const src = ICON_BMP[name]; if (!src) return null; let im = _icoImg[name]; if (!im){ im = _icoImg[name] = new Image(); im.onload = ()=>{ if (typeof requestDraw === "function") requestDraw(); }; im.src = src; } return im.complete && im.naturalWidth ? im : null; }
@@ -844,8 +856,8 @@ function drawIcon(c, name, cx, cy, size, R){ if (R){ const im = iconImg(name); i
 // ================= pins: one preset per agency, measured from the editors' delivered finals (3000 px wide) =================
 const AGENCIES = {
   "red":         { name:"Laurie Kelly — red pins (Devon, Daniel, Franklin; Cooper Winter)",            kind:"pin",  color:"#E2181C", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
-  "charcoal":    { name:"Raspa — charcoal pins (John O'Brien, Simon Raspa; Grant Wilson, Oliver Norris)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
-  "c21":         { name:"Century 21 — dark grey pins (Josh Brockhurst)", kind:"pin", color:"#252526", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
+  "charcoal":    { name:"Raspa — charcoal pins (John O'Brien, Simon Raspa)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
+  "c21":         { name:"Century 21 — Obsessed Grey pins, Relentless Gold house (Josh Brockhurst)", kind:"pin", color:"#252526", house:{ type:"pin", w:240, h:340, mark:"house", ring:true, color:"#BEAF87" } },
   "grey-s":      { name:"Grey pins + S logo (Kasey Summers, Semple)",               kind:"pin",  color:"#9C9C9C", house:{ type:"pin", w:255, h:360, mark:"s", markR:.9, ring:true } },
   "black-photo": { name:"Black pins + agent photo (Jayden Cooke)",          kind:"pin",  color:"#060606", house:{ type:"pin", w:236, h:330, mark:"photo", markR:.69 } },
   "navy":        { name:"Navy pins + emblem (Biljana)",                     kind:"pin",  color:"#122068", scale:.88, house:{ type:"board", w:170, h:143, stem:300, mark:"emblem" } },
@@ -853,7 +865,7 @@ const AGENCIES = {
   "fn":          { name:"Blue pins + First National board (Suresh Sama, Nish Jayant)",   kind:"pin",  color:"#004480", scale:.88, house:{ type:"board", w:142, h:142, stem:250, mark:"fn" } },
   "orange":      { name:"Orange pins (Raymond Chen)",                       kind:"pin",  color:"#F4783C", scale:.88, house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   "green-belle": { name:"Green pins + belle (Shane Garrett, Cory Garrett, Megan Topham)", kind:"pin", color:"#22644E", house:{ type:"pin", w:176, h:281, mark:"belle", markR:.91 } },
-  "flags-p":     { name:"Red flags + P pin (Professionals: Annique Woodford, Nic Pulvirenti, Stephanie Briers, Emma Scharf, James Kennedy)", kind:"flag", color:"#FF2744", house:{ type:"pin", w:192, h:273, color:"#3C3C3C", mark:"p", markR:.85 } },
+  "flags-p":     { name:"Red flags + P pin (Professionals: Annique Woodford, Nic Pulvirenti, Stephanie Briers, Emma Scharf, James Kennedy; Armadale: Grant Wilson)", kind:"flag", color:"#FF2744", house:{ type:"pin", w:192, h:273, color:"#3C3C3C", mark:"p", markR:.85 } },
   "yellow":      { name:"Yellow labels + address (Gregory Swiatek, Shah Akbari)", kind:"ylab", color:"#F4DC00", house:{ type:"label" } },
   "pill-r":      { name:"Navy labels + R pin (Mandie Cubeddu)",             kind:"pill", color:"#223454", house:{ type:"pin", w:82, h:104, stem:190, mark:"r", markR:.9 } },
   "realty-plus": { name:"Realty Plus — teal pins + board (Tracy Garbes, Leonie Adam)",     kind:"pin",  color:"#7ACCD6", scale:.88, house:{ type:"board", w:220, h:183, stem:170, mark:"realty" } },
@@ -1323,6 +1335,14 @@ function landY(p, x){ const L = p.skyLine; if (!L) return -1e9; return L.m*x + L
 // A place beyond the horizon still gets its pin tip on land, never in the sky
 function clampPinsToLand(p){ let ch=false; (p.pins||[]).forEach(pin=>{ if (pin.house || pin.moved) return; const y = landY(p, pin.ex); if (pin.ey < y){ pin.ey = y; ch=true; } }); if (ch) tidySides(p); }
 function autoPoint(p, lat, lng){ const q = projectW(p, lat, lng); if (!inFrame(p, q, 2)) return null; const y = landY(p, q[0]); if (q[1] < y) q[1] = y; return q; }
+// Beach pins (26 Oct): beach points are often charted offshore. If the tip lands on water, walk it toward the house
+// until it reaches sand/land, so the pin stands on the beach rather than in the sea.
+function shoreSnap(p, q){ try{ const c = p.base; if (!c) return q; const x = c.getContext("2d"), W = c.width, H = c.height, sc = W/(p.w||W);
+    const hp = job && autoPoint(p, job.lat, job.lng) || [p.w/2, p.h]; const isWater = (u,v)=>{ const X=Math.round(u*sc), Y=Math.round(v*sc); if (X<3||Y<3||X>W-4||Y>H-4) return false;
+      const d = x.getImageData(X-3,Y-3,7,7).data; let r=0,g=0,b=0,yy=0,y2=0; for (let k=0;k<d.length;k+=4){ r+=d[k]; g+=d[k+1]; b+=d[k+2]; const L=.3*d[k]+.59*d[k+1]+.11*d[k+2]; yy+=L; y2+=L*L; } const n=d.length/4; r/=n; g/=n; b/=n; const sd=Math.sqrt(Math.max(0,y2/n-(yy/n)*(yy/n)));
+      return b > r + 10 && g > r + 4 && sd < 14; };
+    if (!isWater(q[0], q[1])) return q; const dx = hp[0]-q[0], dy = hp[1]-q[1], L = Math.hypot(dx,dy)||1, st = Math.max(2, 0.003*p.w);
+    for (let t=st; t<L*0.9; t+=st){ const u=q[0]+dx/L*t, v=q[1]+dy/L*t; if (!isWater(u,v)){ const e=t+2*st; return [q[0]+dx/L*e, q[1]+dy/L*e]; } } }catch(e){} return q; }
 function placePins(p, onlyAuto){
   if (!job) return;
   p.pins.forEach(pin=>{
@@ -1331,7 +1351,8 @@ function placePins(p, onlyAuto){
     const ha = pin.house && p.anchors.find(a=>a.key==="__house");
     if (ha){ const q = toWork(p,[ha.ox,ha.oy]); pin.ex = q[0]; pin.ey = q[1]; pin.moved = false; return; }
     const ll = pin.house ? job : placeForKey(pin.key); if (!ll) return;
-    const q = autoPoint(p, ll.lat, ll.lng); if (!q) return;
+    let q = autoPoint(p, ll.lat, ll.lng); if (!q) return;
+    if (!pin.house && (/beach/i.test(ll.name||pin.name||"") || ll.cat==="beach")) q = shoreSnap(p, q);
     pin.ex = q[0]; pin.ey = q[1]; pin.moved = false;
   });
   tidySides(p);
@@ -1342,7 +1363,7 @@ function togglePlace(key){
   const existing = p.pins.find(x=>x.key===key);
   if (existing){ commit(); p.pins = p.pins.filter(x=>x!==existing); refreshAll(); return; }
   const q = placeForKey(key); if (!q) return;
-  const at = autoPoint(p, q.lat, q.lng);
+  let at = autoPoint(p, q.lat, q.lng); if (at && (/beach/i.test(q.name||"") || q.cat==="beach")) at = shoreSnap(p, at);
   if (!at){ armed = { kind:"place", key }; setHint(); refreshPinsTab(); toast(p.cam && p.cam.ready ? `${q.name} is outside this photo. Click where it is to pin it anyway.` : `Click where ${q.name} is on the photo`); return; }
   commit(); addPin(p, { key, name:q.name, icon:iconFor(q) }, at); refreshAll();
 }
