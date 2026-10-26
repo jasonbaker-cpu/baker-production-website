@@ -1,0 +1,98 @@
+{
+ "address": "30 Karangi Cir, Byford WA 6122",
+ "lat": -32.2313236,
+ "lng": 116.0069395,
+ "pins": [
+  {
+   "name": "Byford John Calvin School",
+   "cat": "school",
+   "lat": -32.2241,
+   "lng": 116.0062,
+   "desc": "independent primary school, 30 Soldiers Rd"
+  },
+  {
+   "name": "Byford Market Place",
+   "cat": "shopping",
+   "lat": -32.221054,
+   "lng": 116.004722,
+   "desc": "Woolworths-anchored centre, 34 Abernethy Rd"
+  },
+  {
+   "name": "Serpentine Jarrahdale Library",
+   "cat": "library",
+   "lat": -32.2207,
+   "lng": 116.0094,
+   "desc": "public library, 858 South Western Hwy"
+  },
+  {
+   "name": "Byford Village Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.219858,
+   "lng": 116.00685,
+   "desc": "Coles-anchored centre, 20 Abernethy Rd"
+  },
+  {
+   "name": "Byford Centre",
+   "cat": "shopping",
+   "lat": -32.21886,
+   "lng": 116.00833,
+   "desc": "shops on South Western Hwy (Aldi next door)"
+  },
+  {
+   "name": "Byford Station",
+   "cat": "train",
+   "lat": -32.21646,
+   "lng": 116.007381,
+   "desc": "Armadale/Byford line terminus (extension opened 12 Oct 2025)"
+  },
+  {
+   "name": "Cohunu Koala Park",
+   "cat": "park",
+   "lat": -32.230305,
+   "lng": 116.014151,
+   "desc": "wildlife park, Nettleton Rd"
+  },
+  {
+   "name": "Lakeside Plaza Byford",
+   "cat": "shopping",
+   "lat": -32.224794,
+   "lng": 115.988086,
+   "desc": "IGA-anchored centre, The Glades"
+  },
+  {
+   "name": "Serpentine Jarrahdale Community Recreation Centre",
+   "cat": "recreation",
+   "lat": -32.2256,
+   "lng": 116.0005,
+   "desc": "indoor sports centre + YMCA gym, 38 Mead St (no public pool)"
+  },
+  {
+   "name": "Byford Secondary College",
+   "cat": "school",
+   "lat": -32.223432,
+   "lng": 116.001879,
+   "desc": "government secondary college, 57 Abernethy Rd (zoning unverified)"
+  },
+  {
+   "name": "Salvado Catholic College",
+   "cat": "school",
+   "lat": -32.22358,
+   "lng": 115.99697,
+   "desc": "Catholic K-12 college, 115 Abernethy Rd"
+  },
+  {
+   "name": "The Springs Club",
+   "cat": "golf",
+   "lat": -32.158407,
+   "lng": 115.959237,
+   "desc": "nearest golf course, Forrestdale"
+  },
+  {
+   "name": "Tonkin Highway",
+   "cat": "other",
+   "lat": -32.2210196,
+   "lng": 115.969823,
+   "desc": "Tonkin Highway interchange (agent request)"
+  }
+ ]
+}

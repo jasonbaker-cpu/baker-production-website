@@ -1,6 +1,79 @@
 {
  "days": [
   {
+   "id": "26-oct-2026",
+   "label": "Mon 26 Oct 2026",
+   "gallery": "26-oct-2026/",
+   "jobs": [
+    {
+     "slug": "30_karangi_cir",
+     "addr": "30 Karangi Cir, Byford",
+     "who": "Sally Bulpitt \u00b7 Rodway Group",
+     "agency": "red",
+     "full": false,
+     "src": "26-oct-2026/30_karangi_cir/src/",
+     "map": "30_karangi_cir_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261026_103402_0872_1793019916803_photo.JPG",
+      "dji_fly_20261026_103416_0873_1793019912855_photo.JPG",
+      "dji_fly_20261026_103442_0874_1793019910369_photo.JPG",
+      "dji_fly_20261026_103502_0875_1793019907643_photo.JPG",
+      "dji_fly_20261026_103526_0876_1793019904253_photo.JPG",
+      "dji_fly_20261026_103540_0877_1793019901522_photo.JPG",
+      "dji_fly_20261026_103556_0878_1793019898733_photo.JPG",
+      "dji_fly_20261026_103610_0879_1793019896166_photo.JPG"
+     ]
+    },
+    {
+     "slug": "30_karangi_cir__nadir",
+     "addr": "30 Karangi Cir, Byford \u2014 top-down",
+     "who": "Sally Bulpitt \u00b7 Rodway Group",
+     "agency": "red",
+     "full": true,
+     "src": "26-oct-2026/30_karangi_cir/src-top/",
+     "map": "30_karangi_cir_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261026_103336_0871_1793019919233_photo.JPG"
+     ]
+    },
+    {
+     "slug": "41_coulthard_cres",
+     "addr": "41 Coulthard Cres, Canning Vale",
+     "who": "Phil Lankowski \u00b7 Rodway Group",
+     "agency": "red",
+     "full": false,
+     "src": "26-oct-2026/41_coulthard_cres/src/",
+     "map": "41_coulthard_cres_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261026_132144_0882_1793019887778_photo.JPG",
+      "dji_fly_20261026_132200_0883_1793019885134_photo.JPG",
+      "dji_fly_20261026_132224_0884_1793019882479_photo.JPG",
+      "dji_fly_20261026_132246_0885_1793019879873_photo.JPG",
+      "dji_fly_20261026_132302_0886_1793019877214_photo.JPG",
+      "dji_fly_20261026_132320_0887_1793019873465_photo.JPG",
+      "dji_fly_20261026_132332_0888_1793019871013_photo.JPG",
+      "dji_fly_20261026_132344_0889_1793019868493_photo.JPG"
+     ]
+    },
+    {
+     "slug": "41_coulthard_cres__nadir",
+     "addr": "41 Coulthard Cres, Canning Vale \u2014 top-down",
+     "who": "Phil Lankowski \u00b7 Rodway Group",
+     "agency": "red",
+     "full": true,
+     "src": "26-oct-2026/41_coulthard_cres/src-top/",
+     "map": "41_coulthard_cres_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261026_132126_0881_1793019890605_photo.JPG"
+     ]
+    }
+   ]
+  },
+  {
    "id": "24-oct-2026",
    "label": "Sat 24 Oct 2026",
    "gallery": "24-oct-2026/",
