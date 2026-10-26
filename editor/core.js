@@ -288,10 +288,10 @@ function dehazeBand(px, w, h, line){
   if (thr < 95) return;   // no real haze — leave it alone
   const at = (x,y) => { const fx=Math.min(sw-1.001,x/s), fy=Math.min(sh-1.001,y/s), x0=fx|0, y0=fy|0, tx=fx-x0, ty=fy-y0, i=y0*sw+x0; return (Mb[i]*(1-tx)+Mb[i+1]*tx)*(1-ty)+(Mb[i+sw]*(1-tx)+Mb[i+sw+1]*tx)*ty; };
   const strength = Math.min(0.6, Math.max(0.35, (thr-95)/100 + 0.35));
-  for (let y=Math.max(0, hz0|0); y<h; y++){
+  for (let y=Math.max(0, (hz0 - 0.5*band)|0); y<h; y++){
     for (let x=0;x<w;x++){
-      const hz = line(x), d = (y-hz)/band; if (d < -0.02 || d > 1) continue;
-      const u = d < 0 ? 1 + d/0.02 : 1 - d; const wgt = u*u*(3-2*u);
+      const hz = line(x), d = (y-hz)/band; if (d < -0.5 || d > 1) continue;   // 26 Oct: fade over 0.5 band above the line (was 0.02 = seam through hills)
+      const u = d < 0 ? 1 + d/0.5 : 1 - d; const wgt = u*u*(3-2*u);
       const tmin = 0.55 + 0.25*Math.min(1, Math.max(0,d)/0.5), st2 = Math.min(0.7, strength + 0.1*(1-Math.min(1,Math.max(0,d)/0.3)));
       const t = Math.max(tmin, 1 - st2*wgt*(1-wat(x,y))*at(x,y)/A);
       const i = (y*w+x)*4;
@@ -378,7 +378,7 @@ function finishImage(base, p){
   const det20 = sky ? gaussBlur(Y,w,h,20*scale) : null;
   // land guard: just above the horizon, anything clearly darker than the sky a little higher up is land (hills, city towers), not sky — keep it
   let Tm = null; if (sky){ const d = new Float32Array(w*h); for (let k=0;k<d.length;k++) d[k] = Math.abs(Y[k]-g3[k]); Tm = gaussBlur(d, w, h, 5*scale+0.5); }
-  let landTop = null, landTrend = null, landEnv = null, rowTone = null;
+  let landTop = null, landTrend = null, landEnv = null, rowTone = null, landLoc = null;
   let refY = null;
   if (sky){ refY = new Float32Array(w); const st=Math.max(1,(w/400)|0), tmp=new Float32Array(Math.ceil(w/st));
     for (let xs=0,k=0; xs<w; xs+=st,k++){ const hz=line(xs), ya=Math.max(0,(hz-0.16*h)|0), yb=Math.max(ya+1,(hz-0.08*h)|0), v=[];
@@ -410,6 +410,12 @@ function finishImage(base, p){
         for (let x=0;x<w;x++){ let m=1e9; for (let k=-Rw;k<=Rw;k+=3){ const v=lt3[Math.min(w-1,Math.max(0,x+k))]; if (v<m) m=v; } env[x]=m; }
         const Rs = Math.round(0.02*w), pe = new Float64Array(w+1); for (let x=0;x<w;x++) pe[x+1]=pe[x]+env[x];
         landEnv = new Float32Array(w); for (let x=0;x<w;x++){ const a0=Math.max(0,x-Rs), a1=Math.min(w,x+Rs+1); landEnv[x]=Math.min(env[x], (pe[a1]-pe[a0])/(a1-a0)); }
+        // smooth fade line (26 Oct): the envelope has hard steps beside tall features, which showed as grey boxes of old sky.
+        // Two box passes (triangle, ~5% of width) turn every step into a gentle ramp; the plateau over a hill stays put.
+        { const Rb = Math.max(4, Math.round(0.025*w)); let src = landEnv;
+          for (let pass=0; pass<2; pass++){ const p2 = new Float64Array(w+1); for (let x=0;x<w;x++) p2[x+1]=p2[x]+src[x];
+            const o = new Float32Array(w); for (let x=0;x<w;x++){ const a0=Math.max(0,x-Rb), a1=Math.min(w,x+Rb+1); o[x]=(p2[a1]-p2[a0])/(a1-a0); } src = o; }
+          landLoc = src; }
         // per-row mean of the original sky between the envelope fade and the land, for tone matching
         rowTone = new Float32Array(h*3).fill(-1);
         for (let y=0;y<h;y++){ let a=0,b2=0,c=0,n=0; for (let x=0;x<w;x+=4){ if (y > landEnv[x] - 0.05*h && y < landEnv[x] + 0.035*h && Y[y*w+x] > refY[x] - 30){ const i=(y*w+x)*4; a+=px[i]; b2+=px[i+1]; c+=px[i+2]; n++; } } if (n>20){ rowTone[y*3]=a/n; rowTone[y*3+1]=b2/n; rowTone[y*3+2]=c/n; } }
@@ -424,8 +430,9 @@ function finishImage(base, p){
     const hz = sky ? line(0) : 0;
     for (let x=0;x<w;x++){
       const j = y*w+x, i = j*4, ws = wSky[j];
-      const above = line ? (y < line(x) - 2) : false; const add = (above ? (G[0]*TF*(Y[j]-g1[j]) + G[1]*(g1[j]-g3[j])) : (G[0]*TF*(Y[j]-g1[j]) + G[1]*TM*(g1[j]-g3[j]) + G[2]*(g3[j]-g10[j]) + G[3]*(g10[j]-g30[j]))) * (1-ws);
-      let fw = 0; if (line){ const dy = (y - line(x))/(h*0.12); if (dy > -0.02 && dy < 1) fw = dy<0 ? 1 : (1-dy)*(1-dy); }
+      const aw = line ? Math.min(1, Math.max(0, (line(x) - 2 - y)/(0.05*h))) : 0;   // 26 Oct: blend sky/land detail over 5% of height (was a hard switch at the line)
+      const add = (aw*(G[0]*TF*(Y[j]-g1[j]) + G[1]*(g1[j]-g3[j])) + (1-aw)*(G[0]*TF*(Y[j]-g1[j]) + G[1]*TM*(g1[j]-g3[j]) + G[2]*(g3[j]-g10[j]) + G[3]*(g10[j]-g30[j]))) * (1-ws);
+      let fw = 0; if (line){ const dy = (y - line(x))/(h*0.12); if (dy > -0.6 && dy < 1){ if (dy >= 0) fw = (1-dy)*(1-dy); else { const u = 1 + dy/0.6; fw = u*u*(3-2*u); } } }   // 26 Oct: fade out above the line (was a hard stop = ruled seam through hills)
       const addF = add*(1 - TT.farSoft*fw);
       let r = px[i]+addF, g = px[i+1]+addF, b = px[i+2]+addF;
       if (fw > 0 && ws < 0.5){ const hk = 0.5*TT.farSoft*fw*(1-ws); r += (TT.skyHz[0]-r)*hk; g += (TT.skyHz[1]-g)*hk; b += (TT.skyHz[2]-b)*hk; }
@@ -449,8 +456,13 @@ function finishImage(base, p){
         let ww = wsE;
         { const dz = (hzx - y)/h, GZ = (Object.assign({},TUNE,window.__TUNE||{}).gz||0.045);
           if (SKYP.direct && !rmS){
-            const top = landEnv[x] - 0.004*h, FL = 0.03*h, u = (top - y)/FL;
-            ww = u >= 1 ? 1 : (u <= 0 ? 0 : u*u*(3-2*u));
+            // 26 Oct: two fade lengths. Bright haze is replaced over a short distance (no grey dome over the sea);
+            // anything darker than the sky (hazy hills) keeps the long, gentle fade so hills are never clipped.
+            const top = (landLoc ? landLoc[x] : landEnv[x]) - 0.004*h, uS = (top - y)/(0.012*h), uL = (top - y)/(0.03*h);
+            const wS = uS >= 1 ? 1 : (uS <= 0 ? 0 : uS*uS*(3-2*uS)), wL = uL >= 1 ? 1 : (uL <= 0 ? 0 : uL*uL*(3-2*uL));
+            const tYb = (rowTone && rowTone[y*3] >= 0) ? (rowTone[y*3]+rowTone[y*3+1]+rowTone[y*3+2])/3 : refY[x];
+            const brt = Math.min(1, Math.max(0, (g1[j] - (Math.min(tYb, refY[x]) - 28))/16));
+            ww = wL + (wS - wL)*brt;
             // original sky near the horizon (between the fade and the land) is toned toward the new sky instead of cut out
             if (ww < 1 && y < landEnv[x] + 0.035*h && rowTone[y*3] >= 0){ const q = SKYP.rm[SKYP.h-2], tY = (rowTone[y*3]+rowTone[y*3+1]+rowTone[y*3+2])/3, skyish = Math.min(1, Math.max(0, (g3[j] - (tY - 22))/18)),
                 kt = 0.8 * skyish * Math.min(1, Math.max(0, (landEnv[x] + 0.035*h - y)/(0.015*h)));

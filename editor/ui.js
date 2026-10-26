@@ -109,6 +109,14 @@ function landY(p, x){ const L = p.skyLine; if (!L) return -1e9; return L.m*x + L
 // A place beyond the horizon still gets its pin tip on land, never in the sky
 function clampPinsToLand(p){ let ch=false; (p.pins||[]).forEach(pin=>{ if (pin.house || pin.moved) return; const y = landY(p, pin.ex); if (pin.ey < y){ pin.ey = y; ch=true; } }); if (ch) tidySides(p); }
 function autoPoint(p, lat, lng){ const q = projectW(p, lat, lng); if (!inFrame(p, q, 2)) return null; const y = landY(p, q[0]); if (q[1] < y) q[1] = y; return q; }
+// Beach pins (26 Oct): beach points are often charted offshore. If the tip lands on water, walk it toward the house
+// until it reaches sand/land, so the pin stands on the beach rather than in the sea.
+function shoreSnap(p, q){ try{ const c = p.base; if (!c) return q; const x = c.getContext("2d"), W = c.width, H = c.height, sc = W/(p.w||W);
+    const hp = job && autoPoint(p, job.lat, job.lng) || [p.w/2, p.h]; const isWater = (u,v)=>{ const X=Math.round(u*sc), Y=Math.round(v*sc); if (X<3||Y<3||X>W-4||Y>H-4) return false;
+      const d = x.getImageData(X-3,Y-3,7,7).data; let r=0,g=0,b=0,yy=0,y2=0; for (let k=0;k<d.length;k+=4){ r+=d[k]; g+=d[k+1]; b+=d[k+2]; const L=.3*d[k]+.59*d[k+1]+.11*d[k+2]; yy+=L; y2+=L*L; } const n=d.length/4; r/=n; g/=n; b/=n; const sd=Math.sqrt(Math.max(0,y2/n-(yy/n)*(yy/n)));
+      return b > r + 10 && g > r + 4 && sd < 14; };
+    if (!isWater(q[0], q[1])) return q; const dx = hp[0]-q[0], dy = hp[1]-q[1], L = Math.hypot(dx,dy)||1, st = Math.max(2, 0.003*p.w);
+    for (let t=st; t<L*0.9; t+=st){ const u=q[0]+dx/L*t, v=q[1]+dy/L*t; if (!isWater(u,v)){ const e=t+2*st; return [q[0]+dx/L*e, q[1]+dy/L*e]; } } }catch(e){} return q; }
 function placePins(p, onlyAuto){
   if (!job) return;
   p.pins.forEach(pin=>{
@@ -117,7 +125,8 @@ function placePins(p, onlyAuto){
     const ha = pin.house && p.anchors.find(a=>a.key==="__house");
     if (ha){ const q = toWork(p,[ha.ox,ha.oy]); pin.ex = q[0]; pin.ey = q[1]; pin.moved = false; return; }
     const ll = pin.house ? job : placeForKey(pin.key); if (!ll) return;
-    const q = autoPoint(p, ll.lat, ll.lng); if (!q) return;
+    let q = autoPoint(p, ll.lat, ll.lng); if (!q) return;
+    if (!pin.house && (/beach/i.test(ll.name||pin.name||"") || ll.cat==="beach")) q = shoreSnap(p, q);
     pin.ex = q[0]; pin.ey = q[1]; pin.moved = false;
   });
   tidySides(p);
@@ -128,7 +137,7 @@ function togglePlace(key){
   const existing = p.pins.find(x=>x.key===key);
   if (existing){ commit(); p.pins = p.pins.filter(x=>x!==existing); refreshAll(); return; }
   const q = placeForKey(key); if (!q) return;
-  const at = autoPoint(p, q.lat, q.lng);
+  let at = autoPoint(p, q.lat, q.lng); if (at && (/beach/i.test(q.name||"") || q.cat==="beach")) at = shoreSnap(p, at);
   if (!at){ armed = { kind:"place", key }; setHint(); refreshPinsTab(); toast(p.cam && p.cam.ready ? `${q.name} is outside this photo. Click where it is to pin it anyway.` : `Click where ${q.name} is on the photo`); return; }
   commit(); addPin(p, { key, name:q.name, icon:iconFor(q) }, at); refreshAll();
 }

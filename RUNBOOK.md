@@ -93,3 +93,21 @@ Send Jason a short message:
 - anything flagged (no map, strata, Mac offline, area mismatch, QC issues)
 
 Push-notify him.
+
+## 26 Oct fixes (automatic in the editor, nothing to do per job)
+- Horizon haze: the new-sky fade line is now smoothed (no more grey boxes of old sky beside hills/buildings).
+- Beach pins charted offshore are walked toward the house until they sit on sand.
+- Zoo / wildlife / sanctuary places get the park icon, never shopping.
+- Strata lots: if the cadastre only returns the shared parent lot (several identical features), leave the boundary off unless a strata plan is in Dropbox (e.g. 8a Coogan Cl).
+
+## Quality gates (26 Oct — every day, before committing)
+1. **Agency branding.** The booking email domain picks the style from `agency_map.json`. A domain that isn't in the map is NEVER guessed:
+   open the agency's website, read the logo (franchise brand = franchise style, e.g. armadalerealestate.com.au is Professionals → `flags-p`),
+   add it to the map, and note it in the report. Century 21 = Obsessed Grey pins + Relentless Gold house pin (`c21`).
+2. **Pin locations.** Collect the pins actually shown (from `e2e/report_<slug>.json`) with their map coordinates, then run
+   `python3 pinverify.py qc/pins_shown.json`. ArcGIS is noisy (police stations, same-name places elsewhere), so check each FAR/NOMATCH
+   by hand: if a second source puts the place >250 m away, fix the coordinate (a council page or street address beats both) and the spelling.
+3. **Portal parity.** After `mkday.py`, run `python3 parity.py <day> <run.json>`. It renders the 3000 px files the portal loads and
+   compares them with the gallery. Anything but `PARITY PASS` = don't publish; look at `qc/parity_<day>.jpg`.
+4. **Places.** At most 4 places per photo. Small parks, reserves and playgrounds only within 1.5 km. Nothing beyond 6 km unless it's
+   a station, regional shopping centre, hospital, beach, regional park, golf course or lake.
