@@ -14,6 +14,7 @@ const prefs = Object.assign({
   discOn:false, discText:DEFAULT_DISC
 }, LS.get("prefs", {}));
 if (prefs.pinStyle !== undefined || prefs.v !== 2){ delete prefs.pinStyle; prefs.pinColor = ""; prefs.labelOpacity = 86; prefs.agency = prefs.agency || "red"; prefs.v = 2; }  // old grey/red looks retired
+prefs.skyPlate = "C"; prefs.sky = true;   // 26 Oct: Baker skies are always pale-blue C; a plate picked in an old session never carries over
 const savePrefs = () => LS.set("prefs", prefs);
 let templates = LS.get("templates", {});
 

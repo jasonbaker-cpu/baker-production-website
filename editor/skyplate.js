@@ -10,5 +10,5 @@ function loadSkyPlate(k, cb){ k = SKY_PLATES[k] ? k : "C"; if (SKYP_CACHE[k]){ S
     const P = { w: im.width, h: im.height, d: x.getImageData(0,0,im.width,im.height).data, direct:true }; P.rm = [];
     for (let yy=0; yy<im.height; yy++){ let a=0,b=0,c2=0; for (let xx=0; xx<im.width; xx+=4){ const q=(yy*im.width+xx)*4; a+=P.d[q]; b+=P.d[q+1]; c2+=P.d[q+2]; } const n=Math.ceil(im.width/4); P.rm.push([a/n,b/n,c2/n]); }
     for (let it=0; it<3; it++){ const r2=P.rm.map((v,i)=>{ const lo=Math.max(0,i-25), hi=Math.min(P.h-1,i+25); let a=0,b=0,c2=0,n=0; for (let kk=lo;kk<=hi;kk++){ a+=P.rm[kk][0]; b+=P.rm[kk][1]; c2+=P.rm[kk][2]; n++; } return [a/n,b/n,c2/n]; }); P.rm=r2; }
-    SKYP_CACHE[k] = P; SKYP = P; SKYP_KEY = k; if (cb) cb(); }; im.src = SKY_PLATES[k].src; }
+    SKYP_CACHE[k] = P; const want = (typeof prefs!=="undefined" && prefs.skyPlate) || "C"; if (cb || k === want){ SKYP = P; SKYP_KEY = k; } if (cb) cb(); }; im.src = SKY_PLATES[k].src; }
 ["A","B"].forEach(k=>loadSkyPlate(k)); loadSkyPlate("C");

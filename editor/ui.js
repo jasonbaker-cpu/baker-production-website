@@ -43,6 +43,8 @@ function ensureFinish(p){
   const key = p.skyOn ? "skyP"+(prefs.skyPlate||"C") : "nosky";
   if (p.fin && p.finKey === key) return;
   if (p._finPending === key) return;
+  // 26 Oct: never finish before the sky plate is decoded (that fallback drew blocky grey boxes in the portal)
+  if (p.skyOn && typeof SKYP_CACHE !== "undefined" && !SKYP_CACHE[prefs.skyPlate||"C"]){ $("busy").hidden = false; if (!p._waitSky){ p._waitSky = true; loadSkyPlate(prefs.skyPlate||"C", ()=>{ p._waitSky = false; ensureFinish(p); requestDraw(); }); } return; }
   p._finPending = key; finishing++; $("busy").hidden = false;
   setTimeout(()=>{
     try{ const r = finishImage(p.base, p); p.fin = r.canvas; p.finKey = key; p._blur = null; p.skyLine = r.sky ? { m:r.sky.m, b:r.sky.b, h:p.base.height } : null; clampPinsToLand(p); makeThumb(p); }
