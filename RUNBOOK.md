@@ -36,7 +36,7 @@ job folder (all subfolders, e.g. `Aerial - Drone Photography` and `Floorplan or 
 - Get `download_link` for the DJI files plus the `*_map.html` and any title or strata PDFs, then `curl` them into `batch/<slug>/raw/`.
 - Slug: the street part of the address, lowercase, with underscores (e.g. `28_george_st`).
 - DNG only (no JPG): run `python3 dng2jpg.py batch/<slug>/raw/*.DNG` and move the jpgs into `batch/<slug>/jpg/`. Drone XMP is kept.
-- No `*_map.html`: build `batch/<slug>/<slug>_places.json` from TomTom using the format below. Pick 8–14 real amenities: schools, shopping centres, stations, beaches, parks, golf. Skip childcare businesses, driving schools and dance studios.
+- No `*_map.html`: build `batch/<slug>/<slug>_places.json` WITHOUT TomTom (Jason 28 Oct: TomTom refuses the key — make no TomTom calls). Sources in order: Project doc claude/amenity-known-changes*.md, `amenity_ref.py <lat> <lng> <dir>` (claude/amenity_ref.py + claude/amenity-perth-reference.json), then `amenity_arcgis.py` (claude/amenity_arcgis.py, rules in claude/amenity-brief-fallback.md: named verify for every ArcGIS pin, stations never from ArcGIS alone), WebSearch to settle names. Use the format below. Pick 8–14 real amenities: schools, shopping centres, stations, beaches, parks, golf. Skip childcare businesses, driving schools and dance studios.
   ```
   {"address":..., "lat":..., "lng":..., "pins":[{"name","cat","lat","lng"}]}
   ```
