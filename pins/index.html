@@ -710,13 +710,13 @@ function finishImage(base, p){
     return Math.max(kb, Math.min(1, Math.max(0, (refWide[j%w]-40-g1[j])/15))); };
   if (sky && SKYP && SKYP.direct){ solidTop = new Float32Array(w);
     for (let x=0;x<w;x++){ const hz=line(x); let top=hz, gap=0; const gMax = Math.max(2, (0.004*h)|0);
-      for (let y=Math.floor(hz); y>Math.max(0,hz-0.15*h); y--){ const j=y*w+x; if (solidK(j*4,j) > 0.5){ top=y; gap=0; } else if (++gap > gMax) break; }
+      for (let y=Math.floor(hz); y>Math.max(0,hz-0.28*h); y--){ const j=y*w+x; if (solidK(j*4,j) > 0.5){ top=y; gap=0; } else if (++gap > gMax) break; }
       solidTop[x]=top; }
     // a column only counts if its neighbours agree (no single-column spikes)
     const st2 = new Float32Array(w); for (let x=0;x<w;x++){ const v=[]; for (let k=-2;k<=2;k++) v.push(solidTop[Math.min(w-1,Math.max(0,x+k))]); v.sort((a,b)=>a-b); st2[x]=v[2]; } solidTop = st2; }
   if (sky && SKYP && SKYP.direct){
     const d2 = new Float32Array(w*h); for (let k=0;k<d2.length;k++) d2[k] = Math.abs(Y[k]-g3[k]); const T2 = gaussBlur(d2, w, h, 1.5*scale+0.3);
-    const Yb = g1, maxUp = (Object.assign({},TUNE,window.__TUNE||{}).landUp||0.10)*h, gapMax = 2; landTop = new Float32Array(w);
+    const Yb = g1, maxUp = (Object.assign({},TUNE,window.__TUNE||{}).landUp||0.05)*h, gapMax = 2; landTop = new Float32Array(w);
     for (let x=0;x<w;x++){ const hz=line(x); let top=hz, gap=0;
       for (let y=Math.floor(hz-0.0015*h); y>Math.max(0,hz-maxUp); y--){ const j=y*w+x; const up = hz - y, land = (up < 0.004*h && Yb[j] < refY[x]-12) || (Yb[j] < refY[x]-45) || (T2[j] > 2.6 && Yb[j] < refY[x]-6);
         if (land){ top=y; gap=0; } else if (++gap > gapMax) break; }
