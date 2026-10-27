@@ -39,7 +39,7 @@ for j in D['jobs']:
             if f in cams: c = dict(cams.pop(f)); c['roll'] = c.get('roll', 0) + ang; c['f35'] = c.get('f35', 24) * zm; cams[nf] = c
     ph = [next((n for n, o in lv.items() if o == f), f) for f in ph]
     nad = [f for f in ph if pitch(f) < -75]
-    base = {'map': j['map'], 'agency': j.get('agency', 'red')}
+    base = {'map': j['map'], 'agency': j.get('agency', 'grey')}
     if j.get('must'): base['must'] = j['must']
     if j.get('skyPlate'): base['skyPlate'] = j['skyPlate']   # e.g. 'S' = editors' sunset sky for twilight shoots
     if j.get('noSky'): base['noSky'] = 1   # twilight / sunset shoot: keep the real sky

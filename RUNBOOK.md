@@ -16,7 +16,7 @@ Chromium is already installed for Playwright (`/opt/pw-browsers`).
 - Google Calendar `admin@bakerproduction.com`, yesterday (Perth time). A job counts if its description lists "Aerial / Drone Photography".
 - For each job, read:
   - address
-  - listing agent and their email domain → pin style via `agency_map.json`. If the domain isn't listed, use `red` and flag it.
+  - listing agent and their email domain → pin style via `agency_map.json`. If the domain isn't listed, use plain grey pins (`grey`, Jason 28 Oct) and flag it.
   - "Any specific boundaries or land features to mark" → `must` places
   - strata answer and land size
 
@@ -103,7 +103,7 @@ Push-notify him.
 ## Quality gates (26 Oct — every day, before committing)
 1. **Agency branding.** The booking email domain picks the style from `agency_map.json`. A domain that isn't in the map is NEVER guessed:
    open the agency's website, read the logo (franchise brand = franchise style, e.g. armadalerealestate.com.au is Professionals → `flags-p`),
-   add it to the map, and note it in the report. Century 21 = Obsessed Grey pins + Relentless Gold house pin (`c21`).
+   add it to the map, and note it in the report. If the agency has no clear brand colour (or the site can't be read), use `grey` — the default (Jason 28 Oct), never red. Century 21 = Obsessed Grey pins + Relentless Gold house pin (`c21`).
 2. **Pin locations.** Collect the pins actually shown (from `e2e/report_<slug>.json`) with their map coordinates, then run
    `python3 pinverify.py qc/pins_shown.json`. ArcGIS is noisy (police stations, same-name places elsewhere), so check each FAR/NOMATCH
    by hand: if a second source puts the place >250 m away, fix the coordinate (a council page or street address beats both) and the spelling.

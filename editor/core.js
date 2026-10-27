@@ -9,7 +9,7 @@ const DEFAULT_DISC = "Boundary lines are approximate and for illustration only."
 const prefs = Object.assign({
   outMode:"finals",            // finals = 3:2 centre crop, 3000 px wide (matches delivered aerials) | full
   finish:true, sky:true,
-  agency:"red", pinColor:"", pinScale:100, labelOpacity:86, labelFont:"Source Sans 3", logo:"",
+  agency:"grey", pinColor:"", pinScale:100, labelOpacity:86, labelFont:"Source Sans 3", logo:"",
   lineColor:BAKER_RED, lineWidth:6.7, outside:"blur", blurAmt:45, darkAmt:35,
   discOn:false, discText:DEFAULT_DISC
 }, LS.get("prefs", {}));
