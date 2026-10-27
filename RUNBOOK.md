@@ -138,5 +138,5 @@ Push-notify him.
 - Agency styles can carry `line` (boundary colour); rodway = #2A2A2A.
 - Booking "specific boundaries or land features to mark" MUST go in `must` AND every one must exist in the places file — add any that are missing (Google coordinates) before running. Lathlain went out without Crown/Optus because of this.
 - Never publish an address of "Property": set the real address in the places file / project.
-- Solid-object keep (towers above the horizon) compares against sky 18–30% of frame height above the horizon (a frame-wide median kept the dark side of a dusk sky).
+- Solid-object keep (towers above the horizon) compares against sky 18–30% of frame height above the horizon (a frame-wide median kept the dark side of a dusk sky) and follows a building up to 28% of frame height. Land guard is back to 5% (10% put a pale arc beside tall buildings).
 - portalcheck waits until the thumbnail count stops growing (it used to capture after the first thumb).
