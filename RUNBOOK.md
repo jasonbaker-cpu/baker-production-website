@@ -133,3 +133,10 @@ Push-notify him.
 - Top-down jobs with no registered camera lost their boundary (t12 only treated a photo as top-down when a registered camera said so) — fixed. If a satellite registration of a top-down scores low, check the lot is parallel to the street; a bad one rotated Balga's lot 7°. Mini 4 Pro RelativeAltitude can read high on top-downs: size the lot to the fences (h is in the reg_all cam).
 - Newer amenity maps use short categories (shop, zoned, privschool, rec, edu); the editor now maps them (they were never pinned before). Live /pins editor on main still has the old loader until the editor build is deployed.
 - Agent-requested places beyond the distance rules (e.g. "Perth CBD") must be in the places file and in `must`; must places now skip the 1.5 km / 6 km filters.
+## 28 Oct — triple-check fixes
+- agency_map: rodwaygroup.com.au → rodway (black pins, black boundary), professionals.com.au → flags-p. Karangi (Rodway) went out red because the domain was missing.
+- Agency styles can carry `line` (boundary colour); rodway = #2A2A2A.
+- Booking "specific boundaries or land features to mark" MUST go in `must` AND every one must exist in the places file — add any that are missing (Google coordinates) before running. Lathlain went out without Crown/Optus because of this.
+- Never publish an address of "Property": set the real address in the places file / project.
+- Solid-object keep (towers above the horizon) compares against sky 18–30% of frame height above the horizon (a frame-wide median kept the dark side of a dusk sky).
+- portalcheck waits until the thumbnail count stops growing (it used to capture after the first thumb).

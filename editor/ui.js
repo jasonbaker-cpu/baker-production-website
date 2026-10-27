@@ -250,7 +250,7 @@ function finishDraft(){
   if (draft.pts.length>=min){
     commit();
     const n = draft.type==="poly" ? draft.pts.length : draft.pts.length-1;
-    const sh = { id:nid(), type:draft.type, pts:draft.pts, color:prefs.lineColor, width:prefs.lineWidth, dashed:new Array(n).fill(draft.type==="line"), lens:new Array(n).fill(""), showLens:true };
+    const sh = { id:nid(), type:draft.type, pts:draft.pts, color:((AGENCIES[prefs.agency]||{}).line||prefs.lineColor), width:prefs.lineWidth, dashed:new Array(n).fill(draft.type==="line"), lens:new Array(n).fill(""), showLens:true };
     P().shapes.push(sh); sel={kind:"shape", id:sh.id};
     draft=null; hover=null; setTool("select"); setTab("boundary"); refreshAll();
   } else toast(draft.type==="poly" ? "A boundary needs at least 3 corners" : "A line needs at least 2 points");

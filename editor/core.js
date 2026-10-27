@@ -390,12 +390,18 @@ function finishImage(base, p){
       v.sort((a,b)=>a-b); tmp[k] = v.length>3 ? v[(v.length*0.35)|0] : 255; }
     const n=tmp.length, R=Math.max(2,(n*0.04)|0);
     for (let k=0;k<n;k++){ let a=0,c=0; for (let t=-R;t<=R;t++){ const kk=Math.min(n-1,Math.max(0,k+t)); a+=tmp[kk]; c++; } const v=a/c; for (let x=k*st; x<Math.min(w,(k+1)*st); x++) refY[x]=v; } }
-  let refMed = 0; if (refY){ const v = Array.from(refY).sort((a,b)=>a-b); refMed = v[(v.length*0.6)|0]; }
+  // 28 Oct: sky reference for 'is this a solid object' is taken from sky well above the horizon
+  // (a whole-frame median wrongly kept the darker side of a dusk sky as 'solid')
+  let refMed = 0, refWide = null; if (refY){ const v = Array.from(refY).sort((a,b)=>a-b); refMed = v[(v.length*0.6)|0];
+    // sky well above the horizon (18-30% of frame height higher), so towers and roofs never pollute it; smoothed ±3% of width
+    refWide = new Float32Array(w); const st = Math.max(1,(w/300)|0), tmp=[];
+    for (let x=0; x<w; x+=st){ const hz=line(x), ya=Math.max(0,(hz-0.30*h)|0), yb=Math.max(ya+1,(hz-0.18*h)|0), v=[]; for (let y=ya;y<yb;y+=Math.max(1,((yb-ya)/20)|0)) v.push(Y[y*w+x]); v.sort((p,q)=>p-q); tmp.push(v.length ? v[(v.length*0.5)|0] : refMed); }
+    const R=Math.max(1,(tmp.length*0.03)|0); for (let k=0;k<tmp.length;k++){ let t=0,c=0; for (let d=-R;d<=R;d++){ const kk=Math.min(tmp.length-1,Math.max(0,k+d)); t+=tmp[kk]; c++; } const r=t/c; for (let xx=k*st; xx<Math.min(w,(k+1)*st); xx++) refWide[xx]=r; } }
   // 27 Oct: per column, how far a solid object (tower, roof) rises continuously from the horizon
   let solidTop = null;
   const solidK = (i,j) => { const o0=px[i], o2=px[i+2], Yo=(px[i]+px[i+1]+px[i+2])/3;
-    const kb = Math.min(1, Math.max(0, (o0-o2-14)/16)) * Math.min(1, Math.max(0, (205-Yo)/30)) * Math.min(1, Math.max(0, (refMed-10-g1[j])/15));
-    return Math.max(kb, Math.min(1, Math.max(0, (Math.max(refY[j%w], refMed)-40-g1[j])/15))); };
+    const kb = Math.min(1, Math.max(0, (o0-o2-14)/16)) * Math.min(1, Math.max(0, (205-Yo)/30)) * Math.min(1, Math.max(0, (refWide[j%w]-10-g1[j])/15));
+    return Math.max(kb, Math.min(1, Math.max(0, (refWide[j%w]-40-g1[j])/15))); };
   if (sky && SKYP && SKYP.direct){ solidTop = new Float32Array(w);
     for (let x=0;x<w;x++){ const hz=line(x); let top=hz, gap=0; const gMax = Math.max(2, (0.004*h)|0);
       for (let y=Math.floor(hz); y>Math.max(0,hz-0.15*h); y--){ const j=y*w+x; if (solidK(j*4,j) > 0.5){ top=y; gap=0; } else if (++gap > gMax) break; }
