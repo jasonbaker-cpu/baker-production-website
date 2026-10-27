@@ -31,7 +31,7 @@ for j in D['jobs']:
         if r and 'cam' in r and r.get('sc', 0) >= r.get('sc0', 0): cams[f] = r['cam']
     # level the horizon on every oblique shot; the satellite-registered camera gets the same roll/zoom
     lv = {}
-    LF = level_flight(ph, os.path.join(os.path.dirname(os.path.dirname(ph[0])), 'lvl'))
+    LF = level_flight(ph, os.path.join(os.path.dirname(os.path.dirname(ph[0])), 'lvl'), force=j.get('level'))
     for f in ph:
         nf, ang, zm = LF[f]
         if nf != f:

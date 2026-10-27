@@ -1,8 +1,8 @@
 import asyncio, json, base64, subprocess, sys, os, time
 from playwright.async_api import async_playwright
-SP='/tmp/claude-0/-home-claude/123b6bc4-adfa-5095-9578-7622ec75f692/scratchpad/'
+SP = os.environ.get('AERIAL_SP') or os.path.dirname(os.path.abspath(__file__)) + '/'   # run from any clone (was a fixed session scratchpad)
 OUT=SP+'e2e/'
-F=SP+'fontpkg/package/files/'
+F=SP+'fonts/' if os.path.exists(SP+'fonts/source-sans-3-latin-300-normal.woff2') else SP+'fontpkg/package/files/'
 ff=''.join(f"@font-face{{font-family:'Source Sans 3';font-weight:{w};src:url(data:font/woff2;base64,{base64.b64encode(open(F+f'source-sans-3-latin-{w}-normal.woff2','rb').read()).decode()}) format('woff2');}}" for w in (300,400,700))+''.join(f"@font-face{{font-family:'Open Sans';font-weight:{w};src:url(data:font/woff2;base64,{base64.b64encode(open(F+f'open-sans-latin-{w}-normal.woff2','rb').read()).decode()}) format('woff2');}}" for w in (400,700))
 srv=subprocess.Popen(['python3','-m','http.server','8765','--bind','127.0.0.1'],cwd=SP,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 time.sleep(1)
@@ -49,7 +49,7 @@ async def main():
                 await th.nth(base+k).click(); await busy(pg); await pg.wait_for_timeout(400)
                 if job.get('cams',{}).get(ph): await pg.evaluate("o=>window.__bae.setCam(o)", job['cams'][ph]); await pg.wait_for_timeout(300)
                 if job.get('adj'): await pg.evaluate("o=>window.__bae.setAdj(o)", job['adj']); await pg.wait_for_timeout(300)
-                nadir = bool(job.get('poly')) and job.get('cams',{}).get(ph,{}).get('pitch',0) < -75
+                nadir = bool(job.get('poly')) and (job.get('cams',{}).get(ph,{}).get('pitch',0) < -75 or bool(job.get('full')))   # 27 Oct: top-down jobs with no registered camera (drone XMP only) lost their boundary
                 if nadir:
                     import math
                     ll=job['poly']; la0=math.radians(ll[0][0])
@@ -120,8 +120,8 @@ async def main():
                         return None if not m else (float(m.group(1)) if m.group(2)=='km' else float(m.group(1))/1000)
                     _cat={nm:cat for nm,cat in names}
                     BIG=('train','regional shopping','hospital','beach','regional park','golf','lake')
-                    cands=[c for c in cands if not ((_km(_cat[c[2]]) or 0)>1.5 and c[3] in ('park','reserve','playground')) and not ((_km(_cat[c[2]]) or 0)>6 and c[3] not in BIG)]
-                    MUST=[m.lower() for m in job.get('must',[])]
+                    MUST=[m.lower() for m in job.get('must',[])]   # places the agent asked for (e.g. the CBD) skip the distance rules
+                    cands=[c for c in cands if any(m in c[2].lower() for m in MUST) or not ((_km(_cat[c[2]]) or 0)>1.5 and c[3] in ('park','reserve','playground')) and not ((_km(_cat[c[2]]) or 0)>6 and c[3] not in BIG)]
                     cands=sorted(cands, key=lambda c:(0 if any(m in c[2].lower() for m in MUST) else 1, c[0], c[1]))
                     cands=[(-1 if any(m in c[2].lower() for m in MUST) else c[0],)+tuple(c[1:]) for c in cands]
                     seen={}; kept=0

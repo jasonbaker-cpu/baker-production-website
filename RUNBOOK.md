@@ -125,3 +125,11 @@ Push-notify him.
 ## 27 Oct — twilight sky + towers
 - Sky plate "S" = editors' Rutland sunset (blue top → peach horizon, from DSC03542). Use `"skyPlate": "S"` in the day json for dusk/twilight jobs; project.json keeps the plate so the portal reopens with it.
 - Tall buildings above the horizon are no longer painted over: land guard reaches 10% of frame height, and brick/dark solids connected to the horizon are kept (dark clouds are not — they aren't connected).
+
+## 27 Oct (Tue 27 run)
+- Scripts no longer need the old session scratchpad: t12/mkday/parity run from the clone (fonts/ in the repo); `SITE=~/site` is honoured by mkday and parity; `python3 assemble.py <this session's tool-results dir>`. Create `qc/` before edgeruler (it fails silently without it).
+- DJI Fly app exports (photos saved from the phone, ~14 MB) have GPS but NO drone XMP (no gimbal pitch/yaw/height). Run `python3 estpose.py <slug> <house_lat> <house_lng> batch/<slug>/raw/*.JPG` after the satellite is in `sat/` (keep a copy of the originals first; run top-downs separately with `NADIR=1`). It solves yaw/pitch/height against the satellite and writes an XMP packet so the rest of the pipeline works. Check with `python3 regview.py <slug> <photos>`.
+- If the skyline finder can't level a flight (hazy horizon, "no-change" on every photo), measure it by hand and set `"level": <deg, + = right side high>` on the job in days/<day>.json; prep_day applies it to every oblique.
+- Top-down jobs with no registered camera lost their boundary (t12 only treated a photo as top-down when a registered camera said so) — fixed. If a satellite registration of a top-down scores low, check the lot is parallel to the street; a bad one rotated Balga's lot 7°. Mini 4 Pro RelativeAltitude can read high on top-downs: size the lot to the fences (h is in the reg_all cam).
+- Newer amenity maps use short categories (shop, zoned, privschool, rec, edu); the editor now maps them (they were never pinned before). Live /pins editor on main still has the old loader until the editor build is deployed.
+- Agent-requested places beyond the distance rules (e.g. "Perth CBD") must be in the places file and in `must`; must places now skip the 1.5 km / 6 km filters.

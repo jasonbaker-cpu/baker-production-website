@@ -491,6 +491,9 @@ function parseJobFile(text){
       places: M.map(q=>({ name:decodeEntities(q.name), cat:q.cat||normType(q.type)||(/school|college/i.test(q.name)?"school":/station/i.test(q.name)?"train":/park|reserve/i.test(q.name)?"park":"other"), lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
   }
   const seen = new Set();
+  // 27 Oct: newer amenity maps use short cats (shop, zoned, privschool, rec, edu) that ranked as "other" and were never pinned
+  const CAT_ALIAS = { shop:"shopping", zoned:"school", privschool:"school", private:"school", rec:"recreation", edu:"tafe" };
+  j.places.forEach(q=>{ if (q.cat==="zoned" && !q.school) q.school="zoned"; if ((q.cat==="privschool"||q.cat==="private") && !q.school) q.school="private"; if (q.cat==="transport") q.cat = /\bbus\b/i.test(q.name||"") ? "bus" : "train"; if (CAT_ALIAS[q.cat]) q.cat = CAT_ALIAS[q.cat]; });
   j.places.forEach(q=>{ if (q.name){ if (/✓\s*ZONED|\bZONED\b/i.test(q.name) && !q.school) q.school='zoned'; q.name = String(q.name).replace(/\s*✓?\s*\(?\bZONED\b\)?\s*/ig,' ').replace(/\s*[✓✔]\s*$/,'').trim(); } });
   j.places = j.places.filter(q=>q.name && isFinite(q.lat) && isFinite(q.lng)).map(q=>{ const g = geoDist(j.lat, j.lng, q.lat, q.lng); let key = q.name.toLowerCase(); while (seen.has(key)) key += "+"; seen.add(key); return Object.assign(q, { key, dist:g.d, dir:g.dir, icon:iconForPlace(q.name, q.cat) }); }).sort((a,b)=>a.dist-b.dist);
   return j;

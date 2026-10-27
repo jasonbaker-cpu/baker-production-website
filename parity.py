@@ -4,7 +4,7 @@
 import sys, json, os, glob, shutil, subprocess, numpy as np
 from PIL import Image, ImageDraw
 day, rf = sys.argv[1], sys.argv[2]
-SITE = '/home/claude/baker-production-website/aerials/' + day + '/'
+SITE = ((os.environ['SITE'].rstrip('/') + '/aerials/') if os.environ.get('SITE') else '/home/claude/baker-production-website/aerials/') + day + '/'
 os.makedirs('par3k', exist_ok=True); jobs = []
 for j in json.load(open(rf)):
     if j['slug'].endswith('__nadir'): continue

@@ -3,8 +3,8 @@ usage: python3 mkday.py <day-id> "<label>" <runjobs.json> <jobs-meta.json>
 jobs-meta: {slug: {"addr":..., "who":...}}"""
 import glob, os, sys, json, html, io, shutil
 from PIL import Image
-SP = '/tmp/claude-0/-home-claude/123b6bc4-adfa-5095-9578-7622ec75f692/scratchpad/'
-SITE = '/home/claude/baker-production-website/aerials/'
+SP = os.environ.get('AERIAL_SP') or os.path.dirname(os.path.abspath(__file__)) + '/'   # run from any clone (was a fixed session scratchpad)
+SITE = (os.environ['SITE'].rstrip('/') + '/aerials/') if os.environ.get('SITE') else '/home/claude/baker-production-website/aerials/'
 day, label, runf, metaf = sys.argv[1:5]
 RUN = json.load(open(SP + runf)); META = json.load(open(SP + metaf))
 OUT = SITE + day + '/'

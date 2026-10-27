@@ -104,7 +104,7 @@ def level_file(src, out_dir):
     if r[0] == 'levelled': return dst, r[1], r[2]
     return src, 0.0, 1.0
 
-def level_flight(files, out_dir):
+def level_flight(files, out_dir, force=None):
     """Level a whole flight. A drone's gimbal tilt is the same on every photo of a flight, so the per-photo skyline
     angles are pooled: if they agree (median spread < 0.6 deg) the median is applied to every oblique photo. If they
     don't agree, a photo is only levelled when two independent horizon measurements match. Returns {src: (dst, ang, zoom)}."""
@@ -119,6 +119,7 @@ def level_flight(files, out_dir):
     v = np.array([a for a in angs.values() if a is not None])
     med = float(np.median(v)) if len(v) >= 3 else None
     spread = float(np.median(np.abs(v - med))) if med is not None else 99
+    if force is not None: med, spread = float(force), 0.0   # day json "level": flight-wide angle measured by hand (skyline finder failed, e.g. hazy DJI Fly exports)
     os.makedirs(out_dir, exist_ok=True); res = {}
     for f in files:
         if f not in obl: res[f] = (f, 0.0, 1.0); continue

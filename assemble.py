@@ -1,5 +1,5 @@
 import json,glob,re,base64,sys,os
-D='/root/.claude/projects/-home-claude/123b6bc4-adfa-5095-9578-7622ec75f692/tool-results/'
+D=sys.argv[1] if len(sys.argv)>1 else '/root/.claude/projects/-home-claude/123b6bc4-adfa-5095-9578-7622ec75f692/tool-results/'   # pass this session's tool-results dir
 parts={}
 for f in glob.glob(D+'mcp-remote-devices-Claude_Browser__javascript_tool-*.txt'):
     try: t=json.load(open(f))[0]['text']
