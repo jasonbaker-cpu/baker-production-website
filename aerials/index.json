@@ -70,6 +70,57 @@
      "photos": [
       "dji_fly_20261026_132126_0881_1793019890605_photo.JPG"
      ]
+    },
+    {
+     "slug": "132a_arkana_rd",
+     "addr": "132A Arkana Rd, Westminster",
+     "who": "Emma Scharf \u00b7 Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "src": "26-oct-2026/132a_arkana_rd/src/",
+     "map": "132a_arkana_rd_westminster_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261026155234_0130_D.jpg",
+      "DJI_20261026155304_0131_D.jpg",
+      "DJI_20261026155318_0132_D.jpg",
+      "DJI_20261026155346_0133_D.jpg",
+      "DJI_20261026155403_0134_D.jpg",
+      "DJI_20261026155426_0135_D.jpg",
+      "DJI_20261026155511_0136_D.jpg"
+     ]
+    },
+    {
+     "slug": "132a_arkana_rd__nadir",
+     "addr": "132A Arkana Rd, Westminster \u2014 top-down",
+     "who": "Emma Scharf \u00b7 Professionals TWT",
+     "agency": "flags-p",
+     "full": true,
+     "src": "26-oct-2026/132a_arkana_rd/src-top/",
+     "map": "132a_arkana_rd_westminster_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261026155212_0129_D.jpg"
+     ]
+    },
+    {
+     "slug": "42_rutland_ave",
+     "addr": "4/42 Rutland Ave, Lathlain",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
+     "agency": "red",
+     "full": false,
+     "src": "26-oct-2026/42_rutland_ave/src/",
+     "map": "42_rutland_ave_lathlain_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261026190010_0313_D.JPG",
+      "DJI_20261026190055_0314_D.JPG",
+      "DJI_20261026190128_0315_D.JPG",
+      "DJI_20261026190140_0316_D.JPG",
+      "DJI_20261026190154_0317_D.JPG",
+      "DJI_20261026190214_0318_D.JPG",
+      "DJI_20261026190232_0319_D.JPG"
+     ]
     }
    ]
   },

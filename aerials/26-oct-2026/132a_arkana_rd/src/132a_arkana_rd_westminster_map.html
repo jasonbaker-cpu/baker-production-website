@@ -1,0 +1,61 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>132A Arkana Rd Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+html,body{margin:0;height:100%;font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#111}
+#hdr{position:absolute;top:0;left:0;right:0;z-index:1000;background:#1b1b1f;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+#hdr h1{margin:0;font-size:17px} #hdr .m{font-size:12px;color:#bbb;margin-top:3px}
+#hdr .b{text-align:right;font-size:12px;color:#ddd;white-space:nowrap} #hdr .b strong{font-size:13px;color:#fff}
+#map{position:absolute;top:62px;bottom:0;left:0;right:0}
+.pin{width:16px;height:16px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.6)}
+.home{font-size:28px;line-height:28px;text-align:center;filter:drop-shadow(0 1px 3px #000)}
+.homewrap{background:#D4537E;border:3px solid #fff;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 2px 6px rgba(0,0,0,.6)}
+.badge{display:inline-block;background:#185FA5;color:#fff;border-radius:4px;padding:1px 6px;font-size:11px;font-weight:700;margin-right:4px}
+.zb{display:inline-block;background:#B8860B;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;margin-top:4px}
+.legend{background:rgba(27,27,31,.92);color:#fff;padding:8px 10px;border-radius:6px;font-size:12px;line-height:20px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;border:2px solid #fff;margin-right:6px;vertical-align:-2px}
+.lbl{background:rgba(0,0,0,.78);color:#fff;border:none;font-size:11px;font-weight:600;padding:2px 6px;box-shadow:none}
+.lbl:before{display:none}
+@media(max-width:600px){#hdr{flex-direction:column;align-items:flex-start} #hdr .b{text-align:left} #map{top:96px}}
+</style></head><body>
+<div id="hdr"><div><h1>🏠 132A Arkana Rd, Westminster WA 6061</h1>
+<div class="m">728 m² block · 4 bed 2 bath double storey · R40 · City of Stirling · School zoning unverified (primary &amp; secondary)</div></div>
+<div class="b"><strong>Baker Production Pty Ltd</strong><br>Real Estate Photography</div></div>
+<div id="map"></div>
+<script>
+const P=[-31.8665598,115.84123919999998];
+const A=[{"n": "Pycombe Worthing Reserve", "la": -31.8672799, "lo": 115.8428116, "d": "SE", "m": 169, "t": "park", "no": "169 m SE \u00b7 Local park & playground", "c": "#185FA5"}, {"n": "The Y Westminster Early Learning Centre", "la": -31.869377199999995, "lo": 115.8369676, "d": "SW", "m": 511, "t": "childcare", "no": "511 m SW \u00b7 Childcare", "c": "#185FA5"}, {"n": "Westminster Centre", "la": -31.869852499999997, "lo": 115.8371927, "d": "SW", "m": 529, "t": "shopping", "no": "529 m SW \u00b7 Local shopping centre", "c": "#185FA5"}, {"n": "Bilinga Reserve", "la": -31.8676546, "lo": 115.83555589999999, "d": "W", "m": 550, "t": "park", "no": "550 m W \u00b7 Local reserve", "c": "#185FA5"}, {"n": "Salmar Edale Reserve", "la": -31.8677079, "lo": 115.8474837, "d": "E", "m": 603, "t": "park", "no": "603 m E \u00b7 Reserve with playground", "c": "#185FA5"}, {"n": "Matt Williams Reserve", "la": -31.8708511, "lo": 115.83713509999998, "d": "SW", "m": 615, "t": "park", "no": "615 m SW \u00b7 Park with playground", "c": "#185FA5"}, {"n": "Framfield Selhurst Reserve", "la": -31.860827599999997, "lo": 115.84000239999999, "d": "N", "m": 649, "t": "park", "no": "649 m N \u00b7 Leafy local reserve", "c": "#185FA5"}, {"n": "Westminster Primary School", "la": -31.871698100000003, "lo": 115.8378234, "d": "SW", "m": 657, "t": "school_amber", "no": "657 m SW \u00b7 Government primary (zoning unverified)", "c": "#B8860B"}, {"n": "Balga Primary School", "la": -31.8605963, "lo": 115.84479329999998, "d": "NE", "m": 744, "t": "school_amber", "no": "744 m NE \u00b7 Government primary (zoning unverified)", "c": "#B8860B"}, {"n": "St. Gerard's Catholic Primary School", "la": -31.8699463, "lo": 115.84882929999999, "d": "SE", "m": 809, "t": "school_private", "no": "809 m SE \u00b7 Catholic primary", "c": "#185FA5"}, {"n": "Fernhurst Reserve", "la": -31.8608776, "lo": 115.8473358, "d": "NE", "m": 855, "t": "park", "no": "855 m NE \u00b7 Oval & cricket nets", "c": "#185FA5"}, {"n": "Gorjy Park", "la": -31.8594056, "lo": 115.8371216, "d": "NW", "m": 886, "t": "park", "no": "886 m NW \u00b7 Family park & picnic spot", "c": "#185FA5"}, {"n": "Margaret Coyle Reserve", "la": -31.8695789, "lo": 115.8317495, "d": "W", "m": 956, "t": "park", "no": "956 m W \u00b7 Reserve & Westminster Community Food Garden", "c": "#185FA5"}, {"n": "Northlands Centre", "la": -31.872218999999998, "lo": 115.83200829999998, "d": "SW", "m": 1075, "t": "shopping", "no": "1.1 km SW \u00b7 Shopping centre (Coles)", "c": "#185FA5"}, {"n": "Ted Cross Reserve", "la": -31.866458700000003, "lo": 115.8298341, "d": "W", "m": 1076, "t": "park", "no": "1.1 km W \u00b7 Park, goals & playground", "c": "#185FA5"}, {"n": "North Metropolitan TAFE Balga", "la": -31.8624214, "lo": 115.8528696, "d": "NE", "m": 1190, "t": "tafe", "no": "1.2 km NE \u00b7 TAFE campus", "c": "#185FA5"}, {"n": "Des Penman Reserve", "la": -31.877604499999997, "lo": 115.8405531, "d": "S", "m": 1231, "t": "park", "no": "1.2 km S \u00b7 Major oval, courts & playground", "c": "#185FA5"}, {"n": "Stirling Central Shopping Centre", "la": -31.8622876, "lo": 115.8291809, "d": "NW", "m": 1233, "t": "shopping", "no": "1.2 km NW \u00b7 Shopping centre (Woolworths, Spudshed)", "c": "#185FA5"}, {"n": "Robertsbridge Reserve", "la": -31.8740426, "lo": 115.85099969999999, "d": "SE", "m": 1242, "t": "park", "no": "1.2 km SE \u00b7 Oval & playground", "c": "#185FA5"}, {"n": "Barry Britton Reserve", "la": -31.8591584, "lo": 115.8511397, "d": "NE", "m": 1245, "t": "park", "no": "1.2 km NE \u00b7 Sports oval & playground", "c": "#185FA5"}, {"n": "Majella Catholic Primary School", "la": -31.856078300000004, "lo": 115.8478768, "d": "NE", "m": 1324, "t": "school_private", "no": "1.3 km NE \u00b7 Catholic primary", "c": "#185FA5"}, {"n": "Stirling Leisure - Balga", "la": -31.8541514, "lo": 115.8387073, "d": "N", "m": 1402, "t": "rec", "no": "1.4 km N \u00b7 Aquatic & leisure centre", "c": "#185FA5"}, {"n": "Rickman Delawney Reserve", "la": -31.8677325, "lo": 115.82592729999999, "d": "W", "m": 1450, "t": "park", "no": "1.4 km W \u00b7 Adventure playground, courts, BBQs", "c": "#185FA5"}, {"n": "Bina Parkland", "la": -31.854094000000003, "lo": 115.83579859999999, "d": "N", "m": 1480, "t": "park", "no": "1.5 km N \u00b7 Adventure playground, skate park, bike track", "c": "#185FA5"}, {"n": "Princess Wallington Reserve", "la": -31.852862, "lo": 115.83706399999998, "d": "N", "m": 1575, "t": "park", "no": "1.6 km N \u00b7 Enclosed dog park", "c": "#185FA5"}, {"n": "Mirrabooka Bus Station", "la": -31.87002, "lo": 115.85854999999998, "d": "E", "m": 1678, "t": "transport", "no": "1.7 km E \u00b7 Bus interchange", "c": "#185FA5"}, {"n": "Stirling Libraries - Mirrabooka", "la": -31.869097, "lo": 115.85946, "d": "E", "m": 1742, "t": "library", "no": "1.7 km E \u00b7 Public library", "c": "#185FA5"}, {"n": "John Septimus Roe Anglican Community School", "la": -31.8581608, "lo": 115.8577493, "d": "NE", "m": 1817, "t": "school_private", "no": "1.8 km NE \u00b7 Anglican K-12", "c": "#185FA5"}, {"n": "Mirrabooka Regional Open Space", "la": -31.867308500000004, "lo": 115.86233869999998, "d": "E", "m": 1992, "t": "park", "no": "2.0 km E \u00b7 Regional open space", "c": "#185FA5"}, {"n": "The Square Mirrabooka", "la": -31.871325799999994, "lo": 115.8617108, "d": "E", "m": 2003, "t": "shopping", "no": "2.0 km E \u00b7 Regional shopping centre", "c": "#185FA5"}, {"n": "Mercy College", "la": -31.848000300000002, "lo": 115.85697300000001, "d": "NE", "m": 2544, "t": "school_private", "no": "2.5 km NE \u00b7 Catholic K-12", "c": "#185FA5"}, {"n": "The Western Australian Golf Club", "la": -31.8959266, "lo": 115.852163, "d": "S", "m": 3428, "t": "golf", "no": "3.4 km S \u00b7 Golf course", "c": "#185FA5"}, {"n": "Koondoola Regional Bushland", "la": -31.846159699999998, "lo": 115.87356729999999, "d": "NE", "m": 3802, "t": "park", "no": "3.8 km NE \u00b7 Regional bushland & wildflower trails", "c": "#185FA5"}, {"n": "Dianella Regional Open Space", "la": -31.8849013, "lo": 115.8753653, "d": "SE", "m": 3812, "t": "park", "no": "3.8 km SE \u00b7 Regional park, ovals & dog park", "c": "#185FA5"}, {"n": "Stirling Station", "la": -31.8941455, "lo": 115.8045988, "d": "SW", "m": 4624, "t": "transport", "no": "4.6 km SW \u00b7 Train station (Joondalup line)", "c": "#185FA5"}, {"n": "Warwick Station", "la": -31.844791399999995, "lo": 115.79642839999998, "d": "NW", "m": 4873, "t": "transport", "no": "4.9 km NW \u00b7 Train station (Joondalup line)", "c": "#185FA5"}];
+const sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Esri World Imagery'});
+const ref=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:19});
+const sat2=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Esri World Imagery'});
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'});
+const labelled=L.layerGroup([sat,ref]);
+const map=L.map('map',{layers:[labelled]});
+L.control.layers({'Satellite with labels':labelled,'Satellite clean':sat2,'Street (OSM)':osm},null,{position:'topright'}).addTo(map);
+L.marker(P,{zIndexOffset:1000,icon:L.divIcon({className:'',html:'<div class="homewrap">🏠</div>',iconSize:[38,38],iconAnchor:[19,19]})})
+ .addTo(map).bindPopup('<b>🏠 132A Arkana Rd, Westminster WA 6061</b><br>728 m² · 4×2 double storey · R40');
+const near=[];
+A.forEach(a=>{
+  const close=a.m<300;
+  const mk=L.marker([a.la,a.lo],{zIndexOffset:close?2000:500,icon:L.divIcon({className:'',html:'<div class="pin" style="background:'+a.c+'"></div>',iconSize:[16,16],iconAnchor:[8,8]})}).addTo(map);
+  let pop='<span class="badge">'+a.d+'</span><b>'+a.n+'</b>';
+  if(a.t==='school_amber') pop+='<br><span class="zb">zoning unverified</span>';
+  pop+='<br>'+a.no; mk.bindPopup(pop);
+  if(close){
+    L.polyline([P,[a.la,a.lo]],{color:'#fff',weight:2,dashArray:'5,5',opacity:.9}).addTo(map);
+    mk.bindTooltip('['+a.d+'] '+a.n+' · '+a.m+' m',{permanent:true,direction:'bottom',offset:[0,10],className:'lbl'});
+  }
+  if(a.m<=1500) near.push([a.la,a.lo]);
+});
+// overlap check: label one of any pair within 40 m
+for(let i=0;i<A.length;i++)for(let j=i+1;j<A.length;j++){
+  const dy=(A[i].la-A[j].la)*111320,dx=(A[i].lo-A[j].lo)*94340;
+  if(Math.hypot(dx,dy)<40) console.warn('overlap',A[i].n,A[j].n);
+}
+near.push(P);
+map.fitBounds(L.latLngBounds(near),{padding:[40,40],maxZoom:15});
+const lg=L.control({position:'bottomleft'});
+lg.onAdd=()=>{const d=L.DomUtil.create('div','legend');d.innerHTML='<i style="background:#D4537E"></i>Property<br><i style="background:#185FA5"></i>Amenity<br><i style="background:#0F6E56"></i>Zoned school<br><i style="background:#B8860B"></i>School (zoning unverified)';return d;};
+lg.addTo(map);
+window.PINCOUNT=A.length;
+</script></body></html>
