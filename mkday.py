@@ -1,11 +1,10 @@
-import os
 """Publish one shoot day to bakerproduction.com/aerials/<day>/ : finals gallery + editable sources + index.json entry.
-usage: python3 mkday.py <day-id> "<label>" e2e/run_<day>.json e2e/meta_<day>.json
+usage: python3 mkday.py <day-id> "<label>" <runjobs.json> <jobs-meta.json>
 jobs-meta: {slug: {"addr":..., "who":...}}"""
 import glob, os, sys, json, html, io, shutil
 from PIL import Image
-SP = os.path.dirname(os.path.abspath(__file__))+'/'
-SITE = os.environ.get('SITE', '/home/claude/baker-production-website') + '/aerials/'
+SP = '/tmp/claude-0/-home-claude/123b6bc4-adfa-5095-9578-7622ec75f692/scratchpad/'
+SITE = '/home/claude/baker-production-website/aerials/'
 day, label, runf, metaf = sys.argv[1:5]
 RUN = json.load(open(SP + runf)); META = json.load(open(SP + metaf))
 OUT = SITE + day + '/'
@@ -28,10 +27,6 @@ def save_with_meta(src, dst, width):
     open(dst, 'wb').write(j); return Image.open(src).size, im.size
 
 os.makedirs(OUT, exist_ok=True)
-# collect finals: each job's photos plus its top-down
-for slug in META:
-    fd = f'{SP}final_aerials/{slug}'; shutil.rmtree(fd, ignore_errors=True); os.makedirs(fd)
-    for f in glob.glob(f'{SP}e2e/{slug}/*.jpg') + glob.glob(f'{SP}e2e/{slug}__nadir/*.jpg'): shutil.copy(f, fd)
 jobs_idx, secs = [], []
 by_slug = {j['slug']: j for j in RUN}
 for slug, m in META.items():

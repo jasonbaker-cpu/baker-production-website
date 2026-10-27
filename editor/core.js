@@ -390,9 +390,21 @@ function finishImage(base, p){
       v.sort((a,b)=>a-b); tmp[k] = v.length>3 ? v[(v.length*0.35)|0] : 255; }
     const n=tmp.length, R=Math.max(2,(n*0.04)|0);
     for (let k=0;k<n;k++){ let a=0,c=0; for (let t=-R;t<=R;t++){ const kk=Math.min(n-1,Math.max(0,k+t)); a+=tmp[kk]; c++; } const v=a/c; for (let x=k*st; x<Math.min(w,(k+1)*st); x++) refY[x]=v; } }
+  let refMed = 0; if (refY){ const v = Array.from(refY).sort((a,b)=>a-b); refMed = v[(v.length*0.6)|0]; }
+  // 27 Oct: per column, how far a solid object (tower, roof) rises continuously from the horizon
+  let solidTop = null;
+  const solidK = (i,j) => { const o0=px[i], o2=px[i+2], Yo=(px[i]+px[i+1]+px[i+2])/3;
+    const kb = Math.min(1, Math.max(0, (o0-o2-14)/16)) * Math.min(1, Math.max(0, (205-Yo)/30)) * Math.min(1, Math.max(0, (refMed-10-g1[j])/15));
+    return Math.max(kb, Math.min(1, Math.max(0, (Math.max(refY[j%w], refMed)-40-g1[j])/15))); };
+  if (sky && SKYP && SKYP.direct){ solidTop = new Float32Array(w);
+    for (let x=0;x<w;x++){ const hz=line(x); let top=hz, gap=0; const gMax = Math.max(2, (0.004*h)|0);
+      for (let y=Math.floor(hz); y>Math.max(0,hz-0.15*h); y--){ const j=y*w+x; if (solidK(j*4,j) > 0.5){ top=y; gap=0; } else if (++gap > gMax) break; }
+      solidTop[x]=top; }
+    // a column only counts if its neighbours agree (no single-column spikes)
+    const st2 = new Float32Array(w); for (let x=0;x<w;x++){ const v=[]; for (let k=-2;k<=2;k++) v.push(solidTop[Math.min(w-1,Math.max(0,x+k))]); v.sort((a,b)=>a-b); st2[x]=v[2]; } solidTop = st2; }
   if (sky && SKYP && SKYP.direct){
     const d2 = new Float32Array(w*h); for (let k=0;k<d2.length;k++) d2[k] = Math.abs(Y[k]-g3[k]); const T2 = gaussBlur(d2, w, h, 1.5*scale+0.3);
-    const Yb = g1, maxUp = 0.05*h, gapMax = 2; landTop = new Float32Array(w);
+    const Yb = g1, maxUp = (Object.assign({},TUNE,window.__TUNE||{}).landUp||0.10)*h, gapMax = 2; landTop = new Float32Array(w);
     for (let x=0;x<w;x++){ const hz=line(x); let top=hz, gap=0;
       for (let y=Math.floor(hz-0.0015*h); y>Math.max(0,hz-maxUp); y--){ const j=y*w+x; const up = hz - y, land = (up < 0.004*h && Yb[j] < refY[x]-12) || (Yb[j] < refY[x]-45) || (T2[j] > 2.6 && Yb[j] < refY[x]-6);
         if (land){ top=y; gap=0; } else if (++gap > gapMax) break; }
@@ -475,6 +487,8 @@ function finishImage(base, p){
           const o0=px[i], o1=px[i+1], o2=px[i+2], Yp = .299*o0+.587*o1+.114*o2, mn = Math.min(o0,o1,o2), mx = Math.max(o0,o1,o2);
           const bl = Math.min(1, Math.max(0, (o2 - o0 - 4)/22)) * Math.min(1, Math.max(0, (Yp - 120)/40)), cw = Math.min(1, Math.max(0, (mn - 175)/30)) * Math.min(1, Math.max(0, (40 - (mx-mn))/20));
           const e = Math.abs(Y[j]-g1[j])*2.2, gz = y > hzx - 0.08*h ? Math.min(1, Math.max(0, (Y[j] - (refY[x] - 22))/12)) : 1; ww = gz * (ws > 0.04 ? Math.min(1, ws/0.04) * Math.max(bl, cw) : Math.min(1, fz) * bl * (cw > 0.5 ? 0 : 1)) * Math.min(1, Math.max(0, (14 - e)/10)); } }
+        // 27 Oct: solid objects poking above the horizon (brick towers, dark roofs) are never painted over
+        if (SKYP.direct && !rmS && ww > 0 && solidTop && y >= solidTop[x] - 1) ww *= 1 - solidK(i,j);
         r = r*(1-ww) + sr*ww; g = g*(1-ww) + sg*ww; b = b*(1-ww) + sb*ww;
       } else if (ws > 0){
         const hzx = line(x), t = Math.min(1, (y/Math.max(hzx,1))/0.8) * (SKY_STOPS.length-1);

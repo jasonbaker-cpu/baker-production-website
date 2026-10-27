@@ -1,9 +1,8 @@
-import os
 import asyncio, json, base64, subprocess, sys, os, time
 from playwright.async_api import async_playwright
-SP=os.path.dirname(os.path.abspath(__file__))+'/'
+SP='/tmp/claude-0/-home-claude/123b6bc4-adfa-5095-9578-7622ec75f692/scratchpad/'
 OUT=SP+'e2e/'
-F=SP+'fonts/'
+F=SP+'fontpkg/package/files/'
 ff=''.join(f"@font-face{{font-family:'Source Sans 3';font-weight:{w};src:url(data:font/woff2;base64,{base64.b64encode(open(F+f'source-sans-3-latin-{w}-normal.woff2','rb').read()).decode()}) format('woff2');}}" for w in (300,400,700))+''.join(f"@font-face{{font-family:'Open Sans';font-weight:{w};src:url(data:font/woff2;base64,{base64.b64encode(open(F+f'open-sans-latin-{w}-normal.woff2','rb').read()).decode()}) format('woff2');}}" for w in (400,700))
 srv=subprocess.Popen(['python3','-m','http.server','8765','--bind','127.0.0.1'],cwd=SP,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 time.sleep(1)

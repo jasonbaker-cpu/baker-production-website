@@ -40,7 +40,8 @@ function drawIcon(c, name, cx, cy, size, R){ if (R){ const im = iconImg(name); i
 // ================= pins: one preset per agency, measured from the editors' delivered finals (3000 px wide) =================
 const AGENCIES = {
   "red":         { name:"Laurie Kelly — red pins (Devon, Daniel, Franklin; Cooper Winter)",            kind:"pin",  color:"#E2181C", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
-  "charcoal":    { name:"Raspa — charcoal pins (John O'Brien, Simon Raspa)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
+  "rodway":      { name:"Rodway Group — black pins", kind:"pin", color:"#111111", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
+"charcoal":    { name:"Raspa — charcoal pins (John O'Brien, Simon Raspa)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   "c21":         { name:"Century 21 — Obsessed Grey pins, Relentless Gold house (Josh Brockhurst)", kind:"pin", color:"#252526", house:{ type:"pin", w:240, h:340, mark:"house", ring:true, color:"#BEAF87" } },
   "grey-s":      { name:"Grey pins + S logo (Kasey Summers, Semple)",               kind:"pin",  color:"#9C9C9C", house:{ type:"pin", w:255, h:360, mark:"s", markR:.9, ring:true } },
   "black-photo": { name:"Black pins + agent photo (Jayden Cooke)",          kind:"pin",  color:"#060606", house:{ type:"pin", w:236, h:330, mark:"photo", markR:.69 } },

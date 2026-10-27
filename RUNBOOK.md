@@ -121,3 +121,7 @@ Push-notify him.
 - Late uploads for a day already published: publish with `MERGE=1 python3 mkday.py ...` so the earlier jobs stay.
 - mkday now refreshes final_aerials/<slug> from e2e/ itself (a stale folder had put old edits in the gallery).
 - Amenity maps with `{n, la, lo, t}` records are read too (they were showing no pins).
+
+## 27 Oct — twilight sky + towers
+- Sky plate "S" = editors' Rutland sunset (blue top → peach horizon, from DSC03542). Use `"skyPlate": "S"` in the day json for dusk/twilight jobs; project.json keeps the plate so the portal reopens with it.
+- Tall buildings above the horizon are no longer painted over: land guard reaches 10% of frame height, and brick/dark solids connected to the horizon are kept (dark clouds are not — they aren't connected).

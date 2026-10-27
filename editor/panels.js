@@ -411,13 +411,13 @@ async function decodeToWorking(file){
 const fileIn = $("fileIn");
 $("addBtn").onclick=()=>fileIn.click();
 fileIn.onchange=()=>{ addFiles([...fileIn.files]); fileIn.value=""; };
-function projectJSON(){ return JSON.stringify({ bakerProject:1, saved:new Date().toISOString(), job: job||null, agency: prefs.agency, photos: photos.filter(q=>!q.sample).map(q=>{ const o={ name:q.name }; SNAP_KEYS.forEach(k=>o[k]=q[k]); return o; }) }); }
+function projectJSON(){ return JSON.stringify({ bakerProject:1, saved:new Date().toISOString(), job: job||null, agency: prefs.agency, skyPlate: prefs.skyPlate||"C", photos: photos.filter(q=>!q.sample).map(q=>{ const o={ name:q.name }; SNAP_KEYS.forEach(k=>o[k]=q[k]); return o; }) }); }
 let pendingProject = null;
 function applyProject(){ if (!pendingProject) return 0; let n=0;
   photos.forEach(q=>{ const s = pendingProject.photos.find(o=>o.name===q.name); if (!s) return; SNAP_KEYS.forEach(k=>{ if (s[k]!==undefined) q[k]=JSON.parse(JSON.stringify(s[k])); }); q.fin=null; q.finKey=null; q._blur=null; q._adj=null; ensureFinish(q); n++; });
   return n; }
 async function addFiles(files){
-  const pf = []; for (const f of files){ if (/\.json$/i.test(f.name)){ try{ const o=JSON.parse(await f.text()); if (o && o.bakerProject){ pendingProject=o; if (o.job) job=o.job; if (o.agency) { prefs.agency=o.agency; savePrefs(); } pf.push(f); } }catch(e){} } }
+  const pf = []; for (const f of files){ if (/\.json$/i.test(f.name)){ try{ const o=JSON.parse(await f.text()); if (o && o.bakerProject){ pendingProject=o; if (o.job) job=o.job; if (o.skyPlate && typeof SKY_PLATES!=="undefined" && SKY_PLATES[o.skyPlate]) prefs.skyPlate=o.skyPlate; if (o.agency) { prefs.agency=o.agency; savePrefs(); } pf.push(f); } }catch(e){} } }
   files = files.filter(f=>!pf.includes(f));
   if (pf.length && !files.length){ const n=applyProject(); refreshAll(); toast(n ? `Project restored on ${n} photo${n>1?"s":""}` : "Project loaded. Now add its photos."); return; }
   const jf = files.find(f=>/\.(json|html?)$/i.test(f.name)); if (jf) await loadJobFile(jf);
