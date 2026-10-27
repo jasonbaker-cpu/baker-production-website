@@ -41,6 +41,8 @@ for j in D['jobs']:
     nad = [f for f in ph if pitch(f) < -75]
     base = {'map': j['map'], 'agency': j.get('agency', 'red')}
     if j.get('must'): base['must'] = j['must']
+    if j.get('noSky'): base['noSky'] = 1   # twilight / sunset shoot: keep the real sky
+    if j.get('noFinish'): base['noFinish'] = 1   # twilight: no brightening grade either
     if j.get('plain'): base['plain'] = 1
     for k in ('area', 'lens'):   # from the title / strata plan / agent's sketch in Dropbox
         if j.get(k): base[k] = j[k]

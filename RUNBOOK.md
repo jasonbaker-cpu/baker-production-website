@@ -115,3 +115,9 @@ Push-notify him.
    (26 Oct: the portal finished photos with the registered camera and clamped the sky ~130 px too high; the batch never showed it.)
 4. **Places.** At most 4 places per photo. Small parks, reserves and playgrounds only within 1.5 km. Nothing beyond 6 km unless it's
    a station, regional shopping centre, hospital, beach, regional park, golf course or lake.
+
+## 27 Oct
+- Twilight / sunset shoots: set `"noSky": true, "noFinish": true` on the job in days/<day>.json — keeps the real blue→orange sky and the dusk mood (no daytime sky, no brightening).
+- Late uploads for a day already published: publish with `MERGE=1 python3 mkday.py ...` so the earlier jobs stay.
+- mkday now refreshes final_aerials/<slug> from e2e/ itself (a stale folder had put old edits in the gallery).
+- Amenity maps with `{n, la, lo, t}` records are read too (they were showing no pins).

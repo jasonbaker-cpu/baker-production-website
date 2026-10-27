@@ -98,6 +98,8 @@ async def main():
                         kx=im.width/ok['w']; cx,cy,cw,ch=[v*kx for v in ok['crop']]
                         im.crop((round(cx),round(cy),round(cx+cw),round(cy+ch))).resize((3000,2000),Image.LANCZOS).save(fn,quality=93)
                     continue
+                if job.get('noFinish'): await pg.evaluate("window.__bae.setFinish(false)"); await pg.wait_for_timeout(300)   # twilight: keep the drone's own colour and dusk mood
+                if job.get('noSky'): await pg.evaluate("window.__bae.setSky(false)"); await pg.wait_for_timeout(300); await busy(pg)   # twilight/sunset shoots keep their real sky
                 st = job.get('steps',{}).get(ph,{})
                 if 'house' in st:
                     await pg.click('text=Click the house'); await clickImg(pg,*st['house'])

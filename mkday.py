@@ -57,6 +57,9 @@ for slug, m in META.items():
         mp = SP + j['map']; shutil.copy(mp, src_dir + os.path.basename(mp))
         jobs_idx.append({'slug': variant, 'addr': m['addr'] + (' — top-down' if full else ''), 'who': m['who'], 'agency': j.get('agency'),
                          'full': full, 'src': f'{day}/{slug}/src{"-top" if full else ""}/', 'map': os.path.basename(mp), 'project': 'project.json', 'photos': names})
+    # finals gallery: always refresh from this run's renders (26 Oct: a stale final_aerials folder put old edits in the gallery)
+    fa = f'{SP}final_aerials/{slug}'; shutil.rmtree(fa, ignore_errors=True); os.makedirs(fa)
+    for src in glob.glob(f'{SP}e2e/{slug}/*.jpg') + glob.glob(f'{SP}e2e/{slug}__nadir/*.jpg'): shutil.copy(src, fa)
     # finals gallery
     d = f'{OUT}{slug}'; os.makedirs(d + '/t', exist_ok=True); items = []
     for f in sorted(glob.glob(f'{SP}final_aerials/{slug}/*.jpg')):
@@ -67,6 +70,12 @@ for slug, m in META.items():
     edits = ''.join(f'<a class="ed" href="/pins/?open={day}/{x["slug"]}">Edit{" top-down" if x["full"] else ""}</a>' for x in jobs_idx if x['slug'] in (slug, slug + '__nadir'))
     secs.append(f'<section><h2>{html.escape(m["addr"])}</h2><p>{html.escape(m["who"])} · {len(items)} photos {edits}</p><div class="g">{"".join(items)}</div></section>')
 
+# MERGE=1: add these jobs to a day that's already published (keeps the other jobs' gallery sections and index entries)
+if os.environ.get('MERGE') and os.path.exists(OUT + 'index.html'):
+    import re as _re
+    mine = {html.escape(m['addr']) for m in META.values()}
+    old_secs = [x for x in _re.findall(r'<section>.*?</section>', open(OUT + 'index.html').read(), _re.S) if _re.search(r'<h2>(.*?)</h2>', x).group(1) not in mine]
+    secs = old_secs + secs
 page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><title>Aerials {html.escape(label)} · Baker Production</title>
 <style>:root{{--bg:#f6f5f2;--fg:#16181b;--mut:#666;--acc:#1f5fbf}}@media(prefers-color-scheme:dark){{:root{{--bg:#121315;--fg:#eee;--mut:#9a9a9a;--acc:#7fb0ff}}}}
@@ -79,6 +88,9 @@ open(OUT + 'index.html', 'w').write(page)
 
 ip = SITE + 'index.json'
 idx = json.load(open(ip)) if os.path.exists(ip) else {'days': []}
+if os.environ.get('MERGE'):
+    prev = next((x for x in idx['days'] if x['id'] == day), None)
+    if prev: jobs_idx = [x for x in prev['jobs'] if x['slug'] not in {y['slug'] for y in jobs_idx}] + jobs_idx
 idx['days'] = [x for x in idx['days'] if x['id'] != day] + [{'id': day, 'label': label, 'gallery': f'{day}/', 'jobs': jobs_idx}]
 idx['days'].sort(key=lambda x: x.get('sort', x['id']), reverse=True)
 open(ip, 'w').write(json.dumps(idx, indent=1))
