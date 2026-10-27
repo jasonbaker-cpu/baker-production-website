@@ -1,0 +1,259 @@
+{
+ "address": "41 St Kilda Rd, Balga WA 6061",
+ "lat": -31.8568361,
+ "lng": 115.8296668,
+ "pins": [
+  {
+   "name": "Stedham Brede Reserve",
+   "cat": "park",
+   "lat": -31.8566501,
+   "lng": 115.8278614,
+   "school": ""
+  },
+  {
+   "name": "Celebration Park",
+   "cat": "park",
+   "lat": -31.8534388,
+   "lng": 115.8283419,
+   "school": ""
+  },
+  {
+   "name": "Camberwell Park",
+   "cat": "park",
+   "lat": -31.8555127,
+   "lng": 115.8342921,
+   "school": ""
+  },
+  {
+   "name": "Balga Salvos Early Learning Centre",
+   "cat": "childcare",
+   "lat": -31.8592055,
+   "lng": 115.8347048,
+   "school": ""
+  },
+  {
+   "name": "North Balga Primary School",
+   "cat": "school",
+   "lat": -31.8531691,
+   "lng": 115.8336388,
+   "school": "zoned"
+  },
+  {
+   "name": "Stirling Central Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.8622876,
+   "lng": 115.8291809,
+   "school": ""
+  },
+  {
+   "name": "Balga Plaza",
+   "cat": "shopping",
+   "lat": -31.8560285,
+   "lng": 115.8380939,
+   "school": ""
+  },
+  {
+   "name": "Princess Wallington Reserve",
+   "cat": "park",
+   "lat": -31.852862,
+   "lng": 115.837064,
+   "school": ""
+  },
+  {
+   "name": "Stirling Leisure - Balga",
+   "cat": "recreation",
+   "lat": -31.8541514,
+   "lng": 115.8387073,
+   "school": ""
+  },
+  {
+   "name": "Ted Cross Reserve",
+   "cat": "park",
+   "lat": -31.8664587,
+   "lng": 115.8298341,
+   "school": ""
+  },
+  {
+   "name": "Fieldgate Reserve",
+   "cat": "park",
+   "lat": -31.8473085,
+   "lng": 115.8261423,
+   "school": ""
+  },
+  {
+   "name": "Hartley Park",
+   "cat": "park",
+   "lat": -31.8463182,
+   "lng": 115.8305838,
+   "school": ""
+  },
+  {
+   "name": "Rannoch Reserve",
+   "cat": "park",
+   "lat": -31.8500335,
+   "lng": 115.8197671,
+   "school": ""
+  },
+  {
+   "name": "Lennox Place Reserve",
+   "cat": "park",
+   "lat": -31.8526217,
+   "lng": 115.8174181,
+   "school": ""
+  },
+  {
+   "name": "Rickman Delawney Reserve",
+   "cat": "park",
+   "lat": -31.8677325,
+   "lng": 115.8259273,
+   "school": ""
+  },
+  {
+   "name": "Balga Senior High School",
+   "cat": "school",
+   "lat": -31.8520548,
+   "lng": 115.8459537,
+   "school": "zoned"
+  },
+  {
+   "name": "Richard Guelfi Reserve",
+   "cat": "park",
+   "lat": -31.8648834,
+   "lng": 115.8149349,
+   "school": ""
+  },
+  {
+   "name": "Jones Paskin Reserve",
+   "cat": "park",
+   "lat": -31.86941,
+   "lng": 115.81972,
+   "school": ""
+  },
+  {
+   "name": "Pycombe Worthing Reserve",
+   "cat": "park",
+   "lat": -31.8672799,
+   "lng": 115.8428116,
+   "school": ""
+  },
+  {
+   "name": "Matt Williams Reserve",
+   "cat": "park",
+   "lat": -31.8708511,
+   "lng": 115.8371351,
+   "school": ""
+  },
+  {
+   "name": "Majella Catholic Primary School",
+   "cat": "school",
+   "lat": -31.8560783,
+   "lng": 115.8478768,
+   "school": "private"
+  },
+  {
+   "name": "Blackmore Park",
+   "cat": "park",
+   "lat": -31.84126,
+   "lng": 115.83076,
+   "school": ""
+  },
+  {
+   "name": "Warwick Bushland",
+   "cat": "park",
+   "lat": -31.8415306,
+   "lng": 115.8183837,
+   "school": ""
+  },
+  {
+   "name": "Girrawheen Library",
+   "cat": "library",
+   "lat": -31.8397045,
+   "lng": 115.8387197,
+   "school": ""
+  },
+  {
+   "name": "Emmanuel Christian Community School",
+   "cat": "school",
+   "lat": -31.8462206,
+   "lng": 115.848557,
+   "school": "private"
+  },
+  {
+   "name": "Aintree Eglinton Reserve",
+   "cat": "park",
+   "lat": -31.8517163,
+   "lng": 115.8076651,
+   "school": ""
+  },
+  {
+   "name": "North Metropolitan TAFE Balga",
+   "cat": "tafe",
+   "lat": -31.8624214,
+   "lng": 115.8528696,
+   "school": ""
+  },
+  {
+   "name": "Warwick Grove",
+   "cat": "shopping",
+   "lat": -31.8441921,
+   "lng": 115.8106431,
+   "school": ""
+  },
+  {
+   "name": "Des Penman Reserve",
+   "cat": "park",
+   "lat": -31.8776045,
+   "lng": 115.8405531,
+   "school": ""
+  },
+  {
+   "name": "John Septimus Roe Anglican Community School",
+   "cat": "school",
+   "lat": -31.8581608,
+   "lng": 115.8577493,
+   "school": "private"
+  },
+  {
+   "name": "Mirrabooka Bus Station",
+   "cat": "bus",
+   "lat": -31.87002,
+   "lng": 115.85855,
+   "school": ""
+  },
+  {
+   "name": "Warwick Station",
+   "cat": "train",
+   "lat": -31.8447914,
+   "lng": 115.7964284,
+   "school": ""
+  },
+  {
+   "name": "The Square Mirrabooka",
+   "cat": "shopping",
+   "lat": -31.8713258,
+   "lng": 115.8617108,
+   "school": ""
+  },
+  {
+   "name": "Lake Gwelup Regional Open Space",
+   "cat": "regional_park",
+   "lat": -31.8761435,
+   "lng": 115.7944422,
+   "school": ""
+  },
+  {
+   "name": "Koondoola Regional Bushland",
+   "cat": "regional_park",
+   "lat": -31.8461597,
+   "lng": 115.8735673,
+   "school": ""
+  },
+  {
+   "name": "Lake Karrinyup Country Club",
+   "cat": "golf",
+   "lat": -31.8615436,
+   "lng": 115.784233,
+   "school": ""
+  }
+ ]
+}

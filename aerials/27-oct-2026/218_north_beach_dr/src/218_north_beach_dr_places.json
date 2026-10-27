@@ -1,0 +1,287 @@
+{
+ "address": "218 North Beach Dr, Tuart Hill WA 6060",
+ "lat": -31.8907,
+ "lng": 115.83596,
+ "pins": [
+  {
+   "name": "Wattle Street Reserve",
+   "cat": "park",
+   "lat": -31.8912209,
+   "lng": 115.8358516,
+   "school": ""
+  },
+  {
+   "name": "Tuart Hill Village",
+   "cat": "shopping",
+   "lat": -31.8901666,
+   "lng": 115.8372499,
+   "school": ""
+  },
+  {
+   "name": "Milestones Early Learning Yokine",
+   "cat": "childcare",
+   "lat": -31.8930142,
+   "lng": 115.8395684,
+   "school": ""
+  },
+  {
+   "name": "Constance Nanson Reserve",
+   "cat": "park",
+   "lat": -31.88653,
+   "lng": 115.84131,
+   "school": ""
+  },
+  {
+   "name": "Royal Street Reserve",
+   "cat": "park",
+   "lat": -31.896911,
+   "lng": 115.8376799,
+   "school": ""
+  },
+  {
+   "name": "Robinson Reserve",
+   "cat": "park",
+   "lat": -31.895581,
+   "lng": 115.830771,
+   "school": ""
+  },
+  {
+   "name": "Conway Reserve",
+   "cat": "park",
+   "lat": -31.8854528,
+   "lng": 115.8290699,
+   "school": ""
+  },
+  {
+   "name": "Stirling Libraries - Osborne",
+   "cat": "library",
+   "lat": -31.8961934,
+   "lng": 115.8293601,
+   "school": ""
+  },
+  {
+   "name": "Woodchester Reserve",
+   "cat": "park",
+   "lat": -31.88757,
+   "lng": 115.8448,
+   "school": ""
+  },
+  {
+   "name": "West Coast Steiner School",
+   "cat": "school",
+   "lat": -31.8834166,
+   "lng": 115.8402587,
+   "school": "private"
+  },
+  {
+   "name": "Knight Avenue Reserve",
+   "cat": "park",
+   "lat": -31.8917866,
+   "lng": 115.8457446,
+   "school": ""
+  },
+  {
+   "name": "Nollamara Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.8812645,
+   "lng": 115.8408972,
+   "school": ""
+  },
+  {
+   "name": "Royal Lockwood Reserve",
+   "cat": "park",
+   "lat": -31.8969224,
+   "lng": 115.8464551,
+   "school": ""
+  },
+  {
+   "name": "Macedonia Park",
+   "cat": "park",
+   "lat": -31.8882402,
+   "lng": 115.8230846,
+   "school": ""
+  },
+  {
+   "name": "Balcatta Primary School",
+   "cat": "school",
+   "lat": -31.8817375,
+   "lng": 115.8278947,
+   "school": "zoned"
+  },
+  {
+   "name": "Our Lady of Lourdes School Nollamara",
+   "cat": "school",
+   "lat": -31.8878805,
+   "lng": 115.8492644,
+   "school": "private"
+  },
+  {
+   "name": "Servite College",
+   "cat": "school",
+   "lat": -31.9025882,
+   "lng": 115.8329301,
+   "school": "private"
+  },
+  {
+   "name": "Stirling Leisure \u2013 Tuart Hill Community Centre",
+   "cat": "recreation",
+   "lat": -31.902895,
+   "lng": 115.8353235,
+   "school": ""
+  },
+  {
+   "name": "Grindleford Reserve",
+   "cat": "park",
+   "lat": -31.8832276,
+   "lng": 115.8240598,
+   "school": ""
+  },
+  {
+   "name": "Grenville Reserve",
+   "cat": "park",
+   "lat": -31.9032247,
+   "lng": 115.835784,
+   "school": ""
+  },
+  {
+   "name": "St Kieran Catholic Primary School",
+   "cat": "school",
+   "lat": -31.9029425,
+   "lng": 115.8310461,
+   "school": "private"
+  },
+  {
+   "name": "Roselea Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.8893171,
+   "lng": 115.8205059,
+   "school": ""
+  },
+  {
+   "name": "St Lawrence Primary School",
+   "cat": "school",
+   "lat": -31.8791638,
+   "lng": 115.8277715,
+   "school": "private"
+  },
+  {
+   "name": "Des Penman Reserve",
+   "cat": "park",
+   "lat": -31.8776045,
+   "lng": 115.8405531,
+   "school": ""
+  },
+  {
+   "name": "The Western Australian Golf Club",
+   "cat": "golf",
+   "lat": -31.8959266,
+   "lng": 115.852163,
+   "school": ""
+  },
+  {
+   "name": "Joondanna Reserve",
+   "cat": "park",
+   "lat": -31.9074296,
+   "lng": 115.8361455,
+   "school": ""
+  },
+  {
+   "name": "Centuria Northlands Plaza",
+   "cat": "shopping",
+   "lat": -31.8734575,
+   "lng": 115.8298401,
+   "school": ""
+  },
+  {
+   "name": "Dog Swamp Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.9106486,
+   "lng": 115.8471397,
+   "school": ""
+  },
+  {
+   "name": "Stirling Civic Gardens",
+   "cat": "park",
+   "lat": -31.8919542,
+   "lng": 115.8084454,
+   "school": ""
+  },
+  {
+   "name": "Balcatta Senior High School",
+   "cat": "school",
+   "lat": -31.873926,
+   "lng": 115.8131061,
+   "school": "zoned"
+  },
+  {
+   "name": "Glendalough Station",
+   "cat": "train",
+   "lat": -31.9146896,
+   "lng": 115.8231252,
+   "school": ""
+  },
+  {
+   "name": "Stirling Station",
+   "cat": "train",
+   "lat": -31.8941455,
+   "lng": 115.8045988,
+   "school": ""
+  },
+  {
+   "name": "The Square Mirrabooka",
+   "cat": "shopping",
+   "lat": -31.8713258,
+   "lng": 115.8617108,
+   "school": ""
+  },
+  {
+   "name": "Yokine Regional Open Space",
+   "cat": "regional_park",
+   "lat": -31.9095662,
+   "lng": 115.8644952,
+   "school": ""
+  },
+  {
+   "name": "North Metropolitan TAFE Balga",
+   "cat": "tafe",
+   "lat": -31.8624214,
+   "lng": 115.8528696,
+   "school": ""
+  },
+  {
+   "name": "Westfield Innaloo",
+   "cat": "shopping",
+   "lat": -31.9014506,
+   "lng": 115.7992006,
+   "school": ""
+  },
+  {
+   "name": "Herdsman Lake Regional Park",
+   "cat": "regional_park",
+   "lat": -31.910987,
+   "lng": 115.8045047,
+   "school": ""
+  },
+  {
+   "name": "Stirling Leisure - Inglewood",
+   "cat": "aquatic",
+   "lat": -31.9088154,
+   "lng": 115.8700114,
+   "school": ""
+  },
+  {
+   "name": "Stirling Leisure - Balga",
+   "cat": "aquatic",
+   "lat": -31.8541514,
+   "lng": 115.8387073,
+   "school": ""
+  },
+  {
+   "name": "Perth CBD",
+   "cat": "city",
+   "lat": -31.9523,
+   "lng": 115.859,
+   "school": ""
+  }
+ ]
+}

@@ -1,6 +1,83 @@
 {
  "days": [
   {
+   "id": "27-oct-2026",
+   "label": "Tue 27 Oct 2026",
+   "gallery": "27-oct-2026/",
+   "jobs": [
+    {
+     "slug": "218_north_beach_dr",
+     "addr": "218 North Beach Dr, Tuart Hill",
+     "who": "Stephanie Briers \u00b7 Professionals",
+     "agency": "flags-p",
+     "full": false,
+     "src": "27-oct-2026/218_north_beach_dr/src/",
+     "map": "218_north_beach_dr_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261027_150852_0906_1793084703012_photo.JPG",
+      "dji_fly_20261027_150910_0907_1793084701634_photo.JPG",
+      "dji_fly_20261027_150938_0908_1793084700212_photo.JPG",
+      "dji_fly_20261027_150948_0909_1793084698807_photo.JPG",
+      "dji_fly_20261027_151000_0910_1793084697396_photo.JPG",
+      "dji_fly_20261027_151032_0911_1793084695909_photo.JPG",
+      "dji_fly_20261027_151100_0912_1793084694451_photo.JPG",
+      "dji_fly_20261027_151114_0913_1793084693051_photo.JPG",
+      "dji_fly_20261027_151128_0914_1793084691646_photo.JPG",
+      "dji_fly_20261027_151138_0915_1793084690227_photo.JPG",
+      "dji_fly_20261027_151152_0916_1793084688823_photo.JPG",
+      "dji_fly_20261027_151200_0917_1793084687391_photo.JPG"
+     ]
+    },
+    {
+     "slug": "218_north_beach_dr__nadir",
+     "addr": "218 North Beach Dr, Tuart Hill \u2014 top-down",
+     "who": "Stephanie Briers \u00b7 Professionals",
+     "agency": "flags-p",
+     "full": true,
+     "src": "27-oct-2026/218_north_beach_dr/src-top/",
+     "map": "218_north_beach_dr_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261027_150818_0904_1793084705926_photo.JPG"
+     ]
+    },
+    {
+     "slug": "41_st_kilda_rd",
+     "addr": "41 St Kilda Rd, Balga",
+     "who": "Emma Scharf \u00b7 Professionals",
+     "agency": "flags-p",
+     "full": false,
+     "src": "27-oct-2026/41_st_kilda_rd/src/",
+     "map": "41_st_kilda_rd_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261027_120152_0892_1793084725908_photo.JPG",
+      "dji_fly_20261027_120208_0893_1793084724563_photo.JPG",
+      "dji_fly_20261027_120238_0894_1793084723192_photo.JPG",
+      "dji_fly_20261027_120258_0895_1793084721818_photo.JPG",
+      "dji_fly_20261027_120318_0896_1793084720496_photo.JPG",
+      "dji_fly_20261027_120334_0897_1793084719060_photo.JPG",
+      "dji_fly_20261027_120400_0898_1793084717514_photo.JPG",
+      "dji_fly_20261027_120412_0899_1793084715431_photo.JPG"
+     ]
+    },
+    {
+     "slug": "41_st_kilda_rd__nadir",
+     "addr": "41 St Kilda Rd, Balga \u2014 top-down",
+     "who": "Emma Scharf \u00b7 Professionals",
+     "agency": "flags-p",
+     "full": true,
+     "src": "27-oct-2026/41_st_kilda_rd/src-top/",
+     "map": "41_st_kilda_rd_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261027_123924_0900_1793084713356_photo.JPG"
+     ]
+    }
+   ]
+  },
+  {
    "id": "26-oct-2026",
    "label": "Mon 26 Oct 2026",
    "gallery": "26-oct-2026/",
