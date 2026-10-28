@@ -33,24 +33,15 @@
      "map": "90_tibradden_cir_ascot_map.html",
      "project": "project.json",
      "photos": [
+      "dji_fly_20261028_164618_0918.JPG",
       "dji_fly_20261028_164652_0921.JPG",
       "dji_fly_20261028_164704_0922.JPG",
       "dji_fly_20261028_164724_0923.JPG",
       "dji_fly_20261028_164740_0924.JPG",
       "dji_fly_20261028_164924_0927.JPG",
       "dji_fly_20261028_164938_0928.JPG"
-     ]
-    },
-    {
-     "slug": "90_tibradden_cir__nadir",
-     "addr": "90 Tibradden Cir, Ascot \u2014 top-down",
-     "who": "Devon Kelly \u00b7 Laurie Kelly",
-     "agency": "red",
-     "full": true,
-     "src": "28-oct-2026/90_tibradden_cir/src-top/",
-     "map": "90_tibradden_cir_ascot_map.html",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "dji_fly_20261028_164618_0918.JPG"
      ]
     },
@@ -117,6 +108,7 @@
      "project": "project.json",
      "photos": [
       "dji_fly_20261027_123924_0900_1793084713356_photo.JPG",
+      "dji_fly_20261027_123940_0902_1793084708968_photo.JPG",
       "dji_fly_20261027_120152_0892_1793084725908_photo.JPG",
       "dji_fly_20261027_120208_0893_1793084724563_photo.JPG",
       "dji_fly_20261027_120238_0894_1793084723192_photo.JPG",
@@ -127,7 +119,8 @@
       "dji_fly_20261027_120412_0899_1793084715431_photo.JPG"
      ],
      "fullPhotos": [
-      "dji_fly_20261027_123924_0900_1793084713356_photo.JPG"
+      "dji_fly_20261027_123924_0900_1793084713356_photo.JPG",
+      "dji_fly_20261027_123940_0902_1793084708968_photo.JPG"
      ]
     },
     {
@@ -260,6 +253,7 @@
      "project": "project.json",
      "photos": [
       "dji_fly_20261026_132126_0881_1793019890605_photo.JPG",
+      "dji_fly_20261026_132122_0880_1793019893585_photo.JPG",
       "dji_fly_20261026_132144_0882_1793019887778_photo.JPG",
       "dji_fly_20261026_132200_0883_1793019885134_photo.JPG",
       "dji_fly_20261026_132224_0884_1793019882479_photo.JPG",
@@ -270,7 +264,8 @@
       "dji_fly_20261026_132344_0889_1793019868493_photo.JPG"
      ],
      "fullPhotos": [
-      "dji_fly_20261026_132126_0881_1793019890605_photo.JPG"
+      "dji_fly_20261026_132126_0881_1793019890605_photo.JPG",
+      "dji_fly_20261026_132122_0880_1793019893585_photo.JPG"
      ]
     },
     {
