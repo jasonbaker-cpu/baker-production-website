@@ -24,6 +24,7 @@ def pitch(f):
 run, meta = [], {}
 for j in D['jobs']:
     ph = sorted(f for f in glob.glob(j['photos'].rstrip('/') + '/*') if f.lower().endswith(('.jpg', '.jpeg')))
+    if j.get('pick'): ph = [f for f in ph if any(p in os.path.basename(f) for p in j['pick'])]   # 28 Oct: agent wants only these frames
     if not ph: print('no photos for', j['slug']); continue
     cams = {}
     for f in ph:
@@ -41,6 +42,8 @@ for j in D['jobs']:
     nad = [f for f in ph if pitch(f) < -75]
     base = {'map': j['map'], 'agency': j.get('agency', 'grey')}
     if j.get('must'): base['must'] = j['must']
+    for k in ('skip', 'perPhoto'):
+        if j.get(k): base[k] = j[k]
     if j.get('skyPlate'): base['skyPlate'] = j['skyPlate']   # e.g. 'S' = editors' sunset sky for twilight shoots
     if j.get('noSky'): base['noSky'] = 1   # twilight / sunset shoot: keep the real sky
     if j.get('noFinish'): base['noFinish'] = 1   # twilight: no brightening grade either

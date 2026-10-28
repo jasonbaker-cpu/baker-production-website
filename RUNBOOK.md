@@ -140,3 +140,10 @@ Push-notify him.
 - Never publish an address of "Property": set the real address in the places file / project.
 - Solid-object keep (towers above the horizon) compares against sky 18–30% of frame height above the horizon (a frame-wide median kept the dark side of a dusk sky) and follows a building up to 28% of frame height. Land guard is back to 5% (10% put a pale arc beside tall buildings).
 - portalcheck waits until the thumbnail count stops growing (it used to capture after the first thumb).
+
+## 28 Oct 2026 — 3 pins per location photo (Jason)
+- Every oblique (location) photo carries **3 amenity pins** — not 2, not 4. t12.py `TARGET = job.perPhoto or 3`; if the strict list can't reach 3 it falls back to any other in-view place (still never childcare/kindy/driving/dance).
+- Labels may sit above/below the pin when left/right would overlap (render.js tidySides). Still no stems, no overlaps, nothing off-frame.
+- If a photo can't fit 3 clean pins, drop that photo rather than show 1–2 pins, or pick a different frame.
+- Agent requests: `must` (places that have to appear), `skip` (e.g. ["library"]), `pick` (only these frames, matched on filename), `perPhoto`. Per-photo hand choices go in the run file as `steps: {photo: {ticks: [three names]}}`.
+- A satellite overview (satmap/) is made only when asked: property pin + the requested places, labels never covering pins.

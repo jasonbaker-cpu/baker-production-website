@@ -120,14 +120,19 @@ async def main():
                         return None if not m else (float(m.group(1)) if m.group(2)=='km' else float(m.group(1))/1000)
                     _cat={nm:cat for nm,cat in names}
                     BIG=('train','regional shopping','hospital','beach','regional park','golf','lake')
+                    SKIP=[x.lower() for x in job.get('skip',[])]   # 28 Oct: agent-excluded categories or names (e.g. Jenny: no library)
+                    cands=[c for c in cands if not any(x==c[3].lower() or x in c[2].lower() for x in SKIP)]
                     MUST=[m.lower() for m in job.get('must',[])]   # places the agent asked for (e.g. the CBD) skip the distance rules
                     cands=[c for c in cands if any(m in c[2].lower() for m in MUST) or not ((_km(_cat[c[2]]) or 0)>1.5 and c[3] in ('park','reserve','playground')) and not ((_km(_cat[c[2]]) or 0)>6 and c[3] not in BIG)]
                     cands=sorted(cands, key=lambda c:(0 if any(m in c[2].lower() for m in MUST) else 1, c[0], c[1]))
                     cands=[(-1 if any(m in c[2].lower() for m in MUST) else c[0],)+tuple(c[1:]) for c in cands]
-                    seen={}; kept=0
-                    for r_,i,nm,c in cands:
-                        if kept>=4: break
-                        if r_==99 or (r_>=0 and seen.get(c,0)>=2): continue
+                    seen={}; kept=0; TARGET=int(job.get('perPhoto',3))   # 28 Oct (Jason): every location photo carries 3 pins
+                    _all=[(rank(cat.split('·')[0].strip()), i, nm, cat.split('·')[0].strip()) for i,(nm,cat) in enumerate(names)]
+                    _all=[c for c in _all if not _re.search(r'child ?care|early learning|kindergarten|kindy|daycare|driving school|dance', c[2], _re.I) and c[3]!='childcare' and not any(x==c[3].lower() or x in c[2].lower() for x in SKIP)]
+                    _extra=[(c[0]+100,)+tuple(c[1:]) for c in sorted(_all) if c[2] not in {d[2] for d in cands}]   # fallback pool if the strict list can't reach 3
+                    for r_,i,nm,c in cands+_extra:
+                        if kept>=TARGET: break
+                        if r_==99 or r_==199 or (0<=r_<100 and seen.get(c,0)>=2): continue
                         await pg.locator('.place', has_text=nm).first.click(); await pg.wait_for_timeout(250)
                         ph_ = await pg.evaluate("window.__bae.photo()")
                         if any(q['clash'] for q in ph_['pins'] if not q['house']) or any(q['clash'] for q in ph_['pins'] if q['house']):
