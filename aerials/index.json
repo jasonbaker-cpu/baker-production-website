@@ -131,25 +131,6 @@
      ]
     },
     {
-     "slug": "47_attra_st",
-     "addr": "47 Attra St, Balcatta",
-     "who": "Jenny Fry \u00b7 City to Surf",
-     "agency": "simple",
-     "full": false,
-     "fullPhotos": [
-      "DJI_20261027201407_0152_D.jpg"
-     ],
-     "src": "27-oct-2026/47_attra_st/src/",
-     "map": "47_attra_st_balcatta_map.html",
-     "project": "project.json",
-     "photos": [
-      "DJI_20261027201407_0152_D.jpg",
-      "DJI_20261027201444_0154_D.jpg",
-      "DJI_20261027201539_0158_D.jpg",
-      "DJI_20261027201608_0160_D.jpg"
-     ]
-    },
-    {
      "slug": "4_17_forest_hill_dr",
      "addr": "4/17 Forest Hill Dr, Kingsley",
      "who": "James Kennedy \u00b7 Professionals Kingsley",
@@ -212,6 +193,27 @@
       "DJI_20261027164625_0140_D.jpg",
       "DJI_20261027164659_0141_D.jpg",
       "DJI_20261027164724_0142_D.jpg"
+     ]
+    },
+    {
+     "slug": "47_attra_st",
+     "addr": "47 Attra St, Balcatta",
+     "who": "Jenny Fry \u00b7 City to Surf",
+     "agency": "simple",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261027201407_0152_D.jpg",
+      "DJI_20261027201357_0151_D.jpg"
+     ],
+     "src": "27-oct-2026/47_attra_st/src/",
+     "map": "47_attra_st_balcatta_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261027201407_0152_D.jpg",
+      "DJI_20261027201357_0151_D.jpg",
+      "DJI_20261027201444_0154_D.jpg",
+      "DJI_20261027201539_0158_D.jpg",
+      "DJI_20261027201608_0160_D.jpg"
      ]
     }
    ]
