@@ -106,7 +106,10 @@ async def main():
                 elif not job.get('plain') and await pg.locator('#plHouse').count(): await pg.click('#plHouse'); await pg.wait_for_timeout(300)
                 if job.get('plain'): pass
                 elif 'ticks' in st:
-                    for t in st['ticks']: await pg.locator('.place', has_text=t).first.click(); await pg.wait_for_timeout(250)
+                    for t in st['ticks']:
+                        import re as _r2   # exact name match first ("Lake Goollelal" must not hit "Lake Goollelal Boardwalk")
+                        ex = pg.locator('.place').filter(has=pg.locator('.t', has_text=_r2.compile('^\\s*'+_r2.escape(t)+'\\s*$')))
+                        await (ex.first if await ex.count() else pg.locator('.place', has_text=t).first).click(); await pg.wait_for_timeout(250)
                 else:  # add places one at a time (landmarks first); keep each only if it doesn't clash; stop at 5
                     names = await pg.evaluate("""()=>[...document.querySelectorAll('.place:not(.off)')].map(b=>[b.querySelector('.t').textContent,b.querySelector('small').textContent+' · '+((b.querySelector('.d')||{}).textContent||'')])""")
                     PRI=['train','shopping','regional shopping','school','library','aquatic','sport','golf','hospital','regional park','lake','beach','park','reserve','transport','community','childcare','playground']
