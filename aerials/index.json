@@ -76,39 +76,6 @@
      ]
     },
     {
-     "slug": "47_attra_st",
-     "addr": "47 Attra St, Balcatta",
-     "who": "Jenny Fry \u00b7 City to Surf",
-     "agency": "grey",
-     "full": false,
-     "src": "27-oct-2026/47_attra_st/src/",
-     "map": "47_attra_st_balcatta_map.html",
-     "project": "project.json",
-     "photos": [
-      "DJI_20261027201427_0153_D.jpg",
-      "DJI_20261027201444_0154_D.jpg",
-      "DJI_20261027201457_0155_D.jpg",
-      "DJI_20261027201514_0156_D.jpg",
-      "DJI_20261027201525_0157_D.jpg",
-      "DJI_20261027201539_0158_D.jpg",
-      "DJI_20261027201554_0159_D.jpg",
-      "DJI_20261027201608_0160_D.jpg"
-     ]
-    },
-    {
-     "slug": "47_attra_st__nadir",
-     "addr": "47 Attra St, Balcatta \u2014 top-down",
-     "who": "Jenny Fry \u00b7 City to Surf",
-     "agency": "grey",
-     "full": true,
-     "src": "27-oct-2026/47_attra_st/src-top/",
-     "map": "47_attra_st_balcatta_map.html",
-     "project": "project.json",
-     "photos": [
-      "DJI_20261027201407_0152_D.jpg"
-     ]
-    },
-    {
      "slug": "4_17_forest_hill_dr",
      "addr": "4/17 Forest Hill Dr, Kingsley",
      "who": "James Kennedy \u00b7 Professionals Kingsley",
@@ -158,6 +125,34 @@
      "project": "project.json",
      "photos": [
       "DJI_20261027153704_0025_D.jpg"
+     ]
+    },
+    {
+     "slug": "47_attra_st",
+     "addr": "47 Attra St, Balcatta",
+     "who": "Jenny Fry \u00b7 City to Surf",
+     "agency": "grey",
+     "full": false,
+     "src": "27-oct-2026/47_attra_st/src/",
+     "map": "47_attra_st_balcatta_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261027201444_0154_D.jpg",
+      "DJI_20261027201539_0158_D.jpg",
+      "DJI_20261027201608_0160_D.jpg"
+     ]
+    },
+    {
+     "slug": "47_attra_st__nadir",
+     "addr": "47 Attra St, Balcatta \u2014 top-down",
+     "who": "Jenny Fry \u00b7 City to Surf",
+     "agency": "grey",
+     "full": true,
+     "src": "27-oct-2026/47_attra_st/src-top/",
+     "map": "47_attra_st_balcatta_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261027201407_0152_D.jpg"
      ]
     }
    ]

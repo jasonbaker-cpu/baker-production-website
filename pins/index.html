@@ -1084,7 +1084,7 @@ function tidySides(p){
   const K = boxed ? 16 : 1, st = boxed ? 70*s : step;
   const place = (pin, others) => {
     let best = null;
-    for (let k=0;k<K;k++) for (const flip of [false]) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : ["right","left"])){
+    for (let k=0;k<K;k++) for (const flip of [false]) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : ["right","left","top","bottom"])){   /* 28 Oct: above/below only win when left/right overlap (2500 penalty) — lets 3 pins fit per photo */
       if (boxed){ pin.off = side; pin.side = "right"; } else pin.side = side;
       pin.flip = flip; pin.lift = k*st;
       const parts = pinParts(p,pin), r = parts[0];
