@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 47 Attra St, Balcatta</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary · 809 m²</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (15)</div></div></div>
+<script>const D={"lat": -31.870675799999994, "lng": 115.81656830000001, "poly": [[-31.870853945050822, 115.81644908105991], [-31.870491078448058, 115.81645095434178], [-31.870491902811867, 115.81666433125055], [-31.870854756398305, 115.81666247097259]], "places": [{"name": "Stirling Central Shopping Centre", "lat": -31.8622876, "lng": 115.8291809, "d": "1.5 km"}, {"name": "Takari Primary School", "lat": -31.8695345, "lng": 115.8215948, "d": "490 m"}, {"name": "Jones Paskin Reserve", "lat": -31.86941, "lng": 115.81971999999999, "d": "330 m"}, {"name": "Rickman Delawney Reserve", "lat": -31.8677325, "lng": 115.82592729999999, "d": "940 m"}, {"name": "Stirling Leisure - Balga", "lat": -31.854151400000003, "lng": 115.8387073, "d": "2.8 km"}, {"name": "Stirling Station", "lat": -31.8941455, "lng": 115.8045988, "d": "2.8 km"}, {"name": "West Balcatta Primary School", "lat": -31.872730699999998, "lng": 115.80961219999999, "d": "700 m"}, {"name": "Karrinyup Shopping Centre", "lat": -31.877347699999998, "lng": 115.7781686, "d": "3.7 km"}, {"name": "Balcatta Senior High School", "lat": -31.873925999999997, "lng": 115.81310610000001, "d": "490 m"}, {"name": "Lake Gwelup Regional Open Space", "lat": -31.8761435, "lng": 115.7944422, "d": "2.2 km"}, {"name": "Lake Karrinyup Country Club", "lat": -31.861543599999997, "lng": 115.784233, "d": "3.2 km"}, {"name": "Carine Regional Open Space", "lat": -31.8468939, "lng": 115.7871095, "d": "3.8 km"}, {"name": "Richard Guelfi Reserve", "lat": -31.864883400000004, "lng": 115.8149349, "d": "660 m"}, {"name": "Careniup Reserve", "lat": -31.859918600000004, "lng": 115.79492469999998, "d": "2.4 km"}, {"name": "Warwick Station", "lat": -31.844791399999995, "lng": 115.79642839999998, "d": "3.5 km"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[30,30]});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{padding:[40,40]});
+</script></body></html>

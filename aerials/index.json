@@ -88,6 +88,7 @@
      "map": "218_north_beach_dr_places.json",
      "project": "project.json",
      "photos": [
+      "dji_fly_20261027_150818_0904_1793084705926_photo.JPG",
       "dji_fly_20261027_150852_0906_1793084703012_photo.JPG",
       "dji_fly_20261027_150910_0907_1793084701634_photo.JPG",
       "dji_fly_20261027_150938_0908_1793084700212_photo.JPG",
@@ -100,18 +101,8 @@
       "dji_fly_20261027_151138_0915_1793084690227_photo.JPG",
       "dji_fly_20261027_151152_0916_1793084688823_photo.JPG",
       "dji_fly_20261027_151200_0917_1793084687391_photo.JPG"
-     ]
-    },
-    {
-     "slug": "218_north_beach_dr__nadir",
-     "addr": "218 North Beach Dr, Tuart Hill \u2014 top-down",
-     "who": "Stephanie Briers \u00b7 Professionals",
-     "agency": "flags-p",
-     "full": true,
-     "src": "27-oct-2026/218_north_beach_dr/src-top/",
-     "map": "218_north_beach_dr_places.json",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "dji_fly_20261027_150818_0904_1793084705926_photo.JPG"
      ]
     },
@@ -125,6 +116,7 @@
      "map": "41_st_kilda_rd_places.json",
      "project": "project.json",
      "photos": [
+      "dji_fly_20261027_123924_0900_1793084713356_photo.JPG",
       "dji_fly_20261027_120152_0892_1793084725908_photo.JPG",
       "dji_fly_20261027_120208_0893_1793084724563_photo.JPG",
       "dji_fly_20261027_120238_0894_1793084723192_photo.JPG",
@@ -133,19 +125,28 @@
       "dji_fly_20261027_120334_0897_1793084719060_photo.JPG",
       "dji_fly_20261027_120400_0898_1793084717514_photo.JPG",
       "dji_fly_20261027_120412_0899_1793084715431_photo.JPG"
+     ],
+     "fullPhotos": [
+      "dji_fly_20261027_123924_0900_1793084713356_photo.JPG"
      ]
     },
     {
-     "slug": "41_st_kilda_rd__nadir",
-     "addr": "41 St Kilda Rd, Balga \u2014 top-down",
-     "who": "Emma Scharf \u00b7 Professionals",
-     "agency": "flags-p",
-     "full": true,
-     "src": "27-oct-2026/41_st_kilda_rd/src-top/",
-     "map": "41_st_kilda_rd_places.json",
+     "slug": "47_attra_st",
+     "addr": "47 Attra St, Balcatta",
+     "who": "Jenny Fry \u00b7 City to Surf",
+     "agency": "simple",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261027201407_0152_D.jpg"
+     ],
+     "src": "27-oct-2026/47_attra_st/src/",
+     "map": "47_attra_st_balcatta_map.html",
      "project": "project.json",
      "photos": [
-      "dji_fly_20261027_123924_0900_1793084713356_photo.JPG"
+      "DJI_20261027201407_0152_D.jpg",
+      "DJI_20261027201444_0154_D.jpg",
+      "DJI_20261027201539_0158_D.jpg",
+      "DJI_20261027201608_0160_D.jpg"
      ]
     },
     {
@@ -154,6 +155,7 @@
      "who": "James Kennedy \u00b7 Professionals Kingsley",
      "agency": "flags-p",
      "full": false,
+     "fullPhotos": [],
      "src": "27-oct-2026/4_17_forest_hill_dr/src/",
      "map": "4_17_forest_hill_dr_kingsley_map.html",
      "project": "project.json",
@@ -174,10 +176,14 @@
      "who": "David Huynh \u00b7 Harcourts",
      "agency": "navy-h",
      "full": false,
+     "fullPhotos": [
+      "DJI_20261027153704_0025_D.jpg"
+     ],
      "src": "27-oct-2026/18_wonderboom_way/src/",
      "map": "wonderboom_places.json",
      "project": "project.json",
      "photos": [
+      "DJI_20261027153704_0025_D.jpg",
       "DJI_20261027153728_0026_D.jpg",
       "DJI_20261027153750_0027_D.jpg",
       "DJI_20261027153805_0028_D.jpg",
@@ -188,74 +194,24 @@
      ]
     },
     {
-     "slug": "18_wonderboom_way__nadir",
-     "addr": "18 Wonderboom Way, Forrestfield \u2014 top-down",
-     "who": "David Huynh \u00b7 Harcourts",
-     "agency": "navy-h",
-     "full": true,
-     "src": "27-oct-2026/18_wonderboom_way/src-top/",
-     "map": "wonderboom_places.json",
-     "project": "project.json",
-     "photos": [
-      "DJI_20261027153704_0025_D.jpg"
-     ]
-    },
-    {
-     "slug": "47_attra_st",
-     "addr": "47 Attra St, Balcatta",
-     "who": "Jenny Fry \u00b7 City to Surf",
-     "agency": "simple",
-     "full": false,
-     "src": "27-oct-2026/47_attra_st/src/",
-     "map": "47_attra_st_balcatta_map.html",
-     "project": "project.json",
-     "photos": [
-      "DJI_20261027201444_0154_D.jpg",
-      "DJI_20261027201539_0158_D.jpg",
-      "DJI_20261027201608_0160_D.jpg"
-     ]
-    },
-    {
-     "slug": "47_attra_st__nadir",
-     "addr": "47 Attra St, Balcatta \u2014 top-down",
-     "who": "Jenny Fry \u00b7 City to Surf",
-     "agency": "grey",
-     "full": true,
-     "src": "27-oct-2026/47_attra_st/src-top/",
-     "map": "47_attra_st_balcatta_map.html",
-     "project": "project.json",
-     "photos": [
-      "DJI_20261027201407_0152_D.jpg"
-     ]
-    },
-    {
      "slug": "209_barridale_dr",
      "addr": "209 Barridale Dr, Kingsley",
      "who": "James Kennedy \u00b7 Professionals Kingsley",
      "agency": "flags-p",
      "full": false,
+     "fullPhotos": [
+      "DJI_20261027164443_0137_D.jpg"
+     ],
      "src": "27-oct-2026/209_barridale_dr/src/",
      "map": "209_barridale_dr_kingsley_map.html",
      "project": "project.json",
      "photos": [
+      "DJI_20261027164443_0137_D.jpg",
       "DJI_20261027164541_0138_D.jpg",
       "DJI_20261027164558_0139_D.jpg",
       "DJI_20261027164625_0140_D.jpg",
       "DJI_20261027164659_0141_D.jpg",
       "DJI_20261027164724_0142_D.jpg"
-     ]
-    },
-    {
-     "slug": "209_barridale_dr__nadir",
-     "addr": "209 Barridale Dr, Kingsley \u2014 top-down",
-     "who": "James Kennedy \u00b7 Professionals Kingsley",
-     "agency": "flags-p",
-     "full": true,
-     "src": "27-oct-2026/209_barridale_dr/src-top/",
-     "map": "209_barridale_dr_kingsley_map.html",
-     "project": "project.json",
-     "photos": [
-      "DJI_20261027164443_0137_D.jpg"
      ]
     }
    ]
@@ -275,6 +231,7 @@
      "map": "30_karangi_cir_places.json",
      "project": "project.json",
      "photos": [
+      "dji_fly_20261026_103336_0871_1793019919233_photo.JPG",
       "dji_fly_20261026_103402_0872_1793019916803_photo.JPG",
       "dji_fly_20261026_103416_0873_1793019912855_photo.JPG",
       "dji_fly_20261026_103442_0874_1793019910369_photo.JPG",
@@ -283,18 +240,8 @@
       "dji_fly_20261026_103540_0877_1793019901522_photo.JPG",
       "dji_fly_20261026_103556_0878_1793019898733_photo.JPG",
       "dji_fly_20261026_103610_0879_1793019896166_photo.JPG"
-     ]
-    },
-    {
-     "slug": "30_karangi_cir__nadir",
-     "addr": "30 Karangi Cir, Byford \u2014 top-down",
-     "who": "Sally Bulpitt \u00b7 Rodway Group",
-     "agency": "rodway",
-     "full": true,
-     "src": "26-oct-2026/30_karangi_cir/src-top/",
-     "map": "30_karangi_cir_places.json",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "dji_fly_20261026_103336_0871_1793019919233_photo.JPG"
      ]
     },
@@ -308,6 +255,7 @@
      "map": "41_coulthard_cres_places.json",
      "project": "project.json",
      "photos": [
+      "dji_fly_20261026_132126_0881_1793019890605_photo.JPG",
       "dji_fly_20261026_132144_0882_1793019887778_photo.JPG",
       "dji_fly_20261026_132200_0883_1793019885134_photo.JPG",
       "dji_fly_20261026_132224_0884_1793019882479_photo.JPG",
@@ -316,18 +264,8 @@
       "dji_fly_20261026_132320_0887_1793019873465_photo.JPG",
       "dji_fly_20261026_132332_0888_1793019871013_photo.JPG",
       "dji_fly_20261026_132344_0889_1793019868493_photo.JPG"
-     ]
-    },
-    {
-     "slug": "41_coulthard_cres__nadir",
-     "addr": "41 Coulthard Cres, Canning Vale \u2014 top-down",
-     "who": "Phil Lankowski \u00b7 Rodway Group",
-     "agency": "rodway",
-     "full": true,
-     "src": "26-oct-2026/41_coulthard_cres/src-top/",
-     "map": "41_coulthard_cres_places.json",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "dji_fly_20261026_132126_0881_1793019890605_photo.JPG"
      ]
     },
@@ -341,6 +279,7 @@
      "map": "132a_arkana_rd_westminster_map.html",
      "project": "project.json",
      "photos": [
+      "DJI_20261026155212_0129_D.jpg",
       "DJI_20261026155234_0130_D.jpg",
       "DJI_20261026155304_0131_D.jpg",
       "DJI_20261026155318_0132_D.jpg",
@@ -348,18 +287,8 @@
       "DJI_20261026155403_0134_D.jpg",
       "DJI_20261026155426_0135_D.jpg",
       "DJI_20261026155511_0136_D.jpg"
-     ]
-    },
-    {
-     "slug": "132a_arkana_rd__nadir",
-     "addr": "132A Arkana Rd, Westminster \u2014 top-down",
-     "who": "Emma Scharf \u00b7 Professionals TWT",
-     "agency": "flags-p",
-     "full": true,
-     "src": "26-oct-2026/132a_arkana_rd/src-top/",
-     "map": "132a_arkana_rd_westminster_map.html",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "DJI_20261026155212_0129_D.jpg"
      ]
     },
@@ -399,6 +328,7 @@
      "map": "10_belches_lp_seville_grove_map.html",
      "project": "project.json",
      "photos": [
+      "DJI_20261024152338_0110_D.jpg",
       "DJI_20261024152412_0111_D.jpg",
       "DJI_20261024152431_0112_D.jpg",
       "DJI_20261024152450_0113_D.jpg",
@@ -406,18 +336,8 @@
       "DJI_20261024152527_0115_D.jpg",
       "DJI_20261024152546_0116_D.jpg",
       "DJI_20261024152601_0117_D.jpg"
-     ]
-    },
-    {
-     "slug": "10_belches_lp__nadir",
-     "addr": "10 Belches Lp, Seville Grove \u2014 top-down",
-     "who": "Lou Smith \u00b7 Harcourts",
-     "agency": "navy-h",
-     "full": true,
-     "src": "24-oct-2026/10_belches_lp/src-top/",
-     "map": "10_belches_lp_seville_grove_map.html",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "DJI_20261024152338_0110_D.jpg"
      ]
     },
@@ -431,6 +351,7 @@
      "map": "3_midi_tce_hillarys_map.html",
      "project": "project.json",
      "photos": [
+      "DJI_20261024182143_0119_D.jpg",
       "DJI_20261024182213_0120_D.jpg",
       "DJI_20261024182231_0121_D.jpg",
       "DJI_20261024182249_0122_D.jpg",
@@ -439,18 +360,8 @@
       "DJI_20261024182429_0125_D.jpg",
       "DJI_20261024182514_0126_D.jpg",
       "DJI_20261024182554_0127_D.jpg"
-     ]
-    },
-    {
-     "slug": "3_midi_terrace__nadir",
-     "addr": "3 Midi Terrace, Hillarys \u2014 top-down",
-     "who": "Josh Brockhurst \u00b7 Century 21",
-     "agency": "c21",
-     "full": true,
-     "src": "24-oct-2026/3_midi_terrace/src-top/",
-     "map": "3_midi_tce_hillarys_map.html",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "DJI_20261024182143_0119_D.jpg"
      ]
     },
@@ -464,6 +375,7 @@
      "map": "lot1_places.json",
      "project": "project.json",
      "photos": [
+      "DJI_20261024141419_0013_D.jpg",
       "DJI_20261024141500_0016_D.jpg",
       "DJI_20261024141516_0017_D.jpg",
       "DJI_20261024141529_0018_D.jpg",
@@ -472,18 +384,8 @@
       "DJI_20261024141613_0021_D.jpg",
       "DJI_20261024141640_0022_D.jpg",
       "DJI_20261024141657_0023_D.jpg"
-     ]
-    },
-    {
-     "slug": "13_angelo_st_lot1__nadir",
-     "addr": "Lot 1, 13 Angelo St, Armadale \u2014 top-down",
-     "who": "Grant Wilson \u00b7 Armadale Real Estate",
-     "agency": "flags-p",
-     "full": true,
-     "src": "24-oct-2026/13_angelo_st_lot1/src-top/",
-     "map": "lot1_places.json",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "DJI_20261024141419_0013_D.jpg"
      ]
     },
@@ -497,6 +399,7 @@
      "map": "lot2_places.json",
      "project": "project.json",
      "photos": [
+      "DJI_20261024141419_0013_D.jpg",
       "DJI_20261024141500_0016_D.jpg",
       "DJI_20261024141516_0017_D.jpg",
       "DJI_20261024141529_0018_D.jpg",
@@ -505,18 +408,8 @@
       "DJI_20261024141613_0021_D.jpg",
       "DJI_20261024141640_0022_D.jpg",
       "DJI_20261024141657_0023_D.jpg"
-     ]
-    },
-    {
-     "slug": "13_angelo_st_lot2__nadir",
-     "addr": "Lot 2, 13 Angelo St, Armadale \u2014 top-down",
-     "who": "Grant Wilson \u00b7 Armadale Real Estate",
-     "agency": "flags-p",
-     "full": true,
-     "src": "24-oct-2026/13_angelo_st_lot2/src-top/",
-     "map": "lot2_places.json",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "DJI_20261024141419_0013_D.jpg"
      ]
     }
@@ -537,24 +430,15 @@
      "map": "28george_st_belmont_map.html",
      "project": "project.json",
      "photos": [
+      "DJI_20261023142938_0306_D.JPG",
       "DJI_20261023143023_0307_D.JPG",
       "DJI_20261023143042_0308_D.JPG",
       "DJI_20261023143109_0309_D.JPG",
       "DJI_20261023143127_0310_D.JPG",
       "DJI_20261023143147_0311_D.JPG",
       "DJI_20261023143246_0312_D.JPG"
-     ]
-    },
-    {
-     "slug": "28_george_st__nadir",
-     "addr": "28 George St, Belmont \u2014 top-down",
-     "who": "Devon Kelly \u00b7 Laurie Kelly",
-     "agency": "red",
-     "full": true,
-     "src": "23-oct-2026/28_george_st/src-top/",
-     "map": "28george_st_belmont_map.html",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "DJI_20261023142938_0306_D.JPG"
      ]
     },
@@ -568,6 +452,7 @@
      "map": "13_riviera_vista_places.json",
      "project": "project.json",
      "photos": [
+      "DJI_20261023193507_0102_D.jpg",
       "DJI_20261023193538_0103_D.jpg",
       "DJI_20261023193600_0104_D.jpg",
       "DJI_20261023193613_0105_D.jpg",
@@ -575,18 +460,8 @@
       "DJI_20261023193659_0107_D.jpg",
       "DJI_20261023193714_0108_D.jpg",
       "DJI_20261023193728_0109_D.jpg"
-     ]
-    },
-    {
-     "slug": "13_riviera_vista__nadir",
-     "addr": "13 Riviera Vista, Port Kennedy \u2014 top-down",
-     "who": "Leonie Adam \u00b7 Realty Plus",
-     "agency": "realty-plus",
-     "full": true,
-     "src": "23-oct-2026/13_riviera_vista/src-top/",
-     "map": "13_riviera_vista_places.json",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "DJI_20261023193507_0102_D.jpg"
      ]
     }
@@ -607,24 +482,15 @@
      "map": "14_country_club_ave_roleystone_map.html",
      "project": "project.json",
      "photos": [
+      "DJI_20261022143333_0270_D.jpg",
       "DJI_20261022143357_0271_D.jpg",
       "DJI_20261022143418_0272_D.jpg",
       "DJI_20261022143431_0273_D.jpg",
       "DJI_20261022143458_0274_D.jpg",
       "DJI_20261022143553_0275_D.jpg",
       "DJI_20261022143633_0276_D.jpg"
-     ]
-    },
-    {
-     "slug": "14_country_club_ave__nadir",
-     "addr": "14 Country Club Ave, Roleystone \u2014 top-down",
-     "who": "Tim Fidock \u00b7 Harcourts",
-     "agency": "navy-h",
-     "full": true,
-     "src": "22-oct-2026/14_country_club_ave/src-top/",
-     "map": "14_country_club_ave_roleystone_map.html",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "DJI_20261022143333_0270_D.jpg"
      ]
     },
@@ -656,24 +522,15 @@
      "map": "14b_bohemia_st_places.json",
      "project": "project.json",
      "photos": [
+      "DJI_20261022175204_0283_D.jpg",
       "DJI_20261022175242_0285_D.jpg",
       "DJI_20261022175300_0286_D.jpg",
       "DJI_20261022175318_0287_D.jpg",
       "DJI_20261022175338_0288_D.jpg",
       "DJI_20261022175356_0289_D.jpg",
       "DJI_20261022175447_0290_D.jpg"
-     ]
-    },
-    {
-     "slug": "14b_bohemia_st__nadir",
-     "addr": "14B Bohemia St, Spearwood \u2014 top-down",
-     "who": "Leonie Adam \u00b7 Realty Plus",
-     "agency": "realty-plus",
-     "full": true,
-     "src": "22-oct-2026/14b_bohemia_st/src-top/",
-     "map": "14b_bohemia_st_places.json",
-     "project": "project.json",
-     "photos": [
+     ],
+     "fullPhotos": [
       "DJI_20261022175204_0283_D.jpg"
      ]
     },

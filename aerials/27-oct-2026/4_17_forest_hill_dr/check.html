@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 4/17 Forest Hill Dr, Kingsley</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (19)</div></div></div>
+<script>const D={"lat": -31.8009387, "lng": 115.7927012, "poly": [], "places": [{"name": "St Luke's Catholic Primary School", "lat": -31.802059699999997, "lng": 115.8056177, "d": "1.2 km"}, {"name": "The Montessori School Kingsley", "lat": -31.811799899999993, "lng": 115.8078862, "d": "1.9 km"}, {"name": "Lake Goollelal", "lat": -31.812171600000003, "lng": 115.8144656, "d": "2.4 km"}, {"name": "Shepherds Bush Park", "lat": -31.811125599999993, "lng": 115.79687240000001, "d": "1.2 km"}, {"name": "Greenwood Station", "lat": -31.8185682, "lng": 115.78323069999998, "d": "2.2 km"}, {"name": "Creaney Primary School", "lat": -31.804035799999998, "lng": 115.78853699999999, "d": "520 m"}, {"name": "Kingsley Park", "lat": -31.805671200000003, "lng": 115.78932209999999, "d": "620 m"}, {"name": "Newham Park", "lat": -31.813852699999998, "lng": 115.78701729999997, "d": "1.5 km"}, {"name": "Whitfords Station", "lat": -31.799406999999995, "lng": 115.7823322, "d": "1000 m"}, {"name": "Westfield Whitford City", "lat": -31.796721399999996, "lng": 115.74965949999999, "d": "4.1 km"}, {"name": "Forest Hill Park", "lat": -31.7996411, "lng": 115.78960599999999, "d": "330 m"}, {"name": "Chelsea Park", "lat": -31.8012535, "lng": 115.78605089999998, "d": "630 m"}, {"name": "Edgewater Station", "lat": -31.7719768, "lng": 115.77865229999998, "d": "3.5 km"}, {"name": "Woodvale Village Shopping Centre", "lat": -31.782704999999996, "lng": 115.7883766, "d": "2.1 km"}, {"name": "Trailwood Reserve", "lat": -31.797545099999997, "lng": 115.78469980000001, "d": "850 m"}, {"name": "Woodvale Boulevard Shopping Centre", "lat": -31.7990872, "lng": 115.79486539999999, "d": "290 m"}, {"name": "Woodvale Primary School", "lat": -31.794148900000003, "lng": 115.7945912, "d": "780 m"}, {"name": "Woodvale Secondary College", "lat": -31.7914344, "lng": 115.80072469999999, "d": "1.3 km"}, {"name": "Woodvale Library", "lat": -31.7980228, "lng": 115.79547, "d": "420 m"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[30,30]});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{padding:[40,40]});
+</script></body></html>
