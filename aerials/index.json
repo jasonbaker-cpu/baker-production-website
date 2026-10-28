@@ -127,6 +127,38 @@
       "DJI_20261027190924_0149_D.jpg",
       "DJI_20261027190945_0150_D.jpg"
      ]
+    },
+    {
+     "slug": "18_wonderboom_way",
+     "addr": "18 Wonderboom Way, Forrestfield",
+     "who": "David Huynh \u00b7 Harcourts",
+     "agency": "navy-h",
+     "full": false,
+     "src": "27-oct-2026/18_wonderboom_way/src/",
+     "map": "wonderboom_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261027153728_0026_D.jpg",
+      "DJI_20261027153750_0027_D.jpg",
+      "DJI_20261027153805_0028_D.jpg",
+      "DJI_20261027153822_0029_D.jpg",
+      "DJI_20261027153841_0030_D.jpg",
+      "DJI_20261027153857_0031_D.jpg",
+      "DJI_20261027153910_0032_D.jpg"
+     ]
+    },
+    {
+     "slug": "18_wonderboom_way__nadir",
+     "addr": "18 Wonderboom Way, Forrestfield \u2014 top-down",
+     "who": "David Huynh \u00b7 Harcourts",
+     "agency": "navy-h",
+     "full": true,
+     "src": "27-oct-2026/18_wonderboom_way/src-top/",
+     "map": "wonderboom_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261027153704_0025_D.jpg"
+     ]
     }
    ]
   },
