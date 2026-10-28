@@ -472,6 +472,25 @@ function decodeEntities(s){ const t = document.createElement("textarea"); t.inne
 function normType(t){ if (!t) return ""; t=String(t).toLowerCase();
   const R=[[/train|station/,"train"],[/regional shopping/,"regional_shopping"],[/shopping|mall|plaza/,"shopping"],[/school|college/,"school"],[/golf/,"golf"],[/library/,"library"],[/aquatic|pool|swim/,"aquatic"],[/hospital/,"hospital"],[/national park|regional park|dam/,"regional_park"],[/beach/,"beach"],[/lake/,"lake"],[/nature reserve|bushland|trail|reserve/,"reserve"],[/botanic|park|oval/,"park"],[/recreation|sport/,"recreation"],[/child|kinder|daycare/,"childcare"],[/playground/,"playground"]];
   for (const [re,c] of R) if (re.test(t)) return c; return "other"; }
+// 28 Oct: older amenity maps store a pin colour (blue/green/amber) in "cat" instead of a place type — work the type out from the note + name
+const COLOR_CAT = new Set(["blue","green","amber","red","purple","teal"]);
+function inferCat(name, note){ const t = (String(note).replace(/^.*?·\s*/,"") + " " + name).toLowerCase();
+  if (/child ?care|early learning|early school|kindy|kindergarten|daycare/.test(t)) return "childcare";
+  if (/train station|\bstation\b/.test(t)) return "train";
+  if (/school|college/.test(t)) return "school";
+  if (/regional shopping|westfield/.test(t)) return "regional_shopping";
+  if (/shopping|plaza|marketplace|shopping centre/.test(t)) return "shopping";
+  if (/library/.test(t)) return "library";
+  if (/golf/.test(t)) return "golf";
+  if (/hospital/.test(t)) return "hospital";
+  if (/aquatic|leisure centre|swimming|pool/.test(t)) return "aquatic";
+  if (/regional park/.test(t)) return "regional_park";
+  if (/marina|harbour/.test(t)) return "marina";
+  if (/beach/.test(t)) return "beach";
+  if (/lake|wetland|swamp/.test(t)) return "lake";
+  if (/reserve|bushland/.test(t)) return "reserve";
+  if (/park|oval|paddock|playground/.test(t)) return "park";
+  return "other"; }
 function parseJobFile(text){
   let j = null; const tt = text.trim();
   if (tt.startsWith("{")){
@@ -488,7 +507,7 @@ function parseJobFile(text){
     const prop = JSON.parse(ps), M = JSON.parse(ms).map(q=>Object.assign({}, q, { lat: (q.lat ?? q.la), lng: (q.lng ?? q.lo), cat: q.cat || ({school_amber:'school', school_private:'school', school_green:'school', transport:'train', rec:'recreation'}[q.t] || q.t), notes: q.notes || q.no, name: q.name || q.n, badge: q.badge || (q.kind==="zoned" ? "ZONED" : q.kind==="unverified" ? "unverified" : q.kind==="private" ? "private" : "") }));
     const am = tt.match(/<div class="addr">([\s\S]*?)<\/div>/) || tt.match(/<title>([^<–-]+?)\s*[–-]/);
     j = { address: am ? decodeEntities(am[1]).trim() : "Property", lat:prop[0], lng:prop[1],
-      places: M.map(q=>({ name:decodeEntities(q.name), cat:q.cat||normType(q.type)||(/school|college/i.test(q.name)?"school":/station/i.test(q.name)?"train":/park|reserve/i.test(q.name)?"park":"other"), lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
+      places: M.map(q=>({ name:decodeEntities(q.name), cat:(COLOR_CAT.has(q.cat) ? inferCat(q.name, q.note||q.notes||"") : q.cat)||normType(q.type)||(/school|college/i.test(q.name)?"school":/station/i.test(q.name)?"train":/park|reserve/i.test(q.name)?"park":"other"), lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||q.note||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
   }
   const seen = new Set();
   // 27 Oct: newer amenity maps use short cats (shop, zoned, privschool, rec, edu) that ranked as "other" and were never pinned
