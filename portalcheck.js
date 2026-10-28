@@ -5,7 +5,7 @@ const { chromium } = require('playwright'); const fs = require('fs');
   fs.mkdirSync(out, { recursive: true });
   const b = await chromium.launch(); const pg = await b.newPage({ viewport: { width: 1900, height: 950 } });
   // fonts: the headless browser can't reach Google Fonts, so serve the same families from the local package
-  const FD = '/tmp/claude-0/-home-claude/123b6bc4-adfa-5095-9578-7622ec75f692/scratchpad/fontpkg/package/files/';
+  const FD = require('path').join(__dirname, 'fonts') + '/';   // 29 Oct: fonts ship in the repo (old scratchpad path is gone)
   const ffc = (fam, file, w) => `@font-face{font-family:'${fam}';font-weight:${w};font-style:normal;src:url(data:font/woff2;base64,${fs.readFileSync(FD+file).toString('base64')}) format('woff2');}`;
   const CSS = [300,400,700].map(w=>ffc('Source Sans 3', `source-sans-3-latin-${w}-normal.woff2`, w)).join('') + [400,700].map(w=>ffc('Open Sans', `open-sans-latin-${w}-normal.woff2`, w)).join('');
   await pg.route(/fonts\.googleapis\.com/, r => r.fulfill({ status: 200, contentType: 'text/css', body: CSS }));

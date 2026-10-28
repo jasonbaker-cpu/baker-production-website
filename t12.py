@@ -104,6 +104,8 @@ async def main():
                     await pg.click('text=Click the house'); await clickImg(pg,*st['house'])
                     if 'lm' in st: await pg.select_option('#lmSel', st['lm'][0]); await pg.click('#lmGo'); await clickImg(pg,*st['lm'][1])
                 elif not job.get('plain') and await pg.locator('#plHouse').count(): await pg.click('#plHouse'); await pg.wait_for_timeout(300)
+                if 'housepin' in st:   # 29 Oct: move only the house pin (e.g. onto an apartment roof) without re-aiming the camera
+                    await pg.evaluate(f"window.__bae.setHouse({st['housepin'][0]},{st['housepin'][1]})"); await pg.wait_for_timeout(200)
                 if job.get('plain'): pass
                 elif 'ticks' in st:
                     for t in st['ticks']:
@@ -112,6 +114,7 @@ async def main():
                         await (ex.first if await ex.count() else pg.locator('.place', has_text=t).first).click(); await pg.wait_for_timeout(250)
                 else:  # add places one at a time (landmarks first); keep each only if it doesn't clash; stop at 5
                     names = await pg.evaluate("""()=>[...document.querySelectorAll('.place:not(.off)')].map(b=>[b.querySelector('.t').textContent,b.querySelector('small').textContent+' · '+((b.querySelector('.d')||{}).textContent||'')])""")
+                    if os.environ.get('DBG'): print('   NAMES', names)
                     PRI=['train','shopping','regional shopping','school','library','aquatic','sport','golf','hospital','regional park','lake','beach','park','reserve','transport','community','childcare','playground']
                     rank=lambda c: PRI.index(c) if c in PRI else 99
                     cands=sorted([(rank(cat.split('·')[0].strip()), i, nm, cat.split('·')[0].strip()) for i,(nm,cat) in enumerate(names)])
@@ -141,6 +144,8 @@ async def main():
                         if any(q['clash'] for q in ph_['pins'] if not q['house']) or any(q['clash'] for q in ph_['pins'] if q['house']):
                             await pg.locator('.place', has_text=nm).first.click(); await pg.wait_for_timeout(150)
                             await pg.evaluate("window.__bae.retidy()"); await pg.wait_for_timeout(150)
+                        elif not any(q['name']==nm for q in ph_['pins']):   # 29 Oct: ticked but no pin drawn (e.g. Perth Station) - untick, don't count it
+                            await pg.locator('.place', has_text=nm).first.click(); await pg.wait_for_timeout(150)
                         else:
                             kept+=1; seen[c]=seen.get(c,0)+1
                         if os.environ.get('DBG'): print('   try',nm,[(q['name'][:12],q['side'],q['clash']) for q in ph_['pins']])
@@ -151,6 +156,31 @@ async def main():
                         if not bad: break
                         await pg.locator('.place', has_text=bad[-1]).first.click(); await pg.wait_for_timeout(150); kept-=1
                         await pg.evaluate("window.__bae.retidy()"); await pg.wait_for_timeout(150)
+                    if kept < TARGET:   # 29 Oct: greedy order can paint itself into a corner; try other 3-place combinations before giving up
+                        import itertools as _it, re as _r3
+                        async def _tog(nm):
+                            ex = pg.locator('.place').filter(has=pg.locator('.t', has_text=_r3.compile('^\\s*'+_r3.escape(nm)+'\\s*$')))
+                            await (ex.first if await ex.count() else pg.locator('.place', has_text=nm).first).click(); await pg.wait_for_timeout(120)
+                        ph_ = await pg.evaluate("window.__bae.photo()"); cur=[q['name'] for q in ph_['pins'] if not q['house']]
+                        pool=[]
+                        for r_,i,nm,c in cands+_extra:
+                            if r_ in (99,199) or nm in pool: continue
+                            pool.append(nm)
+                        pool=pool[:10]; done=False; tries=0
+                        if len(pool) >= TARGET:
+                            for nm in cur: await _tog(nm)
+                            for combo in _it.combinations(pool, TARGET):
+                                if tries > 120: break
+                                tries+=1
+                                for nm in combo: await _tog(nm)
+                                await pg.evaluate("window.__bae.retidy()"); await pg.wait_for_timeout(150)
+                                ph_ = await pg.evaluate("window.__bae.photo()")
+                                if len([q for q in ph_['pins'] if not q['house']])==TARGET and not any(q['clash'] for q in ph_['pins']):
+                                    done=True; kept=TARGET; print('  combo', combo); break
+                                for nm in combo: await _tog(nm)
+                            if not done:   # put the greedy result back
+                                for nm in cur: await _tog(nm)
+                                await pg.evaluate("window.__bae.retidy()"); await pg.wait_for_timeout(150)
                     print('  kept', kept)
                 await pg.wait_for_timeout(300)
                 if False and job.get('poly'):
