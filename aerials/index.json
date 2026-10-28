@@ -154,6 +154,36 @@
      "photos": [
       "DJI_20261027201407_0152_D.jpg"
      ]
+    },
+    {
+     "slug": "209_barridale_dr",
+     "addr": "209 Barridale Dr, Kingsley",
+     "who": "James Kennedy \u00b7 Professionals Kingsley",
+     "agency": "flags-p",
+     "full": false,
+     "src": "27-oct-2026/209_barridale_dr/src/",
+     "map": "209_barridale_dr_kingsley_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261027164541_0138_D.jpg",
+      "DJI_20261027164558_0139_D.jpg",
+      "DJI_20261027164625_0140_D.jpg",
+      "DJI_20261027164659_0141_D.jpg",
+      "DJI_20261027164724_0142_D.jpg"
+     ]
+    },
+    {
+     "slug": "209_barridale_dr__nadir",
+     "addr": "209 Barridale Dr, Kingsley \u2014 top-down",
+     "who": "James Kennedy \u00b7 Professionals Kingsley",
+     "agency": "flags-p",
+     "full": true,
+     "src": "27-oct-2026/209_barridale_dr/src-top/",
+     "map": "209_barridale_dr_kingsley_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261027164443_0137_D.jpg"
+     ]
     }
    ]
   },
