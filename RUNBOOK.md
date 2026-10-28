@@ -147,3 +147,7 @@ Push-notify him.
 - If a photo can't fit 3 clean pins, drop that photo rather than show 1–2 pins, or pick a different frame.
 - Agent requests: `must` (places that have to appear), `skip` (e.g. ["library"]), `pick` (only these frames, matched on filename), `perPhoto`. Per-photo hand choices go in the run file as `steps: {photo: {ticks: [three names]}}`.
 - A satellite overview (satmap/) is made only when asked: property pin + the requested places, labels never covering pins.
+
+## 28 Oct 2026 — "Simple" template (Jason)
+- New pin style `simple` in the editor (Template list → "Simple"): dark rounded labels reading "Name - 1.5km", a thin white line straight down to the spot, hollow white house pin with the street address above it. Based on a realestate.com.au listing Jason liked.
+- Use it only when Jason or the agent asks (set `"agency": "simple"` on the job). Agency branding still wins by default.
