@@ -11,10 +11,10 @@ for j in D['jobs']:
     s = j['slug']
     if s not in C: continue
     eo = {int(k): v for k, v in (j.get('edgeOff') or {}).items()}
-    bad = [c for c in C[s] if c.get('confidence') in ('high', 'med') and abs(c['offset_m']) > 0.3]
+    bad = [c for c in C[s] if c.get('confidence') in ('high', 'med', 'medium') and abs(c['offset_m']) > 0.3]
     for c in bad: eo[c['edge']] = round(eo.get(c['edge'], 0) + c['offset_m'], 2)
     if bad: j['edgeOff'] = {str(k): v for k, v in eo.items()}; changed.append(s)
-    mx = max([abs(c['offset_m']) for c in C[s] if c.get('confidence') in ('high', 'med')] or [0])
+    mx = max([abs(c['offset_m']) for c in C[s] if c.get('confidence') in ('high', 'med', 'medium')] or [0])
     json.dump({'pass': not bad, 'max_off': mx, 'checks': C[s]}, open(f'e2e/fence_{s}__nadir.json', 'w'))
     print(s, 'PASS' if not bad else f'FIX edges {[c["edge"] for c in bad]} -> edgeOff {j.get("edgeOff")}', f'max {mx} m')
 json.dump(D, open(f'days/{day}.json', 'w'), indent=1)
