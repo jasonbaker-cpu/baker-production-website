@@ -1,6 +1,79 @@
 {
  "days": [
   {
+   "id": "28-oct-2026",
+   "label": "Wed 28 Oct 2026",
+   "gallery": "28-oct-2026/",
+   "jobs": [
+    {
+     "slug": "414a_belgravia_st",
+     "addr": "414A Belgravia St, Cloverdale",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
+     "agency": "red",
+     "full": false,
+     "src": "28-oct-2026/414a_belgravia_st/src/",
+     "map": "414a_belgravia_st_cloverdale_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261028145953_0042_D.jpg",
+      "DJI_20261028150000_0043_D.jpg",
+      "DJI_20261028150019_0044_D.jpg",
+      "DJI_20261028150032_0045_D.jpg",
+      "DJI_20261028150044_0046_D.jpg",
+      "DJI_20261028150130_0049_D.jpg"
+     ]
+    },
+    {
+     "slug": "90_tibradden_cir",
+     "addr": "90 Tibradden Cir, Ascot",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
+     "agency": "red",
+     "full": false,
+     "src": "28-oct-2026/90_tibradden_cir/src/",
+     "map": "90_tibradden_cir_ascot_map.html",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261028_164652_0921.JPG",
+      "dji_fly_20261028_164704_0922.JPG",
+      "dji_fly_20261028_164724_0923.JPG",
+      "dji_fly_20261028_164740_0924.JPG",
+      "dji_fly_20261028_164924_0927.JPG",
+      "dji_fly_20261028_164938_0928.JPG"
+     ]
+    },
+    {
+     "slug": "90_tibradden_cir__nadir",
+     "addr": "90 Tibradden Cir, Ascot \u2014 top-down",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
+     "agency": "red",
+     "full": true,
+     "src": "28-oct-2026/90_tibradden_cir/src-top/",
+     "map": "90_tibradden_cir_ascot_map.html",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261028_164618_0918.JPG"
+     ]
+    },
+    {
+     "slug": "22_337_lord_st",
+     "addr": "22/337 Lord St, Highgate",
+     "who": "Kylie Atkinson \u00b7 Belle Property",
+     "agency": "grey",
+     "full": false,
+     "src": "28-oct-2026/22_337_lord_st/src/",
+     "map": "22_337_lord_st_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261028195141_0050_D.jpg",
+      "DJI_20261028195232_0052_D.jpg",
+      "DJI_20261028195251_0053_D.jpg",
+      "DJI_20261028195321_0054_D.jpg",
+      "DJI_20261028195346_0055_D.jpg"
+     ]
+    }
+   ]
+  },
+  {
    "id": "27-oct-2026",
    "label": "Tue 27 Oct 2026",
    "gallery": "27-oct-2026/",

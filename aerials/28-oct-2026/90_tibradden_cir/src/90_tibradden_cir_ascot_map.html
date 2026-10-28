@@ -1,0 +1,58 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>90 Tibradden Cir Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+html,body{margin:0;height:100%;font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:#111}
+#hdr{position:absolute;top:0;left:0;right:0;z-index:1000;background:#1b1b1f;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+#hdr h1{font-size:17px;margin:0}#hdr .meta{font-size:12px;color:#c9c9d1;margin-top:3px}
+#hdr .brand{text-align:right;font-size:12px;color:#c9c9d1;white-space:nowrap}#hdr .brand b{color:#fff;font-size:13px}
+#map{position:absolute;top:64px;bottom:0;left:0;right:0}
+.pin{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.home{font-size:30px;line-height:30px;text-align:center;filter:drop-shadow(0 0 3px #D4537E)}
+.homeb{background:#D4537E;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:3px solid #fff;font-size:20px;box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.dirb{display:inline-block;background:#1b1b1f;color:#fff;font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px}
+.zb{display:inline-block;background:#0F6E56;color:#fff;font-size:10px;padding:1px 5px;border-radius:4px;margin-left:4px}
+.legend{background:rgba(27,27,31,.92);color:#fff;padding:8px 10px;border-radius:6px;font-size:12px;line-height:20px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle;border:1px solid #fff}
+.leaflet-tooltip.close{background:#1b1b1f;color:#fff;border:1px solid #fff;font-weight:600;font-size:11px}
+@media(max-width:600px){#hdr{flex-direction:column;align-items:flex-start}#map{top:96px}#hdr .brand{text-align:left}}
+</style></head><body>
+<div id="hdr"><div><h1>🏠 90 Tibradden Cir, Ascot WA 6104</h1>
+<div class="meta">Tibradden Estate · 2-storey · 3 bed + study / 2 bath / 2 car · City of Belmont · Primary: Redcliffe PS ✓ zoned · Secondary: Belmont City College (Ascot intake area, 3.7 km SW — off map)</div></div>
+<div class="brand"><b>Baker Production Pty Ltd</b><br>Real Estate Photography</div></div>
+<div id="map"></div>
+<script>
+const H=[-31.9270816,115.9493546];
+const P=[{"n": "Albert Jordan Park", "dir": "W", "lat": -31.9264853, "lng": 115.9472505, "c": "blue", "note": "209 m W · Local park with playground and fitness stations", "d": 209, "b": ""}, {"n": "Mulberry Tree Childcare Ascot", "dir": "SW", "lat": -31.9284209, "lng": 115.9465688, "c": "blue", "note": "302 m SW · Childcare, kindy and vacation care", "d": 302, "b": ""}, {"n": "Sandy Beach Reserve", "dir": "N", "lat": -31.921352, "lng": 115.9503105, "c": "blue", "note": "643 m N · Riverside reserve with nature playspace and BBQs, across the Swan", "d": 643, "b": ""}, {"n": "Redcliffe Station", "dir": "S", "lat": -31.93357, "lng": 115.95007, "c": "blue", "note": "725 m S · Airport Line station and bus interchange", "d": 725, "b": ""}, {"n": "Garvey Park", "dir": "NW", "lat": -31.9220239, "lng": 115.9442944, "c": "blue", "note": "738 m NW · Swan River foreshore park, playground, cafe, parkrun", "d": 738, "b": ""}, {"n": "Ashfield Flats", "dir": "N", "lat": -31.9195902, "lng": 115.9459908, "c": "blue", "note": "891 m N · Swan River wetland reserve and walking trails", "d": 891, "b": ""}, {"n": "Redcliffe Primary School ✓ ZONED", "dir": "SW", "lat": -31.9349786, "lng": 115.94512, "c": "green", "note": "965 m SW · Government K-6", "d": 965, "b": "zoned"}, {"n": "Dunreath Village", "dir": "S", "lat": -31.9368544, "lng": 115.9490378, "c": "blue", "note": "1.1 km S · Nearest shopping centre (Woolworths)", "d": 1087, "b": ""}, {"n": "Selby Park", "dir": "SW", "lat": -31.9352131, "lng": 115.94092, "c": "blue", "note": "1.2 km SW · Park with playground and off-leash dog area", "d": 1205, "b": ""}, {"n": "DFO Perth", "dir": "S", "lat": -31.9384407, "lng": 115.9486475, "c": "blue", "note": "1.3 km S · Outlet shopping centre", "d": 1265, "b": ""}, {"n": "St Maria Goretti's Catholic School", "dir": "S", "lat": -31.93908, "lng": 115.9437801, "c": "blue", "note": "1.4 km S · Catholic primary school", "d": 1434, "b": ""}, {"n": "Pickering Park", "dir": "NE", "lat": -31.912871, "lng": 115.95881, "c": "blue", "note": "1.8 km NE · Riverside park with playground", "d": 1815, "b": ""}, {"n": "Gould Reserve", "dir": "W", "lat": -31.9322588, "lng": 115.929686, "c": "blue", "note": "1.9 km W · Quiet Swan River reserve", "d": 1943, "b": ""}, {"n": "Ashfield Station", "dir": "NW", "lat": -31.9127765, "lng": 115.9361122, "c": "blue", "note": "2.0 km NW · Midland Line station", "d": 2023, "b": ""}, {"n": "Redcliffe Park", "dir": "S", "lat": -31.9460945, "lng": 115.9482803, "c": "blue", "note": "2.1 km S · Ovals, playgrounds and community centre", "d": 2117, "b": ""}, {"n": "Bassendean Shopping Centre", "dir": "N", "lat": -31.905271, "lng": 115.9511476, "c": "blue", "note": "2.4 km N · Shopping centre (Coles)", "d": 2431, "b": ""}, {"n": "Riverside Gardens", "dir": "W", "lat": -31.9300858, "lng": 115.9230949, "c": "blue", "note": "2.5 km W · Riverside park and off-leash dog beach", "d": 2501, "b": ""}, {"n": "Bassendean Memorial Library", "dir": "N", "lat": -31.9041617, "lng": 115.949349, "c": "blue", "note": "2.5 km N · Public library", "d": 2549, "b": ""}, {"n": "Bassendean Station", "dir": "N", "lat": -31.9035773, "lng": 115.9471616, "c": "blue", "note": "2.6 km N · Midland Line station and bus interchange", "d": 2622, "b": ""}, {"n": "Centenary Park", "dir": "SW", "lat": -31.9448007, "lng": 115.9293141, "c": "blue", "note": "2.7 km SW · Lake park with playgrounds", "d": 2731, "b": ""}, {"n": "Steel Blue Oval", "dir": "N", "lat": -31.9031437, "lng": 115.9559003, "c": "blue", "note": "2.7 km N · WAFL football ground (Swan Districts)", "d": 2733, "b": ""}, {"n": "Point Reserve", "dir": "NE", "lat": -31.9043816, "lng": 115.9620019, "c": "blue", "note": "2.8 km NE · Riverside reserve, BBQs, small beach", "d": 2792, "b": ""}, {"n": "Ascot Racecourse", "dir": "W", "lat": -31.936662, "lng": 115.9214389, "c": "blue", "note": "2.8 km W · Perth's summer racecourse", "d": 2842, "b": ""}, {"n": "Airport Central Station", "dir": "SE", "lat": -31.94411, "lng": 115.97483, "c": "blue", "note": "3.1 km SE · Airport Line, T1/T2 terminals", "d": 3060, "b": ""}, {"n": "Ascot Waters Marina", "dir": "SW", "lat": -31.9398729, "lng": 115.920098, "c": "blue", "note": "3.1 km SW · Swan River marina", "d": 3106, "b": ""}, {"n": "Freshwater Park", "dir": "W", "lat": -31.9386809, "lng": 115.9162441, "c": "blue", "note": "3.4 km W · Lake and boardwalk reserve, Ascot Waters", "d": 3380, "b": ""}, {"n": "Bayswater Station", "dir": "W", "lat": -31.9180956, "lng": 115.9125424, "c": "blue", "note": "3.6 km W · Airport, Ellenbrook and Midland lines", "d": 3615, "b": ""}, {"n": "Belmont Oasis Leisure Centre", "dir": "SW", "lat": -31.9602462, "lng": 115.9313455, "c": "blue", "note": "4.1 km SW · Aquatic and leisure centre, 50 m pool", "d": 4060, "b": ""}, {"n": "Ruth Faulkner Library", "dir": "S", "lat": -31.9628782, "lng": 115.9341921, "c": "blue", "note": "4.2 km S · City of Belmont library", "d": 4230, "b": ""}, {"n": "Belmont Forum", "dir": "S", "lat": -31.964962, "lng": 115.9349136, "c": "blue", "note": "4.4 km S · Regional shopping centre", "d": 4427, "b": ""}, {"n": "Maylands Peninsula Public Golf Course", "dir": "W", "lat": -31.9419503, "lng": 115.9024031, "c": "blue", "note": "4.7 km W · Nearest golf course", "d": 4729, "b": ""}];
+const C={blue:'#185FA5',green:'#0F6E56',amber:'#B8860B'};
+const sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Esri World Imagery'});
+const ref=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:19});
+const satL=L.layerGroup([sat,ref]);
+const sat2=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Esri World Imagery'});
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'});
+const map=L.map('map',{layers:[satL]});
+L.control.layers({'Satellite with labels':satL,'Satellite clean':sat2,'Street (OSM)':osm},null,{position:'topright'}).addTo(map);
+L.marker(H,{icon:L.divIcon({className:'',html:'<div class="homeb">🏠</div>',iconSize:[38,38],iconAnchor:[19,19]}),zIndexOffset:1000})
+ .bindPopup('<b>🏠 90 Tibradden Cir, Ascot WA 6104</b><br>3 bed + study / 2 bath / 2 car · Tibradden Estate').addTo(map);
+const near=[];
+P.forEach((p,i)=>{
+ const col=C[p.c];
+ const ic=L.divIcon({className:'',html:`<div class="pin" style="background:${col}"></div>`,iconSize:[26,26],iconAnchor:[13,26],popupAnchor:[0,-24]});
+ const close=p.d<320;
+ const m=L.marker([p.lat,p.lng],{icon:ic,zIndexOffset:close?2000:500});
+ m.bindPopup(`<span class="dirb">${p.dir}</span><b>${p.n.replace(' ✓ ZONED','')}</b>${p.b?'<span class="zb">✓ ZONED</span>':''}<br>${p.note}`);
+ if(close){
+  L.polyline([H,[p.lat,p.lng]],{color:'#fff',weight:2,dashArray:'5,5',opacity:.9}).addTo(map);
+  m.bindTooltip(`[${p.dir}] ${p.n} · ${p.d} m`,{permanent:true,direction:(p.lng<H[1]?'left':'right'),offset:[p.lng<H[1]?-14:14,-14],className:'close'});
+ }
+ m.addTo(map);
+ if(p.d<=1500) near.push([p.lat,p.lng]);
+});
+near.push(H);
+map.fitBounds(L.latLngBounds(near),{padding:[40,40],maxZoom:15});
+const lg=L.control({position:'bottomleft'});
+lg.onAdd=()=>{const d=L.DomUtil.create('div','legend');d.innerHTML='<i style="background:#D4537E"></i>Property<br><i style="background:#185FA5"></i>Amenity<br><i style="background:#0F6E56"></i>Zoned school';return d};
+lg.addTo(map);
+window.__pins=P.length;
+</script></body></html>

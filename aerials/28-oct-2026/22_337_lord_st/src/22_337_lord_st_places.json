@@ -1,0 +1,109 @@
+{
+"address": "22/337 Lord St, Highgate WA 6003",
+"lat": -31.942282,
+"lng": 115.873916,
+"pins": [
+{
+"name": "East Perth Station",
+"cat": "train",
+"lat": -31.944099,
+"lng": 115.877189
+},
+{
+"name": "Perth Station",
+"cat": "train",
+"lat": -31.951428,
+"lng": 115.860416
+},
+{
+"name": "Forrest Chase",
+"cat": "shopping",
+"lat": -31.95353,
+"lng": 115.86079
+},
+{
+"name": "Highgate Primary School",
+"cat": "school",
+"lat": -31.941007,
+"lng": 115.866798
+},
+{
+"name": "Trinity College",
+"cat": "school",
+"lat": -31.959929,
+"lng": 115.883251
+},
+{
+"name": "Jack Marks Reserve",
+"cat": "park",
+"lat": -31.9408,
+"lng": 115.8737
+},
+{
+"name": "Birdwood Square",
+"cat": "park",
+"lat": -31.943124,
+"lng": 115.865901
+},
+{
+"name": "Weld Square",
+"cat": "park",
+"lat": -31.946876,
+"lng": 115.86495
+},
+{
+"name": "Hyde Park",
+"cat": "park",
+"lat": -31.93852,
+"lng": 115.86471
+},
+{
+"name": "Claisebrook Cove",
+"cat": "park",
+"lat": -31.95317,
+"lng": 115.87843
+},
+{
+"name": "Kings Park",
+"cat": "park",
+"lat": -31.95781,
+"lng": 115.84339
+},
+{
+"name": "Maylands Peninsula Golf Course",
+"cat": "golf",
+"lat": -31.94611,
+"lng": 115.90056
+},
+{
+"name": "Mount Lawley Golf Club",
+"cat": "golf",
+"lat": -31.914863,
+"lng": 115.875764
+},
+{
+"name": "Lake Monger",
+"cat": "lake",
+"lat": -31.934313,
+"lng": 115.835272
+},
+{
+"name": "Forrest Park",
+"cat": "park",
+"lat": -31.938,
+"lng": 115.87473
+},
+{
+"name": "Mount Lawley Senior High School",
+"cat": "school",
+"lat": -31.9212,
+"lng": 115.8704
+},
+{
+"name": "Memorial Gardens",
+"cat": "park",
+"lat": -31.931334,
+"lng": 115.870532
+}
+]
+}
