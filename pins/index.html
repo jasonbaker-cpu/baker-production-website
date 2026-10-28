@@ -894,6 +894,7 @@ const AGENCIES = {
   "green-belle": { name:"Green pins + belle (Shane Garrett, Cory Garrett, Megan Topham)", kind:"pin", color:"#22644E", house:{ type:"pin", w:176, h:281, mark:"belle", markR:.91 } },
   "flags-p":     { name:"Red flags + P pin (Professionals: Annique Woodford, Nic Pulvirenti, Stephanie Briers, Emma Scharf, James Kennedy; Armadale: Grant Wilson)", kind:"flag", color:"#FF2744", house:{ type:"pin", w:192, h:273, color:"#3C3C3C", mark:"p", markR:.85 } },
   "yellow":      { name:"Yellow labels + address (Gregory Swiatek, Shah Akbari)", kind:"ylab", color:"#F4DC00", house:{ type:"label" } },
+  "simple":      { name:"Simple — dark labels on thin lines, name + distance (28 Oct template)", kind:"simple", color:"#34373B", house:{ type:"pin", w:150, h:206, outline:true, color:"#FFFFFF" } },
   "pill-r":      { name:"Navy labels + R pin (Mandie Cubeddu)",             kind:"pill", color:"#223454", house:{ type:"pin", w:82, h:104, stem:190, mark:"r", markR:.9 } },
   "realty-plus": { name:"Realty Plus — teal pins + board (Tracy Garbes, Leonie Adam)",     kind:"pin",  color:"#7ACCD6", scale:.88, house:{ type:"board", w:220, h:183, stem:170, mark:"realty" } },
   "peard":       { name:"Navy pins + Peard board (Wesley Majeks)",          kind:"pin",  color:"#0E2357", scale:.88, house:{ type:"board", w:285, h:111, stem:160, mark:"peard" } },
@@ -930,17 +931,22 @@ function pinGeom(p, pin){
       g.board = true; g.box = [pin.ex - w/2, pin.ey - g.lift - h, w, h]; g.tipY = pin.ey - g.lift; g.hx = pin.ex; g.hy = g.box[1] + h/2; g.R = w/2;
     } else {
       g.mw = w; g.mh = h; g.R = w/2; g.tipY = pin.ey - g.lift; g.hx = pin.ex; g.hy = g.tipY - h + g.R; g.box = [pin.ex - g.R, g.tipY - h, w, h];
+      if (H.outline){ // "simple": hollow white pin with the street address in a dark box above it
+        const t = houseText().split(",")[0].replace(/^(.*?\b(?:St|Street|Rd|Road|Ave|Avenue|Dr|Drive|Way|Wy|Cres|Crescent|Ct|Court|Pl|Place|Cir|Circle|Cct|Circuit|Tce|Terrace|Pde|Parade|Bvd|Blvd|Boulevard|Lane|Ln|Cl|Close|Rise|Gr|Grove|Hwy|Highway|Loop|Mews|Vista|View|Esp|Esplanade|Gdns|Gardens|Pkwy|Parkway|Retreat|Rtt|Link|Ramble|Bend)\b).*$/i,"$1"), fs = 54*s; ctx.font = `600 ${fs}px ${LABEL_FONT()}`; const lw = 30*s + ctx.measureText(t).width + 30*s, lh = 100*s;
+        g.label = { x:pin.ex - lw/2, y:g.tipY - h - 22*s - lh, w:lw, h:lh, fs, side:"top", tx:pin.ex - lw/2 + 30*s, text:t };
+      }
     }
     return g;
   }
-  const FS = { pin:72, flag:52, pill:64, ylab:52 }[kind];
-  ctx.font = `400 ${FS*s}px ${LABEL_FONT()}`;
-  const tw = ctx.measureText(text).width;
-  if (kind === "flag" || kind === "pill" || kind === "ylab"){
-    const fh = ({ flag:128, pill:108, ylab:114 })[kind]*s, padL = ({ flag:18, pill:39, ylab:24 })[kind]*s, padR = ({ flag:14, pill:39, ylab:24 })[kind]*s, fw = padL + tw + padR;
-    g.lift = ({ flag:110, pill:150, ylab:120 })[kind]*s + (pin.lift||0);
+  const FS = { pin:72, flag:52, pill:64, ylab:52, simple:54 }[kind];
+  const text2 = kind === "simple" && !house ? (distText(pin) ? `${text} - ${distText(pin)}` : text) : text;
+  ctx.font = `${kind==="simple"?600:400} ${FS*s}px ${LABEL_FONT()}`;
+  const tw = ctx.measureText(text2).width;
+  if (kind === "flag" || kind === "pill" || kind === "ylab" || kind === "simple"){
+    const fh = ({ flag:128, pill:108, ylab:114, simple:100 })[kind]*s, padL = ({ flag:18, pill:39, ylab:24, simple:30 })[kind]*s, padR = ({ flag:14, pill:39, ylab:24, simple:30 })[kind]*s, fw = padL + tw + padR;
+    g.lift = ({ flag:110, pill:150, ylab:120, simple:170 })[kind]*s + (pin.lift||0);
     const off = pin.off == null ? .5 : pin.off, x = pin.ex - Math.max(fh/2, Math.min(fw - fh/2, fw*off)), y = pin.ey - g.lift - fh;
-    g.box = [x, y, fw, fh]; g.tipY = pin.ey - g.lift; g.flag = { x, y, w:fw, h:fh, fs:FS*s, tx:x+padL, text };
+    g.box = [x, y, fw, fh]; g.tipY = pin.ey - g.lift; g.flag = { x, y, w:fw, h:fh, fs:FS*s, tx:x+padL, text:text2 };
     return g;
   }
   const mw = 141*s, mh = 200*s, R = mw/2;
@@ -980,6 +986,7 @@ function drawHBoard(c, x, y, w, h){
   c.fillRect(x+w*.31, y+h*.2, sw, h*.44); c.fillRect(x+w*.67-sw, y+h*.2, sw, h*.44); c.fillRect(x+w*.31, y+h*.39, w*.36, h*.085);
   c.fillStyle = "#03ABF2"; c.fillRect(x+w*.31, y+h*.71, w*.36, h*.085);
 }
+function distText(pin){ const q = job && job.places && job.places.find(z=>z.key===pin.key); const d = q && q.dist; if (!d && d!==0) return ""; return d >= 1000 ? (d/1000).toFixed(1)+"km" : (Math.max(50, Math.round(d/50)*50))+"m"; }
 function houseText(){ return job && job.address ? job.address.replace(/,\s*Australia\s*$/i,"").replace(/\s+\d{4}\s*$/,m=>m) : "The property"; }
 function drawHouseGlyph(c, cx, cy, size, col){ // solid home glyph (roof, chimney, body with door)
   c.save(); c.translate(cx, cy); c.scale(size, size); c.fillStyle = col;
@@ -1004,6 +1011,13 @@ function drawHouse(c, p, pin, g){
     else drawHBoard(c, x, y, w, h);
     return;
   }
+  if (H.outline){
+    c.save(); c.shadowColor = "rgba(0,0,0,.45)"; c.shadowBlur = 8*g.s; c.shadowOffsetY = 2*g.s;
+    markerPath(c, g, pin.ex, g.tipY); c.fillStyle = "rgba(255,255,255,.12)"; c.fill(); c.strokeStyle = "#fff"; c.lineWidth = 7*g.s; c.lineJoin = "round"; c.stroke();
+    c.beginPath(); c.arc(g.hx, g.hy, g.R*.3, 0, 7); c.lineWidth = 6*g.s; c.stroke(); c.restore();
+    if (g.label) simpleBox(c, g.label.x, g.label.y, g.label.w, g.label.h, g.label.fs, g.label.tx, g.label.text, g.s);
+    return;
+  }
   c.save(); c.shadowColor = "rgba(0,0,0,.35)"; c.shadowBlur = 10*g.s; c.shadowOffsetX = 2*g.s; c.shadowOffsetY = 4*g.s;
   c.fillStyle = houseColour(); markerPath(c, g, pin.ex, g.tipY); c.fill(); c.restore();
   if (H.ring){ c.strokeStyle = "#fff"; c.lineWidth = g.R*.065; c.beginPath(); c.arc(g.hx, g.hy, g.R*.955, 0, 7); c.stroke(); }
@@ -1020,8 +1034,18 @@ function dottedStem(c, x, y0, y1, s){
   for (let y = y1 + step*.6; y < y0 - 18*s; y += step){ c.beginPath(); c.arc(x, y, 6*s, 0, 7); c.fill(); }
   c.beginPath(); c.arc(x, y0, 15*s, 0, 7); c.fill(); c.fillStyle = pinColour(); c.beginPath(); c.arc(x, y0, 11*s, 0, 7); c.fill();
 }
+function simpleBox(c, x, y, w, h, fs, tx, text, s){
+  c.save(); c.shadowColor = "rgba(0,0,0,.35)"; c.shadowBlur = 10*s; c.shadowOffsetY = 3*s;
+  roundRect(c, x, y, w, h, 12*s); c.fillStyle = "rgba(52,55,59,.93)"; c.fill(); c.restore();
+  c.strokeStyle = "rgba(255,255,255,.55)"; c.lineWidth = 2.5*s; roundRect(c, x, y, w, h, 12*s); c.stroke();
+  c.fillStyle = "#fff"; c.textBaseline = "middle"; c.textAlign = "left"; c.font = `600 ${fs}px ${LABEL_FONT()}`; c.fillText(text, tx, y + h/2 + fs*0.03);
+}
 function drawBoxLabel(c, pin, g, A){
   const F = g.flag, col = pinColour();
+  if (A.kind === "simple"){ // thin white line from the box straight down to the spot
+    c.save(); c.shadowColor = "rgba(0,0,0,.4)"; c.shadowBlur = 3*g.s; c.fillStyle = "rgba(255,255,255,.92)"; c.fillRect(pin.ex - 2.2*g.s, F.y + F.h, 4.4*g.s, pin.ey - F.y - F.h); c.restore();
+    simpleBox(c, F.x, F.y, F.w, F.h, F.fs, F.tx, F.text, g.s); return;
+  }
   if (A.kind === "flag"){
     c.fillStyle = col; c.fillRect(pin.ex - 4.5*g.s, F.y + F.h, 9*g.s, pin.ey - F.y - F.h);
     c.save(); c.shadowColor = "rgba(0,0,0,.45)"; c.shadowBlur = 6*g.s; c.shadowOffsetX = 3*g.s; c.shadowOffsetY = 3*g.s;
@@ -1081,7 +1105,7 @@ function tidySides(p){
   const house = p.pins.find(x=>x.house);
   const list = p.pins.filter(x=>!x.house).sort((a,b)=>a.ey-b.ey);   // farthest (top of frame) first: they have the least room
   const ov = (r,q) => { const ox = Math.min(r[2],q[2])-Math.max(r[0],q[0])+gap, oy = Math.min(r[3],q[3])-Math.max(r[1],q[1])+gap; return ox>0 && oy>0 ? ox*oy : 0; };
-  const K = boxed ? 16 : 1, st = boxed ? 70*s : step;
+  const K = boxed ? 16 : 1, st = boxed ? (A.kind==="simple" ? 62*s : 70*s) : step;
   const place = (pin, others) => {
     let best = null;
     for (let k=0;k<K;k++) for (const flip of [false]) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : ["right","left","top","bottom"])){   /* 28 Oct: above/below only win when left/right overlap (2500 penalty) — lets 3 pins fit per photo */
