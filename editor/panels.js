@@ -390,11 +390,12 @@ async function decodeToWorking(file){
   catch(e){ bmp = await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=URL.createObjectURL(file); }); }
   const ow = bmp.width, oh = bmp.height;
   let x0=0, y0=0, cw=ow, ch=oh;
-  if (prefs.outMode === "finals"){
+  const mode = (window.__fullNames && file && window.__fullNames.has(file.name)) ? "full" : prefs.outMode;
+  if (mode === "finals"){
     if (ow/oh > 1.5){ cw = Math.round(oh*1.5); x0 = Math.round((ow-cw)/2); }
     else if (ow/oh < 1.5 && ow>=oh){ ch = Math.round(ow/1.5); y0 = Math.round((oh-ch)/2); }
   }
-  const tw = prefs.outMode === "finals" ? Math.min(3000, cw) : cw;
+  const tw = mode === "finals" ? Math.min(3000, cw) : cw;
   const k = tw/cw, th = Math.round(ch*k);
   // step down in halves for a clean downscale
   let src = bmp, sx=x0, sy=y0, sw=cw, sh=ch;
@@ -701,6 +702,7 @@ async function openRemoteJob(entry){
     if (photos.some(q=>!q.sample) && !confirm("Close the photos you have open and load "+entry.addr+"?")) return;
     photos = []; job = null; pendingProject = null; cur = -1;
     prefs.outMode = entry.full ? "full" : "finals"; savePrefs();
+    window.__fullNames = new Set(entry.fullPhotos || []);   // 29 Oct: top-down travels in the same set as the aerials, but keeps its full frame
     $("busy").hidden = false; $("busy").textContent = "Downloading "+entry.addr+"…";
     const base = DAYS_ROOT + entry.src;
     const get = async (name, type) => { const r = await fetch(base + encodeURIComponent(name)); if (!r.ok) throw new Error(name+" "+r.status); return new File([await r.blob()], name, { type }); };
@@ -721,7 +723,7 @@ async function showDays(){
   let idx;
   try{ const r = await fetch(DAYS_ROOT + "index.json", { cache:"no-store" }); idx = await r.json(); }
   catch(e){ toast("Couldn't load the list of previous days."); return; }
-  const m = el(`<div class="modal days" role="dialog" aria-label="Previous days"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>Previous days</b><button class="btn" data-x>Close</button></div><p class="note">Open a job to tweak pins, boundary or the photo itself (Photo tab → Adjust), then Export. Top-down shots open on their own.</p><div class="list"></div></div></div>`);
+  const m = el(`<div class="modal days" role="dialog" aria-label="Previous days"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>Previous days</b><button class="btn" data-x>Close</button></div><p class="note">Open a job to tweak pins, boundary or the photo itself (Photo tab → Adjust), then Export. The top-down is the first photo of each job.</p><div class="list"></div></div></div>`);
   const list = m.querySelector(".list");
   (idx.days||[]).forEach(d=>{
     list.appendChild(el(`<h3>${d.label}</h3>`));

@@ -152,3 +152,7 @@ Push-notify him.
 - New pin style `simple` in the editor (Template list → "Simple"): dark rounded labels reading "Name - 1.5km", a thin white line straight down to the spot, hollow white house pin with the street address above it. Based on a realestate.com.au listing Jason liked.
 - Use it only when Jason or the agent asks (set `"agency": "simple"` on the job). Agency branding still wins by default.
 - Simple template takes more pins: thin lines may pass near other labels (only real overlaps count). Jenny Fry (City to Surf, jenny@citytosurf.net.au) likes lots of pins: Simple, 5 per photo, no library.
+
+## 29 Oct 2026 — top-down in the same set + quick check (Jason)
+- mkday.py publishes ONE editor job per address: top-down first (kept full frame via index `fullPhotos`), then the aerials. No more separate "— top-down" entries.
+- Gallery section shows the top-down first and a "Quick check" panel (check.html): lot boundary on satellite + every pinned place on a map with distances, for the VA to eyeball.
