@@ -152,29 +152,6 @@
      ]
     },
     {
-     "slug": "18_wonderboom_way",
-     "addr": "18 Wonderboom Way, Forrestfield",
-     "who": "David Huynh \u00b7 Harcourts",
-     "agency": "navy-h",
-     "full": false,
-     "fullPhotos": [
-      "DJI_20261027153704_0025_D.jpg"
-     ],
-     "src": "27-oct-2026/18_wonderboom_way/src/",
-     "map": "wonderboom_places.json",
-     "project": "project.json",
-     "photos": [
-      "DJI_20261027153704_0025_D.jpg",
-      "DJI_20261027153728_0026_D.jpg",
-      "DJI_20261027153750_0027_D.jpg",
-      "DJI_20261027153805_0028_D.jpg",
-      "DJI_20261027153822_0029_D.jpg",
-      "DJI_20261027153841_0030_D.jpg",
-      "DJI_20261027153857_0031_D.jpg",
-      "DJI_20261027153910_0032_D.jpg"
-     ]
-    },
-    {
      "slug": "209_barridale_dr",
      "addr": "209 Barridale Dr, Kingsley",
      "who": "James Kennedy \u00b7 Professionals Kingsley",
@@ -214,6 +191,31 @@
       "DJI_20261027201444_0154_D.jpg",
       "DJI_20261027201539_0158_D.jpg",
       "DJI_20261027201608_0160_D.jpg"
+     ]
+    },
+    {
+     "slug": "18_wonderboom_way",
+     "addr": "18 Wonderboom Way, Forrestfield",
+     "who": "David Huynh \u00b7 Harcourts",
+     "agency": "navy-h",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261027153704_0025_D.jpg",
+      "DJI_20261027153655_0024_D.jpg"
+     ],
+     "src": "27-oct-2026/18_wonderboom_way/src/",
+     "map": "wonderboom_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261027153704_0025_D.jpg",
+      "DJI_20261027153655_0024_D.jpg",
+      "DJI_20261027153728_0026_D.jpg",
+      "DJI_20261027153750_0027_D.jpg",
+      "DJI_20261027153805_0028_D.jpg",
+      "DJI_20261027153822_0029_D.jpg",
+      "DJI_20261027153841_0030_D.jpg",
+      "DJI_20261027153857_0031_D.jpg",
+      "DJI_20261027153910_0032_D.jpg"
      ]
     }
    ]
@@ -272,29 +274,6 @@
      ]
     },
     {
-     "slug": "132a_arkana_rd",
-     "addr": "132A Arkana Rd, Westminster",
-     "who": "Emma Scharf \u00b7 Professionals TWT",
-     "agency": "flags-p",
-     "full": false,
-     "src": "26-oct-2026/132a_arkana_rd/src/",
-     "map": "132a_arkana_rd_westminster_map.html",
-     "project": "project.json",
-     "photos": [
-      "DJI_20261026155212_0129_D.jpg",
-      "DJI_20261026155234_0130_D.jpg",
-      "DJI_20261026155304_0131_D.jpg",
-      "DJI_20261026155318_0132_D.jpg",
-      "DJI_20261026155346_0133_D.jpg",
-      "DJI_20261026155403_0134_D.jpg",
-      "DJI_20261026155426_0135_D.jpg",
-      "DJI_20261026155511_0136_D.jpg"
-     ],
-     "fullPhotos": [
-      "DJI_20261026155212_0129_D.jpg"
-     ]
-    },
-    {
      "slug": "42_rutland_ave",
      "addr": "4/42 Rutland Ave, Lathlain",
      "who": "Devon Kelly \u00b7 Laurie Kelly",
@@ -311,6 +290,31 @@
       "DJI_20261026190154_0317_D.JPG",
       "DJI_20261026190214_0318_D.JPG",
       "DJI_20261026190232_0319_D.JPG"
+     ]
+    },
+    {
+     "slug": "132a_arkana_rd",
+     "addr": "132A Arkana Rd, Westminster",
+     "who": "Emma Scharf \u00b7 Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261026155212_0129_D.jpg",
+      "DJI_20261026155203_0128_D.jpg"
+     ],
+     "src": "26-oct-2026/132a_arkana_rd/src/",
+     "map": "132a_arkana_rd_westminster_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261026155212_0129_D.jpg",
+      "DJI_20261026155203_0128_D.jpg",
+      "DJI_20261026155234_0130_D.jpg",
+      "DJI_20261026155304_0131_D.jpg",
+      "DJI_20261026155318_0132_D.jpg",
+      "DJI_20261026155346_0133_D.jpg",
+      "DJI_20261026155403_0134_D.jpg",
+      "DJI_20261026155426_0135_D.jpg",
+      "DJI_20261026155511_0136_D.jpg"
      ]
     }
    ]
