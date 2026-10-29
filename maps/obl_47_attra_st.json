@@ -1,0 +1,78 @@
+{
+ "house": [
+  -31.8706758,
+  115.8165683
+ ],
+ "addr": "47 Attra Street, Balcatta",
+ "bearing": 248,
+ "back": 2600,
+ "alt": 1100,
+ "aim": 300,
+ "fov": 60,
+ "mos": [
+  "attra_z17",
+  "attra_z16",
+  "attra_z15",
+  "attra_z13"
+ ],
+ "cbd": [
+  -31.9527,
+  115.8593
+ ],
+ "places": [
+  {
+   "name": "West Balcatta Primary",
+   "label": "West Balcatta\nPrimary",
+   "lat": -31.8727307,
+   "lng": 115.8096122,
+   "short": "West Balcatta Primary School"
+  },
+  {
+   "name": "Balcatta Senior High School",
+   "label": "Balcatta Senior\nHigh School",
+   "lat": -31.8748729,
+   "lng": 115.8129706,
+   "short": "Balcatta Senior High School"
+  },
+  {
+   "name": "Stirling Station",
+   "lat": -31.894178,
+   "lng": 115.8057802,
+   "side": "ma"
+  },
+  {
+   "name": "Karrinyup Shopping Centre",
+   "label": "Karrinyup Shopping\nCentre",
+   "lat": -31.8773477,
+   "lng": 115.7781686,
+   "short": "Karrinyup Shopping Centre"
+  },
+  {
+   "name": "Lake Gwelup",
+   "lat": -31.8778237,
+   "lng": 115.7910249
+  },
+  {
+   "name": "Lake Karrinyup Golf Course",
+   "label": "Lake Karrinyup\nGolf Course",
+   "lat": -31.8649184,
+   "lng": 115.7866917,
+   "short": "Lake Karrinyup Country Club"
+  },
+  {
+   "name": "Mettams Pool",
+   "lat": -31.8674059,
+   "lng": 115.7523799
+  },
+  {
+   "name": "IKEA",
+   "lat": -31.8966824,
+   "lng": 115.803883,
+   "side": "md"
+  }
+ ],
+ "pinH": 200,
+ "style": "elegant",
+ "pinR": 58,
+ "stem": 118
+}

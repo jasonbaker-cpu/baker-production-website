@@ -156,3 +156,9 @@ Push-notify him.
 ## 29 Oct 2026 — top-down in the same set + quick check (Jason)
 - mkday.py publishes ONE editor job per address: top-down first (kept full frame via index `fullPhotos`), then the aerials. No more separate "— top-down" entries.
 - Gallery section shows the top-down first and a "Quick check" panel (check.html): lot boundary on satellite + every pinned place on a map with distances, for the VA to eyeball.
+
+## 29 Oct 2026
+- **Two top-downs**: `prep_day.py` keeps a second nadir when yaw differs >25° or altitude >8 m — but check it isn't a near-duplicate (Coulthard 0880/0881 and St Kilda 0900/0902 were; dropped). DJI Fly files can carry EXIF orientation 8: register against the raw pixels (tag stripped), not the rotated view.
+- **Oblique location map** (Jenny/City to Surf style, asked for 47 Attra St): `oblique.py maps/obl_<slug>.json out.jpg`. Satellite mosaics z17/z16/z15/z13 come from the Mac browser (`box()` helper → `__chunk` → `assemble.py`). `style: "elegant"` = frosted label cards with distances, slim white pin, address bottom-left, Perth CBD chip. Jason rejected the bold red/white version as "cheap". Min 6 places.
+- **Fence accuracy**: `ruler_pub.py <day> <slug> <photo>` makes edge-ruler crops from the *published* project.json; an independent agent reads offsets → `fence_apply.py result.json` builds pixel-polygon (`pxpoly`) re-render jobs; low-confidence edges are not moved.
+- **No logo on top-downs** (Jason, 29 Oct).

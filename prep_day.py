@@ -24,7 +24,7 @@ def pitch(f):
 run, meta = [], {}
 for j in D['jobs']:
     ph = sorted(f for f in glob.glob(j['photos'].rstrip('/') + '/*') if f.lower().endswith(('.jpg', '.jpeg')))
-    if j.get('pick'): ph = [f for f in ph if any(p in os.path.basename(f) for p in j['pick'])]   # 28 Oct: agent wants only these frames
+    if j.get('pick'): ph = [f for f in ph if pitch(f) < -75 or any(p in os.path.basename(f) for p in j['pick'])]   # pick only narrows the aerials; top-downs always stay   # 28 Oct: agent wants only these frames
     if not ph: print('no photos for', j['slug']); continue
     cams = {}
     for f in ph:
@@ -54,11 +54,20 @@ for j in D['jobs']:
         obl = [f for f in ph if f not in nad]
         run.append(dict(base, slug=j['slug'], photos=obl, poly=j['poly'], cams={f: cams[f] for f in obl if f in cams}))
         alt = lambda f: float((re.search(r'RelativeAltitude="([-+\d.]+)"', open(f,'rb').read(400000).decode('latin1')) or [0,'0'])[1])
-        n0 = max(nad, key=alt)   # the highest straight-down shot gets the boundary (whole lot in frame); extra low top-downs are dropped
-        run.append(dict(base, slug=j['slug'] + '__nadir', photos=[n0], poly=j['poly'], full=1,
-                        snap={'on': True, 'mode': 'ridge', 'sc': 0.0, 'R': 2.5, 'rot': 3},
-                        edgeOff=j.get('edgeOff', {}), cams={n0: cams[n0]} if n0 in cams else {}))
-        if j.get('pxpoly'): run[-1].update(pxpoly=j['pxpoly'], nosnap=1); run[-1].pop('snap', None)   # boundary hand-traced on the fences
+        # 29 Oct (Jason): shooters often take TWO top-downs — one turned so the road is at the bottom, one higher/wider.
+        # Edit both. Highest first (whole lot in frame); then the best different one (yaw differs >25 deg or >8 m higher/lower). Max 2.
+        def yaw(f): return float((re.search(r'GimbalYawDegree="([-+\d.]+)"', open(f,'rb').read(400000).decode('latin1')) or [0,'0'])[1])
+        nads = sorted(nad, key=alt, reverse=True); pick = [nads[0]]
+        for f in nads[1:]:
+            dy = abs((yaw(f) - yaw(pick[0]) + 180) % 360 - 180)
+            if dy > 25 or abs(alt(f) - alt(pick[0])) > 8: pick.append(f); break
+        if j.get('nadirPick'): pick = [f for f in nads if any(p in os.path.basename(f) for p in j['nadirPick'])][:2] or pick
+        for i, n0 in enumerate(pick):
+            v = j['slug'] + ('__nadir' if i == 0 else f'__nadir{i+1}')
+            run.append(dict(base, slug=v, photos=[n0], poly=j['poly'], full=1,
+                            snap={'on': True, 'mode': 'ridge', 'sc': 0.0, 'R': 2.5, 'rot': 3},
+                            edgeOff=(j.get('edgeOff', {}) if i == 0 else (j.get('edgeOffs') or {}).get(v, {})), cams={n0: cams[n0]} if n0 in cams else {}))
+            if j.get('pxpoly') and i == 0: run[-1].update(pxpoly=j['pxpoly'], nosnap=1); run[-1].pop('snap', None)   # boundary hand-traced on the fences
     else:
         run.append(dict(base, slug=j['slug'], photos=ph, cams={f: cams[f] for f in ph if f in cams}))
     meta[j['slug']] = {'addr': j['addr'], 'who': j.get('who', '')}

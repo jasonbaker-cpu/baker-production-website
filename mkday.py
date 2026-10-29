@@ -70,13 +70,16 @@ def make_check(slug, m, proj, poly, area):
 
 for slug, m in META.items():
     # 29 Oct (Jason): the top-down travels in the SAME set as the aerials (first photo) so nobody misses it
-    oj, nj = by_slug.get(slug), by_slug.get(slug + '__nadir')
-    variants = [x for x in (nj, oj) if x]
+    oj = by_slug.get(slug)
+    nads = [by_slug[k] for k in sorted((k for k in by_slug if k == slug + '__nadir' or (k.startswith(slug + '__nadir') and k[len(slug)+7:].isdigit())), key=lambda k: int(k[len(slug)+7:] or 1))]
+    nj = nads[0] if nads else None
+    variants = nads + ([oj] if oj else [])   # 29 Oct: every top-down (road-at-bottom + wide) first, then the aerials
     if not variants: continue
-    if nj and not os.environ.get('SKIP_FENCE'):
-        fp = f'{SP}e2e/fence_{slug}__nadir.json'
+    for nv in nads:
+        if os.environ.get('SKIP_FENCE'): break
+        fp = f"{SP}e2e/fence_{nv['slug']}.json"
         if not os.path.exists(fp) or not json.load(open(fp)).get('pass'):
-            sys.exit(f'STOP: {slug}__nadir has no passing fence check ({fp}). Run edgeruler + independent fence check + fencefix.py first.')
+            sys.exit(f"STOP: {nv['slug']} has no passing fence check ({fp}). Run edgeruler + independent fence check + fencefix.py first.")
     os.makedirs(f'{OUT}{slug}', exist_ok=True)
     src_dir = f'{OUT}{slug}/src/'; shutil.rmtree(src_dir, ignore_errors=True); shutil.rmtree(f'{OUT}{slug}/src-top/', ignore_errors=True); os.makedirs(src_dir)
     proj, names, full_names = None, [], []
@@ -101,7 +104,7 @@ for slug, m in META.items():
                      'src': f'{day}/{slug}/src/', 'map': os.path.basename(mp), 'project': 'project.json', 'photos': names})
     # finals gallery: always refresh from this run's renders; top-down first
     fa = f'{SP}final_aerials/{slug}'; shutil.rmtree(fa, ignore_errors=True); os.makedirs(fa)
-    ordered = sorted(glob.glob(f'{SP}e2e/{slug}__nadir/*.jpg')) + sorted(glob.glob(f'{SP}e2e/{slug}/*.jpg'))
+    ordered = [f for nv in nads for f in sorted(glob.glob(f"{SP}e2e/{nv['slug']}/*.jpg"))] + sorted(glob.glob(f'{SP}e2e/{slug}/*.jpg'))
     for src in ordered: shutil.copy(src, fa)
     d = f'{OUT}{slug}'; os.makedirs(d + '/t', exist_ok=True); items = []
     for f in [fa + '/' + os.path.basename(x) for x in ordered]:
@@ -112,7 +115,7 @@ for slug, m in META.items():
     used = make_check(slug, m, proj, base.get('poly'), base.get('area'))
     edits = f'<a class="ed" href="/pins/?open={day}/{slug}">Edit</a><a class="ed" href="{slug}/check.html" target="_blank">Check map</a>'
     chk = f'<details class="chk" open><summary>Quick check — boundary + {len(used)} pinned places</summary><iframe loading="lazy" src="{slug}/check.html?v={int(__import__("time").time())}" title="Boundary and places check"></iframe></details>'
-    secs.append(f'<section><h2>{html.escape(m["addr"])}</h2><p>{html.escape(m["who"])} · {len(items)} photos{" (top-down first)" if nj else ""} {edits}</p><div class="g">{"".join(items)}</div>{chk}</section>')
+    secs.append(f'<section><h2>{html.escape(m["addr"])}</h2><p>{html.escape(m["who"])} · {len(items)} photos{(" (top-downs first)" if len(nads) > 1 else " (top-down first)") if nads else ""} {edits}</p><div class="g">{"".join(items)}</div>{chk}</section>')
 
 # MERGE=1: add these jobs to a day that's already published (keeps the other jobs' gallery sections and index entries)
 if os.environ.get('MERGE') and os.path.exists(OUT + 'index.html'):
