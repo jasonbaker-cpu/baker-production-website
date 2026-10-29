@@ -78,7 +78,7 @@ const DEFAULT_DISC = "Boundary lines are approximate and for illustration only."
 const prefs = Object.assign({
   outMode:"finals",            // finals = 3:2 centre crop, 3000 px wide (matches delivered aerials) | full
   finish:true, sky:true,
-  agency:"red", pinColor:"", pinScale:100, labelOpacity:86, labelFont:"Source Sans 3", logo:"",
+  agency:"grey", pinColor:"", pinScale:100, labelOpacity:86, labelFont:"Source Sans 3", logo:"",
   lineColor:BAKER_RED, lineWidth:6.7, outside:"blur", blurAmt:45, darkAmt:35,
   discOn:false, discText:DEFAULT_DISC
 }, LS.get("prefs", {}));
@@ -459,21 +459,27 @@ function finishImage(base, p){
       v.sort((a,b)=>a-b); tmp[k] = v.length>3 ? v[(v.length*0.35)|0] : 255; }
     const n=tmp.length, R=Math.max(2,(n*0.04)|0);
     for (let k=0;k<n;k++){ let a=0,c=0; for (let t=-R;t<=R;t++){ const kk=Math.min(n-1,Math.max(0,k+t)); a+=tmp[kk]; c++; } const v=a/c; for (let x=k*st; x<Math.min(w,(k+1)*st); x++) refY[x]=v; } }
-  let refMed = 0; if (refY){ const v = Array.from(refY).sort((a,b)=>a-b); refMed = v[(v.length*0.6)|0]; }
+  // 28 Oct: sky reference for 'is this a solid object' is taken from sky well above the horizon
+  // (a whole-frame median wrongly kept the darker side of a dusk sky as 'solid')
+  let refMed = 0, refWide = null; if (refY){ const v = Array.from(refY).sort((a,b)=>a-b); refMed = v[(v.length*0.6)|0];
+    // sky well above the horizon (18-30% of frame height higher), so towers and roofs never pollute it; smoothed ±3% of width
+    refWide = new Float32Array(w); const st = Math.max(1,(w/300)|0), tmp=[];
+    for (let x=0; x<w; x+=st){ const hz=line(x), ya=Math.max(0,(hz-0.30*h)|0), yb=Math.max(ya+1,(hz-0.18*h)|0), v=[]; for (let y=ya;y<yb;y+=Math.max(1,((yb-ya)/20)|0)) v.push(Y[y*w+x]); v.sort((p,q)=>p-q); tmp.push(v.length ? v[(v.length*0.5)|0] : refMed); }
+    const R=Math.max(1,(tmp.length*0.03)|0); for (let k=0;k<tmp.length;k++){ let t=0,c=0; for (let d=-R;d<=R;d++){ const kk=Math.min(tmp.length-1,Math.max(0,k+d)); t+=tmp[kk]; c++; } const r=t/c; for (let xx=k*st; xx<Math.min(w,(k+1)*st); xx++) refWide[xx]=r; } }
   // 27 Oct: per column, how far a solid object (tower, roof) rises continuously from the horizon
   let solidTop = null;
   const solidK = (i,j) => { const o0=px[i], o2=px[i+2], Yo=(px[i]+px[i+1]+px[i+2])/3;
-    const kb = Math.min(1, Math.max(0, (o0-o2-14)/16)) * Math.min(1, Math.max(0, (205-Yo)/30)) * Math.min(1, Math.max(0, (refMed-10-g1[j])/15));
-    return Math.max(kb, Math.min(1, Math.max(0, (Math.max(refY[j%w], refMed)-40-g1[j])/15))); };
+    const kb = Math.min(1, Math.max(0, (o0-o2-14)/16)) * Math.min(1, Math.max(0, (205-Yo)/30)) * Math.min(1, Math.max(0, (refWide[j%w]-10-g1[j])/15));
+    return Math.max(kb, Math.min(1, Math.max(0, (refWide[j%w]-40-g1[j])/15))); };
   if (sky && SKYP && SKYP.direct){ solidTop = new Float32Array(w);
     for (let x=0;x<w;x++){ const hz=line(x); let top=hz, gap=0; const gMax = Math.max(2, (0.004*h)|0);
-      for (let y=Math.floor(hz); y>Math.max(0,hz-0.15*h); y--){ const j=y*w+x; if (solidK(j*4,j) > 0.5){ top=y; gap=0; } else if (++gap > gMax) break; }
+      for (let y=Math.floor(hz); y>Math.max(0,hz-0.28*h); y--){ const j=y*w+x; if (solidK(j*4,j) > 0.5){ top=y; gap=0; } else if (++gap > gMax) break; }
       solidTop[x]=top; }
     // a column only counts if its neighbours agree (no single-column spikes)
     const st2 = new Float32Array(w); for (let x=0;x<w;x++){ const v=[]; for (let k=-2;k<=2;k++) v.push(solidTop[Math.min(w-1,Math.max(0,x+k))]); v.sort((a,b)=>a-b); st2[x]=v[2]; } solidTop = st2; }
   if (sky && SKYP && SKYP.direct){
     const d2 = new Float32Array(w*h); for (let k=0;k<d2.length;k++) d2[k] = Math.abs(Y[k]-g3[k]); const T2 = gaussBlur(d2, w, h, 1.5*scale+0.3);
-    const Yb = g1, maxUp = (Object.assign({},TUNE,window.__TUNE||{}).landUp||0.10)*h, gapMax = 2; landTop = new Float32Array(w);
+    const Yb = g1, maxUp = (Object.assign({},TUNE,window.__TUNE||{}).landUp||0.05)*h, gapMax = 2; landTop = new Float32Array(w);
     for (let x=0;x<w;x++){ const hz=line(x); let top=hz, gap=0;
       for (let y=Math.floor(hz-0.0015*h); y>Math.max(0,hz-maxUp); y--){ const j=y*w+x; const up = hz - y, land = (up < 0.004*h && Yb[j] < refY[x]-12) || (Yb[j] < refY[x]-45) || (T2[j] > 2.6 && Yb[j] < refY[x]-6);
         if (land){ top=y; gap=0; } else if (++gap > gapMax) break; }
@@ -638,7 +644,8 @@ function drawIcon(c, name, cx, cy, size, R){ if (R){ const im = iconImg(name); i
 // ================= pins: one preset per agency, measured from the editors' delivered finals (3000 px wide) =================
 const AGENCIES = {
   "red":         { name:"Laurie Kelly — red pins (Devon, Daniel, Franklin; Cooper Winter)",            kind:"pin",  color:"#E2181C", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
-  "rodway":      { name:"Rodway Group — black pins", kind:"pin", color:"#111111", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
+  "grey":        { name:"Default — plain grey pins (agency not recognised)", kind:"pin", color:"#8A8A8A", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
+  "rodway":      { name:"Rodway Group — black pins", kind:"pin", color:"#111111", line:"#2A2A2A", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
 "charcoal":    { name:"Raspa — charcoal pins (John O'Brien, Simon Raspa)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   "c21":         { name:"Century 21 — Obsessed Grey pins, Relentless Gold house (Josh Brockhurst)", kind:"pin", color:"#252526", house:{ type:"pin", w:240, h:340, mark:"house", ring:true, color:"#BEAF87" } },
   "grey-s":      { name:"Grey pins + S logo (Kasey Summers, Semple)",               kind:"pin",  color:"#9C9C9C", house:{ type:"pin", w:255, h:360, mark:"s", markR:.9, ring:true } },
@@ -650,6 +657,7 @@ const AGENCIES = {
   "green-belle": { name:"Green pins + belle (Shane Garrett, Cory Garrett, Megan Topham)", kind:"pin", color:"#22644E", house:{ type:"pin", w:176, h:281, mark:"belle", markR:.91 } },
   "flags-p":     { name:"Red flags + P pin (Professionals: Annique Woodford, Nic Pulvirenti, Stephanie Briers, Emma Scharf, James Kennedy; Armadale: Grant Wilson)", kind:"flag", color:"#FF2744", house:{ type:"pin", w:192, h:273, color:"#3C3C3C", mark:"p", markR:.85 } },
   "yellow":      { name:"Yellow labels + address (Gregory Swiatek, Shah Akbari)", kind:"ylab", color:"#F4DC00", house:{ type:"label" } },
+  "simple":      { name:"Simple — dark labels on thin lines, name + distance (28 Oct template)", kind:"simple", color:"#34373B", house:{ type:"pin", w:150, h:206, outline:true, color:"#FFFFFF" } },
   "pill-r":      { name:"Navy labels + R pin (Mandie Cubeddu)",             kind:"pill", color:"#223454", house:{ type:"pin", w:82, h:104, stem:190, mark:"r", markR:.9 } },
   "realty-plus": { name:"Realty Plus — teal pins + board (Tracy Garbes, Leonie Adam)",     kind:"pin",  color:"#7ACCD6", scale:.88, house:{ type:"board", w:220, h:183, stem:170, mark:"realty" } },
   "peard":       { name:"Navy pins + Peard board (Wesley Majeks)",          kind:"pin",  color:"#0E2357", scale:.88, house:{ type:"board", w:285, h:111, stem:160, mark:"peard" } },
@@ -663,7 +671,7 @@ const HOUSE_STYLES = {
   board:     { name:"Square sign on a post", house:{ type:"board", w:170, h:170, stem:220, mark:"houseboard" } },
   big:       { name:"Big pin", house:{ type:"pin", w:290, h:410, mark:"house" } }
 };
-function agency(){ const A = AGENCIES[prefs.agency] || AGENCIES.red, o = HOUSE_STYLES[prefs.houseStyle||""]; return o && o.house ? Object.assign({}, A, { house:o.house }) : A; }
+function agency(){ const A = AGENCIES[prefs.agency] || AGENCIES.grey, o = HOUSE_STYLES[prefs.houseStyle||""]; return o && o.house ? Object.assign({}, A, { house:o.house }) : A; }
 function pinColour(){ return prefs.pinColor || agency().color; }
 function houseColour(){ const h = agency().house; return h.color || pinColour(); }
 function shade(hex, pct){ const n=parseInt(hex.slice(1),16); const f=v=>Math.max(0,Math.min(255,Math.round(v + 255*pct/100))); return `rgb(${f(n>>16&255)},${f(n>>8&255)},${f(n&255)})`; }
@@ -686,17 +694,22 @@ function pinGeom(p, pin){
       g.board = true; g.box = [pin.ex - w/2, pin.ey - g.lift - h, w, h]; g.tipY = pin.ey - g.lift; g.hx = pin.ex; g.hy = g.box[1] + h/2; g.R = w/2;
     } else {
       g.mw = w; g.mh = h; g.R = w/2; g.tipY = pin.ey - g.lift; g.hx = pin.ex; g.hy = g.tipY - h + g.R; g.box = [pin.ex - g.R, g.tipY - h, w, h];
+      if (H.outline){ // "simple": hollow white pin with the street address in a dark box above it
+        const t = houseText().split(",")[0].replace(/^(.*?\b(?:St|Street|Rd|Road|Ave|Avenue|Dr|Drive|Way|Wy|Cres|Crescent|Ct|Court|Pl|Place|Cir|Circle|Cct|Circuit|Tce|Terrace|Pde|Parade|Bvd|Blvd|Boulevard|Lane|Ln|Cl|Close|Rise|Gr|Grove|Hwy|Highway|Loop|Mews|Vista|View|Esp|Esplanade|Gdns|Gardens|Pkwy|Parkway|Retreat|Rtt|Link|Ramble|Bend)\b).*$/i,"$1"), fs = 54*s; ctx.font = `600 ${fs}px ${LABEL_FONT()}`; const lw = 30*s + ctx.measureText(t).width + 30*s, lh = 100*s;
+        g.label = { x:pin.ex - lw/2, y:g.tipY - h - 22*s - lh, w:lw, h:lh, fs, side:"top", tx:pin.ex - lw/2 + 30*s, text:t };
+      }
     }
     return g;
   }
-  const FS = { pin:72, flag:52, pill:64, ylab:52 }[kind];
-  ctx.font = `400 ${FS*s}px ${LABEL_FONT()}`;
-  const tw = ctx.measureText(text).width;
-  if (kind === "flag" || kind === "pill" || kind === "ylab"){
-    const fh = ({ flag:128, pill:108, ylab:114 })[kind]*s, padL = ({ flag:18, pill:39, ylab:24 })[kind]*s, padR = ({ flag:14, pill:39, ylab:24 })[kind]*s, fw = padL + tw + padR;
-    g.lift = ({ flag:110, pill:150, ylab:120 })[kind]*s + (pin.lift||0);
+  const FS = { pin:72, flag:52, pill:64, ylab:52, simple:54 }[kind];
+  const text2 = kind === "simple" && !house ? (distText(pin) ? `${text} - ${distText(pin)}` : text) : text;
+  ctx.font = `${kind==="simple"?600:400} ${FS*s}px ${LABEL_FONT()}`;
+  const tw = ctx.measureText(text2).width;
+  if (kind === "flag" || kind === "pill" || kind === "ylab" || kind === "simple"){
+    const fh = ({ flag:128, pill:108, ylab:114, simple:100 })[kind]*s, padL = ({ flag:18, pill:39, ylab:24, simple:30 })[kind]*s, padR = ({ flag:14, pill:39, ylab:24, simple:30 })[kind]*s, fw = padL + tw + padR;
+    g.lift = ({ flag:110, pill:150, ylab:120, simple:170 })[kind]*s + (pin.lift||0);
     const off = pin.off == null ? .5 : pin.off, x = pin.ex - Math.max(fh/2, Math.min(fw - fh/2, fw*off)), y = pin.ey - g.lift - fh;
-    g.box = [x, y, fw, fh]; g.tipY = pin.ey - g.lift; g.flag = { x, y, w:fw, h:fh, fs:FS*s, tx:x+padL, text };
+    g.box = [x, y, fw, fh]; g.tipY = pin.ey - g.lift; g.flag = { x, y, w:fw, h:fh, fs:FS*s, tx:x+padL, text:text2 };
     return g;
   }
   const mw = 141*s, mh = 200*s, R = mw/2;
@@ -736,6 +749,7 @@ function drawHBoard(c, x, y, w, h){
   c.fillRect(x+w*.31, y+h*.2, sw, h*.44); c.fillRect(x+w*.67-sw, y+h*.2, sw, h*.44); c.fillRect(x+w*.31, y+h*.39, w*.36, h*.085);
   c.fillStyle = "#03ABF2"; c.fillRect(x+w*.31, y+h*.71, w*.36, h*.085);
 }
+function distText(pin){ const q = job && job.places && job.places.find(z=>z.key===pin.key); const d = q && q.dist; if (!d && d!==0) return ""; return d >= 1000 ? (d/1000).toFixed(1)+"km" : (Math.max(50, Math.round(d/50)*50))+"m"; }
 function houseText(){ return job && job.address ? job.address.replace(/,\s*Australia\s*$/i,"").replace(/\s+\d{4}\s*$/,m=>m) : "The property"; }
 function drawHouseGlyph(c, cx, cy, size, col){ // solid home glyph (roof, chimney, body with door)
   c.save(); c.translate(cx, cy); c.scale(size, size); c.fillStyle = col;
@@ -760,6 +774,13 @@ function drawHouse(c, p, pin, g){
     else drawHBoard(c, x, y, w, h);
     return;
   }
+  if (H.outline){
+    c.save(); c.shadowColor = "rgba(0,0,0,.45)"; c.shadowBlur = 8*g.s; c.shadowOffsetY = 2*g.s;
+    markerPath(c, g, pin.ex, g.tipY); c.fillStyle = "rgba(255,255,255,.12)"; c.fill(); c.strokeStyle = "#fff"; c.lineWidth = 7*g.s; c.lineJoin = "round"; c.stroke();
+    c.beginPath(); c.arc(g.hx, g.hy, g.R*.3, 0, 7); c.lineWidth = 6*g.s; c.stroke(); c.restore();
+    if (g.label) simpleBox(c, g.label.x, g.label.y, g.label.w, g.label.h, g.label.fs, g.label.tx, g.label.text, g.s);
+    return;
+  }
   c.save(); c.shadowColor = "rgba(0,0,0,.35)"; c.shadowBlur = 10*g.s; c.shadowOffsetX = 2*g.s; c.shadowOffsetY = 4*g.s;
   c.fillStyle = houseColour(); markerPath(c, g, pin.ex, g.tipY); c.fill(); c.restore();
   if (H.ring){ c.strokeStyle = "#fff"; c.lineWidth = g.R*.065; c.beginPath(); c.arc(g.hx, g.hy, g.R*.955, 0, 7); c.stroke(); }
@@ -776,8 +797,18 @@ function dottedStem(c, x, y0, y1, s){
   for (let y = y1 + step*.6; y < y0 - 18*s; y += step){ c.beginPath(); c.arc(x, y, 6*s, 0, 7); c.fill(); }
   c.beginPath(); c.arc(x, y0, 15*s, 0, 7); c.fill(); c.fillStyle = pinColour(); c.beginPath(); c.arc(x, y0, 11*s, 0, 7); c.fill();
 }
+function simpleBox(c, x, y, w, h, fs, tx, text, s){
+  c.save(); c.shadowColor = "rgba(0,0,0,.35)"; c.shadowBlur = 10*s; c.shadowOffsetY = 3*s;
+  roundRect(c, x, y, w, h, 12*s); c.fillStyle = "rgba(52,55,59,.93)"; c.fill(); c.restore();
+  c.strokeStyle = "rgba(255,255,255,.55)"; c.lineWidth = 2.5*s; roundRect(c, x, y, w, h, 12*s); c.stroke();
+  c.fillStyle = "#fff"; c.textBaseline = "middle"; c.textAlign = "left"; c.font = `600 ${fs}px ${LABEL_FONT()}`; c.fillText(text, tx, y + h/2 + fs*0.03);
+}
 function drawBoxLabel(c, pin, g, A){
   const F = g.flag, col = pinColour();
+  if (A.kind === "simple"){ // thin white line from the box straight down to the spot
+    c.save(); c.shadowColor = "rgba(0,0,0,.4)"; c.shadowBlur = 3*g.s; c.fillStyle = "rgba(255,255,255,.92)"; c.fillRect(pin.ex - 2.2*g.s, F.y + F.h, 4.4*g.s, pin.ey - F.y - F.h); c.restore();
+    simpleBox(c, F.x, F.y, F.w, F.h, F.fs, F.tx, F.text, g.s); return;
+  }
   if (A.kind === "flag"){
     c.fillStyle = col; c.fillRect(pin.ex - 4.5*g.s, F.y + F.h, 9*g.s, pin.ey - F.y - F.h);
     c.save(); c.shadowColor = "rgba(0,0,0,.45)"; c.shadowBlur = 6*g.s; c.shadowOffsetX = 3*g.s; c.shadowOffsetY = 3*g.s;
@@ -837,10 +868,10 @@ function tidySides(p){
   const house = p.pins.find(x=>x.house);
   const list = p.pins.filter(x=>!x.house).sort((a,b)=>a.ey-b.ey);   // farthest (top of frame) first: they have the least room
   const ov = (r,q) => { const ox = Math.min(r[2],q[2])-Math.max(r[0],q[0])+gap, oy = Math.min(r[3],q[3])-Math.max(r[1],q[1])+gap; return ox>0 && oy>0 ? ox*oy : 0; };
-  const K = boxed ? 16 : 1, st = boxed ? 70*s : step;
+  const K = boxed ? 16 : 1, st = boxed ? (A.kind==="simple" ? 62*s : 70*s) : step;
   const place = (pin, others) => {
     let best = null;
-    for (let k=0;k<K;k++) for (const flip of [false]) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : ["right","left"])){
+    for (let k=0;k<K;k++) for (const flip of [false]) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : ["right","left","top","bottom"])){   /* 28 Oct: above/below only win when left/right overlap (2500 penalty) — lets 3 pins fit per photo */
       if (boxed){ pin.off = side; pin.side = "right"; } else pin.side = side;
       pin.flip = flip; pin.lift = k*st;
       const parts = pinParts(p,pin), r = parts[0];
@@ -857,7 +888,7 @@ function tidySides(p){
   for (let it=0; it<2; it++) for (const pin of list){ if (pin.layoutLocked) continue; place(pin, p.pins.filter(q=>q!==pin).map(q=>pinParts(p,q))); }
   // flag anything still overlapping so the editor can drop a place (the finals never have overlapping labels)
   p.pins.forEach(a=>{ a.clash = false; if (!a.house){ const m = 0.012*p.h; for (const r of pinParts(p,a)) if (r[0] < m || r[2] > p.w-m || r[1] < 1.6*m) a.clash = true; } });   // any part touching the frame edge counts as a clash   // label hanging off the frame counts as a clash too
-  for (const a of p.pins) for (const b of p.pins){ if (a===b) continue; let o=0; for (const x of pinParts(p,a)) for (const y of pinParts(p,b)) { const ox = Math.min(x[2],y[2])-Math.max(x[0],y[0]), oy = Math.min(x[3],y[3])-Math.max(x[1],y[1]); if (ox > -30*s && oy > -30*s) o++; } if (o){ a.clash = b.clash = true; } }
+  for (const a of p.pins) for (const b of p.pins){ if (a===b) continue; let o=0; for (const x of pinParts(p,a)) for (const y of pinParts(p,b)) { const ox = Math.min(x[2],y[2])-Math.max(x[0],y[0]), oy = Math.min(x[3],y[3])-Math.max(x[1],y[1]); if (A.kind==="simple" ? (ox > 2*s && oy > 2*s) : (ox > -30*s && oy > -30*s)) o++;   /* simple: thin lines may pass close to other labels, as in the reference; only real overlaps count */ } if (o){ a.clash = b.clash = true; } }
 }
 
 // ================= scene =================
@@ -1259,7 +1290,7 @@ function finishDraft(){
   if (draft.pts.length>=min){
     commit();
     const n = draft.type==="poly" ? draft.pts.length : draft.pts.length-1;
-    const sh = { id:nid(), type:draft.type, pts:draft.pts, color:prefs.lineColor, width:prefs.lineWidth, dashed:new Array(n).fill(draft.type==="line"), lens:new Array(n).fill(""), showLens:true };
+    const sh = { id:nid(), type:draft.type, pts:draft.pts, color:((AGENCIES[prefs.agency]||{}).line||prefs.lineColor), width:prefs.lineWidth, dashed:new Array(n).fill(draft.type==="line"), lens:new Array(n).fill(""), showLens:true };
     P().shapes.push(sh); sel={kind:"shape", id:sh.id};
     draft=null; hover=null; setTool("select"); setTab("boundary"); refreshAll();
   } else toast(draft.type==="poly" ? "A boundary needs at least 3 corners" : "A line needs at least 2 points");
@@ -1717,11 +1748,12 @@ async function decodeToWorking(file){
   catch(e){ bmp = await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=URL.createObjectURL(file); }); }
   const ow = bmp.width, oh = bmp.height;
   let x0=0, y0=0, cw=ow, ch=oh;
-  if (prefs.outMode === "finals"){
+  const mode = (window.__fullNames && file && window.__fullNames.has(file.name)) ? "full" : prefs.outMode;
+  if (mode === "finals"){
     if (ow/oh > 1.5){ cw = Math.round(oh*1.5); x0 = Math.round((ow-cw)/2); }
     else if (ow/oh < 1.5 && ow>=oh){ ch = Math.round(ow/1.5); y0 = Math.round((oh-ch)/2); }
   }
-  const tw = prefs.outMode === "finals" ? Math.min(3000, cw) : cw;
+  const tw = mode === "finals" ? Math.min(3000, cw) : cw;
   const k = tw/cw, th = Math.round(ch*k);
   // step down in halves for a clean downscale
   let src = bmp, sx=x0, sy=y0, sw=cw, sh=ch;
@@ -1799,6 +1831,25 @@ function decodeEntities(s){ const t = document.createElement("textarea"); t.inne
 function normType(t){ if (!t) return ""; t=String(t).toLowerCase();
   const R=[[/train|station/,"train"],[/regional shopping/,"regional_shopping"],[/shopping|mall|plaza/,"shopping"],[/school|college/,"school"],[/golf/,"golf"],[/library/,"library"],[/aquatic|pool|swim/,"aquatic"],[/hospital/,"hospital"],[/national park|regional park|dam/,"regional_park"],[/beach/,"beach"],[/lake/,"lake"],[/nature reserve|bushland|trail|reserve/,"reserve"],[/botanic|park|oval/,"park"],[/recreation|sport/,"recreation"],[/child|kinder|daycare/,"childcare"],[/playground/,"playground"]];
   for (const [re,c] of R) if (re.test(t)) return c; return "other"; }
+// 28 Oct: older amenity maps store a pin colour (blue/green/amber) in "cat" instead of a place type — work the type out from the note + name
+const COLOR_CAT = new Set(["blue","green","amber","red","purple","teal"]);
+function inferCat(name, note){ const t = (String(note).replace(/^.*?·\s*/,"") + " " + name).toLowerCase();
+  if (/child ?care|early learning|early school|kindy|kindergarten|daycare/.test(t)) return "childcare";
+  if (/train station|\bstation\b/.test(t)) return "train";
+  if (/school|college/.test(t)) return "school";
+  if (/regional shopping|westfield/.test(t)) return "regional_shopping";
+  if (/shopping|plaza|marketplace|shopping centre|supermarket|\bmall\b/.test(t)) return "shopping";
+  if (/library/.test(t)) return "library";
+  if (/golf/.test(t)) return "golf";
+  if (/hospital/.test(t)) return "hospital";
+  if (/aquatic|leisure centre|swimming|pool/.test(t)) return "aquatic";
+  if (/regional park/.test(t)) return "regional_park";
+  if (/marina|harbour/.test(t)) return "marina";
+  if (/beach/.test(t)) return "beach";
+  if (/lake|wetland|swamp/.test(t)) return "lake";
+  if (/reserve|bushland/.test(t)) return "reserve";
+  if (/park|oval|paddock|playground/.test(t)) return "park";
+  return "other"; }
 function parseJobFile(text){
   let j = null; const tt = text.trim();
   if (tt.startsWith("{")){
@@ -1815,7 +1866,7 @@ function parseJobFile(text){
     const prop = JSON.parse(ps), M = JSON.parse(ms).map(q=>Object.assign({}, q, { lat: (q.lat ?? q.la), lng: (q.lng ?? q.lo), cat: q.cat || ({school_amber:'school', school_private:'school', school_green:'school', transport:'train', rec:'recreation'}[q.t] || q.t), notes: q.notes || q.no, name: q.name || q.n, badge: q.badge || (q.kind==="zoned" ? "ZONED" : q.kind==="unverified" ? "unverified" : q.kind==="private" ? "private" : "") }));
     const am = tt.match(/<div class="addr">([\s\S]*?)<\/div>/) || tt.match(/<title>([^<–-]+?)\s*[–-]/);
     j = { address: am ? decodeEntities(am[1]).trim() : "Property", lat:prop[0], lng:prop[1],
-      places: M.map(q=>({ name:decodeEntities(q.name), cat:q.cat||normType(q.type)||(/school|college/i.test(q.name)?"school":/station/i.test(q.name)?"train":/park|reserve/i.test(q.name)?"park":"other"), lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
+      places: M.map(q=>({ name:decodeEntities(q.name), cat:(COLOR_CAT.has(q.cat) ? inferCat(q.name, q.note||q.notes||"") : q.cat)||normType(q.type)||inferCat(q.name, q.notes||q.note||q.desc||""), lat:q.lat, lng:q.lng, desc:decodeEntities((q.notes||q.note||"").replace(/^.*?·\s*/,"")), school: /ZONED/.test(q.badge||"") ? "zoned" : /unverified/.test(q.badge||"") ? "unverified" : /private/.test(q.badge||"") ? "private" : "" })) };
   }
   const seen = new Set();
   // 27 Oct: newer amenity maps use short cats (shop, zoned, privschool, rec, edu) that ranked as "other" and were never pinned
@@ -1996,19 +2047,40 @@ window.__bae = { project:()=>projectJSON(), setFinish:(on)=>{ const p=P(); if(!p
           if (Math.abs(den)/(Math.hypot(d1x,d1y)*Math.hypot(d2x,d2y)) < 0.17) Q.push([(p2[0]+p3[0])/2,(p2[1]+p3[1])/2]); else { const t=((p3[0]-p1[0])*d2y-(p3[1]-p1[1])*d2x)/den; Q.push([p1[0]+d1x*t, p1[1]+d1y*t]); } }
         pts.splice(0, n, ...Q); } } catch(e){ console.warn(e); }
     let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; pts.forEach(q=>{ x0=Math.min(x0,q[0]); x1=Math.max(x1,q[0]); y0=Math.min(y0,q[1]); y1=Math.max(y1,q[1]); });
-    const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3); const chh=cw/1.5;
+    const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3);
+    // 29 Oct (Jason): the house sits in the centre of every top-down. Shrink the 3:2 window (never below what the lot + its
+    // side labels need) so it can stay centred on the lot instead of sliding against the photo edge.
+    { const ccx=(x0+x1)/2, ccy=(y0+y1)/2, cmax=Math.min(2*Math.min(ccx,p.w-ccx), 3*Math.min(ccy,p.h-ccy)), need=Math.max(bw/0.78, bh*1.5/0.74);
+      if (cw > cmax) cw = Math.max(cmax, need); }
+    const chh=cw/1.5;
     let cx=(x0+x1)/2-cw/2, cy=(y0+y1)/2-chh/2; cx=Math.max(0,Math.min(p.w-cw,cx)); cy=Math.max(0,Math.min(p.h-chh,cy)); const zf=p.w/cw;
-    const col = prefs.agency==="grey-s" ? "#FFFFFF" : shadeHex(agency().color, 0.75); const sh={ id:nid(), type:"poly", pts, color:col, width:17/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:1.5*72/(62*zf), lensWeight:400 }; p.shapes.push(sh); p.outside='blur'; p.blurAmt=45; p._blur=null; p.pins.length=0;
+    const col = prefs.agency==="grey-s" ? "#FFFFFF" : (agency().line || shadeHex(agency().color, 0.75)); const sh={ id:nid(), type:"poly", pts, color:col, width:17/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:1.5*72/(62*zf), lensWeight:400 }; p.shapes.push(sh); p.outside='blur'; p.blurAmt=45; p._blur=null; p.pins.length=0;
     if (area){ p.texts.push({ id:nid(), link:sh.id, style:"area", color:"#ffffff", size:200, x:0, y:0, autoSize:true, lot:area, text:area+"m2", weight:wt||700, fitW:0.62, fitH:0.55 }); }
     refreshAll(); return { crop:[cx,cy,cw,chh], w:p.w, h:p.h, snap:window.__lotSnap }; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { w:p.w, h:p.h, cam:p.cam, shapes:p.shapes.map(s=>s.pts.map(q=>q.map(Math.round))), snap:window.__lotSnap||null, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
 
 // ---- Previous days: open any published job (original photos + saved edits + map) in one click
 const DAYS_ROOT = /^https?:$/.test(location.protocol) ? "/aerials/" : "https://bakerproduction.com/aerials/";
+
+// 29 Oct 2026: map + boundary panel for gallery jobs (the same quick-check map the VA sees in the gallery)
+function showCheckMap(entry){
+  let box = document.getElementById("chkBox"); if (box) box.remove();
+  if (!entry || !entry.src) return;
+  const url = DAYS_ROOT + entry.src.replace(/src\/?$/, "") + "check.html?v=" + Date.now();
+  box = document.createElement("div"); box.id = "chkBox";
+  box.innerHTML = `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary" loading="lazy"></iframe>`;
+  ($("stage") || document.body).appendChild(box);
+  let small = false; try { small = localStorage.getItem("chkMin") === "1"; } catch(e){}
+  const set = () => { box.classList.toggle("min", small); try { localStorage.setItem("chkMin", small ? "1" : "0"); } catch(e){} };
+  box.querySelector("#chkMin").onclick = () => { small = !small; set(); };
+  box.querySelector("#chkBig").onclick = () => box.classList.toggle("big");
+  set();
+}
 async function openRemoteJob(entry){
   try{
     if (photos.some(q=>!q.sample) && !confirm("Close the photos you have open and load "+entry.addr+"?")) return;
     photos = []; job = null; pendingProject = null; cur = -1;
     prefs.outMode = entry.full ? "full" : "finals"; savePrefs();
+    window.__fullNames = new Set(entry.fullPhotos || []);   // 29 Oct: top-down travels in the same set as the aerials, but keeps its full frame
     $("busy").hidden = false; $("busy").textContent = "Downloading "+entry.addr+"…";
     const base = DAYS_ROOT + entry.src;
     const get = async (name, type) => { const r = await fetch(base + encodeURIComponent(name)); if (!r.ok) throw new Error(name+" "+r.status); return new File([await r.blob()], name, { type }); };
@@ -2022,6 +2094,7 @@ async function openRemoteJob(entry){
     await addFiles(files);
     if (entry.agency){ prefs.agency = entry.agency; savePrefs(); }
     refreshAll(); requestDraw();
+    showCheckMap(entry);   // 29 Oct (Jason): the map + boundary sit beside the photo while you edit
     toast(entry.addr + " opened. Edit, then Export.");
   }catch(err){ console.error(err); $("busy").hidden = true; toast("Couldn't open that job: " + err.message); }
 }
@@ -2029,7 +2102,7 @@ async function showDays(){
   let idx;
   try{ const r = await fetch(DAYS_ROOT + "index.json", { cache:"no-store" }); idx = await r.json(); }
   catch(e){ toast("Couldn't load the list of previous days."); return; }
-  const m = el(`<div class="modal days" role="dialog" aria-label="Previous days"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>Previous days</b><button class="btn" data-x>Close</button></div><p class="note">Open a job to tweak pins, boundary or the photo itself (Photo tab → Adjust), then Export. Top-down shots open on their own.</p><div class="list"></div></div></div>`);
+  const m = el(`<div class="modal days" role="dialog" aria-label="Previous days"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>Previous days</b><button class="btn" data-x>Close</button></div><p class="note">Open a job to tweak pins, boundary or the photo itself (Photo tab → Adjust), then Export. The top-down is the first photo of each job.</p><div class="list"></div></div></div>`);
   const list = m.querySelector(".list");
   (idx.days||[]).forEach(d=>{
     list.appendChild(el(`<h3>${d.label}</h3>`));

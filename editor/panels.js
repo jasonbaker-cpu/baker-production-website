@@ -689,7 +689,12 @@ window.__bae = { project:()=>projectJSON(), setFinish:(on)=>{ const p=P(); if(!p
           if (Math.abs(den)/(Math.hypot(d1x,d1y)*Math.hypot(d2x,d2y)) < 0.17) Q.push([(p2[0]+p3[0])/2,(p2[1]+p3[1])/2]); else { const t=((p3[0]-p1[0])*d2y-(p3[1]-p1[1])*d2x)/den; Q.push([p1[0]+d1x*t, p1[1]+d1y*t]); } }
         pts.splice(0, n, ...Q); } } catch(e){ console.warn(e); }
     let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; pts.forEach(q=>{ x0=Math.min(x0,q[0]); x1=Math.max(x1,q[0]); y0=Math.min(y0,q[1]); y1=Math.max(y1,q[1]); });
-    const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3); const chh=cw/1.5;
+    const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3);
+    // 29 Oct (Jason): the house sits in the centre of every top-down. Shrink the 3:2 window (never below what the lot + its
+    // side labels need) so it can stay centred on the lot instead of sliding against the photo edge.
+    { const ccx=(x0+x1)/2, ccy=(y0+y1)/2, cmax=Math.min(2*Math.min(ccx,p.w-ccx), 3*Math.min(ccy,p.h-ccy)), need=Math.max(bw/0.78, bh*1.5/0.74);
+      if (cw > cmax) cw = Math.max(cmax, need); }
+    const chh=cw/1.5;
     let cx=(x0+x1)/2-cw/2, cy=(y0+y1)/2-chh/2; cx=Math.max(0,Math.min(p.w-cw,cx)); cy=Math.max(0,Math.min(p.h-chh,cy)); const zf=p.w/cw;
     const col = prefs.agency==="grey-s" ? "#FFFFFF" : (agency().line || shadeHex(agency().color, 0.75)); const sh={ id:nid(), type:"poly", pts, color:col, width:17/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:1.5*72/(62*zf), lensWeight:400 }; p.shapes.push(sh); p.outside='blur'; p.blurAmt=45; p._blur=null; p.pins.length=0;
     if (area){ p.texts.push({ id:nid(), link:sh.id, style:"area", color:"#ffffff", size:200, x:0, y:0, autoSize:true, lot:area, text:area+"m2", weight:wt||700, fitW:0.62, fitH:0.55 }); }
@@ -697,6 +702,21 @@ window.__bae = { project:()=>projectJSON(), setFinish:(on)=>{ const p=P(); if(!p
 
 // ---- Previous days: open any published job (original photos + saved edits + map) in one click
 const DAYS_ROOT = /^https?:$/.test(location.protocol) ? "/aerials/" : "https://bakerproduction.com/aerials/";
+
+// 29 Oct 2026: map + boundary panel for gallery jobs (the same quick-check map the VA sees in the gallery)
+function showCheckMap(entry){
+  let box = document.getElementById("chkBox"); if (box) box.remove();
+  if (!entry || !entry.src) return;
+  const url = DAYS_ROOT + entry.src.replace(/src\/?$/, "") + "check.html?v=" + Date.now();
+  box = document.createElement("div"); box.id = "chkBox";
+  box.innerHTML = `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary" loading="lazy"></iframe>`;
+  ($("stage") || document.body).appendChild(box);
+  let small = false; try { small = localStorage.getItem("chkMin") === "1"; } catch(e){}
+  const set = () => { box.classList.toggle("min", small); try { localStorage.setItem("chkMin", small ? "1" : "0"); } catch(e){} };
+  box.querySelector("#chkMin").onclick = () => { small = !small; set(); };
+  box.querySelector("#chkBig").onclick = () => box.classList.toggle("big");
+  set();
+}
 async function openRemoteJob(entry){
   try{
     if (photos.some(q=>!q.sample) && !confirm("Close the photos you have open and load "+entry.addr+"?")) return;
@@ -716,6 +736,7 @@ async function openRemoteJob(entry){
     await addFiles(files);
     if (entry.agency){ prefs.agency = entry.agency; savePrefs(); }
     refreshAll(); requestDraw();
+    showCheckMap(entry);   // 29 Oct (Jason): the map + boundary sit beside the photo while you edit
     toast(entry.addr + " opened. Edit, then Export.");
   }catch(err){ console.error(err); $("busy").hidden = true; toast("Couldn't open that job: " + err.message); }
 }

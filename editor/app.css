@@ -154,3 +154,11 @@ input[type=color]{width:30px;height:26px;border:1px solid var(--line);border-rad
   .fixb .fixpad{grid-template-columns:repeat(3,64px)}
   .fixb .fixpad .btn{height:48px}
 }
+
+/* 29 Oct: map + boundary panel */
+#chkBox{position:absolute;right:12px;top:12px;width:360px;height:300px;z-index:30;background:#111;border:1px solid rgba(255,255,255,.18);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);display:flex;flex-direction:column;overflow:hidden}
+#chkBox.big{width:min(720px,60vw);height:min(560px,70vh)}
+#chkBox .chkHead{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;font-size:12px;color:#eee;background:#1b1d20}
+#chkBox .chkHead .btn{padding:2px 8px;min-width:0}
+#chkBox iframe{flex:1;border:0;width:100%;background:#222}
+#chkBox.min{height:auto;width:180px}#chkBox.min iframe{display:none}
