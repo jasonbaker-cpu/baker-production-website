@@ -168,3 +168,4 @@ Push-notify him.
 - **Sky always replaced on daytime shoots** (Jason, 29 Oct, after 22/337 Lord St went out with a white overcast sky): `noSky` is for real twilight/sunset shoots only. If the plate ghosts a skyline, fix the mask; don't keep the grey sky. `resky.js <day> <slug>` re-exports a published job with the sky on.
 - **Belle Property** (belleproperty.com → green-belle, Jason 29 Oct, ref: 6/33 Malcolm St West Perth listing): green teardrop pins, white label cards, belle logo house pin.
   Belle jobs also get sky plate D (Belle blue, puffy cumulus) and 2 pins per photo (prep_day default; picking green-belle in the editor switches the sky).
+- **Street at the bottom** (Jason, 29 Oct): every top-down must have the street at the bottom. Look at each nadir and set `streetRot: {"<slug>__nadir": 90|180|270}` (clockwise) in the day file; prep_day turns the photo and the camera yaw. Corner lots: the street the house faces. 90 Tibradden fixed by hand.

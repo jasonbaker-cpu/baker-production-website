@@ -66,6 +66,16 @@ for j in D['jobs']:
         if j.get('nadirPick'): pick = [f for f in nads if any(p in os.path.basename(f) for p in j['nadirPick'])][:2] or pick
         for i, n0 in enumerate(pick):
             v = j['slug'] + ('__nadir' if i == 0 else f'__nadir{i+1}')
+            # 29 Oct (Jason): every top-down goes out with the STREET AT THE BOTTOM. 'streetRot' {variant: 90|180|270}
+            # = clockwise turn needed (decide by looking at the frame); the photo is turned and the camera yaw follows.
+            rot = int((j.get('streetRot') or {}).get(v, 0)) % 360
+            if rot and n0 in cams:
+                from PIL import Image as _I
+                im_ = _I.open(n0); ex_ = im_.getexif(); ex_[274] = 1
+                tr = {90: _I.Transpose.ROTATE_270, 180: _I.Transpose.ROTATE_180, 270: _I.Transpose.ROTATE_90}[rot]
+                n1 = n0.rsplit('.', 1)[0] + f'_r{rot}.' + n0.rsplit('.', 1)[1]
+                im_.transpose(tr).save(n1, quality=95, exif=ex_.tobytes(), xmp=im_.info.get('xmp'))
+                c_ = dict(cams[n0]); c_['yaw'] = c_['yaw'] - rot; cams[n1] = c_; n0 = n1
             run.append(dict(base, slug=v, photos=[n0], poly=j['poly'], full=1,
                             snap={'on': True, 'mode': 'ridge', 'sc': 0.0, 'R': 2.5, 'rot': 3},
                             edgeOff=(j.get('edgeOff', {}) if i == 0 else (j.get('edgeOffs') or {}).get(v, {})), cams={n0: cams[n0]} if n0 in cams else {}))
