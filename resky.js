@@ -13,6 +13,7 @@ const { chromium } = require('playwright'); const fs = require('fs');
   await pg.waitForFunction(() => document.querySelectorAll('.thumb').length > 0, null, { timeout: 120000 });
   { let last = -1, same = 0; for (let k = 0; k < 240 && same < 8; k++) { await pg.waitForTimeout(500); const n = await pg.evaluate(() => document.querySelectorAll('.thumb').length); if (n === last) same++; else { same = 0; last = n; } } }
   await pg.evaluate(() => Promise.all([document.fonts.load('400 40px "Source Sans 3"'), document.fonts.load('700 40px "Open Sans"')]));
+  if (process.env.AGENCY) { await pg.selectOption('#agSel', process.env.AGENCY); await pg.waitForTimeout(500); }
   const n = await pg.evaluate(() => document.querySelectorAll('.thumb').length);
   const busy = () => pg.waitForFunction(() => document.getElementById('busy').hidden === true, null, { timeout: 400000 });
   for (let i = 0; i < n; i++) {
