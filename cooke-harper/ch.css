@@ -187,3 +187,25 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px;padding:0}
 .foot a:hover{text-decoration:underline}
 .foot .col{display:grid;gap:6px;align-content:start}
 .foot .legal{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.1);padding-top:16px;font-size:12.5px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+/* Form higher: tighter hero, card pinned to top; on phones the form comes straight after the headline */
+.hero .wrap{padding-block:28px 56px;align-items:start}
+.hero .wrap>div:first-child{padding-top:24px}
+#appraisal{padding:22px 24px}
+#appraisal h2{font-size:24px}
+#appraisal form.lead{gap:12px;margin-top:14px}
+#appraisal .fl input,#appraisal .fl select{padding:10px 12px}
+#appraisal .chip span{padding:8px 13px}
+@media (max-width:900px){
+  .hero .wrap{padding-block:20px 40px;gap:20px}
+  .hero .wrap>div:first-child{display:contents}
+  .hero .eyebrow,.hero h1,.hero .lede{order:0}
+  .hero h1{margin-top:4px!important}
+  .hero .lede{margin-top:0;font-size:17px}
+  #appraisal{order:1}
+  .hero .facts{order:2;margin-top:4px}
+  .hero .source{order:3}
+}
+#appraisal .chips{gap:6px}
+#appraisal .chip span{padding:7px 11px;font-size:13.5px}
+#appraisal .row2{grid-template-columns:1fr 1fr}
+@media (max-width:340px){#appraisal .row2{grid-template-columns:1fr}}
