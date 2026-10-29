@@ -130,7 +130,7 @@ body{{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-ap
 header,section{{max-width:1400px;margin:auto;padding:18px 16px}}h1{{font-size:20px;margin:0}}h2{{font-size:17px;margin:0}}header p,section p{{color:var(--mut);margin:4px 0 0}}
 .ed{{margin-left:10px;color:var(--acc);font-weight:600;text-decoration:none}}a{{color:var(--acc)}}
 .chk{{margin-top:10px}}.chk summary{{cursor:pointer;color:var(--mut);font-weight:600}}.chk iframe{{width:100%;height:420px;border:0;border-radius:6px;margin-top:6px;background:#111}}.g{{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px;margin-top:10px}}.g img{{width:100%;display:block;border-radius:4px}}</style></head>
-<body><header><h1>Drone edits — {html.escape(label)}</h1><p>Tap a photo for full size. <b>Edit</b> opens the job in the <a href="/pins/">editor</a> with all its pins and settings.</p></header>{"".join(secs)}</body></html>'''
+<body><header><h1>Drone edits — {html.escape(label)}</h1><p>Tap a photo for full size. <b>Edit</b> opens the job in the <a href="/pins/">editor</a> with all its pins and settings.</p></header>{"".join(secs)}<script src="../dl.js"></script></body></html>'''
 open(OUT + 'index.html', 'w').write(page)
 
 ip = SITE + 'index.json'
