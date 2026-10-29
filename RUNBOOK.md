@@ -175,3 +175,8 @@ Push-notify him.
 - Every job carries the booking notes (`notes`) into index.json; the editor shows them in a "Booking notes — follow these" banner.
 - Follow every note. "Vertical" → `portrait: true` (4:5, 1800×2250 aerials; top-down cropped 4:5). Landmarks/CBD → add as `must` pins. Measurements → all edge lengths on.
 - Report any note not followed.
+
+## Default satellite map = "hood map" (Jason, 29 Oct 2026)
+- Every satellite / location map uses `hoodmap.py cfg.json out.jpg` (ref: Crib Creative 36A Cobham Way). Natural satellite, black teardrop pins with white icons (icons/ = editor set; lake/river = drawn waves), white rectangle labels in thin caps "NAME - 1.4km", house pin with no label, front-of-house photo inset in a white frame in the emptiest corner. 3000×1875 (1.6:1).
+- At least 6 places. Pins never covered: labels are placed around reserved pin boxes, and places under the photo are dropped (printed) — move the photo corner or the crop if that loses one you need.
+- satpop.py (frosted cards + pop-up) and oblique.py stay available only when asked.
