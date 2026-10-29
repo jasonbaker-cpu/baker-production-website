@@ -10,13 +10,14 @@ for j in json.load(open(rf)):
     if j['slug'].endswith('__nadir'): continue
     srcdir = SITE + j['slug'] + '/src/'
     if not os.path.isdir(srcdir): continue
-    j = dict(j); newp = []; cams = {}
+    j = dict(j); newp = []; cams = {}; steps = {}
     for p in j['photos']:
         b = os.path.basename(p); s = [x for x in glob.glob(srcdir + '*') if os.path.basename(x).lower() == b.lower()]
         if not s: continue
         d = 'par3k/' + b; shutil.copy(s[0], d); newp.append(d)
         if p in j.get('cams', {}): cams[d] = j['cams'][p]
-    j['photos'] = newp; j['cams'] = cams; j['_orig'] = j['slug']; j['slug'] = 'par_' + j['slug']; jobs.append(j)
+        if p in j.get('steps', {}): steps[d] = j['steps'][p]   # 29 Oct: hand-picked pins (ticks) must follow the 3000px copy
+    j['photos'] = newp; j['cams'] = cams; j['steps'] = steps; j['_orig'] = j['slug']; j['slug'] = 'par_' + j['slug']; jobs.append(j)
 json.dump(jobs, open('e2e/par_' + day + '.json', 'w'))
 if '--score' not in sys.argv: subprocess.run(['python3', 'runjobs.py', 'e2e/par_' + day + '.json'], check=False, stdout=subprocess.DEVNULL)
 bad = 0; rows = []
