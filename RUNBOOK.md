@@ -169,3 +169,4 @@ Push-notify him.
 - **Belle Property** (belleproperty.com → green-belle, Jason 29 Oct, ref: 6/33 Malcolm St West Perth listing): green teardrop pins, white label cards, belle logo house pin.
   Belle jobs also get sky plate D (Belle blue, puffy cumulus) and 2 pins per photo (prep_day default; picking green-belle in the editor switches the sky).
 - **Street at the bottom** (Jason, 29 Oct): every top-down must have the street at the bottom. Look at each nadir and set `streetRot: {"<slug>__nadir": 90|180|270}` (clockwise) in the day file; prep_day turns the photo and the camera yaw. Corner lots: the street the house faces. 90 Tibradden fixed by hand.
+  Both top-downs get turned (road-at-bottom and wide). A 90/270 turn makes a portrait frame, so prep_day/rot_fx.py halve it and pad the sides with a soft blurred mirror (the outside of the lot is blurred anyway) to keep the lot whole and centred in the 3:2 export.

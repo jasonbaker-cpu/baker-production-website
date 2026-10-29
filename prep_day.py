@@ -74,8 +74,18 @@ for j in D['jobs']:
                 im_ = _I.open(n0); ex_ = im_.getexif(); ex_[274] = 1
                 tr = {90: _I.Transpose.ROTATE_270, 180: _I.Transpose.ROTATE_180, 270: _I.Transpose.ROTATE_90}[rot]
                 n1 = n0.rsplit('.', 1)[0] + f'_r{rot}.' + n0.rsplit('.', 1)[1]
-                im_.transpose(tr).save(n1, quality=95, exif=ex_.tobytes(), xmp=im_.info.get('xmp'))
-                c_ = dict(cams[n0]); c_['yaw'] = c_['yaw'] - rot; cams[n1] = c_; n0 = n1
+                r_ = im_.transpose(tr); c_ = dict(cams[n0]); c_['yaw'] = c_['yaw'] - rot
+                import math as _m
+                fp_ = c_['f35'] * _m.hypot(*r_.size) / 43.27
+                if r_.size[1] > r_.size[0]:   # portrait after the turn: halve + pad to a wide frame with a soft blurred mirror so a long lot fits a 3:2 export, centred
+                    import numpy as _np, cv2 as _cv
+                    r_ = r_.resize((r_.size[0]//2, r_.size[1]//2), _I.LANCZOS); fp_ *= 0.5; rw_, rh_ = r_.size
+                    tw_ = int(rh_ * 2.2); pd_ = (tw_ - rw_) // 2; a_ = _np.array(r_)
+                    big_ = _cv.copyMakeBorder(a_, 0, 0, pd_, tw_ - rw_ - pd_, _cv.BORDER_REFLECT)
+                    bl_ = _cv.GaussianBlur(_cv.GaussianBlur(big_, (0, 0), 40), (0, 0), 40); m_ = _np.zeros(big_.shape[:2], _np.float32); m_[:, pd_:pd_+rw_] = 1
+                    m_ = _cv.GaussianBlur(m_, (0, 0), 60)[..., None]; r_ = _I.fromarray((big_*m_ + bl_*(1-m_)).astype(_np.uint8))
+                c_['f35'] = fp_ * 43.27 / _m.hypot(*r_.size)
+                r_.save(n1, quality=95, exif=ex_.tobytes(), xmp=im_.info.get('xmp')); cams[n1] = c_; n0 = n1
             run.append(dict(base, slug=v, photos=[n0], poly=j['poly'], full=1,
                             snap={'on': True, 'mode': 'ridge', 'sc': 0.0, 'R': 2.5, 'rot': 3},
                             edgeOff=(j.get('edgeOff', {}) if i == 0 else (j.get('edgeOffs') or {}).get(v, {})), cams={n0: cams[n0]} if n0 in cams else {}))
