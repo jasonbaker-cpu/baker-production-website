@@ -83,7 +83,9 @@ async def main():
                     lens=[('' if E[k]<max(3,0.04*sum(E)) else v) for k,v in enumerate(lens)]
                     area=round(abs(sum(P[i][0]*P[(i+1)%len(P)][1]-P[(i+1)%len(P)][0]*P[i][1] for i in range(len(P))))/2)
                     if job.get('lens') and len(job['lens'])==len(P): lens=[(fmt(v) if v else '') for v in job['lens']]   # side lengths from the title/strata plan beat the cadastre
-                    if job.get('area'): area=int(job['area'])   # lot size from the title/plan
+                    if job.get('area') and job.get('areaSource'): area=int(job['area'])   # lot size from the title/strata plan — only with a stated source
+                    elif job.get('area'):   # 29 Oct (Jason): a hand-typed area with no source put 809 m2 on 47 Attra (cadastre 812). Cadastre wins; flag it.
+                        print(f"  AREA CHECK {job.get('slug')}: typed {job['area']} m2 has no areaSource - using cadastre {area} m2"); open('AREA_FLAGS.txt','a').write(f"{job.get('slug')}: typed {job['area']} vs cadastre {area}\n")
                     wt=700   # Jason (25 Oct): bold Open Sans lot size with a real ² (like his 195m² example)
                     rg = job.get('reg',{}).get(ph,[0,0])
                     ok = await pg.evaluate("([ll,a,b,l,ar,w,px])=>window.__bae.addLot(ll,a,b,l,ar,w,px)", [ll, rg[0], rg[1], lens, area, wt, job.get('pxpoly')]); print('  lot', ph, ok, area, lens)

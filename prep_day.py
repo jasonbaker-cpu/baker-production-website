@@ -48,7 +48,7 @@ for j in D['jobs']:
     if j.get('noSky'): base['noSky'] = 1   # twilight / sunset shoot: keep the real sky
     if j.get('noFinish'): base['noFinish'] = 1   # twilight: no brightening grade either
     if j.get('plain'): base['plain'] = 1
-    for k in ('area', 'lens'):   # from the title / strata plan / agent's sketch in Dropbox
+    for k in ('area', 'areaSource', 'lens'):   # from the title / strata plan / agent's sketch in Dropbox
         if j.get(k): base[k] = j[k]
     if j.get('poly') and nad:
         obl = [f for f in ph if f not in nad]
