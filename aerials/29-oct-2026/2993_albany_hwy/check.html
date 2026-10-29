@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 2993 Albany Hwy, Kelmscott WA 6111</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary · 1500 m²</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (13)</div></div></div>
+<script>const D={"lat": -32.1262195, "lng": 116.01786879999999, "poly": [[-32.12609330069192, 116.01805444960772], [-32.126365363299975, 116.01808596456607], [-32.12636526468555, 116.01754323714403], [-32.12609320313751, 116.01754332118253]], "places": [{"name": "Challis Station", "lat": -32.12650730000001, "lng": 116.01267730000001, "d": "490 m"}, {"name": "Kuhl Park", "lat": -32.121909099999996, "lng": 115.9982139, "d": "1.9 km"}, {"name": "Flora Reserve", "lat": -32.1338102, "lng": 116.00476080000001, "d": "1.5 km"}, {"name": "Kelmscott Station", "lat": -32.1137166, "lng": 116.01336309999999, "d": "1.5 km"}, {"name": "Kelmscott Public Library", "lat": -32.1130863, "lng": 116.01507699999998, "d": "1.5 km"}, {"name": "Rushton Park", "lat": -32.1207333, "lng": 116.0211954, "d": "690 m"}, {"name": "Pioneer Village School", "lat": -32.1505036, "lng": 116.02411000000001, "d": "2.8 km"}, {"name": "Carrigg Park", "lat": -32.1316665, "lng": 116.02424950000001, "d": "850 m"}, {"name": "Ellis Park", "lat": -32.1336059, "lng": 116.0307856, "d": "1.5 km"}, {"name": "Armadale Station", "lat": -32.1539387, "lng": 116.01289969999998, "d": "3.1 km"}, {"name": "Bellarni Reisha Reserve", "lat": -32.130916, "lng": 116.0148309, "d": "600 m"}, {"name": "Sowilo Community High School", "lat": -32.131091999999995, "lng": 116.0103225, "d": "890 m"}, {"name": "John Calvin Christian College", "lat": -32.1488162, "lng": 116.00733500000001, "d": "2.7 km"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[40,40],maxZoom:20});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[230,40]});
+</script></body></html>

@@ -1,0 +1,91 @@
+{
+ "address": "3 Throttle St, Brabham WA 6055",
+ "lat": -31.827534,
+ "lng": 115.979871,
+ "pins": [
+  {
+   "name": "Whiteman Park Station",
+   "cat": "train",
+   "lat": -31.835897,
+   "lng": 115.964538
+  },
+  {
+   "name": "Ellenbrook Station",
+   "cat": "train",
+   "lat": -31.781602,
+   "lng": 115.96339
+  },
+  {
+   "name": "Maarakool Primary School",
+   "cat": "school",
+   "lat": -31.82512,
+   "lng": 115.97842
+  },
+  {
+   "name": "Brabham Primary School",
+   "cat": "school",
+   "lat": -31.82173,
+   "lng": 115.97205
+  },
+  {
+   "name": "Emmaus Catholic Primary School",
+   "cat": "school",
+   "lat": -31.8472,
+   "lng": 115.972165
+  },
+  {
+   "name": "Australian Islamic College Henley Brook",
+   "cat": "school",
+   "lat": -31.80565,
+   "lng": 115.97931
+  },
+  {
+   "name": "Swan Valley Anglican Community School",
+   "cat": "school",
+   "lat": -31.793617,
+   "lng": 115.985344
+  },
+  {
+   "name": "Whiteman Edge Village",
+   "cat": "shopping",
+   "lat": -31.830554,
+   "lng": 115.969094
+  },
+  {
+   "name": "Ellenbrook Central",
+   "cat": "shopping",
+   "lat": -31.782569,
+   "lng": 115.969426
+  },
+  {
+   "name": "Midland Gate",
+   "cat": "shopping",
+   "lat": -31.889825,
+   "lng": 116.0093
+  },
+  {
+   "name": "Watervalley Boulevard Park",
+   "cat": "park",
+   "lat": -31.82643,
+   "lng": 115.97312
+  },
+  {
+   "name": "Brabham Neighbourhood Park",
+   "cat": "park",
+   "lat": -31.8213,
+   "lng": 115.9735
+  },
+  {
+   "name": "Whiteman Park",
+   "cat": "park",
+   "lat": -31.8351,
+   "lng": 115.948212
+  },
+  {
+   "name": "The Vines Golf & Country Club",
+   "cat": "golf",
+   "lat": -31.764132,
+   "lng": 116.007891
+  }
+ ]
+}

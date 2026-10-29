@@ -1,6 +1,104 @@
 {
  "days": [
   {
+   "id": "29-oct-2026",
+   "label": "Thu 29 Oct 2026",
+   "gallery": "29-oct-2026/",
+   "jobs": [
+    {
+     "slug": "217_marmion_st",
+     "addr": "217 Marmion St, Palmyra WA 6157",
+     "who": "Drew Dwyer \u00b7 One Residential",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [],
+     "src": "29-oct-2026/217_marmion_st/src/",
+     "map": "217_marmion_st_palmyra_map.html",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261029_132940_0943_1793251581876_photo.JPG",
+      "dji_fly_20261029_133014_0944_1793251580532_photo.JPG",
+      "dji_fly_20261029_133024_0945_1793251579229_photo.JPG",
+      "dji_fly_20261029_133048_0946_1793251577896_photo.JPG",
+      "dji_fly_20261029_133100_0947_1793251576552_photo.JPG",
+      "dji_fly_20261029_133124_0948_1793251575229_photo.JPG",
+      "dji_fly_20261029_133138_0949_1793251573907_photo.JPG",
+      "dji_fly_20261029_133156_0950_1793251572525_photo.JPG",
+      "dji_fly_20261029_133210_0951_1793251571044_photo.JPG"
+     ],
+     "notes": "Amenities or features to highlight: SOME FRONT PHOTOS, overhead shots, and location shots.",
+     "portrait": false
+    },
+    {
+     "slug": "12_keymer_st",
+     "addr": "12 Keymer St, Ascot WA 6104",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
+     "agency": "red",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261029_122816_0930_1793251599917_photo_r90.JPG"
+     ],
+     "src": "29-oct-2026/12_keymer_st/src/",
+     "map": "12_keymer_st_ascot_map.html",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261029_122816_0930_1793251599917_photo_r90.JPG",
+      "dji_fly_20261029_122902_0932_1793251596396_photo.JPG",
+      "dji_fly_20261029_122930_0933_1793251595126_photo.JPG",
+      "dji_fly_20261029_123016_0935_1793251592467_photo.JPG",
+      "dji_fly_20261029_123030_0936_1793251591188_photo.JPG",
+      "dji_fly_20261029_123048_0937_1793251589849_photo.JPG",
+      "dji_fly_20261029_123102_0938_1793251588504_photo.JPG"
+     ],
+     "notes": "Entry Notes: FRONT SHOTS ONLY SHOWING ACCESS TO STABLES\nAmenities or features to highlight: ASCOT RACECOURSE / SWAN RIVER / ASCOT WATERS MARINA / SWAN RIVER HOTEL / HORSE SWIMMING POOL\nLand size: 911SQM\nAny specific boundaries or land features to mark: ASCOT RACES / SWAN RIVER HOTEL / ASCOT WATERS MARINA / BELMONT PRIMARY / CENTENARY PARK",
+     "portrait": false
+    },
+    {
+     "slug": "3_throttle_st",
+     "addr": "3 Throttle St, Brabham WA 6055",
+     "who": "Nigel Ndlovu \u00b7 Armadale Real Estate",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [],
+     "src": "29-oct-2026/3_throttle_st/src/",
+     "map": "3_throttle_st_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261029193020_0164_D.jpg",
+      "DJI_20261029193135_0167_D.jpg"
+     ],
+     "notes": "",
+     "portrait": false
+    },
+    {
+     "slug": "2993_albany_hwy",
+     "addr": "2993 Albany Hwy, Kelmscott WA 6111",
+     "who": "Jayden Cooke \u00b7 Rodway Group",
+     "agency": "rodway",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261029215759_0170_D.jpg",
+      "DJI_20261029215737_0168_D_r90.jpg"
+     ],
+     "src": "29-oct-2026/2993_albany_hwy/src/",
+     "map": "2993_albany_hwy_kelmscott_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261029215759_0170_D.jpg",
+      "DJI_20261029215737_0168_D_r90.jpg",
+      "DJI_20261029215841_0171_D.jpg",
+      "DJI_20261029215858_0172_D.jpg",
+      "DJI_20261029220022_0173_D.jpg",
+      "DJI_20261029220119_0176_D.jpg",
+      "DJI_20261029220134_0177_D.jpg",
+      "DJI_20261029220150_0178_D.jpg"
+     ],
+     "notes": "",
+     "portrait": false
+    }
+   ]
+  },
+  {
    "id": "28-oct-2026",
    "label": "Wed 28 Oct 2026",
    "gallery": "28-oct-2026/",
