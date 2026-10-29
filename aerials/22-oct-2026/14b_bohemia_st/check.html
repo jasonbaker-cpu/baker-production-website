@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 14B Bohemia St, Spearwood</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary · 173 m²</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (10)</div></div></div>
+<script>const D={"lat": -32.0958885, "lng": 115.7930361, "poly": [[-32.09593220822091, 115.79298661316727], [-32.095827040181184, 115.79298785566047], [-32.09581421511749, 115.79296599356971], [-32.09580970276691, 115.79296594733043], [-32.09580905548063, 115.79306861544248], [-32.09582708989574, 115.79309011227905], [-32.095961387211545, 115.79308991584054], [-32.095960400164905, 115.79297428084391], [-32.09593228877956, 115.79297403719912]], "places": [{"name": "Saint Paul's Shopping Centre", "lat": -32.09082, "lng": 115.813493, "d": "2.0 km"}, {"name": "Coolbellup Shopping Centre", "lat": -32.0825, "lng": 115.8075, "d": "2.0 km"}, {"name": "Hamilton Senior High School", "lat": -32.085566, "lng": 115.795007, "d": "1.2 km"}, {"name": "Southwell Primary School", "lat": -32.09005, "lng": 115.78462, "d": "1.0 km"}, {"name": "Phoenix Primary School", "lat": -32.092567, "lng": 115.779451, "d": "1.3 km"}, {"name": "Phoenix Shopping Centre", "lat": -32.0973, "lng": 115.7841, "d": "860 m"}, {"name": "Newton Primary School", "lat": -32.11231, "lng": 115.78899, "d": "1.9 km"}, {"name": "Coogee Beach", "lat": -32.11848, "lng": 115.76168, "d": "3.9 km"}, {"name": "MacFaull Park", "lat": -32.099539, "lng": 115.790786, "d": "460 m"}, {"name": "Lakes Shopping Centre", "lat": -32.106515, "lng": 115.827651, "d": "3.5 km"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[40,40],maxZoom:20});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[230,40]});
+</script></body></html>

@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 10 Belches Lp, Seville Grove</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary · 208 m²</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (11)</div></div></div>
+<script>const D={"lat": -32.128602799999996, "lng": 115.99646099999998, "poly": [[-32.12860878681565, 115.99659731146897], [-32.12869168673967, 115.99651602935266], [-32.12858131688255, 115.9963659974456], [-32.12850015622955, 115.99644700503055]], "places": [{"name": "Challis Station", "lat": -32.12650730000001, "lng": 116.01267730000001, "d": "1.5 km"}, {"name": "Kelmscott Station", "lat": -32.1137166, "lng": 116.01336309999999, "d": "2.3 km"}, {"name": "Bernice Hargrave Reserve", "lat": -32.1234272, "lng": 115.99908669999999, "d": "630 m"}, {"name": "Champion Drive Shopping Centre", "lat": -32.131598, "lng": 116.00116469999999, "d": "550 m"}, {"name": "Armadale Health Service", "lat": -32.1331888, "lng": 116.01953929999999, "d": "2.2 km"}, {"name": "Armadale Station", "lat": -32.1539387, "lng": 116.01289969999998, "d": "3.2 km"}, {"name": "Westfield Skate Park", "lat": -32.1355281, "lng": 115.98736059999999, "d": "1.2 km"}, {"name": "Verdant Crescent Reserve", "lat": -32.1247092, "lng": 115.9895378, "d": "780 m"}, {"name": "Seville Central Park", "lat": -32.128790099999996, "lng": 115.9853475, "d": "1.0 km"}, {"name": "Kelmscott John Calvin School", "lat": -32.117931999999996, "lng": 115.988324, "d": "1.4 km"}, {"name": "John Wollaston Anglican Community School", "lat": -32.1038095, "lng": 116.0070064, "d": "2.9 km"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[40,40],maxZoom:20});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[230,40]});
+</script></body></html>

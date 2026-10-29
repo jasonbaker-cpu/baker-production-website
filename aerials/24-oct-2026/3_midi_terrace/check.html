@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 3 Midi Terrace, Hillarys</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary · 613 m²</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (11)</div></div></div>
+<script>const D={"lat": -31.8190252, "lng": 115.748218, "poly": [[-31.818741577867314, 115.74839902493709], [-31.818771101071004, 115.74845274986099], [-31.81877314577002, 115.7484188876165], [-31.818885906875416, 115.74826323522461], [-31.81888925393789, 115.74826294347041], [-31.819031431401427, 115.74840792258027], [-31.819132193746096, 115.74820112251784], [-31.81911999717322, 115.74815558717376], [-31.819089544841493, 115.74810853113202], [-31.819055585881255, 115.74807304645825], [-31.818994227913258, 115.74805024444204]], "places": [{"name": "Harbour View Park", "lat": -31.81805, "lng": 115.74408999999999, "d": "410 m"}, {"name": "Lacepede Park", "lat": -31.822108199999995, "lng": 115.74576890000002, "d": "410 m"}, {"name": "Sacred Heart College", "lat": -31.828149, "lng": 115.7481231, "d": "1.0 km"}, {"name": "Seacrest Park", "lat": -31.8245859, "lng": 115.7505517, "d": "660 m"}, {"name": "Tom Walker Park", "lat": -31.827022799999998, "lng": 115.76077499999998, "d": "1.5 km"}, {"name": "Greenwood Station", "lat": -31.8185682, "lng": 115.78323069999998, "d": "3.3 km"}, {"name": "Whitfords Station", "lat": -31.799406999999995, "lng": 115.7823322, "d": "3.9 km"}, {"name": "Hillarys Primary School", "lat": -31.813260000000003, "lng": 115.75276540000002, "d": "770 m"}, {"name": "Hillarys Park", "lat": -31.8141002, "lng": 115.7485368, "d": "550 m"}, {"name": "Hillarys Marina Lake Park", "lat": -31.819388300000004, "lng": 115.73802239999998, "d": "970 m"}, {"name": "Maquire Park", "lat": -31.8145592, "lng": 115.75794549999998, "d": "1.0 km"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[40,40],maxZoom:20});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[230,40]});
+</script></body></html>
