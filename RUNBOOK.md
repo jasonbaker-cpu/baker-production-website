@@ -167,3 +167,4 @@ Push-notify him.
 - **Editor map panel + centred top-downs** (29 Oct): gallery jobs open with a Map & boundary panel (check.html; rebuild all with gen_check.py). Top-down crops shrink to stay centred on the lot (never tighter than lot+labels).
 - **Sky always replaced on daytime shoots** (Jason, 29 Oct, after 22/337 Lord St went out with a white overcast sky): `noSky` is for real twilight/sunset shoots only. If the plate ghosts a skyline, fix the mask; don't keep the grey sky. `resky.js <day> <slug>` re-exports a published job with the sky on.
 - **Belle Property** (belleproperty.com → green-belle, Jason 29 Oct, ref: 6/33 Malcolm St West Perth listing): green teardrop pins, white label cards, belle logo house pin.
+  Belle jobs also get sky plate D (Belle blue, puffy cumulus) and 2 pins per photo (prep_day default; picking green-belle in the editor switches the sky).

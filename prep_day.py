@@ -44,6 +44,8 @@ for j in D['jobs']:
     if j.get('must'): base['must'] = j['must']
     for k in ('skip', 'perPhoto'):
         if j.get(k): base[k] = j[k]
+    if base['agency'] == 'green-belle':   # 29 Oct (Jason): every Belle Property office matches their listing look
+        base.setdefault('skyPlate', 'D'); base.setdefault('perPhoto', 2)
     if j.get('skyPlate'): base['skyPlate'] = j['skyPlate']   # e.g. 'S' = editors' sunset sky for twilight shoots
     if j.get('noSky'): base['noSky'] = 1   # twilight / sunset shoot: keep the real sky
     if j.get('noFinish'): base['noFinish'] = 1   # twilight: no brightening grade either

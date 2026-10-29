@@ -115,6 +115,7 @@ function refreshPinsTab(){
   asel.onchange = ev=>{ const v = ev.target.value;
     if (v.startsWith("tpl:")){ const n=v.slice(4); LS.set("tpl", n); Object.assign(prefs, templates[n]); }
     else { LS.set("tpl",""); prefs.agency = v; prefs.pinColor = ""; prefs.logo = ""; prefs.houseStyle = ""; }
+    if (prefs.agency === "green-belle" && prefs.skyPlate !== "D"){ prefs.skyPlate = "D"; loadSkyPlate("D", ()=>{ photos.forEach(q=>{ q.finKey=null; q.fin=null; }); requestDraw(); }); }   // 29 Oct: Belle = deeper blue sky
     savePrefs(); const q=P(); if(q) tidySides(q); refreshPinsTab(); requestDraw(); };
   s4.appendChild(ar2);
   s4.appendChild(el(`<p class="note">Each agency's look is copied from the editors' finals. Pick the agent's agency before placing pins.</p>`));
