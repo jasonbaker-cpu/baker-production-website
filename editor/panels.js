@@ -392,11 +392,12 @@ async function decodeToWorking(file){
   const ow = bmp.width, oh = bmp.height;
   let x0=0, y0=0, cw=ow, ch=oh;
   const mode = (window.__fullNames && file && window.__fullNames.has(file.name)) ? "full" : prefs.outMode;
-  if (mode === "finals"){
+  if (mode === "finals" && window.__portrait){ cw = Math.min(ow, Math.round(oh*0.8)); x0 = Math.round((ow-cw)/2); }   // 29 Oct: agent asked for vertical drone photos -> 4:5 portrait
+  else if (mode === "finals"){
     if (ow/oh > 1.5){ cw = Math.round(oh*1.5); x0 = Math.round((ow-cw)/2); }
     else if (ow/oh < 1.5 && ow>=oh){ ch = Math.round(ow/1.5); y0 = Math.round((oh-ch)/2); }
   }
-  const tw = mode === "finals" ? Math.min(3000, cw) : cw;
+  const tw = mode === "finals" ? Math.min(window.__portrait ? 2400 : 3000, cw) : cw;
   const k = tw/cw, th = Math.round(ch*k);
   // step down in halves for a clean downscale
   let src = bmp, sx=x0, sy=y0, sw=cw, sh=ch;
@@ -710,7 +711,8 @@ function showCheckMap(entry){
   if (!entry || !entry.src) return;
   const url = DAYS_ROOT + entry.src.replace(/src\/?$/, "") + "check.html?v=" + Date.now();
   box = document.createElement("div"); box.id = "chkBox";
-  box.innerHTML = `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary" loading="lazy"></iframe>`;
+  const notes = (entry.notes||"").trim(); const esc = t => t.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  box.innerHTML = (notes ? `<div class="chkNotes"><b>Booking notes — follow these:</b> ${esc(notes)}</div>` : "") + `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary" loading="lazy"></iframe>`;
   ($("stage") || document.body).appendChild(box);
   let small = false; try { small = localStorage.getItem("chkMin") === "1"; } catch(e){}
   const set = () => { box.classList.toggle("min", small); try { localStorage.setItem("chkMin", small ? "1" : "0"); } catch(e){} };
@@ -723,7 +725,8 @@ async function openRemoteJob(entry){
     if (photos.some(q=>!q.sample) && !confirm("Close the photos you have open and load "+entry.addr+"?")) return;
     photos = []; job = null; pendingProject = null; cur = -1;
     prefs.outMode = entry.full ? "full" : "finals"; savePrefs();
-    window.__fullNames = new Set(entry.fullPhotos || []);   // 29 Oct: top-down travels in the same set as the aerials, but keeps its full frame
+    window.__fullNames = new Set(entry.fullPhotos || []);
+    window.__portrait = !!entry.portrait;   // 29 Oct: booking asked for vertical   // 29 Oct: top-down travels in the same set as the aerials, but keeps its full frame
     $("busy").hidden = false; $("busy").textContent = "Downloading "+entry.addr+"…";
     const base = DAYS_ROOT + entry.src;
     const get = async (name, type) => { const r = await fetch(base + encodeURIComponent(name)); if (!r.ok) throw new Error(name+" "+r.status); return new File([await r.blob()], name, { type }); };

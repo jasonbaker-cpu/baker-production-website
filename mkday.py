@@ -101,7 +101,8 @@ for slug, m in META.items():
     base = oj or nj
     mp = SP + base['map']; shutil.copy(mp, src_dir + os.path.basename(mp))
     jobs_idx.append({'slug': slug, 'addr': m['addr'], 'who': m['who'], 'agency': base.get('agency'), 'full': False, 'fullPhotos': full_names,
-                     'src': f'{day}/{slug}/src/', 'map': os.path.basename(mp), 'project': 'project.json', 'photos': names})
+                     'src': f'{day}/{slug}/src/', 'map': os.path.basename(mp), 'project': 'project.json', 'photos': names,
+                     'notes': m.get('notes', ''), 'portrait': bool(m.get('portrait'))})   # 29 Oct: booking notes shown in the editor; portrait = agent asked for vertical
     # finals gallery: always refresh from this run's renders; top-down first
     fa = f'{SP}final_aerials/{slug}'; shutil.rmtree(fa, ignore_errors=True); os.makedirs(fa)
     ordered = [f for nv in nads for f in sorted(glob.glob(f"{SP}e2e/{nv['slug']}/*.jpg"))] + sorted(glob.glob(f'{SP}e2e/{slug}/*.jpg'))

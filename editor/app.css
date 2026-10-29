@@ -162,3 +162,5 @@ input[type=color]{width:30px;height:26px;border:1px solid var(--line);border-rad
 #chkBox .chkHead .btn{padding:2px 8px;min-width:0}
 #chkBox iframe{flex:1;border:0;width:100%;background:#222}
 #chkBox.min{height:auto;width:180px}#chkBox.min iframe{display:none}
+#chkBox .chkNotes{padding:8px 10px;font-size:12.5px;line-height:1.35;background:#3a2f00;color:#ffe9a8;border-bottom:1px solid rgba(255,255,255,.15);max-height:120px;overflow:auto}
+#chkBox.min .chkNotes{display:block}

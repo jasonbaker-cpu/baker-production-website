@@ -22,6 +22,7 @@ const { chromium } = require('playwright'); const fs = require('fs');
         const pins = ph.pins.filter(q => !q.house).map(q => ({ n: q.name, d: ((P.find(x => x.name === q.name) || {}).dist) || 1e9 })).sort((a, b) => a.d - b.d); return pins.slice(+mx).map(x => x.n); }, process.env.MAXPINS);
       for (const nm of drop) { await pg.locator('.place', { hasText: nm }).first().click(); await pg.waitForTimeout(250); } if (drop.length) { await pg.evaluate(() => window.__bae.retidy()); await pg.waitForTimeout(300); } console.log('  dropped', drop.join(', ')); }
     if (process.env.SKYPLATE) await pg.evaluate((k) => { prefs.skyPlate = k; return new Promise(r => loadSkyPlate(k, () => { photos.forEach(q => { q.finKey = null; q.fin = null; }); r(); })); }, process.env.SKYPLATE);
+    if (process.env.RETIDY) { await pg.evaluate(() => window.__bae.retidy()); await pg.waitForTimeout(400); }
     const ok = await pg.evaluate(() => window.__bae.setSky(true)); await pg.waitForTimeout(400); await busy(); await pg.waitForTimeout(1200);
     const [dl] = await Promise.all([pg.waitForEvent('download'), pg.click('#exportBtn')]);
     const name = dl.suggestedFilename(); await dl.saveAs(`${out}/${name}`); console.log('exported', name, ok);

@@ -170,3 +170,8 @@ Push-notify him.
   Belle jobs also get sky plate D (Belle blue, puffy cumulus) and 2 pins per photo (prep_day default; picking green-belle in the editor switches the sky).
 - **Street at the bottom** (Jason, 29 Oct): every top-down must have the street at the bottom. Look at each nadir and set `streetRot: {"<slug>__nadir": 90|180|270}` (clockwise) in the day file; prep_day turns the photo and the camera yaw. Corner lots: the street the house faces. 90 Tibradden fixed by hand.
   Both top-downs get turned (road-at-bottom and wide). A 90/270 turn makes a portrait frame, so prep_day/rot_fx.py halve it and pad the sides with a soft blurred mirror (the outside of the lot is blurred anyway) to keep the lot whole and centred in the 3:2 export.
+
+## Booking notes (29 Oct)
+- Every job carries the booking notes (`notes`) into index.json; the editor shows them in a "Booking notes — follow these" banner.
+- Follow every note. "Vertical" → `portrait: true` (4:5, 1800×2250 aerials; top-down cropped 4:5). Landmarks/CBD → add as `must` pins. Measurements → all edge lengths on.
+- Report any note not followed.

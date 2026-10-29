@@ -50,6 +50,7 @@ for j in D['jobs']:
     if j.get('noSky'): base['noSky'] = 1   # twilight / sunset shoot: keep the real sky
     if j.get('noFinish'): base['noFinish'] = 1   # twilight: no brightening grade either
     if j.get('plain'): base['plain'] = 1
+    if j.get('portrait'): base['portrait'] = 1   # booking note asked for vertical drone photos
     for k in ('area', 'areaSource', 'lens'):   # from the title / strata plan / agent's sketch in Dropbox
         if j.get(k): base[k] = j[k]
     if j.get('poly') and nad:
@@ -92,7 +93,7 @@ for j in D['jobs']:
             if j.get('pxpoly') and i == 0: run[-1].update(pxpoly=j['pxpoly'], nosnap=1); run[-1].pop('snap', None)   # boundary hand-traced on the fences
     else:
         run.append(dict(base, slug=j['slug'], photos=ph, cams={f: cams[f] for f in ph if f in cams}))
-    meta[j['slug']] = {'addr': j['addr'], 'who': j.get('who', '')}
+    meta[j['slug']] = {'addr': j['addr'], 'who': j.get('who', ''), 'notes': j.get('notes', ''), 'portrait': bool(j.get('portrait'))}   # 29 Oct: booking notes travel to the editor
 os.makedirs('e2e', exist_ok=True)
 json.dump(run, open(f'e2e/run_{day}.json', 'w')); json.dump(meta, open(f'e2e/meta_{day}.json', 'w'))
 print(f'e2e/run_{day}.json', len(run), 'jobs;', sum(len(r['photos']) for r in run), 'photos')

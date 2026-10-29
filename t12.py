@@ -42,6 +42,7 @@ async def main():
             if job.get('nosnap'): await pg.evaluate("window.__noSnap=true")
             await pg.evaluate("k=>window.__bae.setPref('skyPlate',k)", job.get('skyPlate','C')); await pg.wait_for_timeout(300)
             if job.get('full'): await pg.evaluate("window.__bae.setPref('outMode','full')")
+            await pg.evaluate("p=>{window.__portrait=!!p}", bool(job.get('portrait')))   # 29 Oct: booking asked for vertical drone photos
             await drag(pg, [job['map']]+job['photos']); await pg.wait_for_timeout(1500); await busy(pg)
             if job.get('agency'): await pg.select_option('#agSel', job['agency']); await pg.wait_for_timeout(300)
             th = pg.locator('.thumb'); n = await th.count(); base = n-len(job['photos'])
@@ -98,6 +99,8 @@ async def main():
                         if abs(im.width/im.height-1.5)<0.01: continue   # editor already exported the 3:2 lot crop
                         kx=im.width/ok['w']; cx,cy,cw,ch=[v*kx for v in ok['crop']]
                         im.crop((round(cx),round(cy),round(cx+cw),round(cy+ch))).resize((3000,2000),Image.LANCZOS).save(fn,quality=93)
+                        if job.get('portrait'):
+                            im=Image.open(fn); w_,h_=im.size; c_=int(h_*0.8); x_=(w_-c_)//2; im.crop((x_,0,x_+c_,h_)).resize((1800,2250),Image.LANCZOS).save(fn,quality=93)
                     continue
                 if job.get('noFinish'): await pg.evaluate("window.__bae.setFinish(false)"); await pg.wait_for_timeout(300)   # twilight: keep the drone's own colour and dusk mood
                 if job.get('noSky'): await pg.evaluate("window.__bae.setSky(false)"); await pg.wait_for_timeout(300); await busy(pg)   # twilight/sunset shoots keep their real sky
