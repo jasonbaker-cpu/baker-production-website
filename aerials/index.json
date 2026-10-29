@@ -95,7 +95,8 @@
      ],
      "fullPhotos": [
       "dji_fly_20261027_150818_0904_1793084705926_photo.JPG"
-     ]
+     ],
+     "notes": "All measurements of the block to be added. Use any main landmarks including CBD on pinpoints please."
     },
     {
      "slug": "41_st_kilda_rd",
@@ -119,7 +120,9 @@
      ],
      "fullPhotos": [
       "dji_fly_20261027_123924_0900_1793084713356_photo.JPG"
-     ]
+     ],
+     "notes": "Could drone photos be vertical please! Thanks :)",
+     "portrait": true
     },
     {
      "slug": "4_17_forest_hill_dr",
