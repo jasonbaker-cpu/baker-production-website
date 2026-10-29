@@ -1,0 +1,1529 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#1f3a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Buyer Book">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<title>Cooke &amp; Harper Buyer Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: sticky green top bar with tabs; one working column (max 1100) of cards; pools as a 3-up grid that stacks on phones. */
+:root{
+  --bg:#f2f4ef; --surface:#ffffff; --sunk:#e9ede6; --ink:#17221c; --muted:#57645b; --line:#d6ddd3;
+  --gum:#1f3a2e; --gum-ink:#eef3ec; --sun:#e2a92a; --sun-soft:#f7e7bf; --sun-ink:#2a2006;
+  --hot:#c2462f; --hot-soft:#f7dfd8; --warm:#b7791f; --warm-soft:#f6ead2; --cold:#4d6f8a; --cold-soft:#dfe8ef;
+  --good:#2f7a4c; --good-soft:#dbeedf;
+  --display:"Young Serif",Georgia,serif;
+  --body:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101612; --surface:#18211c; --sunk:#141c17; --ink:#e6ece5; --muted:#a2afa5; --line:#2b3830;
+  --gum:#0b1510; --gum-ink:#e6ece5; --sun:#efbd4c; --sun-soft:#3a2f14; --sun-ink:#231b05;
+  --hot:#ee7d66; --hot-soft:#3d211b; --warm:#e0a94e; --warm-soft:#382a14; --cold:#8fb0c9; --cold-soft:#1c2a35;
+  --good:#6cc690; --good-soft:#18301f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101612; --surface:#18211c; --sunk:#141c17; --ink:#e6ece5; --muted:#a2afa5; --line:#2b3830;
+  --gum:#0b1510; --gum-ink:#e6ece5; --sun:#efbd4c; --sun-soft:#3a2f14; --sun-ink:#231b05;
+  --hot:#ee7d66; --hot-soft:#3d211b; --warm:#e0a94e; --warm-soft:#382a14; --cold:#8fb0c9; --cold-soft:#1c2a35;
+  --good:#6cc690; --good-soft:#18301f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--gum)}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;line-height:1.15;text-wrap:balance}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--gum);color:var(--gum-ink)}
+.bar .wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:12px 0}
+.brand{display:flex;flex-direction:column;margin-right:auto}
+.brand b{font-family:var(--display);font-weight:400;font-size:20px}
+.brand span{font-size:12px;opacity:.7;letter-spacing:.04em}
+.addbtns{display:flex;gap:8px;flex-wrap:wrap}
+.tabs{display:flex;gap:2px;width:100%;overflow-x:auto;scrollbar-width:none;margin-top:4px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{background:none;border:0;color:var(--gum-ink);opacity:.72;padding:10px 14px 12px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tab[aria-current="page"]{opacity:1;border-bottom-color:var(--sun)}
+.tab .ct{font-weight:500;opacity:.7;margin-left:4px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:9px 14px;font-weight:600;cursor:pointer;min-height:40px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--sun);color:var(--sun-ink);border-color:var(--sun)}
+.btn.onbar{background:transparent;color:var(--gum-ink);border-color:rgba(238,243,236,.35)}
+.btn.onbar.primary{background:var(--sun);color:var(--sun-ink);border-color:var(--sun)}
+.btn.small{padding:6px 10px;min-height:32px;font-size:13px}
+.btn.danger{color:var(--hot)}
+.btn:focus-visible,.tab:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.row:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.linkbtn{background:none;border:0;padding:0;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-weight:600}
+
+main{padding-block:22px 64px}
+.view{display:grid;gap:20px}
+.view > *{min-width:0}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.head h2{font-size:28px}
+.head p{color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.pad{padding:18px}
+#banner:not(:empty){margin-bottom:16px}
+.notice{border:1px dashed var(--line);border-radius:12px;padding:12px 14px;color:var(--muted);font-size:14px;background:var(--sunk)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:720px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{padding:14px 16px}
+.stat b{display:block;font-family:var(--display);font-weight:400;font-size:32px;line-height:1.1}
+.stat span{font-size:13px;color:var(--muted)}
+
+/* two col */
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr)}}
+.sec-title{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.sec-title h3{font-size:19px}
+.sec-title span{font-size:13px;color:var(--muted)}
+
+/* rows */
+.list{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:12px 18px;border-top:1px solid var(--line);background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;width:100%;cursor:pointer}
+.list > .row:first-child{border-top:0}
+.row:hover{background:var(--sunk)}
+.row .nm{font-weight:700;display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-width:0}
+.row .sub{grid-column:1/-1;color:var(--muted);font-size:13.5px;min-width:0}
+.row .right{text-align:right;font-weight:700}
+.empty{padding:22px 18px;color:var(--muted);font-size:14px}
+
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.p-hot{background:var(--hot-soft);color:var(--hot)}
+.p-warm{background:var(--warm-soft);color:var(--warm)}
+.p-cold{background:var(--cold-soft);color:var(--cold)}
+.p-stage{background:var(--sunk);color:var(--muted);border:1px solid var(--line)}
+.p-stage::before{display:none}
+.p-ex{background:var(--sunk);color:var(--muted)}
+.p-ex::before{display:none}
+.tag{display:inline-block;font-size:12.5px;padding:2px 8px;border-radius:6px;background:var(--sunk);border:1px solid var(--line);margin:2px 4px 2px 0}
+
+/* toolbar */
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.tools input[type=search]{flex:1 1 220px;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:8px 12px;font-weight:600;font-size:13px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--gum);color:var(--gum-ink)}
+
+/* pools */
+.pools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
+@media (max-width:900px){.pools{grid-template-columns:minmax(0,1fr)}}
+.pool-h{padding:16px 18px;border-bottom:1px solid var(--line);display:grid;gap:6px}
+.pool-h .band{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.pool-h h3{font-size:26px}
+.heatbar{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--sunk)}
+.heatbar i{display:block}
+.heatlegend{display:flex;gap:12px;font-size:12.5px;color:var(--muted)}
+.wants{padding:12px 18px;border-bottom:1px solid var(--line);display:grid;gap:6px;font-size:13.5px}
+.wants div{display:flex;gap:6px;flex-wrap:wrap;align-items:baseline}
+.wants b{font-weight:600;color:var(--muted);min-width:64px}
+.bandset{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}
+.bandset input{width:110px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+
+/* matches */
+.match{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:4px 14px;align-items:center;padding:14px 18px;border-top:1px solid var(--line)}
+.match:first-child{border-top:0}
+.score{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:18px;border:3px solid var(--line)}
+.score.s-strong{border-color:var(--good);color:var(--good)}
+.score.s-good{border-color:var(--sun);color:var(--warm)}
+.score.s-maybe{border-color:var(--line);color:var(--muted)}
+.why{font-size:13px;color:var(--muted)}
+.why .ok{color:var(--good)}
+.why .no{color:var(--hot)}
+.mact{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:560px){.match{grid-template-columns:48px minmax(0,1fr)}.score{width:48px;height:48px;font-size:16px}.mact{grid-column:1/-1;justify-content:flex-start}}
+.quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:720px){.quick{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.smsbox{width:100%;min-height:120px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--sunk);resize:vertical}
+
+/* drawer form */
+.scrim{position:fixed;inset:0;background:rgba(10,20,14,.45);z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--surface);z-index:21;display:flex;flex-direction:column;box-shadow:-20px 0 40px -20px rgba(0,0,0,.35)}
+.drawer header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(16px + env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) 14px 18px;border-bottom:1px solid var(--line)}
+.drawer header h2{font-size:22px}
+.drawer .body{flex:1;overflow-y:auto;padding:18px max(18px,env(safe-area-inset-right,0px)) 18px 18px;display:grid;gap:16px;align-content:start}
+.drawer footer{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;padding:14px max(18px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) 18px;border-top:1px solid var(--line)}
+.f{display:grid;gap:6px}
+.f > span{font-size:13px;font-weight:700}
+.f small{color:var(--muted);font-size:12.5px}
+.f input,.f select,.f textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--bg)}
+.f textarea{min-height:76px;resize:vertical}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:420px){.g3{grid-template-columns:1fr 1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 12px;font-size:13.5px;cursor:pointer;min-height:36px}
+.chip[aria-pressed="true"]{background:var(--gum);color:var(--gum-ink);border-color:var(--gum)}
+.err{color:var(--hot);font-size:13.5px}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px}
+.detail{display:grid;gap:14px}
+.kv{display:grid;grid-template-columns:120px minmax(0,1fr);gap:6px 12px;font-size:14px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+.p-due{background:var(--hot-soft);color:var(--hot)}
+.p-soon{background:var(--sun-soft);color:var(--warm)}
+.p-ok{background:var(--good-soft);color:var(--good)}
+.remember{background:var(--sun-soft);border-radius:12px;padding:14px 16px;display:grid;gap:8px}
+.remember h3{font-size:17px}
+.remember p{white-space:pre-wrap}
+.idea{border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:6px;background:var(--surface)}
+.idea b{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.logbox{border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:10px;background:var(--sunk)}
+.logbox input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+.hist{display:grid}
+.hist div{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.hist div:first-child{border-top:0}
+.hist .d{color:var(--muted);font-size:13px}
+.nextrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.nextrow input[type=date]{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.guide{display:grid;gap:16px}
+.gsec{display:grid;gap:10px}
+.gsec h3{font-size:21px}
+.gsec p,.gsec li{max-width:66ch}
+.gsec ol,.gsec ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.gsec .k{font-weight:700}
+.rhythm{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.rhythm{grid-template-columns:minmax(0,1fr)}}
+.rhythm .card{padding:16px;display:grid;gap:8px;align-content:start}
+.rhythm b{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.rhythm h4{margin:0;font-family:var(--display);font-weight:400;font-size:20px}
+.weekstrip{display:grid;gap:12px;padding:14px 18px;text-align:left;width:100%;cursor:pointer;font:inherit;color:inherit}
+.weekstrip:hover{border-color:var(--muted)}
+.ws-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.ws-h b{font-family:var(--display);font-weight:400;font-size:19px}
+.ws-h span{font-size:13px;color:var(--muted)}
+.ws-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media (max-width:640px){.ws-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ws{display:grid;gap:5px;min-width:0}
+.ws-top{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
+.ws-top b{font-size:18px;color:var(--ink)}
+.ws-top small{font-size:12px;color:var(--muted);font-weight:500}
+.ws-note{font-size:12px;color:var(--muted)}
+.ws-note.behind{color:var(--hot);font-weight:600}
+.me{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--gum-ink);opacity:.9}
+.me select{background:transparent;color:var(--gum-ink);border:1px solid rgba(238,243,236,.35);border-radius:8px;padding:6px 8px;font-weight:600}
+.me option{color:var(--ink);background:var(--surface)}
+.agt{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.tpl{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:8px;background:var(--surface)}
+.tpl b{font-size:14px}
+.tpl textarea{width:100%;min-height:96px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--sunk);resize:vertical}
+.hint{font-size:13px;background:var(--sun-soft);border-radius:8px;padding:8px 10px}
+.dtab{width:100%;border-collapse:collapse;font-size:14px}
+.dtab th,.dtab td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;vertical-align:middle}
+.dtab th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--sunk)}
+.dtab td.n{text-align:right;font-variant-numeric:tabular-nums}
+.dbar{display:flex;align-items:center;gap:8px;min-width:140px}
+.dbar i{display:block;height:10px;border-radius:5px;background:var(--sun)}
+.sig{font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.sig-pro{background:var(--good-soft);color:var(--good)}
+.sig-under{background:var(--sun-soft);color:var(--warm)}
+.sig-need{background:var(--cold-soft);color:var(--cold)}
+.sig-ok{background:var(--sunk);color:var(--muted)}
+.imp-map{display:grid;gap:8px}
+.imp-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:center;font-size:14px}
+.imp-row span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.imp-row select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.imp-row .ex{display:block;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prev{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.prev table{border-collapse:collapse;font-size:13px;min-width:100%}
+.prev th,.prev td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.prev th{background:var(--sunk);font-weight:700}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;display:grid;gap:8px;justify-items:center;color:var(--muted)}
+.drop.over{border-color:var(--sun);background:var(--sun-soft)}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:14px}
+.check input{margin-top:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{padding:14px 16px;display:grid;gap:8px}
+.kpi .lab{font-size:13px;color:var(--muted);font-weight:600}
+.kpi .val{font-family:var(--display);font-size:30px;line-height:1}
+.kpi .val small{font-family:var(--body);font-size:14px;color:var(--muted)}
+.meter{height:8px;border-radius:4px;background:var(--sunk);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--sun)}
+.meter i.done{background:var(--good)}
+.chartwrap{overflow-x:auto}
+.targets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.targets{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.targets input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.att{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--sunk)}
+.att input,.att select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.att .full{grid-column:1/-1}
+.dup{font-size:13.5px;color:var(--warm);background:var(--warm-soft);border-radius:8px;padding:8px 10px}
+.lb{display:grid;gap:4px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;z-index:30;max-width:calc(100% - 32px)}
+@media (prefers-reduced-motion:no-preference){.drawer{animation:slide .22s ease-out}@keyframes slide{from{transform:translateX(30px);opacity:.6}to{transform:none;opacity:1}}}
+/* ---- website port: base reset, gate, FAB, inbox ---- */
+html{-webkit-text-size-adjust:100%}
+body{margin:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+input,select,textarea{font-size:16px}
+.gate{position:fixed;inset:0;z-index:40;background:var(--gum);color:var(--gum-ink);display:grid;place-items:center;padding:24px max(20px,env(safe-area-inset-right,0px)) 24px max(20px,env(safe-area-inset-left,0px))}
+.gate-in{max-width:420px;width:100%;display:grid;gap:16px;text-align:left}
+.gate h1{font-family:var(--display);font-weight:400;font-size:34px;line-height:1.1}
+.gate p{color:#c9d5ca}
+.gate .gbtn{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f1f1f;border:0;border-radius:12px;padding:15px 18px;font:inherit;font-weight:700;font-size:16px;cursor:pointer;min-height:52px}
+.gate .gerr{background:rgba(238,125,102,.15);border:1px solid rgba(238,125,102,.5);color:#ffd9d0;border-radius:10px;padding:12px 14px;font-size:14px}
+.gate small{color:#a9b8ab;font-size:12.5px}
+.fab{display:none;position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:15;width:60px;height:60px;border-radius:50%;background:var(--sun);color:var(--sun-ink);border:0;font-size:32px;line-height:1;font-weight:400;box-shadow:0 10px 24px -8px rgba(0,0,0,.45);cursor:pointer}
+.fabmenu{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:16;display:grid;gap:8px;justify-items:end}
+.fabmenu button{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:12px 18px;font:inherit;font-weight:700;box-shadow:0 8px 20px -10px rgba(0,0,0,.4);min-height:46px}
+@media (max-width:640px){.addbtns{display:none!important}.fab{display:block}main{padding-bottom:96px}.bar .wrap{padding-block:8px 0}.brand b{font-size:18px}}
+.inbox .row{cursor:default}
+.inbox .acts{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.memlist{display:grid;gap:6px}
+.memrow{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:14px}
+.memrow span{min-width:0;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<div class="gate" id="gate">
+  <div class="gate-in">
+    <p class="eyebrow" style="color:var(--sun)">Cooke &amp; Harper · Rodway Group</p>
+    <h1>Buyer Book</h1>
+    <p id="gateMsg">Checking who you are…</p>
+    <button class="gbtn" id="gateBtn" type="button" hidden><svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Sign in with Google</button>
+    <div class="gerr" id="gateErr" hidden></div>
+    <button class="gbtn" id="gateOut" type="button" hidden style="background:transparent;color:var(--gum-ink);border:1px solid rgba(238,243,236,.4)">Use a different account</button>
+    <small>Private to Jayden, James and Baker Production. Your data is stored securely and only people on the access list can open it.</small>
+  </div>
+</div>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="brand"><b id="teamName">Cooke &amp; Harper</b><span>Buyer &amp; seller book · Rodway Group</span></div>
+    <label class="me"><span>Viewing as</span><select id="meSel" aria-label="Viewing as"></select></label>
+    <div class="addbtns">
+      <button class="btn onbar primary" data-act="new-buyer" id="addBuyerBtn">+ Buyer</button>
+      <button class="btn onbar" data-act="new-prospect" id="addProspectBtn">+ Potential seller</button>
+      <button class="btn onbar" data-act="new-seller" id="addSellerBtn">+ Seller</button>
+    </div>
+    <nav class="tabs" aria-label="Sections">
+      <button class="tab" data-tab="today">Today</button>
+      <button class="tab" data-tab="pools">Buyer pools</button>
+      <button class="tab" data-tab="demand">Suburbs</button>
+      <button class="tab" data-tab="buyers">Buyers <span class="ct num" id="ctB"></span></button>
+      <button class="tab" data-tab="prospects">Potential sellers <span class="ct num" id="ctP"></span></button>
+      <button class="tab" data-tab="sellers">Sellers <span class="ct num" id="ctS"></span></button>
+      <button class="tab" data-tab="past">Past clients</button>
+      <button class="tab" data-tab="match">Match</button>
+      <button class="tab" data-tab="score">Scorecard</button>
+      <button class="tab" data-tab="guide">How to use</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="banner"></div>
+  <div id="view" class="view"></div>
+</main>
+<div id="overlay"></div>
+<div id="toast" class="toast" role="status" hidden></div>
+<button class="fab" id="fab" type="button" aria-label="Add a person" aria-expanded="false">+</button>
+<div class="fabmenu" id="fabmenu" hidden><button type="button" data-act="new-buyer">+ Buyer</button><button type="button" data-act="new-prospect">+ Potential seller</button><button type="button" data-act="new-seller">+ Seller</button><button type="button" data-act="import" data-v="buyers">Import from Excel</button></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- website shims ---------- */
+function saveBlob(name,data,mime){var b=data instanceof Blob?data:new Blob([data],{type:mime||"application/octet-stream"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500);}
+var claude={use:function(n){if(n!=="downloads")return Promise.resolve(null);return Promise.resolve({save:function(o){var f=o.filename||"file";var mime=/\.csv$/.test(f)?"text/csv":/\.json$/.test(f)?"application/json":/\.xlsx$/.test(f)?"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":"application/octet-stream";saveBlob(f,o.data,mime);return Promise.resolve({status:"saved"});}});}};
+
+/* ---------- reference lists ---------- */
+var SUBURBS=["Kelmscott","Armadale","Mount Richon","Seville Grove","Camillo","Champion Lakes","Mount Nasura","Roleystone","Bedfordale","Brookdale","Haynes","Hilbert","Gosnells","Martin","Byford"];
+var TYPES=["House","Unit","Townhouse/villa","Land","Acreage"];
+var FEATURES=["Pool","Shed/workshop","Granny flat","Big block 700m²+","Single storey","Side access","2nd living/theatre","Solar","No strata","Near schools"];
+var FINANCE=["Pre-approved","Cash","Needs finance","Must sell first"];
+var TIMEFRAME=["Ready now","1–3 months","3–6 months","Just looking"];
+var STAGES=["Appraisal","Pre-market","Listed","Under offer","Sold"];
+var BSTATUS=["Active","Bought","Paused"];
+var PTIME=["This month","1–3 months","3–6 months","6–12 months","12+ months / unsure"];
+var MOTIVE=["Upsizing","Downsizing","Relocating","Selling an investment","Estate or separation","Curious about value"];
+var PSOURCE=["Appraisal page","Door knock","Home open","Referral","Just-sold flyer","Instagram","Past client","Other"];
+var TRAITS=["Prefers text","Prefers calls","Busy mornings","Wants detail","Price-focused","Family first","First-time seller","Has sold before","Talking to other agents"];
+var TOUCH=["Call","Text","Email","Door knock","Met in person","Sent sale/report"];
+var PSTATUS=["Nurturing","Appraisal booked","Listed with us","Listed elsewhere","Not selling"];
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function money(n){if(!n&&n!==0)return "–";if(n>=1e6){var m=n/1e6;return "$"+(m%1===0?m:m.toFixed(m<10?2:1).replace(/0$/,""))+"m";}return "$"+Math.round(n/1000)+"k";}
+function parseMoney(v){if(v==null)return null;var s=String(v).trim().toLowerCase().replace(/[$,\s]/g,"");if(!s)return null;var mult=1;if(/m$/.test(s)){mult=1e6;s=s.slice(0,-1);}else if(/k$/.test(s)){mult=1e3;s=s.slice(0,-1);}var n=parseFloat(s);if(!isFinite(n))return null;n=n*mult;if(mult===1&&n<10000)n=n*1000;return Math.round(n);}
+function range(b){if(b.budgetMin&&b.budgetMax)return money(b.budgetMin)+"–"+money(b.budgetMax);if(b.budgetMax)return "up to "+money(b.budgetMax);if(b.budgetMin)return money(b.budgetMin)+"+";return "no budget yet";}
+function daysSince(iso){if(!iso)return null;var t=Date.parse(iso);if(!isFinite(t))return null;return Math.floor((Date.now()-t)/864e5);}
+function ago(iso){var d=daysSince(iso);if(d==null)return "never";if(d<=0)return "today";if(d===1)return "yesterday";if(d<14)return d+" days ago";if(d<60)return Math.round(d/7)+" weeks ago";return Math.round(d/30)+" months ago";}
+function nowIso(){return new Date().toISOString();}
+function heat(b){var f=b.finance,t=b.timeframe;var ready=(f==="Pre-approved"||f==="Cash");if(ready&&(t==="Ready now"||t==="1–3 months"))return "hot";if(t==="Just looking"&&!ready)return "cold";if(t==="Just looking"||(f==="Must sell first"&&t!=="Ready now"))return "cold";return "warm";}
+var HEATRANK={hot:0,warm:1,cold:2};
+function heatPill(b){var h=heat(b);return '<span class="pill p-'+h+'">'+h+'</span>';}
+function digits(p){return String(p||"").replace(/[^\d+]/g,"");}
+function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function todayStr(){return ymd(new Date());}
+function addDays(n){var d=new Date();d.setDate(d.getDate()+n);return ymd(d);}
+function dueIn(s){if(!s)return null;var a=Date.parse(s+"T00:00:00"),b=Date.parse(todayStr()+"T00:00:00");return Math.round((a-b)/864e5);}
+function niceDate(s){if(!s)return "not set";var d=new Date(s+"T00:00:00");var o={weekday:"short",day:"numeric",month:"short"};if(d.getFullYear()!==new Date().getFullYear()){o={day:"numeric",month:"short",year:"numeric"};}return d.toLocaleDateString("en-AU",o);}
+function duePill(s){var n=dueIn(s);if(n==null)return '<span class="pill p-stage">no follow-up</span>';if(n<0)return '<span class="pill p-due">'+(-n)+'d overdue</span>';if(n===0)return '<span class="pill p-due">due today</span>';if(n<=3)return '<span class="pill p-soon">in '+n+'d</span>';return '<span class="pill p-ok">'+esc(niceDate(s))+'</span>';}
+function cadence(r){var t=r.timeframe;if(r.stage){return {"Appraisal":4,"Pre-market":3,"Listed":7,"Under offer":3,"Sold":90}[r.stage]||7;}return {"This month":3,"1–3 months":7,"3–6 months":14,"6–12 months":30}[t]||60;}
+function ptemp(r){var t=r.timeframe;if(t==="This month"||t==="1–3 months")return "hot";if(t==="3–6 months"||t==="6–12 months")return "warm";return "cold";}
+function nextIdea(r,kind){
+  var n=(r.log||[]).length,m=r.motivation,ideas;
+  if(kind==="seller"){
+    ideas={"Appraisal":"Send the written price range with 2–3 nearby sales, then call to walk them through it.","Pre-market":"Tell them how many buyers in the book fit their home, and offer an off-market preview.","Listed":"Weekly update: enquiries, inspections, buyer feedback, and the plan for next week.","Under offer":"Walk them through finance and settlement dates so nothing surprises them.","Sold":"Thank-you gift, then ask for a Google review and anyone else thinking of selling."};
+    return ideas[r.stage]||"Check in.";
+  }
+  var base=["Thank them for their time and send what they asked about (their estimate or a sale).","Send a nearby sale: price, days on market, and what it means for their place.","Call with a 2-minute market update for their street.","Drop past with something useful: a printed estimate or a just-sold flyer.","Ask whether their timing or reason has changed. Offer a fresh appraisal."];
+  var idea=base[Math.min(n,base.length-1)];
+  var extra={"Downsizing":"Mention any buyers wanting a family home like theirs, and offer to look out for a single-storey place for them.","Upsizing":"Offer to watch for their next home so selling and buying line up.","Relocating":"Ask about their move date and work back from it.","Selling an investment":"Offer a rent appraisal from the Rodway PM team so they can compare hold vs sell.","Estate or separation":"Go gently. Ask who else is involved in the decision.","Curious about value":"Keep it light: one useful sale a month, no pressure."}[m];
+  return idea+(extra?" "+extra:"");
+}
+function weekStart(d){d=d?new Date(d+"T00:00:00"):new Date();d.setHours(0,0,0,0);var w=(d.getDay()+6)%7;d.setDate(d.getDate()-w);return ymd(d);}
+function shiftDays(s,n){var d=new Date(s+"T00:00:00");d.setDate(d.getDate()+n);return ymd(d);}
+function inWeek(s,ws){return !!s&&s>=ws&&s<=shiftDays(ws,6);}
+function isoDay(iso){if(!iso)return "";var t=Date.parse(iso);return isFinite(t)?ymd(new Date(t)):String(iso).slice(0,10);}
+function agents(){var a=state.settings.agents;return (a&&a.length===2&&a[0]&&a[1])?a:["Jayden","James"];}
+function mine(r){return !state.me||!r.agent||r.agent===state.me;}
+function agentTag(r){return r&&r.agent?' <span class="agt">'+esc(r.agent)+'</span>':'';}
+function myTargets(who){var t=state.settings.targets||{touches:60,buyers:10,appraisals:3,listings:1};if(!who)return t;var o={};Object.keys(t).forEach(function(k){o[k]=Math.ceil((t[k]||0)/2);});return o;}
+function weekStats(ws,who){
+  var touches=0,buyers=0,appr=0,list=0,sold=0;
+  state.buyers.concat(state.prospects,state.sellers).forEach(function(r){(r.log||[]).forEach(function(e){if(!inWeek(e.date,ws))return;if(!who||e.by===who||(!e.by&&r.agent===who))touches++;});});
+  state.buyers.forEach(function(b){if(inWeek(isoDay(b.createdAt),ws)&&(!who||b.createdBy===who||(!b.createdBy&&b.agent===who)))buyers++;});
+  state.sellers.forEach(function(s){if(who&&s.agent!==who)return;var sd=s.stageDates||{};if(inWeek(sd.Appraisal||(s.fromProspect||!sd.Appraisal?isoDay(s.createdAt):""),ws))appr++;if(inWeek(sd.Listed,ws))list++;if(inWeek(sd.Sold,ws))sold++;});
+  return {touches:touches,buyers:buyers,appraisals:appr,listings:list,sold:sold};
+}
+function median(a){if(!a.length)return null;var s=a.slice().sort(function(x,y){return x-y;}),m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2;}
+function mode(a){var c={},best=null;a.forEach(function(x){c[x]=(c[x]||0)+1;if(best==null||c[x]>c[best])best=x;});return best;}
+function scopeSeg(){if(!state.me)return "";return '<div class="seg" role="group" aria-label="Whose records"><button data-act="scope" data-v="mine" aria-pressed="'+(state.scope!=="all")+'">'+esc(state.me)+' + shared</button><button data-act="scope" data-v="all" aria-pressed="'+(state.scope==="all")+'">Everyone</button></div>';}
+function inScope(r){return !state.me||state.scope==="all"||mine(r);}
+function last4(p){var d=digits(p).replace(/^\+?61/,"0");return d.length>=8?d.slice(-9):"";}
+function findDup(phone,exceptId){
+  var k=last4(phone);if(!k)return null;
+  var pools=[["buyer",state.buyers,"phone","name"],["potential seller",state.prospects,"phone","name"],["seller",state.sellers,"phone","owner"]];
+  for(var i=0;i<pools.length;i++){var hit=pools[i][1].filter(function(r){return r.id!==exceptId&&last4(r[pools[i][2]])===k;})[0];if(hit)return {kind:pools[i][0],name:hit[pools[i][3]]||hit.address||"someone",rec:hit};}
+  return null;
+}
+function anniv(s){if(!s)return null;var d=new Date(s+"T00:00:00"),t=new Date(todayStr()+"T00:00:00");var n=new Date(d);n.setFullYear(t.getFullYear());if(n<t)n.setFullYear(t.getFullYear()+1);var yrs=n.getFullYear()-d.getFullYear();return {date:ymd(n),years:yrs,days:Math.round((n-t)/864e5)};}
+function pastClients(){
+  var out=[];
+  state.sellers.forEach(function(s){if(s.stage==="Sold"){var d=(s.stageDates||{}).Sold||isoDay(s.updatedAt);out.push({kind:"seller",r:s,name:s.owner||s.address,what:"Sold "+(s.address||""),date:d,a:anniv(d)});}});
+  state.buyers.forEach(function(b){if(b.status==="Bought"){var d=(b.stageDates||{}).Bought||isoDay(b.updatedAt);out.push({kind:"buyer",r:b,name:b.name,what:"Bought"+(b.boughtAddress?" "+b.boughtAddress:""),date:d,a:anniv(d)});}});
+  return out.sort(function(x,y){return (x.a?x.a.days:9999)-(y.a?y.a.days:9999);});
+}
+function buyersForHome(r){if(!r.price&&!r.estValue)return [];var p={price:r.price||r.estValue,suburb:r.suburb,beds:r.beds,type:r.type||"House",features:r.features||[]};return matchesFor(p).filter(function(x){return x.m.score>=65;});}
+
+/* ---------- matching: 0–100 ---------- */
+function scoreMatch(b,p){
+  var r={score:0,why:[],out:false};
+  if(!p.price){r.why.push(["no","no price on property"]);}
+  var max=b.budgetMax||0,min=b.budgetMin||0;
+  if(p.price&&max){
+    if(p.price<=max&&(!min||p.price>=min*0.85)){r.score+=40;r.why.push(["ok","in budget"]);}
+    else if(p.price>max&&p.price<=max*1.08){r.score+=22;r.why.push(["ok","stretch, "+Math.round((p.price/max-1)*100)+"% over"]);}
+    else if(p.price<min*0.85){r.score+=15;r.why.push(["no","below their range"]);}
+    else {r.out=true;r.why.push(["no","over budget"]);}
+  } else if(p.price&&!max){r.score+=15;r.why.push(["no","budget unknown"]);}
+  var subs=b.suburbs||[];
+  if(!subs.length){r.score+=12;r.why.push(["ok","any suburb"]);}
+  else if(p.suburb&&subs.indexOf(p.suburb)>-1){r.score+=20;r.why.push(["ok",p.suburb]);}
+  else {r.why.push(["no","not their suburb"]);}
+  if(b.beds&&p.beds){
+    if(p.beds>=b.beds){r.score+=15;r.why.push(["ok",p.beds+" bed"]);}
+    else if(p.beds===b.beds-1){r.score+=5;r.why.push(["no","1 bed short"]);}
+    else {r.why.push(["no","too few beds"]);}
+  } else {r.score+=10;}
+  var types=b.types||[];
+  if(!types.length||types.indexOf(p.type)>-1){r.score+=10;if(types.length)r.why.push(["ok",p.type]);}
+  else {r.why.push(["no","wants "+types.join("/").toLowerCase()]);}
+  var must=b.mustHaves||[],feat=p.features||[];
+  if(must.length){var hit=must.filter(function(m){return feat.indexOf(m)>-1;});r.score+=Math.round(15*hit.length/must.length);
+    if(hit.length)r.why.push(["ok",hit.join(", ").toLowerCase()]);
+    var miss=must.filter(function(m){return feat.indexOf(m)<0;});if(miss.length)r.why.push(["no","no "+miss.join(", ").toLowerCase()]);}
+  else r.score+=15;
+  if(r.out)r.score=Math.min(r.score,30);
+  r.score=Math.max(0,Math.min(100,r.score));
+  r.tier=r.score>=80?"strong":r.score>=65?"good":r.score>=50?"maybe":"none";
+  return r;
+}
+window.__scoreMatch=scoreMatch;
+function matchesFor(p){
+  return state.buyers.filter(function(b){return (b.status||"Active")==="Active";})
+    .map(function(b){var m=scoreMatch(b,p);return {b:b,m:m};})
+    .filter(function(x){return x.m.score>=50;})
+    .sort(function(a,c){return c.m.score-a.m.score||HEATRANK[heat(a.b)]-HEATRANK[heat(c.b)];});
+}
+function poolIndex(b,bands){var v=b.budgetMax||b.budgetMin||0;if(!v)return -1;if(v<=bands[0])return 0;if(v<=bands[1])return 1;return 2;}
+
+/* ---------- state + store ---------- */
+var state={inbox:[],user:null,book:{members:[],names:{}},buyers:[],sellers:[],prospects:[],pq:"",me:"",scope:"mine",scoreWho:null,gq:"",lastMatchP:null,settings:{bands:[650000,850000],targets:{touches:60,buyers:10,appraisals:3,listings:1}},tab:"today",q:"",heatF:"all",matchSel:"",quick:{price:"",suburb:"",beds:"",type:""},ready:{b:false,s:false,p:false},db:null,canWrite:true,dbMode:"pending"};
+var mem={buyers:{},sellers:{},prospects:{}};
+function store(){return state.db;}
+function save(coll,id,data){
+  data.updatedAt=nowIso();
+  if(state.db){var ref=id?state.db.collection(coll).doc(id):state.db.collection(coll).doc();return ref.set(data).then(function(){return ref.id;});}
+  var nid=id||("m"+Math.random().toString(36).slice(2,10));data.id=nid;mem[coll][nid]=data;pull(coll);return Promise.resolve(nid);
+}
+function patch(coll,id,data){
+  if(state.db)return state.db.collection(coll).doc(id).update(data);
+  Object.assign(mem[coll][id],data);pull(coll);return Promise.resolve();
+}
+function remove(coll,id){
+  if(state.db)return state.db.collection(coll).doc(id).delete();
+  delete mem[coll][id];pull(coll);return Promise.resolve();
+}
+function pull(coll){state[coll]=Object.keys(mem[coll]).map(function(k){return Object.assign({id:k},mem[coll][k]);});render();}
+function saveSettings(){
+  if(state.db)return state.db.doc("settings/main").set(state.settings);
+  render();return Promise.resolve();
+}
+function writeErr(e){
+  if(e&&(e.code==="invalid_argument"||e.code==="permission-denied")&&state.db){state.canWrite=false;toast("You have view-only access, so changes can't be saved.");render();return;}
+  if(e&&e.code==="quota_exceeded"){toast("The book is full. Delete old records to add more.");return;}
+  toast("That didn't save. Check your connection and try again.");
+}
+
+/* ---------- toast ---------- */
+var tt;function toast(msg){var t=document.getElementById("toast");t.textContent=msg;t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true;},2600);}
+
+/* ---------- render ---------- */
+function setTab(t){state.tab=t;try{history.replaceState(null,"","#"+t);}catch(e){location.hash=t;}render();window.scrollTo(0,0);}
+function render(){
+  var ms=document.getElementById("meSel");if(ms){var ag=agents(),want='<option value="">Both of us</option>'+ag.map(function(a){return '<option value="'+esc(a)+'">'+esc(a)+'</option>';}).join("");if(ms.getAttribute("data-k")!==ag.join("|")){ms.innerHTML=want;ms.setAttribute("data-k",ag.join("|"));}ms.value=state.me||"";}
+  document.querySelectorAll(".tab").forEach(function(b){if(b.dataset.tab===state.tab)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});
+  var act=state.buyers.filter(function(b){return (b.status||"Active")==="Active";}).length;
+  document.getElementById("ctB").textContent=act||"";
+  document.getElementById("ctS").textContent=state.sellers.filter(function(s){return s.stage!=="Sold";}).length||"";
+  document.getElementById("addBuyerBtn").hidden=!state.canWrite;document.getElementById("addSellerBtn").hidden=!state.canWrite;document.getElementById("addProspectBtn").hidden=!state.canWrite;
+  document.getElementById("ctP").textContent=state.prospects.filter(function(r){return (r.status||"Nurturing")==="Nurturing"||r.status==="Appraisal booked";}).length||"";
+  var bn="";
+  if(state.dbMode==="local")bn='<div class="notice">Can\'t reach the book right now. Check your signal and reload. Anything you add on this screen won\'t be saved.</div>';
+  else if(!state.canWrite)bn='<div class="notice">You can view this book but not change it. Ask Jason to check your access.</div>';
+  document.getElementById("banner").innerHTML=bn;
+  var v=document.getElementById("view");
+  var loading=state.dbMode==="db"&&!(state.ready.b&&state.ready.s&&state.ready.p);
+  if(loading){v.innerHTML='<div class="card pad empty">Loading your buyers and sellers…</div>';return;}
+  v.innerHTML=({today:vToday,pools:vPools,buyers:vBuyers,prospects:vProspects,sellers:vSellers,match:vMatch,guide:vGuide,past:vPast,score:vScore,demand:vDemand}[state.tab]||vToday)();
+}
+
+function buyerRow(b,extra){
+  var wants=[b.beds?b.beds+"+ bed":"",(b.types||[]).join("/"),(b.suburbs||[]).slice(0,3).join(", ")+((b.suburbs||[]).length>3?" +"+((b.suburbs||[]).length-3):"")].filter(Boolean).join(" · ");
+  return '<button class="row" data-act="open-buyer" data-id="'+esc(b.id)+'"><span class="nm">'+esc(b.name||"Unnamed")+' '+heatPill(b)+agentTag(b)+(b.example?' <span class="pill p-ex">example</span>':'')+((b.status&&b.status!=="Active")?' <span class="pill p-stage">'+esc(b.status)+'</span>':'')+'</span><span class="right num">'+esc(range(b))+'</span><span class="sub">'+esc(wants||"no criteria yet")+(extra?' · '+extra:'')+'</span></button>';
+}
+function sellerRow(s){
+  var n=matchesFor(s).length;
+  return '<button class="row" data-act="open-seller" data-id="'+esc(s.id)+'"><span class="nm">'+esc(s.address||"No address")+' <span class="pill p-stage">'+esc(s.stage||"Appraisal")+'</span>'+agentTag(s)+(s.example?' <span class="pill p-ex">example</span>':'')+'</span><span class="right num">'+money(s.price)+'</span><span class="sub">'+esc([s.suburb,s.beds?s.beds+" bed":"",s.type,s.owner].filter(Boolean).join(" · "))+' · <b class="num">'+n+'</b> matching buyer'+(n===1?"":"s")+' · next: '+duePill(s.nextFollowUp)+'</span></button>';
+}
+
+function emptyBook(){
+  return '<div class="card pad" style="display:grid;gap:12px"><h2 style="font-size:24px">Your book is empty</h2><p style="color:var(--muted);max-width:60ch">Start by importing the buyer spreadsheet you already keep. Then add every buyer you meet at home opens and every owner you appraise. The book sorts buyers into budget pools and shows which buyers fit each property, so you can call the right people first.</p><div class="tools">'+(state.canWrite?'<button class="btn primary" data-act="import" data-v="buyers">Import your Excel buyer list</button><button class="btn" data-act="new-buyer">+ Add a buyer</button><button class="btn" data-act="new-seller">+ Add a seller</button><button class="btn" data-act="load-examples">Try it with example records</button>':'')+'<button class="btn" data-tab="guide">How it works</button></div></div>';
+}
+
+function vToday(){
+  var wk=weekStats(weekStart(),state.me),tgt=myTargets(state.me);
+  if(!state.buyers.length&&!state.sellers.length&&!state.prospects.length)return '<div class="head"><div><h2>Today</h2><p>Who to call, and which properties have buyers waiting.</p></div></div>'+inboxSection()+emptyBook();
+  var act=state.buyers.filter(function(b){return (b.status||"Active")==="Active";});
+  var hot=act.filter(function(b){return heat(b)==="hot";});
+  var pipe=state.sellers.filter(function(s){return s.stage!=="Sold";});
+  var follow=act.filter(mine).filter(function(b){var d=daysSince(b.lastContact);var h=heat(b);return h!=="cold"&&(d==null||d>=(h==="hot"?7:14));})
+    .sort(function(a,c){return HEATRANK[heat(a)]-HEATRANK[heat(c)]||((daysSince(c.lastContact)||999)-(daysSince(a.lastContact)||999));}).slice(0,8);
+  var dueSel=state.prospects.filter(function(r){var st=r.status||"Nurturing";return st==="Nurturing"||st==="Appraisal booked";}).map(function(r){return {k:"prospect",r:r};})
+    .concat(pipe.map(function(s){return {k:"seller",r:s};}))
+    .filter(function(x){var n=dueIn(x.r.nextFollowUp);return n!=null&&n<=0&&mine(x.r);})
+    .sort(function(a,c){return dueIn(a.r.nextFollowUp)-dueIn(c.r.nextFollowUp);});
+  var annSoon=pastClients().filter(function(x){return x.a&&x.a.days<=14&&mine(x.r);});
+  var withMatch=pipe.filter(mine).map(function(s){return {s:s,n:matchesFor(s).filter(function(x){return x.m.score>=65;}).length};}).sort(function(a,c){return c.n-a.n;}).slice(0,6);
+  var h='<div class="head"><div><h2>Today</h2><p>'+(state.me?esc(state.me)+'\'s calls plus shared records. Your share of the team targets.':'Who to call, and which properties have buyers waiting.')+'</p></div>'+exBadge()+'</div>';
+  h+='<div class="tools"><input type="search" id="gq" placeholder="Find anyone: name, mobile, address or suburb" value="'+esc(state.gq)+'" aria-label="Search everyone"></div>';
+  if(state.gq.trim().length>=2)return h+searchResults(state.gq.trim());
+  h+=inboxSection();
+  h+=weekStrip(wk,tgt);
+  if(annSoon.length)h+='<section class="card"><div class="sec-title"><h3>Past client anniversaries</h3><span>next 14 days</span></div><div class="list">'+annSoon.map(function(x){return '<button class="row" data-act="open-past" data-kind="'+x.kind+'" data-id="'+esc(x.r.id)+'"><span class="nm">'+esc(x.name||"Client")+'</span><span class="right">'+(x.a.days===0?'<span class="pill p-due">today</span>':'<span class="pill p-soon">in '+x.a.days+'d</span>')+'</span><span class="sub">'+esc(x.what)+'</span></button>';}).join("")+'</div></section>';
+  h+='<section class="card"><div class="sec-title"><h3>Seller follow-ups due</h3><span>potential sellers and current sellers</span></div><div class="list">'+(dueSel.length?dueSel.map(function(x){return x.k==="prospect"?prospectRow(x.r):sellerRow(x.r);}).join(""):'<div class="empty">No seller follow-ups due. Nice work.</div>')+'</div></section>';
+  h+='<div class="cols"><section class="card"><div class="sec-title"><h3>Call these buyers</h3><span>hot after 7 days, warm after 14</span></div><div class="list">'+(follow.length?follow.map(function(b){return buyerRow(b,"last spoke "+ago(b.lastContact));}).join(""):'<div class="empty">Everyone warm or hot has been called recently.</div>')+'</div></section>';
+  h+='<section class="card"><div class="sec-title"><h3>Properties with buyers waiting</h3><span>good or strong matches</span></div><div class="list">'+(withMatch.length?withMatch.map(function(x){return '<button class="row" data-act="go-match" data-id="'+esc(x.s.id)+'"><span class="nm">'+esc(x.s.address||"No address")+' <span class="pill p-stage">'+esc(x.s.stage||"")+'</span></span><span class="right num">'+x.n+' buyer'+(x.n===1?"":"s")+'</span><span class="sub">'+esc([x.s.suburb,money(x.s.price),x.s.beds?x.s.beds+" bed":""].filter(Boolean).join(" · "))+'</span></button>';}).join(""):'<div class="empty">Add a seller with a price to see who fits.</div>')+'</div></section></div>';
+  return h;
+}
+
+function exBadge(){
+  var n=state.prospects.filter(function(r){return r.example;}).length+state.buyers.filter(function(b){return b.example;}).length+state.sellers.filter(function(s){return s.example;}).length;
+  return n&&state.canWrite?'<button class="btn small" data-act="clear-examples">Remove '+n+' example records</button>':"";
+}
+
+function vPools(){
+  var bands=state.settings.bands;
+  var labels=["Under "+money(bands[0]),money(bands[0])+"–"+money(bands[1]),money(bands[1])+"+"];
+  var act=state.buyers.filter(function(b){return (b.status||"Active")==="Active";});
+  var pools=[[],[],[]],nob=[];
+  act.forEach(function(b){var i=poolIndex(b,bands);if(i<0)nob.push(b);else pools[i].push(b);});
+  var h='<div class="head"><div><h2>Buyer pools</h2><p>Active buyers grouped by top budget, with what each pool is after.</p></div>'+exBadge()+'</div>';
+  h+='<div class="card pad bandset"><span>Pool limits:</span><label>Pool 1 up to <input id="band0" inputmode="decimal" value="'+esc(Math.round(bands[0]/1000)+"k")+'" '+(state.canWrite?'':'disabled')+'></label><label>Pool 2 up to <input id="band1" inputmode="decimal" value="'+esc(Math.round(bands[1]/1000)+"k")+'" '+(state.canWrite?'':'disabled')+'></label>'+(state.canWrite?'<button class="btn small" data-act="save-bands">Update pools</button>':'')+'</div>';
+  if(!act.length)return h+emptyBook();
+  h+='<div class="pools">';
+  pools.forEach(function(list,i){
+    list.sort(function(a,c){return HEATRANK[heat(a)]-HEATRANK[heat(c)]||(c.budgetMax||0)-(a.budgetMax||0);});
+    var c={hot:0,warm:0,cold:0};list.forEach(function(b){c[heat(b)]++;});var t=list.length||1;
+    h+='<section class="card"><div class="pool-h"><span class="band">Pool '+(i+1)+'</span><h3>'+esc(labels[i])+'</h3><span class="num" style="color:var(--muted);font-size:14px">'+list.length+' buyer'+(list.length===1?"":"s")+'</span>';
+    h+='<div class="heatbar" aria-hidden="true"><i style="width:'+(c.hot/t*100)+'%;background:var(--hot)"></i><i style="width:'+(c.warm/t*100)+'%;background:var(--warm)"></i><i style="width:'+(c.cold/t*100)+'%;background:var(--cold)"></i></div><div class="heatlegend num"><span>'+c.hot+' hot</span><span>'+c.warm+' warm</span><span>'+c.cold+' cold</span></div></div>';
+    h+='<div class="wants">'+wantRow("Beds",list,function(b){return b.beds?b.beds+"+":null;})+wantRow("Type",list,function(b){return b.types&&b.types.length?b.types:null;})+wantRow("Suburbs",list,function(b){return b.suburbs&&b.suburbs.length?b.suburbs:null;},4)+wantRow("Must have",list,function(b){return b.mustHaves&&b.mustHaves.length?b.mustHaves:null;},4)+'</div>';
+    h+='<div class="list">'+(list.length?list.map(function(b){return buyerRow(b);}).join(""):'<div class="empty">No buyers in this range yet.</div>')+'</div></section>';
+  });
+  h+='</div>';
+  if(nob.length)h+='<section class="card"><div class="sec-title"><h3>No budget yet</h3><span>add a budget to pool them</span></div><div class="list">'+nob.map(function(b){return buyerRow(b);}).join("")+'</div></section>';
+  return h;
+}
+function wantRow(label,list,fn,top){
+  var cnt={};list.forEach(function(b){var v=fn(b);if(v==null)return;[].concat(v).forEach(function(x){cnt[x]=(cnt[x]||0)+1;});});
+  var keys=Object.keys(cnt).sort(function(a,c){return cnt[c]-cnt[a];}).slice(0,top||5);
+  if(!keys.length)return "";
+  return '<div><b>'+label+'</b>'+keys.map(function(k){return '<span class="tag">'+esc(k)+' <span class="num" style="color:var(--muted)">'+cnt[k]+'</span></span>';}).join("")+'</div>';
+}
+
+function vBuyers(){
+  var h='<div class="head"><div><h2>Buyers</h2><p>Hot first, then by budget.</p></div>'+exBadge()+'</div>';
+  if(!state.buyers.length)return h+emptyBook();
+  h+='<div class="tools"><input type="search" id="q" placeholder="Search name, phone, suburb or notes" value="'+esc(state.q)+'" aria-label="Search buyers"><div class="seg" role="group" aria-label="Filter by heat">'+["all","hot","warm","cold"].map(function(x){return '<button data-act="heatf" data-v="'+x+'" aria-pressed="'+(state.heatF===x)+'">'+x[0].toUpperCase()+x.slice(1)+'</button>';}).join("")+'</div>'+(state.canWrite?'':'')+'<button class="btn small" data-act="export">Export CSV</button>'+scopeSeg()+(state.canWrite?'<button class="btn small" data-act="import" data-v="buyers">Import from Excel</button>':'')+'</div>';
+  var q=state.q.toLowerCase();
+  var list=state.buyers.filter(function(b){
+    if(!inScope(b))return false;
+    if(state.heatF!=="all"&&heat(b)!==state.heatF)return false;
+    if(!q)return true;
+    return [b.name,b.phone,b.email,b.notes,(b.suburbs||[]).join(" ")].join(" ").toLowerCase().indexOf(q)>-1||digits(b.phone).indexOf(digits(q))>-1&&digits(q).length>2;
+  }).sort(function(a,c){var sa=(a.status||"Active")==="Active"?0:1,sc=(c.status||"Active")==="Active"?0:1;return sa-sc||HEATRANK[heat(a)]-HEATRANK[heat(c)]||(c.budgetMax||0)-(a.budgetMax||0);});
+  h+='<section class="card"><div class="list">'+(list.length?list.map(function(b){return buyerRow(b,b.finance?esc(b.finance.toLowerCase()):"");}).join(""):'<div class="empty">No buyers match that search.</div>')+'</div></section>';
+  return h;
+}
+
+function vSellers(){
+  var h='<div class="head"><div><h2>Sellers</h2><p>Owners and properties, by stage. Tap one to see its buyers.</p></div>'+exBadge()+(state.canWrite?'<button class="btn small" data-act="import" data-v="sellers">Import from Excel</button>':'')+'</div>';
+  if(state.me&&state.sellers.length)h+='<div class="tools">'+scopeSeg()+'</div>';
+  if(!state.sellers.length)return h+(state.buyers.length?'<div class="card pad empty">No sellers yet. Add an owner after an appraisal to see which buyers fit their home.</div>':emptyBook());
+  STAGES.forEach(function(st){
+    var list=state.sellers.filter(function(s){return (s.stage||"Appraisal")===st&&inScope(s);});
+    if(!list.length)return;
+    h+='<section class="card"><div class="sec-title"><h3>'+st+'</h3><span class="num">'+list.length+'</span></div><div class="list">'+list.map(sellerRow).join("")+'</div></section>';
+  });
+  return h;
+}
+
+function vMatch(){
+  var opts='<option value="">Quick check (type below)</option>'+state.sellers.filter(function(s){return s.stage!=="Sold";}).map(function(s){return '<option value="'+esc(s.id)+'"'+(state.matchSel===s.id?" selected":"")+'>'+esc((s.address||"No address")+" · "+money(s.price))+'</option>';}).join("");
+  var h='<div class="head"><div><h2>Match buyers to a property</h2><p>Pick a seller, or type a price at an appraisal to see how many buyers you already have.</p></div></div>';
+  h+='<div class="card pad" style="display:grid;gap:12px"><label class="f"><span>Property</span><select id="matchSel">'+opts+'</select></label>';
+  var p;
+  if(state.matchSel){p=state.sellers.filter(function(s){return s.id===state.matchSel;})[0];}
+  if(!p){
+    var qk=state.quick;
+    h+='<div class="quick"><label class="f"><span>Price</span><input id="qPrice" inputmode="decimal" placeholder="e.g. 720k" value="'+esc(qk.price)+'"></label><label class="f"><span>Suburb</span><select id="qSuburb"><option value="">Any</option>'+SUBURBS.map(function(s){return '<option'+(qk.suburb===s?" selected":"")+'>'+s+'</option>';}).join("")+'</select></label><label class="f"><span>Bedrooms</span><select id="qBeds"><option value="">Any</option>'+[1,2,3,4,5,6].map(function(n){return '<option'+(String(qk.beds)===String(n)?" selected":"")+'>'+n+'</option>';}).join("")+'</select></label><label class="f"><span>Type</span><select id="qType">'+TYPES.map(function(t){return '<option'+((qk.type||"House")===t?" selected":"")+'>'+t+'</option>';}).join("")+'</select></label></div>';
+    p={price:parseMoney(qk.price),suburb:qk.suburb,beds:qk.beds?Number(qk.beds):null,type:qk.type||"House",features:[]};
+    if(!p.price){h+='</div><div class="card pad empty">Enter a price to see matching buyers.</div>';return h;}
+  }
+  else if(state.canWrite){h+='<div class="tools"><span class="why">'+esc([p.suburb,p.beds?p.beds+" bed":"",p.type,(p.features||[]).join(", "),p.owner?"owner "+p.owner:""].filter(Boolean).join(" · "))+'</span><button class="btn small" data-act="edit-seller" data-id="'+esc(p.id)+'">Edit seller</button></div>';}
+  h+='</div>';
+  state.lastMatchP=p;
+  var ms=matchesFor(p);
+  var strong=ms.filter(function(x){return x.m.tier==="strong";}).length,good=ms.filter(function(x){return x.m.tier==="good";}).length;
+  h+='<section class="card"><div class="sec-title"><h3><span class="num">'+ms.length+'</span> matching buyer'+(ms.length===1?"":"s")+'</h3><span class="num">'+strong+' strong · '+good+' good · '+(ms.length-strong-good)+' possible</span></div><div>';
+  if(!ms.length)h+='<div class="empty">No active buyers fit this one yet. Worth a just-sold drop and a post to find some.</div>';
+  ms.forEach(function(x){
+    var b=x.b,m=x.m;
+    h+='<div class="match"><div class="score s-'+m.tier+' num" aria-label="Match score '+m.score+'">'+m.score+'</div><div style="min-width:0"><div class="nm" style="font-weight:700;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="linkbtn" data-act="open-buyer" data-id="'+esc(b.id)+'">'+esc(b.name||"Unnamed")+'</button> '+heatPill(b)+' <span class="num" style="font-weight:500;color:var(--muted)">'+esc(range(b))+'</span></div><div class="why">'+m.why.map(function(w){return '<span class="'+w[0]+'">'+(w[0]==="ok"?"✓ ":"✗ ")+esc(w[1])+'</span>';}).join(" · ")+'</div><div class="why num">'+esc(b.phone||"no phone")+' · '+esc(b.finance||"finance unknown")+' · last spoke '+ago(b.lastContact)+'</div></div><div class="mact">'+(state.canWrite?'<button class="btn small" data-act="contacted" data-id="'+esc(b.id)+'">Called</button>':'')+'</div></div>';
+  });
+  h+='</div></section>';
+  if(ms.length)h+='<div class="tools"><button class="btn primary" data-act="demand-match">Buyer demand report for the owner</button><span class="why">Anonymised, ready to send or read out at the appraisal.</span></div>';
+  if(ms.length){
+    var addr=p.address?p.address:(p.suburb?"a "+(p.beds?p.beds+" bed ":"")+(p.type||"home").toLowerCase()+" in "+p.suburb:"a home");
+    var sms="Hi [name], it's "+(state.settings.team||"Cooke & Harper")+" from Rodway. We've got "+addr+" coming up"+(p.price?" around "+money(p.price):"")+" before it hits the internet. Thought of you straight away. Want the details or a private look?";
+    var nums=ms.filter(function(x){return x.b.phone;}).map(function(x){return x.b.name+": "+x.b.phone;}).join("\n");
+    h+='<section class="card pad" style="display:grid;gap:12px"><h3 style="font-size:19px">Off-market text to these buyers</h3><textarea class="smsbox" id="smsText" aria-label="Message to send">'+esc(sms)+'</textarea><div class="tools"><button class="btn small" data-act="copy" data-src="smsText">Copy message</button><button class="btn small" data-act="copy" data-src="smsNums">Copy names + numbers</button>'+(state.canWrite?'<button class="btn small primary" data-act="mark-all" data-why="'+esc("Off-market: "+addr)+'" data-ids="'+esc(ms.map(function(x){return x.b.id;}).join(","))+'">Mark all '+ms.length+' as contacted</button>':'')+'</div><textarea class="smsbox" id="smsNums" aria-label="Names and numbers" readonly style="min-height:80px">'+esc(nums||"No phone numbers saved for these buyers.")+'</textarea></section>';
+  }
+  return h;
+}
+
+/* ---------- drawers ---------- */
+var draft=null;
+function chipGroup(name,opts,sel,single){
+  return '<div class="chips" role="group" data-chips="'+name+'"'+(single?' data-single="1"':'')+'>'+opts.map(function(o){var on=single?sel===o:(sel||[]).indexOf(o)>-1;return '<button type="button" class="chip" data-chip="'+esc(o)+'" aria-pressed="'+on+'">'+esc(o)+'</button>';}).join("")+'</div>';
+}
+function openBuyer(id,edit){
+  var b=id?state.buyers.filter(function(x){return x.id===id;})[0]:null;
+  if(id&&!b)return;
+  if(b&&!edit){return showDrawer(buyerDetail(b));}
+  draft={kind:"buyer",id:id||null,data:b?JSON.parse(JSON.stringify(b)):{suburbs:[],types:["House"],mustHaves:[],finance:"",timeframe:"",status:"Active"}};
+  showDrawer(buyerForm(draft.data));
+}
+function buyerDetail(b){
+  var props=state.sellers.filter(function(s){return s.stage!=="Sold";}).map(function(s){return {s:s,m:scoreMatch(b,s)};}).filter(function(x){return x.m.score>=50;}).sort(function(a,c){return c.m.score-a.m.score;});
+  return '<header><h2>'+esc(b.name||"Buyer")+'</h2><button class="btn small" data-act="close">Close</button></header><div class="body"><div class="detail"><div style="display:flex;gap:8px;flex-wrap:wrap">'+heatPill(b)+'<span class="pill p-stage">'+esc(b.status||"Active")+'</span>'+(b.example?'<span class="pill p-ex">example</span>':'')+agentTag(b)+'</div><dl class="kv"><dt>Phone</dt><dd class="num">'+esc(b.phone||"–")+'</dd><dt>Email</dt><dd>'+esc(b.email||"–")+'</dd><dt>Budget</dt><dd class="num">'+esc(range(b))+'</dd><dt>Finance</dt><dd>'+esc(b.finance||"–")+'</dd><dt>Timeframe</dt><dd>'+esc(b.timeframe||"–")+'</dd><dt>Wants</dt><dd>'+esc([b.beds?b.beds+"+ bed":"",b.baths?b.baths+"+ bath":"",(b.types||[]).join(", ")].filter(Boolean).join(" · ")||"–")+'</dd><dt>Suburbs</dt><dd>'+esc((b.suburbs||[]).join(", ")||"Any")+'</dd><dt>Must have</dt><dd>'+((b.mustHaves||[]).map(function(m){return '<span class="tag">'+esc(m)+'</span>';}).join("")||"–")+'</dd><dt>Met at</dt><dd>'+esc(b.source||"–")+'</dd><dt>Last spoke</dt><dd>'+ago(b.lastContact)+'</dd><dt>About them</dt><dd style="white-space:pre-wrap">'+esc(b.personal||"–")+'</dd><dt>Notes</dt><dd style="white-space:pre-wrap">'+esc(b.notes||"–")+'</dd></dl>'+
+  '<div><h3 style="font-size:18px;margin-bottom:6px">History</h3>'+((b.log||[]).length?'<div class="hist">'+(b.log||[]).slice().reverse().slice(0,20).map(function(e){return '<div><span class="d">'+esc(niceDate(e.date))+'</span><span><b>'+esc(e.kind)+'</b>'+(e.note?' · '+esc(e.note):'')+'</span></div>';}).join("")+'</div>':'<p class="why">No contact logged yet.</p>')+'</div>'+
+  '<div><h3 style="font-size:18px;margin-bottom:6px">Properties that fit</h3>'+(props.length?props.map(function(x){return '<div class="why" style="padding:6px 0;border-top:1px solid var(--line)"><b style="color:var(--ink)">'+x.m.score+'</b> · '+esc(x.s.address||"")+' · '+money(x.s.price)+' <span class="pill p-stage">'+esc(x.s.stage)+'</span></div>';}).join(""):'<p class="why">None of your current sellers fit yet.</p>')+'</div></div></div><footer><button class="btn" data-act="msgs" data-kind="buyer" data-id="'+esc(b.id)+'">Messages</button>'+(state.canWrite?'<button class="btn primary" data-act="contacted" data-id="'+esc(b.id)+'">Called today</button><button class="btn" data-act="edit-buyer" data-id="'+esc(b.id)+'">Edit</button>':'')+'</footer>';
+}
+function buyerForm(d){
+  return '<header><h2>'+(draft.id?"Edit buyer":"New buyer")+'</h2><button class="btn small" data-act="close">Cancel</button></header><form class="body" id="draftForm" novalidate>'+agentField(draft.data)+
+  '<div class="g2"><label class="f"><span>Name</span><input id="fName" value="'+esc(d.name)+'" autocomplete="off" required></label><label class="f"><span>Mobile</span><input id="fPhone" type="tel" inputmode="tel" value="'+esc(d.phone)+'"></label></div><div id="dupWarn" class="dup" hidden></div>'+
+  '<label class="f"><span>Email</span><input id="fEmail" type="email" value="'+esc(d.email)+'"></label>'+
+  '<div class="g2"><label class="f"><span>Budget from</span><input id="fMin" inputmode="decimal" placeholder="e.g. 600k" value="'+esc(d.budgetMin?Math.round(d.budgetMin/1000)+"k":"")+'"></label><label class="f"><span>Budget up to</span><input id="fMax" inputmode="decimal" placeholder="e.g. 750k" value="'+esc(d.budgetMax?Math.round(d.budgetMax/1000)+"k":"")+'"><small>Sets their pool. Type 750, 750k or 750000.</small></label></div>'+
+  '<div class="f"><span>Finance</span>'+chipGroup("finance",FINANCE,d.finance,true)+'</div>'+
+  '<div class="f"><span>When are they buying?</span>'+chipGroup("timeframe",TIMEFRAME,d.timeframe,true)+'</div>'+
+  '<div class="g3"><label class="f"><span>Min beds</span><select id="fBeds"><option value="">Any</option>'+[1,2,3,4,5].map(function(n){return '<option'+(d.beds===n?" selected":"")+'>'+n+'</option>';}).join("")+'</select></label><label class="f"><span>Min baths</span><select id="fBaths"><option value="">Any</option>'+[1,2,3].map(function(n){return '<option'+(d.baths===n?" selected":"")+'>'+n+'</option>';}).join("")+'</select></label><label class="f"><span>Status</span><select id="fStatus">'+BSTATUS.map(function(s){return '<option'+((d.status||"Active")===s?" selected":"")+'>'+s+'</option>';}).join("")+'</select></label></div>'+
+  '<div class="f"><span>Property type</span>'+chipGroup("types",TYPES,d.types)+'</div>'+
+  '<div class="f"><span>Suburbs</span><small>Leave all off for "anywhere in the patch".</small>'+chipGroup("suburbs",SUBURBS,d.suburbs)+'</div>'+
+  '<div class="f"><span>Must have</span>'+chipGroup("mustHaves",FEATURES,d.mustHaves)+'</div>'+
+  '<label class="f"><span>Where you met them</span><input id="fSource" placeholder="e.g. home open, 13 Drayton Ct" value="'+esc(d.source)+'"></label>'+
+  '<label class="f"><span>About them</span><textarea id="fPersonal" placeholder="Kids, pets, job, what they loved or hated at inspections">'+esc(d.personal)+'</textarea></label>'+
+  '<label class="f"><span>Notes</span><textarea id="fNotes">'+esc(d.notes)+'</textarea></label><p class="err" id="fErr" hidden></p></form>'+
+  '<footer><div class="confirm" id="delWrap">'+(draft.id?'<button class="btn danger" data-act="ask-delete">Delete</button>':'')+'</div><button class="btn primary" data-act="save-draft">Save buyer</button></footer>';
+}
+function openSeller(id,edit){
+  var s=id?state.sellers.filter(function(x){return x.id===id;})[0]:null;
+  if(id&&!s)return;
+  if(s&&!edit){state.matchSel=s.id;closeDrawer();return setTab("match");}
+  draft={kind:"seller",id:id||null,data:s?JSON.parse(JSON.stringify(s)):{type:"House",features:[],traits:[],stage:"Appraisal",suburb:"",nextFollowUp:addDays(2),log:[]}};
+  showDrawer(sellerForm(draft.data));
+}
+function sellerForm(d){
+  return '<header><h2>'+(draft.id?"Edit seller":"New seller")+'</h2><button class="btn small" data-act="close">Cancel</button></header><form class="body" id="draftForm" novalidate>'+agentField(draft.data)+
+  '<label class="f"><span>Property address</span><input id="fAddr" value="'+esc(d.address)+'" autocomplete="off" required></label>'+
+  '<div class="g2"><label class="f"><span>Suburb</span><select id="fSub"><option value="">Choose…</option>'+SUBURBS.map(function(s){return '<option'+(d.suburb===s?" selected":"")+'>'+s+'</option>';}).join("")+'<option'+(d.suburb==="Other"?" selected":"")+'>Other</option></select></label><label class="f"><span>Price or estimate</span><input id="fPrice" inputmode="decimal" placeholder="e.g. 749k" value="'+esc(d.price?Math.round(d.price/1000)+"k":"")+'"></label></div>'+
+  '<div class="g2"><label class="f"><span>Owner name</span><input id="fOwner" value="'+esc(d.owner)+'"></label><label class="f"><span>Owner mobile</span><input id="fOPhone" type="tel" inputmode="tel" value="'+esc(d.phone)+'"></label></div><div id="dupWarn" class="dup" hidden></div>'+
+  '<div class="g3"><label class="f"><span>Beds</span><select id="fBeds"><option value="">–</option>'+[1,2,3,4,5,6].map(function(n){return '<option'+(d.beds===n?" selected":"")+'>'+n+'</option>';}).join("")+'</select></label><label class="f"><span>Baths</span><select id="fBaths"><option value="">–</option>'+[1,2,3,4].map(function(n){return '<option'+(d.baths===n?" selected":"")+'>'+n+'</option>';}).join("")+'</select></label><label class="f"><span>Land m²</span><input id="fLand" inputmode="numeric" value="'+esc(d.land||"")+'"></label></div>'+
+  '<div class="f"><span>Type</span>'+chipGroup("type",TYPES,d.type,true)+'</div>'+
+  '<div class="f"><span>Stage</span>'+chipGroup("stage",STAGES,d.stage,true)+'</div>'+
+  '<div class="f"><span>Features</span>'+chipGroup("features",FEATURES,d.features)+'</div>'+
+  '<div class="f"><span>What the owner is like</span>'+chipGroup("traits",TRAITS,d.traits)+'</div>'+
+  '<label class="f"><span>About the owner</span><textarea id="fPersonal" placeholder="Kids, pets, job, hobbies, what matters most to them">'+esc(d.personal)+'</textarea></label>'+
+  '<label class="f"><span>Property notes</span><textarea id="fNotes">'+esc(d.notes)+'</textarea></label>'+
+  '<label class="f"><span>Next follow-up</span><input type="date" id="fNext" value="'+esc(d.nextFollowUp||"")+'"></label><p class="err" id="fErr" hidden></p></form>'+
+  '<footer><div class="confirm" id="delWrap">'+(draft.id?'<button class="btn danger" data-act="ask-delete">Delete</button>':'')+'</div><div style="display:flex;gap:8px">'+(draft.id?'<button class="btn" data-act="go-match" data-id="'+esc(draft.id)+'">See buyers</button>':'')+'<button class="btn primary" data-act="save-draft">Save seller</button></div></footer>';
+}
+function showDrawer(html){document.getElementById("overlay").innerHTML='<div class="scrim" data-act="close"></div><div class="drawer" role="dialog" aria-modal="true">'+html+'</div>';var f=document.querySelector(".drawer input,.drawer button");if(f)f.focus();}
+function closeDrawer(){document.getElementById("overlay").innerHTML="";draft=null;}
+function val(id){var e=document.getElementById(id);return e?e.value.trim():"";}
+function chipsVal(name){var g=document.querySelector('[data-chips="'+name+'"]');if(!g)return null;var on=[].slice.call(g.querySelectorAll('[aria-pressed="true"]')).map(function(b){return b.dataset.chip;});return g.dataset.single?(on[0]||""):on;}
+function numOrNull(v){var n=parseInt(v,10);return isFinite(n)?n:null;}
+function saveDraft(){
+  var d=draft.data,err=document.getElementById("fErr");
+  d.agent=chipsVal("agent")||"";if(!draft.id&&state.me)d.createdBy=state.me;
+  if(draft.kind==="buyer"){
+    d.name=val("fName");d.phone=val("fPhone");d.email=val("fEmail");
+    d.budgetMin=parseMoney(val("fMin"));d.budgetMax=parseMoney(val("fMax"));
+    d.finance=chipsVal("finance");d.timeframe=chipsVal("timeframe");d.beds=numOrNull(val("fBeds"));d.baths=numOrNull(val("fBaths"));d.status=val("fStatus")||"Active";
+    d.types=chipsVal("types");d.suburbs=chipsVal("suburbs");d.mustHaves=chipsVal("mustHaves");d.source=val("fSource");d.notes=val("fNotes");d.personal=val("fPersonal");
+    var prevB=draft.id?(state.buyers.filter(function(x){return x.id===draft.id;})[0]||{}).status:null;if(d.status==="Bought"&&prevB!=="Bought"){d.stageDates=Object.assign({},d.stageDates||{},{Bought:todayStr()});}
+    if(!d.name){err.textContent="Add the buyer's name.";err.hidden=false;return;}
+    if(d.budgetMin&&d.budgetMax&&d.budgetMin>d.budgetMax){err.textContent="'Budget from' is higher than 'Budget up to'. Swap them.";err.hidden=false;return;}
+    if(!draft.id){d.createdAt=nowIso();}
+  } else if(draft.kind==="prospect"){
+    d.name=val("fName");d.phone=val("fPhone");d.email=val("fEmail");d.address=val("fAddr");d.suburb=val("fSub");d.estValue=parseMoney(val("fVal"));d.beds=numOrNull(val("fBeds"));
+    d.type=chipsVal("type")||"House";d.timeframe=chipsVal("timeframe");d.motivation=chipsVal("motivation");d.source=val("fSrc");d.status=val("fStatus")||"Nurturing";
+    d.traits=chipsVal("traits");d.personal=val("fPersonal");d.notes=val("fNotes");d.nextFollowUp=val("fNext");
+    if(!d.name&&!d.address){err.textContent="Add a name or an address.";err.hidden=false;return;}
+    if(!draft.id){d.createdAt=nowIso();d.log=d.log||[];}
+  } else {
+    d.address=val("fAddr");d.suburb=val("fSub");d.price=parseMoney(val("fPrice"));d.owner=val("fOwner");d.phone=val("fOPhone");
+    d.beds=numOrNull(val("fBeds"));d.baths=numOrNull(val("fBaths"));d.land=numOrNull(val("fLand"));
+    var prevStage=draft.id?(state.sellers.filter(function(x){return x.id===draft.id;})[0]||{}).stage:null;
+    d.type=chipsVal("type")||"House";d.stage=chipsVal("stage")||"Appraisal";d.features=chipsVal("features");d.notes=val("fNotes");d.traits=chipsVal("traits");d.personal=val("fPersonal");d.nextFollowUp=val("fNext");
+    if(d.stage!==prevStage){d.stageDates=Object.assign({},d.stageDates||{});if(!d.stageDates[d.stage])d.stageDates[d.stage]=todayStr();if(d.stage==="Sold"){d.nextFollowUp=addDays(7);}}
+    if(!d.address){err.textContent="Add the property address.";err.hidden=false;return;}
+    if(!draft.id){d.createdAt=nowIso();}
+  }
+  var dph=draft.kind==="seller"?d.phone:d.phone,dd=dph?findDup(dph,draft.id):null;
+  if(dd&&!draft.id&&!draft.dupOk){err.innerHTML='This number is already in the book as <b>'+esc(dd.name)+'</b> ('+esc(dd.kind)+'). <button class="linkbtn" data-act="dup-ok">Save anyway</button>';err.hidden=false;return;}
+  var coll={buyer:"buyers",seller:"sellers",prospect:"prospects"}[draft.kind],id=draft.id,body=JSON.parse(JSON.stringify(d));delete body.id;
+  var btn=document.querySelector('[data-act="save-draft"]');if(btn){btn.disabled=true;btn.textContent="Saving…";}
+  save(coll,id,body).then(function(){toast({buyer:"Buyer saved",seller:"Seller saved",prospect:"Potential seller saved"}[draft&&draft.kind]||"Saved");closeDrawer();}).catch(function(e){if(btn){btn.disabled=false;btn.textContent="Save";}writeErr(e);});
+}
+
+/* ---------- buyer log ---------- */
+function logBuyer(id,kind,note){
+  var b=state.buyers.filter(function(x){return x.id===id;})[0];if(!b)return Promise.resolve();
+  var log=(b.log||[]).concat([{date:todayStr(),kind:kind,by:state.me||"",note:note||""}]).slice(-100);
+  return patch("buyers",id,{lastContact:nowIso(),log:log});
+}
+
+/* ---------- scorecard ---------- */
+function weekStrip(cur,tg){
+  var day=((new Date().getDay()+6)%7)+1;
+  function m(lab,k){var v=cur[k],t=tg[k]||0,pc=t?Math.min(100,v/t*100):0,pace=t?Math.round(t*day/7):0;var behind=t&&v<pace&&v<t;return '<div class="ws"><div class="ws-top"><span>'+lab+'</span><b class="num">'+v+'<small>/'+t+'</small></b></div><div class="meter" aria-hidden="true"><i class="'+(v>=t&&t?"done":"")+'" style="width:'+pc+'%"></i></div><span class="ws-note'+(behind?" behind":"")+'">'+(!t?"no target":v>=t?"done":behind?(pace-v)+" behind pace":"on pace")+'</span></div>';}
+  return '<button class="card weekstrip" data-tab="score"><div class="ws-h"><b>This week</b><span>Day '+day+' of 7 · full scorecard ›</span></div><div class="ws-grid">'+m("Follow-ups","touches")+m("New buyers","buyers")+m("Appraisals","appraisals")+m("Listings","listings")+'</div></button>';
+}
+function vScore(){
+  var who=state.scoreWho==null?(state.me||""):state.scoreWho;
+  var tg=myTargets(who);
+  var ws=weekStart(),cur=weekStats(ws,who);
+  var weeks=[];for(var i=7;i>=0;i--){var w=shiftDays(ws,-7*i);weeks.push({ws:w,st:weekStats(w,who)});}
+  var streak=0;for(var j=weeks.length-1;j>=0;j--){var met=weeks[j].st.touches>=tg.touches&&tg.touches>0;if(met)streak++;else if(j===weeks.length-1)continue;else break;}
+  var day=((new Date().getDay()+6)%7)+1;
+  function kpi(lab,k,unit){var v=cur[k],t=tg[k]||0,pc=t?Math.min(100,v/t*100):0;return '<div class="card kpi"><span class="lab">'+lab+'</span><span class="val num">'+v+' <small>/ '+t+'</small></span><div class="meter" aria-hidden="true"><i class="'+(v>=t&&t?"done":"")+'" style="width:'+pc+'%"></i></div><span class="why">'+(t?(v>=t?"Target hit":(t-v)+" to go"):"no target")+'</span></div>';}
+  var h='<div class="head"><div><h2>Scorecard</h2><p>This week, Monday to Sunday. Day '+day+' of 7.</p></div><span class="pill '+(streak?"p-ok":"p-stage")+'">'+streak+' week streak</span></div>';
+  h+='<div class="seg" role="group" aria-label="Whose numbers" style="justify-self:start"><button data-act="score-who" data-v="" aria-pressed="'+(!who)+'">Team</button>'+agents().map(function(a){return '<button data-act="score-who" data-v="'+esc(a)+'" aria-pressed="'+(who===a)+'">'+esc(a)+'</button>';}).join("")+'</div>';
+  if(who)h+='<p class="why">'+esc(who)+'\'s numbers against half the team target. Follow-ups count when '+esc(who)+' logged them while "Viewing as" '+esc(who)+', or on records assigned to them.</p>';
+  h+='<div class="kpis">'+kpi("Follow-ups made","touches")+kpi("New buyers added","buyers")+kpi("Appraisals booked","appraisals")+kpi("New listings","listings")+'</div>';
+  // chart: touches per week vs target
+  var W=680,H=220,L=40,R=16,T=20,B=34,max=Math.max(tg.touches||0,1);weeks.forEach(function(w){max=Math.max(max,w.st.touches);});max=Math.ceil(max*1.15/10)*10||10;
+  var bw=(W-L-R)/weeks.length,sy=function(v){return T+(H-T-B)*(1-v/max);};
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="Follow-ups per week, last 8 weeks" style="min-width:420px;display:block">';
+  [0,max/2,max].forEach(function(v){svg+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+sy(v)+'" y2="'+sy(v)+'" stroke="var(--line)"/><text x="'+(L-8)+'" y="'+(sy(v)+4)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+Math.round(v)+'</text>';});
+  weeks.forEach(function(w,i){var x=L+i*bw+bw*0.18,bh=sy(0)-sy(w.st.touches),isCur=i===weeks.length-1,hit=w.st.touches>=tg.touches&&tg.touches;svg+='<rect x="'+x+'" y="'+sy(w.st.touches)+'" width="'+(bw*0.64)+'" height="'+Math.max(bh,0)+'" rx="3" fill="'+(hit?"var(--good)":isCur?"var(--sun)":"var(--cold)")+'"/><text x="'+(x+bw*0.32)+'" y="'+(sy(w.st.touches)-6)+'" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ink)">'+w.st.touches+'</text><text x="'+(x+bw*0.32)+'" y="'+(H-12)+'" text-anchor="middle" font-size="11" fill="var(--muted)">'+(isCur?"This wk":new Date(w.ws+"T00:00:00").toLocaleDateString("en-AU",{day:"numeric",month:"short"}))+'</text>';});
+  if(tg.touches)svg+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+sy(tg.touches)+'" y2="'+sy(tg.touches)+'" stroke="var(--hot)" stroke-dasharray="5 4"/><text x="'+(W-R)+'" y="'+(sy(tg.touches)-6)+'" text-anchor="end" font-size="11" fill="var(--hot)">target '+tg.touches+'</text>';
+  svg+='</svg>';
+  h+='<section class="card"><div class="sec-title"><h3>Follow-ups per week</h3><span>calls, texts, door knocks and more, logged in the book</span></div><div class="pad chartwrap">'+svg+'</div></section>';
+  var tot=weeks.reduce(function(a,w){a.b+=w.st.buyers;a.a+=w.st.appraisals;a.l+=w.st.listings;a.s+=w.st.sold;a.t+=w.st.touches;return a;},{b:0,a:0,l:0,s:0,t:0});
+  h+='<section class="card pad gsec"><h3>Last 8 weeks</h3><p class="num">'+tot.t+' follow-ups · '+tot.b+' new buyers · '+tot.a+' appraisals · '+tot.l+' new listings · '+tot.s+' sold</p><p class="why">'+(tot.a>=2&&tot.t>=10?"Roughly 1 appraisal for every "+Math.max(1,Math.round(tot.t/tot.a))+" follow-ups. ":"")+(tot.a>=3&&tot.l?"About "+Math.round(tot.l/tot.a*100)+"% of appraisals turned into listings.":"Keep logging every follow-up and these conversion rates will fill in.")+'</p></section>';
+  h+='<section class="card pad" style="display:grid;gap:12px"><h3 style="font-size:19px">Weekly team targets</h3><div class="targets"><label class="f"><span>Follow-ups</span><input id="tg_touches" inputmode="numeric" value="'+esc(tg.touches)+'" '+(state.canWrite?"":"disabled")+'></label><label class="f"><span>New buyers</span><input id="tg_buyers" inputmode="numeric" value="'+esc(tg.buyers)+'" '+(state.canWrite?"":"disabled")+'></label><label class="f"><span>Appraisals</span><input id="tg_appraisals" inputmode="numeric" value="'+esc(tg.appraisals)+'" '+(state.canWrite?"":"disabled")+'></label><label class="f"><span>Listings</span><input id="tg_listings" inputmode="numeric" value="'+esc(tg.listings)+'" '+(state.canWrite?"":"disabled")+'></label></div>'+(state.canWrite?'<div><button class="btn small" data-act="save-targets">Save targets</button></div>':'')+'<p class="why">Shared by Jayden and James: the book counts both of you together.</p></section>';
+  return h;
+}
+
+/* ---------- past clients ---------- */
+function vPast(){
+  var list=pastClients();
+  var h='<div class="head"><div><h2>Past clients</h2><p>Sold and bought clients. A check-in on every sale anniversary keeps the referrals coming.</p></div></div>';
+  if(!list.length)return h+'<div class="card pad empty">Nobody here yet. When a seller moves to <b>Sold</b> or a buyer is marked <b>Bought</b>, they land here with a yearly check-in date.</div>';
+  var soon=list.filter(function(x){return x.a&&x.a.days<=30;}),later=list.filter(function(x){return soon.indexOf(x)<0;});
+  function row(x){return '<button class="row" data-act="open-past" data-kind="'+x.kind+'" data-id="'+esc(x.r.id)+'"><span class="nm">'+esc(x.name||"Client")+' <span class="pill p-stage">'+(x.kind==="seller"?"sold with us":"bought")+'</span>'+(x.r.example?' <span class="pill p-ex">example</span>':'')+'</span><span class="right">'+(x.a?(x.a.days===0?'<span class="pill p-due">today</span>':x.a.days<=14?'<span class="pill p-soon">in '+x.a.days+'d</span>':'<span class="pill p-ok">'+esc(niceDate(x.a.date))+'</span>'):'')+'</span><span class="sub">'+esc(x.what)+' · '+esc(x.date?niceDate(x.date):"")+(x.a?' · '+(x.a.years===1?"1st":x.a.years===2?"2nd":x.a.years===3?"3rd":x.a.years+"th")+' anniversary':'')+'</span></button>';}
+  if(soon.length)h+='<section class="card"><div class="sec-title"><h3>Anniversaries in the next 30 days</h3><span class="num">'+soon.length+'</span></div><div class="list">'+soon.map(row).join("")+'</div></section>';
+  if(later.length)h+='<section class="card"><div class="sec-title"><h3>Later this year</h3><span class="num">'+later.length+'</span></div><div class="list">'+later.map(row).join("")+'</div></section>';
+  var msg="Hi [first name], can you believe it's been a year since [the sale / you got the keys]? Hope you're loving it. If anyone you know is thinking about selling, we'd love to help. Jayden & James";
+  h+='<section class="card pad" style="display:grid;gap:10px"><h3 style="font-size:19px">Anniversary message</h3><textarea class="smsbox" id="annMsg" aria-label="Anniversary message">'+esc(msg)+'</textarea><div><button class="btn small" data-act="copy" data-src="annMsg">Copy message</button></div><p class="why">Text it, then open the client and log the check-in. Sold owners also get a check-in every 3 months.</p></section>';
+  return h;
+}
+
+/* ---------- open homes + vendor report ---------- */
+var insp=null;
+function attRow(i){return '<div class="att" data-att="'+i+'"><input class="a-name" placeholder="Name" aria-label="Attendee name" autocomplete="off"><input class="a-phone" type="tel" inputmode="tel" placeholder="Mobile" aria-label="Attendee mobile"><select class="a-price" aria-label="Price feedback"><option value="">Price feedback…</option><option>Good value</option><option>About right</option><option>Too high</option></select><select class="a-int" aria-label="Interest"><option value="">Interest…</option><option>Hot</option><option>Warm</option><option>Not for them</option></select><input class="a-note full" placeholder="What they said (e.g. loved the kitchen, worried about the road)" aria-label="Comment"></div>';}
+function openInspection(sid){
+  var s=state.sellers.filter(function(x){return x.id===sid;})[0];if(!s)return;
+  insp={sid:sid,rows:4};draft=null;
+  showDrawer('<header><h2>Log an open home</h2><button class="btn small" data-act="close">Cancel</button></header><div class="body"><p class="why">'+esc(s.address||"")+'</p><div class="g2"><label class="f"><span>Date</span><input type="date" id="iDate" value="'+todayStr()+'"></label><label class="f"><span>Groups through</span><input id="iGroups" inputmode="numeric" placeholder="e.g. 9"></label></div><p class="why">Add each person you spoke to. New people are added to Buyers automatically; people already in the book get this visit in their history.</p><div id="attList" style="display:grid;gap:10px">'+[0,1,2,3].map(attRow).join("")+'</div><div><button class="btn small" data-act="add-att">+ Add person</button></div></div><footer><span class="why">Blank rows are skipped.</span><button class="btn primary" data-act="save-inspection">Save open home</button></footer>');
+}
+function addAttRow(){var l=document.getElementById("attList");if(!l)return;l.insertAdjacentHTML("beforeend",attRow(insp.rows++));}
+function saveInspection(){
+  var s=state.sellers.filter(function(x){return x.id===insp.sid;})[0];if(!s)return;
+  var date=val("iDate")||todayStr(),groups=parseInt(val("iGroups"),10);
+  var people=[].slice.call(document.querySelectorAll("#attList .att")).map(function(r){return {name:r.querySelector(".a-name").value.trim(),phone:r.querySelector(".a-phone").value.trim(),price:r.querySelector(".a-price").value,interest:r.querySelector(".a-int").value,note:r.querySelector(".a-note").value.trim()};}).filter(function(a){return a.name||a.phone;});
+  var btn=document.querySelector('[data-act="save-inspection"]');if(btn){btn.disabled=true;btn.textContent="Saving…";}
+  var added=0,updated=0,addr=s.address||"open home";
+  (function next(i){
+    if(i>=people.length){
+      var rec={date:date,groups:isFinite(groups)?groups:Math.max(people.length,0),people:people};
+      var ins=(s.inspections||[]).concat([rec]).slice(-60);
+      var log=(s.log||[]).concat([{date:date,kind:"Open home",by:state.me||"",note:(rec.groups||0)+" groups, "+people.length+" spoken to"}]).slice(-100);
+      patch("sellers",s.id,{inspections:ins,log:log}).then(function(){toast("Open home saved · "+added+" new buyer"+(added===1?"":"s")+", "+updated+" updated");closeDrawer();}).catch(writeErr);
+      return;
+    }
+    var a=people[i],d=a.phone?findDup(a.phone,null):null,note="Open home "+addr+(a.price?" · price: "+a.price.toLowerCase():"")+(a.note?" · "+a.note:"");
+    var pr;
+    if(d&&d.kind==="buyer"){var b=d.rec;var lg=(b.log||[]).concat([{date:date,kind:"Open home",by:state.me||"",note:note}]).slice(-100);pr=patch("buyers",b.id,{log:lg,lastContact:nowIso()});updated++;a.buyerId=b.id;}
+    else{added++;var nb={name:a.name||"Open home buyer",phone:a.phone,status:"Active",source:"Open home – "+addr,suburbs:s.suburb?[s.suburb]:[],types:s.type?[s.type]:[],beds:s.beds||null,timeframe:a.interest==="Hot"?"1–3 months":a.interest==="Not for them"?"Just looking":"3–6 months",finance:"",mustHaves:[],notes:a.note||"",createdAt:nowIso(),lastContact:nowIso(),log:[{date:date,kind:"Open home",by:state.me||"",note:note}]};if(s.example)nb.example=true;pr=save("buyers",null,nb).then(function(nid){a.buyerId=nid;});}
+    pr.then(function(){next(i+1);}).catch(function(e){if(btn){btn.disabled=false;btn.textContent="Save open home";}writeErr(e);});
+  })(0);
+}
+function openVendorReport(sid){
+  var s=state.sellers.filter(function(x){return x.id===sid;})[0];if(!s)return;
+  var since=shiftDays(todayStr(),-6),ins=(s.inspections||[]).filter(function(x){return x.date>=since;});
+  var all=s.inspections||[];
+  var groups=ins.reduce(function(a,x){return a+(x.groups||0);},0),ppl=[].concat.apply([],ins.map(function(x){return x.people||[];}));
+  var pc={"Good value":0,"About right":0,"Too high":0};ppl.forEach(function(p){if(pc[p.price]!=null)pc[p.price]++;});
+  var hot=ppl.filter(function(p){return p.interest==="Hot";}).length,warm=ppl.filter(function(p){return p.interest==="Warm";}).length;
+  var ms=matchesFor(s).filter(function(x){return x.m.score>=65;}),called=ms.filter(function(x){return (x.b.log||[]).some(function(e){return e.date>=since;});}).length;
+  var com=ppl.filter(function(p){return p.note;}).slice(0,5).map(function(p){return "• "+p.note;}).join("\n");
+  var first=(s.owner||"").split(/[ &]/)[0]||"there";
+  var txt="Hi "+first+", here's this week's update for "+(s.address||"your home")+":\n\n"+
+  "• Open homes this week: "+ins.length+(ins.length?" ("+ins.map(function(x){return niceDate(x.date);}).join(", ")+"), "+groups+" groups through":"")+"\n"+
+  "• Total groups since launch: "+all.reduce(function(a,x){return a+(x.groups||0);},0)+"\n"+
+  "• Price feedback: "+pc["Good value"]+" good value, "+pc["About right"]+" about right, "+pc["Too high"]+" too high\n"+
+  "• Strong interest: "+hot+" hot, "+warm+" warm\n"+
+  "• Buyers from our database who fit your home: "+ms.length+" ("+called+" contacted this week)\n"+
+  (com?"\nWhat buyers said:\n"+com+"\n":"")+
+  "\nOur plan for next week: [add plan]\n\nAny questions, call me anytime.\nJayden & James";
+  draft=null;
+  showDrawer('<header><h2>Vendor report</h2><button class="btn small" data-act="close">Close</button></header><div class="body"><p class="why">Last 7 days for '+esc(s.address||"")+'. Edit the plan line, then copy and send.</p><textarea class="smsbox" id="vrText" style="min-height:360px" aria-label="Vendor report">'+esc(txt)+'</textarea></div><footer><span class="why">Logged follow-ups and open homes feed this report.</span><button class="btn primary" data-act="copy" data-src="vrText">Copy report</button></footer>');
+}
+
+/* ---------- Excel / CSV import ---------- */
+var IMP_FIELDS={
+  buyers:[["name","Name",/^(full ?)?name$|^buyer|^client|contact name|^purchaser/i],["first","First name",/^first|given/i],["last","Last name",/^last ?name|surname|family name/i],["phone","Mobile",/mob|phone|cell|^ph$|number/i],["email","Email",/e-?mail/i],["budget","Budget (range or single)",/budget|price range|price|max|spend|range|up to/i],["budgetMin","Budget from",/min|from|lower/i],["beds","Bedrooms",/bed|br$|^rooms/i],["suburbs","Suburbs",/suburb|area|location|where/i],["types","Property type",/type|style|dwelling/i],["finance","Finance",/financ|pre.?app|loan|cash|broker/i],["timeframe","Timeframe",/tim(e|ing)|when|urgency|buying in/i],["mustHaves","Must haves",/must|need|wants|feature|require/i],["source","Where met",/source|met|open home|property|inspected|address|listing/i],["lastContact","Last contact",/last (contact|call|spoke|touch)|contact(ed)? date|date called|^date$/i],["notes","Notes",/note|comment|remark|detail/i]],
+  prospects:[["name","Name",/^(full ?)?name$|owner|vendor|client|contact name/i],["first","First name",/^first|given/i],["last","Last name",/^last ?name|surname|family name/i],["phone","Mobile",/mob|phone|cell|^ph$|number/i],["email","Email",/e-?mail/i],["address","Property address",/address|street|property/i],["suburb","Suburb",/suburb|area|location/i],["estValue","Estimated value",/value|price|estimate|apprais|worth/i],["beds","Bedrooms",/bed/i],["timeframe","When selling",/tim(e|ing)|when|sell|urgency/i],["motivation","Why selling",/why|reason|motiv/i],["source","Came from",/source|lead|how/i],["nextFollowUp","Next follow-up",/next|follow|call ?back|reminder|due/i],["personal","About them",/personal|about|family|kids|hobb/i],["notes","Notes",/note|comment|remark|detail/i]],
+  sellers:[["address","Property address",/address|street|property/i],["suburb","Suburb",/suburb|area|location/i],["price","Price",/price|value|list|asking|estimate/i],["owner","Owner",/owner|vendor|seller|client|name/i],["phone","Owner mobile",/mob|phone|cell|^ph$|number/i],["beds","Bedrooms",/bed/i],["baths","Bathrooms",/bath/i],["type","Property type",/type|style|dwelling/i],["stage","Stage",/stage|status/i],["notes","Notes",/note|comment|remark|detail/i]]
+};
+var imp=null;
+function loadXlsx(){
+  if(window.XLSX)return Promise.resolve(window.XLSX);
+  return new Promise(function(res,rej){var s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";s.onload=function(){window.XLSX?res(window.XLSX):rej();};s.onerror=rej;document.head.appendChild(s);});
+}
+function openImport(target){
+  draft=null;imp={target:target||"buyers",rows:null,head:null,map:{},skipDup:true,keepOther:true,sheets:null,wb:null};
+  showDrawer(importHtml());
+}
+function importHtml(){
+  var tg={buyers:"Buyers",prospects:"Potential sellers",sellers:"Sellers"};
+  var h='<header><h2>Import from Excel</h2><button class="btn small" data-act="close">Close</button></header><div class="body">';
+  h+='<div class="f"><span>Import into</span><div class="chips" role="group">'+Object.keys(tg).map(function(k){return '<button type="button" class="chip" data-act="imp-target" data-v="'+k+'" aria-pressed="'+(imp.target===k)+'">'+tg[k]+'</button>';}).join("")+'</div></div>';
+  if(!imp.rows){
+    h+='<label class="drop" id="dropZone"><b style="color:var(--ink)">Choose your spreadsheet</b><span>Excel (.xlsx, .xls) or CSV. One row per person, with a heading row.</span><input type="file" id="impFile" accept=".xlsx,.xls,.csv,text/csv"></label><p class="why">Nothing is saved until you check the preview and tap Import.</p>';
+    return h+'</div>';
+  }
+  if(imp.sheets&&imp.sheets.length>1)h+='<label class="f"><span>Sheet</span><select id="impSheet">'+imp.sheets.map(function(s){return '<option'+(s===imp.sheet?" selected":"")+'>'+esc(s)+'</option>';}).join("")+'</select></label>';
+  var fields=IMP_FIELDS[imp.target];
+  h+='<div class="f"><span>Match your columns</span><small>We guessed from the headings. Change any that are wrong, or pick "Skip".</small></div><div class="imp-map">';
+  imp.head.forEach(function(col,i){var ex=imp.rows.map(function(r){return r[i];}).filter(function(v){return v!==""&&v!=null;})[0]||"";h+='<div class="imp-row"><span title="'+esc(col)+'"><b>'+esc(col||"(no heading)")+'</b><span class="ex">'+esc(ex)+'</span></span><select data-imp-col="'+i+'"><option value="">Skip</option>'+fields.map(function(f){return '<option value="'+f[0]+'"'+(imp.map[i]===f[0]?" selected":"")+'>'+f[1]+'</option>';}).join("")+'</select></div>';});
+  h+='</div>';
+  var recs=imp.rows.map(function(r){return mapRow(r);}).filter(Boolean);
+  var dups=recs.filter(function(r){return r.__dup;}).length;
+  h+='<label class="check"><input type="checkbox" id="impSkipDup"'+(imp.skipDup?" checked":"")+'><span>Skip people already in the book (same mobile) — <b class="num">'+dups+'</b> found</span></label>';
+  h+='<label class="check"><input type="checkbox" id="impKeep"'+(imp.keepOther?" checked":"")+'><span>Copy skipped columns into notes, so nothing is lost</span></label>';
+  var cols=imp.target==="buyers"?[["name","Name"],["phone","Mobile"],["_budget","Budget"],["beds","Beds"],["suburbs","Suburbs"],["finance","Finance"],["timeframe","Timing"]]:imp.target==="prospects"?[["name","Name"],["phone","Mobile"],["address","Address"],["suburb","Suburb"],["_val","Value"],["timeframe","When"]]:[["address","Address"],["suburb","Suburb"],["_price","Price"],["owner","Owner"],["stage","Stage"]];
+  var show=recs.slice(0,6);
+  h+='<div class="f"><span>Preview</span><small>'+recs.length+' rows ready'+(imp.skipDup&&dups?', '+dups+' will be skipped':'')+'. First '+show.length+' shown, as they\'ll be saved.</small></div><div class="prev"><table><thead><tr>'+cols.map(function(c){return '<th>'+c[1]+'</th>';}).join("")+'</tr></thead><tbody>'+show.map(function(r){return '<tr>'+cols.map(function(c){var v=c[0]==="_budget"?range(r):c[0]==="_val"?(r.estValue?money(r.estValue):""):c[0]==="_price"?(r.price?money(r.price):""):r[c[0]];if(Array.isArray(v))v=v.join(", ");return '<td>'+esc(v==null?"":v)+'</td>';}).join("")+'</tr>';}).join("")+'</tbody></table></div><p class="err" id="impErr" hidden></p>';
+  h+='</div><footer><button class="btn" data-act="imp-reset">Choose another file</button><button class="btn primary" data-act="imp-go" id="impGo">Import '+(recs.length-(imp.skipDup?dups:0))+' '+(imp.target==="buyers"?"buyers":imp.target==="prospects"?"potential sellers":"sellers")+'</button></footer>';
+  return h;
+}
+function guessMap(){
+  var fields=IMP_FIELDS[imp.target],used={};imp.map={};
+  var pri=["email","phone","lastContact","nextFollowUp","budgetMin","estValue","price","baths","beds","first","last"];
+  var order=fields.slice().sort(function(a,b){var x=pri.indexOf(a[0]),y=pri.indexOf(b[0]);return (x<0?99:x)-(y<0?99:y);});
+  imp.head.forEach(function(col,i){var c=String(col||"").trim();if(!c)return;
+    for(var k=0;k<order.length;k++){var f=order[k];if(used[f[0]])continue;
+      if(f[0]==="budget"&&/min|from/i.test(c))continue;
+      if(f[0]==="price"&&/range/i.test(c)&&imp.target!=="sellers")continue;
+      if(f[2].test(c)){imp.map[i]=f[0];used[f[0]]=1;break;}}
+  });
+}
+function readFile(file){
+  var errBox=function(m){toast(m);};
+  if(!file)return;
+  if(file.size>15*1024*1024){errBox("That file is over 15MB. Save just the list as a smaller file.");return;}
+  var isCsv=/\.csv$/i.test(file.name);
+  var fr=new FileReader();
+  fr.onload=function(){
+    (isCsv?Promise.resolve(null):loadXlsx()).then(function(X){
+      var grid;
+      if(isCsv&&!X){grid=parseCsv(String(fr.result));imp.sheets=null;}
+      else{var wb=X.read(new Uint8Array(fr.result),{type:"array",cellDates:true});imp.wb=wb;imp.sheets=wb.SheetNames;imp.sheet=imp.sheet&&wb.SheetNames.indexOf(imp.sheet)>-1?imp.sheet:wb.SheetNames[0];grid=sheetGrid(X,wb,imp.sheet);}
+      setGrid(grid);
+    }).catch(function(){toast("Couldn't open Excel files here. Save it as CSV in Excel (File → Save As → CSV) and try again.");});
+  };
+  if(isCsv)fr.readAsText(file);else fr.readAsArrayBuffer(file);
+}
+function sheetGrid(X,wb,name){return X.utils.sheet_to_json(wb.Sheets[name],{header:1,raw:false,defval:"",dateNF:"yyyy-mm-dd"});}
+function setGrid(grid){
+  grid=(grid||[]).map(function(r){return r.map(function(v){return v==null?"":String(v).trim();});});
+  var hi=grid.findIndex(function(r){return r.filter(Boolean).length>=2;});
+  if(hi<0){toast("That sheet looks empty.");return;}
+  imp.head=grid[hi];var w=imp.head.length;
+  imp.rows=grid.slice(hi+1).filter(function(r){return r.filter(Boolean).length>0;}).map(function(r){while(r.length<w)r.push("");return r.slice(0,Math.max(w,1));}).slice(0,3000);
+  guessMap();showDrawer(importHtml());
+}
+function parseCsv(t){var rows=[],row=[],f="",q=false;for(var i=0;i<t.length;i++){var c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=c;}else if(c==='"')q=true;else if(c===","){row.push(f);f="";}else if(c==="\n"||c==="\r"){if(c==="\r"&&t[i+1]==="\n")i++;row.push(f);rows.push(row);row=[];f="";}else f+=c;}if(f||row.length){row.push(f);rows.push(row);}return rows;}
+function parseRange(s){
+  s=String(s||"").toLowerCase().replace(/,/g,"").replace(/\$/g,"");
+  var m=s.match(/(\d+(?:\.\d+)?)\s*(k|m|mil|million)?/g);if(!m)return {};
+  var nums=m.map(function(x){var mm=x.match(/(\d+(?:\.\d+)?)\s*(k|m|mil|million)?/);var n=parseFloat(mm[1]),u=mm[2];if(u==="k")n*=1e3;else if(u)n*=1e6;return n;});
+  var lastU=(s.match(/(k|m|mil|million)\b/)||[])[1];
+  nums=nums.map(function(n){if(n<10000){if(lastU==="m"||lastU==="mil"||lastU==="million"){return n<20?n*1e6:n*1e3;}return n<10?n*1e6:n*1e3;}return n;}).filter(function(n){return n>=50000&&n<=50000000;});
+  if(!nums.length)return {};
+  if(nums.length>=2)return {min:Math.round(Math.min(nums[0],nums[1])),max:Math.round(Math.max(nums[0],nums[1]))};
+  if(/from|\+|over|above|min/.test(s))return {min:Math.round(nums[0])};
+  return {max:Math.round(nums[0])};
+}
+function firstInt(s){var m=String(s||"").match(/\d+/);return m?parseInt(m[0],10):null;}
+function normList(s,opts){var parts=String(s||"").split(/[,;\/|&]+|\band\b/i).map(function(x){return x.trim();}).filter(Boolean);return parts.map(function(x){var hit=opts.filter(function(o){return o.toLowerCase()===x.toLowerCase();})[0];return hit||x.replace(/\b\w/g,function(c){return c.toUpperCase();});});}
+function normType(s){s=String(s||"").toLowerCase();var out=[];if(/house|home|residen|family/.test(s))out.push("House");if(/unit|apart|flat/.test(s))out.push("Unit");if(/town|villa|duplex|strata/.test(s))out.push("Townhouse/villa");if(/land|block|lot/.test(s))out.push("Land");if(/acre|rural|lifestyle/.test(s))out.push("Acreage");return out;}
+function normFinance(s){s=String(s||"").toLowerCase();if(!s)return "";if(/pre.?ap|approved|pre-?approval/.test(s))return "Pre-approved";if(/cash/.test(s))return "Cash";if(/sell|subject to/.test(s))return "Must sell first";if(/need|broker|no|not yet|getting|loan|finance/.test(s))return "Needs finance";return "";}
+function normBuyTime(s){s=String(s||"").toLowerCase();if(!s)return "";if(/now|asap|immediate|urgent|ready|hot/.test(s))return "Ready now";if(/brows|look|curious|cold|unsure|just/.test(s))return "Just looking";var n=firstInt(s);if(/week/.test(s))return "Ready now";if(n!=null){if(/year|yr|12/.test(s))return "Just looking";if(n<=3)return "1–3 months";if(n<=6)return "3–6 months";return "Just looking";}return "";}
+function normSellTime(s){s=String(s||"").toLowerCase();if(!s)return "";if(/now|asap|this month|immediate|urgent|hot/.test(s))return "This month";var n=firstInt(s);if(/year|yr/.test(s))return n&&n>1?"12+ months / unsure":"6–12 months";if(/unsure|maybe|don.?t know|curious|cold/.test(s))return "12+ months / unsure";if(n!=null){if(n<=1)return "This month";if(n<=3)return "1–3 months";if(n<=6)return "3–6 months";if(n<=12)return "6–12 months";return "12+ months / unsure";}return "";}
+function normMotive(s){s=String(s||"").toLowerCase();if(/down/.test(s))return "Downsizing";if(/up|bigger|grow/.test(s))return "Upsizing";if(/move|reloc|interstate|transfer/.test(s))return "Relocating";if(/invest|rental|tenant/.test(s))return "Selling an investment";if(/estate|divorce|separat|deceased|probate/.test(s))return "Estate or separation";if(/curious|value|worth/.test(s))return "Curious about value";return "";}
+function normStage(s){s=String(s||"").toLowerCase();if(/sold|settled/.test(s))return "Sold";if(/offer|contract/.test(s))return "Under offer";if(/list|live|market|advert/.test(s))return /pre|off/.test(s)?"Pre-market":"Listed";if(/pre|off/.test(s))return "Pre-market";return "Appraisal";}
+function normDate(s){s=String(s||"").trim();if(!s)return "";var m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(m)return m[1]+"-"+m[2].padStart(2,"0")+"-"+m[3].padStart(2,"0");m=s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/);if(m){var y=m[3].length===2?"20"+m[3]:m[3];return y+"-"+m[2].padStart(2,"0")+"-"+m[1].padStart(2,"0");}var t=Date.parse(s);return isFinite(t)?ymd(new Date(t)):"";}
+function mapRow(r){
+  var o={},extra=[],t=imp.target;
+  imp.head.forEach(function(col,i){var f=imp.map[i],v=r[i];if(v===""||v==null)return;if(!f){if(col)extra.push(col+": "+v);return;}o[f]=o[f]?o[f]+", "+v:v;});
+  if(!o.name&&(o.first||o.last))o.name=[o.first,o.last].filter(Boolean).join(" ");
+  delete o.first;delete o.last;
+  var rec={};
+  if(t==="buyers"){
+    if(!o.name&&!o.phone)return null;
+    var b=parseRange(o.budget),bm=o.budgetMin?parseRange(o.budgetMin):{};
+    rec={name:o.name||"",phone:o.phone||"",email:o.email||"",budgetMin:(bm.max||bm.min||b.min)||null,budgetMax:b.max||null,beds:firstInt(o.beds),suburbs:o.suburbs?normList(o.suburbs,SUBURBS):[],types:o.types?normType(o.types):[],finance:normFinance(o.finance),timeframe:normBuyTime(o.timeframe),mustHaves:o.mustHaves?normList(o.mustHaves,FEATURES).filter(function(x){return FEATURES.indexOf(x)>-1;}):[],source:o.source||"Excel import",status:"Active",notes:[o.notes,o.mustHaves&&normList(o.mustHaves,FEATURES).filter(function(x){return FEATURES.indexOf(x)<0;}).length?"Wants: "+o.mustHaves:""].filter(Boolean).join("\n")};
+    var lc=normDate(o.lastContact);if(lc)rec.lastContact=lc+"T09:00:00.000Z";
+    if(!rec.types.length)rec.types=[];
+  } else if(t==="prospects"){
+    if(!o.name&&!o.address&&!o.phone)return null;
+    var ev=parseRange(o.estValue);
+    rec={name:o.name||"",phone:o.phone||"",email:o.email||"",address:o.address||"",suburb:o.suburb?normList(o.suburb,SUBURBS)[0]:"",estValue:ev.max||ev.min||null,beds:firstInt(o.beds),type:"House",timeframe:normSellTime(o.timeframe),motivation:normMotive(o.motivation),source:o.source||"Excel import",personal:o.personal||"",notes:[o.notes,o.timeframe&&!normSellTime(o.timeframe)?"Timing: "+o.timeframe:"",o.motivation&&!normMotive(o.motivation)?"Reason: "+o.motivation:""].filter(Boolean).join("\n"),status:"Nurturing",traits:[],log:[]};
+    rec.nextFollowUp=normDate(o.nextFollowUp)||addDays(1);
+  } else {
+    if(!o.address&&!o.owner)return null;
+    var pr=parseRange(o.price),st=normStage(o.stage);
+    rec={address:o.address||o.owner||"",suburb:o.suburb?normList(o.suburb,SUBURBS)[0]:"",price:pr.max||pr.min||null,owner:o.owner||"",phone:o.phone||"",beds:firstInt(o.beds),baths:firstInt(o.baths),type:(normType(o.type)[0])||"House",stage:st,stageDates:{},features:[],traits:[],notes:o.notes||"",log:[],nextFollowUp:addDays(2)};
+    rec.stageDates[st]=todayStr();
+  }
+  if(imp.keepOther&&extra.length)rec.notes=[rec.notes,extra.join("\n")].filter(Boolean).join("\n");
+  var ph=rec.phone;rec.__dup=!!(ph&&findDup(ph,null));
+  return rec;
+}
+function runImport(){
+  var recs=imp.rows.map(mapRow).filter(Boolean),seen={};
+  recs=recs.filter(function(r){if(imp.skipDup&&r.__dup)return false;var k=last4(r.phone);if(k){if(seen[k])return false;seen[k]=1;}return true;});
+  if(!recs.length){toast("Nothing new to import.");return;}
+  var btn=document.getElementById("impGo");if(btn)btn.disabled=true;
+  var stamp=todayStr(),done=0,coll=imp.target;
+  (function next(i){
+    if(i>=recs.length){toast("Imported "+done+" "+(coll==="buyers"?"buyers":coll==="prospects"?"potential sellers":"sellers"));closeDrawer();imp=null;setTab(coll==="buyers"?"buyers":coll);return;}
+    var r=recs[i];delete r.__dup;r.imported=stamp;r.createdAt=nowIso();
+    if(btn)btn.textContent="Importing "+(i+1)+" of "+recs.length+"…";
+    save(coll,null,r).then(function(){done++;next(i+1);}).catch(function(e){if(btn){btn.disabled=false;btn.textContent="Try again";}writeErr(e);toast("Stopped after "+done+" rows. Run the import again with 'Skip people already in the book' ticked.");});
+  })(0);
+}
+
+/* ---------- agent field ---------- */
+function agentField(d){var cur=d.agent!=null&&d.agent!==""?d.agent:(draft&&!draft.id?state.me:"");return '<div class="f"><span>Whose is this?</span>'+chipGroup("agent",agents(),cur,true)+'<small>Leave both off if you share it.</small></div>';}
+
+/* ---------- search everything ---------- */
+function searchResults(q){
+  var ql=q.toLowerCase(),dq=digits(q);
+  function hit(fields,phone){if(dq.length>=3&&digits(phone).indexOf(dq)>-1)return true;return fields.join(" ").toLowerCase().indexOf(ql)>-1;}
+  var b=state.buyers.filter(function(x){return hit([x.name,x.email,x.notes,x.personal,x.source,(x.suburbs||[]).join(" ")],x.phone);});
+  var p=state.prospects.filter(function(x){return hit([x.name,x.email,x.address,x.suburb,x.notes,x.personal],x.phone);});
+  var s=state.sellers.filter(function(x){return hit([x.address,x.owner,x.suburb,x.notes,x.personal],x.phone);});
+  if(!b.length&&!p.length&&!s.length)return '<div class="card pad empty">Nobody matches "'+esc(q)+'". Check the spelling, or search by mobile number.</div>';
+  var h="";
+  if(b.length)h+='<section class="card"><div class="sec-title"><h3>Buyers</h3><span class="num">'+b.length+'</span></div><div class="list">'+b.slice(0,15).map(function(x){return buyerRow(x);}).join("")+'</div></section>';
+  if(p.length)h+='<section class="card"><div class="sec-title"><h3>Potential sellers</h3><span class="num">'+p.length+'</span></div><div class="list">'+p.slice(0,15).map(prospectRow).join("")+'</div></section>';
+  if(s.length)h+='<section class="card"><div class="sec-title"><h3>Sellers</h3><span class="num">'+s.length+'</span></div><div class="list">'+s.slice(0,15).map(sellerRow).join("")+'</div></section>';
+  return h;
+}
+
+/* ---------- message templates ---------- */
+function first(n){n=String(n||"").trim().replace(/^example\s*[–-]\s*/i,"");if(!n)return "there";var f=n.split(/[\s&,]+/)[0];return f.replace(/^example$/i,"there")||"there";}
+function signOff(){return state.me?state.me:agents().join(" & ");}
+function templatesFor(kind,r){
+  var me=signOff(),T=[];
+  if(kind==="buyer"){
+    var f=first(r.name),subs=(r.suburbs||[]).slice(0,2).join(" or ")||"the area",beds=r.beds?r.beds+" bed":"home";
+    var best=state.sellers.filter(function(s){return s.stage==="Listed"||s.stage==="Pre-market";}).map(function(s){return {s:s,m:scoreMatch(r,s)};}).filter(function(x){return x.m.score>=65;}).sort(function(a,c){return c.m.score-a.m.score;})[0];
+    if(best){var s=best.s;T.push(["Home that fits them","Hi "+f+", it's "+me+" from Rodway. "+(s.stage==="Pre-market"?"Before it hits the internet: ":"Just listed: ")+(s.address||"a home")+", "+[s.beds?s.beds+" bed":"",(s.type||"home").toLowerCase()].filter(Boolean).join(" ")+" in "+(s.suburb||"the area")+(s.price?", around "+money(s.price):"")+". It ticks a lot of your boxes. Want a private look?"]);}
+    T.push(["Check-in","Hi "+f+", "+me+" from Rodway here. Still after a "+beds+" in "+subs+(r.budgetMax?" up to "+money(r.budgetMax):"")+"? We've got a few coming up. Has anything changed on your side?"]);
+    T.push(["After an open home","Hi "+f+", thanks for coming through today. What did you think? Happy to send the price guide or answer anything."]);
+    if(r.finance==="Needs finance"||!r.finance)T.push(["Finance nudge","Hi "+f+", quick one: have you had a chance to get pre-approval yet? Buyers with it are winning in "+subs+" at the moment. Happy to put you in touch with a good broker."]);
+    if(r.status==="Bought")T.push(["Settled, ask for a review","Hi "+f+", congrats again on the new place! If you were happy with how we looked after you, a quick Google review would mean a lot. And if friends are looking, send them our way."]);
+  } else if(kind==="prospect"){
+    var pf=first(r.name),addr=r.address||"your place",sb=r.suburb||"your area",n=buyersForHome(r).length;
+    T.push(["Thanks for the chat","Hi "+pf+", it's "+me+" from Rodway Group. Thanks for your time. I'll put together a price range for "+addr+" using the latest sales nearby and send it through."]);
+    T.push(["Nearby sale","Hi "+pf+", a home on [street] in "+sb+" just sold for [price] in [x] days. It's a useful benchmark for "+addr+". Want me to walk you through what it means for yours?"]);
+    if(n)T.push(["Buyers waiting","Hi "+pf+", we've got "+n+" buyer"+(n===1?"":"s")+" in our book right now looking for a home like "+addr+" in "+sb+(r.estValue?", around "+money(r.estValue):"")+". If you've had any more thoughts on timing, it's a good moment for a chat."]);
+    T.push(["Timing check","Hi "+pf+", hope all's well. Last time we spoke you were thinking "+(r.timeframe?r.timeframe.toLowerCase():"of selling down the track")+". Is that still the plan? No pressure, just keeping you in the loop on the market."]);
+    T.push(["Market update","Hi "+pf+", quick "+sb+" update: [x] homes sold this month, most in under [x] days. Happy to send a fresh estimate for "+addr+" any time."]);
+  } else {
+    var sf=first(r.owner),sa=r.address||"your home",sn=matchesFor(r).filter(function(x){return x.m.score>=65;}).length,st=r.stage||"Appraisal";
+    if(st==="Appraisal")T.push(["After the appraisal","Hi "+sf+", thanks for having us at "+sa+". Here's the price range and the sales we based it on: [attach]. We already have "+sn+" buyer"+(sn===1?"":"s")+" who fit your home. Happy to go through it whenever suits."]);
+    if(st==="Pre-market"||st==="Appraisal")T.push(["Off-market interest","Hi "+sf+", quick update: we've matched "+sa+" against our buyer list and "+sn+" buyer"+(sn===1?"":"s")+" fit it. A few want a private look before it goes online. Can I call you this afternoon?"]);
+    if(st==="Listed")T.push(["Weekly update","Hi "+sf+", this week at "+sa+": [x] enquiries and [x] groups through the open home. Full report coming shortly, and I'll call to talk through next steps."]);
+    if(st==="Under offer")T.push(["Under offer","Hi "+sf+", great news on "+sa+". Key dates: finance due [date], settlement [date]. I'll keep you posted at every step."]);
+    if(st==="Sold")T.push(["Thank you + review","Hi "+sf+", congratulations again on selling "+sa+". If you were happy with how we looked after you, a quick Google review would mean a lot: [review link]. And if anyone you know is thinking of selling, we'd love to help."]);
+    T.push(["Quick check-in","Hi "+sf+", "+me+" here. Just checking in on "+sa+". Anything you need from us this week?"]);
+  }
+  return T;
+}
+function openTemplates(kind,id){
+  var coll={buyer:"buyers",prospect:"prospects",seller:"sellers"}[kind];var r=state[coll].filter(function(x){return x.id===id;})[0];if(!r)return;
+  var T=templatesFor(kind,r),tr=r.traits||[],hints=[];
+  if(tr.indexOf("Prefers calls")>-1)hints.push("Prefers calls. Ring first and use these as notes.");
+  if(tr.indexOf("Busy mornings")>-1)hints.push("Busy mornings. Send after lunch.");
+  if(tr.indexOf("Talking to other agents")>-1)hints.push("Talking to other agents. Lead with the buyers you already have.");
+  if(!r.phone)hints.push("No mobile saved yet.");
+  var name=kind==="seller"?(r.owner||r.address):r.name;
+  draft=null;
+  showDrawer('<header><h2>Messages for '+esc(name||"")+'</h2><button class="btn small" data-act="close">Close</button></header><div class="body">'+(hints.length?'<div class="hint">'+hints.map(esc).join("<br>")+'</div>':'')+(r.phone?'<p class="why num">Mobile: '+esc(r.phone)+'</p>':'')+(r.personal?'<div class="remember"><h3>Remember</h3><p>'+esc(r.personal)+'</p></div>':'')+T.map(function(t,i){return '<div class="tpl"><b>'+esc(t[0])+'</b><textarea id="tpl'+i+'" aria-label="'+esc(t[0])+'">'+esc(t[1])+'</textarea><div class="tools"><button class="btn small" data-act="copy" data-src="tpl'+i+'">Copy</button>'+(state.canWrite?'<button class="btn small primary" data-act="tpl-log" data-src="tpl'+i+'" data-label="'+esc(t[0])+'" data-kind="'+kind+'" data-id="'+esc(id)+'">Copy + log as sent</button>':'')+'</div></div>';}).join("")+'<p class="why">Fill anything in [brackets] before sending. Edit freely: the box is yours.</p></div>');
+}
+function logRecord(kind,id,ek,note){
+  if(kind==="buyer")return logBuyer(id,ek,note);
+  var coll=kind==="prospect"?"prospects":"sellers";var r=state[coll].filter(function(x){return x.id===id;})[0];if(!r)return Promise.resolve();
+  var log=(r.log||[]).concat([{date:todayStr(),kind:ek,by:state.me||"",note:note||""}]).slice(-100);
+  var upd={log:log,lastContact:nowIso()};var n=dueIn(r.nextFollowUp);if(n==null||n<=0)upd.nextFollowUp=addDays(cadence(r));
+  return patch(coll,id,upd);
+}
+
+/* ---------- buyer demand report ---------- */
+function anonBuyer(b){
+  var who=/&| and /i.test(b.name||"")?"Couple":"Buyer";
+  var fin=b.finance==="Pre-approved"?"pre-approved":b.finance==="Cash"?"cash buyer":b.finance==="Must sell first"?"selling first":b.finance==="Needs finance"?"arranging finance":"";
+  var want=[b.beds?b.beds+"+ bed":"",(b.suburbs||[]).slice(0,2).join("/")].filter(Boolean).join(" in ");
+  var when=b.timeframe==="Ready now"?"ready now":b.timeframe?b.timeframe.toLowerCase():"";
+  return [who,fin,range(b),want?"wants "+want:"",when].filter(Boolean).join(", ");
+}
+function demandText(p){
+  var act=state.buyers.filter(function(b){return (b.status||"Active")==="Active";});
+  var ms=matchesFor(p),fit=ms.filter(function(x){return x.m.score>=65;});
+  var hot=fit.filter(function(x){return heat(x.b)==="hot";}).length;
+  var ready=fit.filter(function(x){return x.b.finance==="Pre-approved"||x.b.finance==="Cash";}).length;
+  var sub=p.suburb?act.filter(function(b){return (b.suburbs||[]).indexOf(p.suburb)>-1;}).length:0;
+  var tops=fit.map(function(x){return x.b.budgetMax;}).filter(Boolean);
+  var desc=[p.beds?p.beds+" bed":"",(p.type||"home").toLowerCase(),p.suburb?"in "+p.suburb:""].filter(Boolean).join(" ");
+  var t="Buyer demand for "+(p.address||"your home")+"\n\n";
+  t+="We matched your "+desc+(p.price?" at around "+money(p.price):"")+" against the "+act.length+" active buyers in our database.\n\n";
+  t+="• "+fit.length+" buyer"+(fit.length===1?"":"s")+" fit your home on price, location and size\n";
+  t+="• "+hot+" of them "+(hot===1?"is":"are")+" ready to buy now (finance approved or cash, buying within 3 months)\n";
+  t+="• "+ready+" "+(ready===1?"has":"have")+" finance approved or "+(ready===1?"is":"are")+" paying cash\n";
+  if(p.suburb)t+="• "+sub+" buyer"+(sub===1?" is":"s are")+" specifically looking in "+p.suburb+"\n";
+  if(tops.length>1)t+="• Their top budgets range from "+money(Math.min.apply(null,tops))+" to "+money(Math.max.apply(null,tops))+"\n";
+  if(fit.length){t+="\nSome of the buyers waiting:\n"+fit.slice(0,5).map(function(x){return "• "+anonBuyer(x.b);}).join("\n")+"\n";}
+  t+="\n"+(fit.length?"That means we can introduce your home to qualified buyers before it goes online, and start the campaign with competition.":"We'll build demand with a targeted campaign and our database grows every week.")+"\n\n"+agents().join(" & ")+" · Rodway Group";
+  return {text:t,fit:fit.length};
+}
+function openDemand(p){
+  if(!p)return;
+  var d=demandText(p);draft=null;
+  showDrawer('<header><h2>Buyer demand report</h2><button class="btn small" data-act="close">Close</button></header><div class="body"><p class="why">For the owner. Buyer names are left out on purpose. Read it out at the appraisal, or copy and send.</p><textarea class="smsbox" id="demText" style="min-height:380px" aria-label="Demand report">'+esc(d.text)+'</textarea></div><footer><span class="why num">'+d.fit+' matching buyers</span><button class="btn primary" data-act="copy" data-src="demText">Copy report</button></footer>');
+}
+function homeFrom(kind,r){if(kind==="seller")return r;return {address:r.address,suburb:r.suburb,price:r.estValue,beds:r.beds,type:r.type||"House",features:r.features||[]};}
+
+/* ---------- suburb demand ---------- */
+function vDemand(){
+  var act=state.buyers.filter(function(b){return (b.status||"Active")==="Active";});
+  var h='<div class="head"><div><h2>Suburbs</h2><p>Where your buyers want to live, against the homes you have there. Door-knock where buyers are waiting and you have nothing to show them.</p></div></div>';
+  if(!act.length)return h+'<div class="card pad empty">Add buyers with suburbs to see where the demand is.</div>';
+  var set={};SUBURBS.forEach(function(s){set[s]=1;});act.forEach(function(b){(b.suburbs||[]).forEach(function(s){set[s]=1;});});
+  var openP=state.prospects.filter(function(r){var s=r.status||"Nurturing";return s==="Nurturing"||s==="Appraisal booked";}),openS=state.sellers.filter(function(s){return s.stage!=="Sold";});
+  var rows=Object.keys(set).map(function(s){
+    var w=act.filter(function(b){return (b.suburbs||[]).indexOf(s)>-1;});
+    var hot=w.filter(function(b){return heat(b)==="hot";}).length;
+    var bud=median(w.map(function(b){return b.budgetMax||b.budgetMin;}).filter(Boolean));
+    var bd=mode(w.map(function(b){return b.beds;}).filter(Boolean));
+    var sup=openP.filter(function(r){return r.suburb===s;}).length+openS.filter(function(r){return r.suburb===s;}).length;
+    var sig=!w.length?["need","Need buyers"]:sup===0?["pro","Prospect here"]:w.length>=sup*2?["under","Under-supplied"]:sup>w.length?["need","Need buyers"]:["ok","Balanced"];
+    return {s:s,w:w.length,hot:hot,bud:bud,bd:bd,sup:sup,sig:sig};
+  }).filter(function(r){return r.w||r.sup;}).sort(function(a,c){return c.w-a.w||c.hot-a.hot||c.sup-a.sup;});
+  var max=Math.max.apply(null,rows.map(function(r){return r.w;}).concat([1]));
+  var any=act.filter(function(b){return !(b.suburbs||[]).length;}).length;
+  var pro=rows.filter(function(r){return r.sig[0]==="pro"&&r.w>0;}).slice(0,3).map(function(r){return r.s;});
+  if(pro.length)h+='<section class="card pad gsec"><h3>Door-knock next</h3><p>'+esc(pro.join(", "))+': buyers are waiting and you have no homes there to show them. Every owner you meet there is a potential listing with a buyer ready.</p></section>';
+  h+='<section class="card"><div class="prev" style="border:0"><table class="dtab"><thead><tr><th>Suburb</th><th>Buyers wanting it</th><th>Hot</th><th>Typical top budget</th><th>Beds</th><th>Your homes there</th><th>Signal</th></tr></thead><tbody>'+rows.map(function(r){return '<tr><td><b>'+esc(r.s)+'</b></td><td><div class="dbar"><i style="width:'+Math.round(r.w/max*110)+'px"></i><span class="num">'+r.w+'</span></div></td><td class="n">'+r.hot+'</td><td class="n">'+(r.bud?money(r.bud):"–")+'</td><td class="n">'+(r.bd?r.bd+"+":"–")+'</td><td class="n">'+r.sup+'</td><td><span class="sig sig-'+r.sig[0]+'">'+r.sig[1]+'</span></td></tr>';}).join("")+'</tbody></table></div></section>';
+  h+='<p class="why">'+any+' more active buyer'+(any===1?" is":"s are")+' open to any suburb. "Your homes there" counts potential sellers and sellers not yet sold.</p>';
+  return h;
+}
+
+/* ---------- backup + settings ---------- */
+function flat(r){var o={};Object.keys(r).forEach(function(k){var v=r[k];if(k==="log"){o.contacts_logged=(v||[]).length;o.last_contacts=(v||[]).slice(-3).map(function(e){return e.date+" "+e.kind+(e.note?": "+e.note:"");}).join(" | ");return;}if(k==="inspections"){o.open_homes=(v||[]).length;return;}if(Array.isArray(v))o[k]=v.join("; ");else if(v&&typeof v==="object")o[k]=JSON.stringify(v);else o[k]=v;});return o;}
+function backupAll(){
+  var name="cooke-harper-book-"+todayStr();
+  claude.use("downloads").then(function(dl){
+    if(!dl){toast("Downloads aren't available in this view.");return;}
+    return loadXlsx().then(function(X){
+      var wb=X.utils.book_new();
+      [["Buyers",state.buyers],["Potential sellers",state.prospects],["Sellers",state.sellers]].forEach(function(s){X.utils.book_append_sheet(wb,X.utils.json_to_sheet(s[1].map(flat)),s[0]);});
+      var out=X.write(wb,{bookType:"xlsx",type:"array"});
+      return dl.save({filename:name+".xlsx",data:new Uint8Array(out)});
+    },function(){return dl.save({filename:name+".json",data:JSON.stringify({buyers:state.buyers,prospects:state.prospects,sellers:state.sellers,settings:state.settings},null,1)});}).then(function(r){if(r)toast("Backup saved");});
+  }).catch(function(e){if(e&&e.code!=="declined")toast("The backup didn't save. Try again.");});
+}
+
+/* ---------- website inbox ---------- */
+var APPR_TIME={"Within 3 months":"1–3 months","3–6 months":"3–6 months","6–12 months":"6–12 months","Just curious":"12+ months / unsure"};
+var FIN_MAP={"Pre-approved":"Pre-approved","Cash":"Cash","Need to sell first":"Must sell first","Still arranging":"Needs finance"};
+function inboxSection(){
+  var L=state.inbox.slice().sort(function(a,b){return String(b.createdAt||"").localeCompare(String(a.createdAt||""));});
+  if(!L.length)return "";
+  return '<section class="card inbox"><div class="sec-title"><h3>New from your website</h3><span class="num">'+L.length+' waiting</span></div><div class="list">'+L.map(function(r){
+    var isA=r.kind==="appraisal";
+    var sub=isA?[r.address,r.suburb,r.bedrooms?r.bedrooms+" bed":"",r.timeframe].filter(Boolean).join(" · "):[r.budget,r.bedrooms?r.bedrooms+" bed":"",r.suburbs,r.finance,r.timeframe].filter(Boolean).join(" · ");
+    return '<div class="row"><span class="nm">'+esc(r.name||"No name")+' <span class="pill '+(isA?"p-hot":"p-warm")+'">'+(isA?"wants a price estimate":"buyer sign-up")+'</span></span><span class="right num">'+esc(r.phone||"")+'</span><span class="sub">'+esc(sub)+(r.wants?' · wants: '+esc(r.wants):'')+(r.source&&r.source!=="website"?' · from '+esc(r.source):'')+' · '+esc(ago(r.createdAt))+'</span>'+(state.canWrite?'<span class="acts"><button class="btn small primary" data-act="inbox-accept" data-id="'+esc(r.id)+'">'+(isA?"Add to potential sellers":"Add to buyers")+'</button><button class="btn small" data-act="inbox-dismiss" data-id="'+esc(r.id)+'">Dismiss</button></span>':'')+'</div>';
+  }).join("")+'</div></section>';
+}
+function acceptInbox(id){
+  var r=state.inbox.filter(function(x){return x.id===id;})[0];if(!r)return;
+  var note="Website "+(r.kind==="appraisal"?"price estimate request":"buyer sign-up")+(r.source&&r.source!=="website"?" (from "+r.source+")":"");
+  var rec,coll;
+  if(r.kind==="appraisal"){
+    coll="prospects";
+    var dup=r.phone?findDup(r.phone,null):null;
+    rec={name:r.name||"",phone:r.phone||"",email:r.email||"",address:r.address||"",suburb:r.suburb?(normList(r.suburb,SUBURBS)[0]||r.suburb):"",estValue:null,beds:firstInt(r.bedrooms),type:/land/i.test(r.bedrooms||"")?"Land":"House",timeframe:APPR_TIME[r.timeframe]||"",motivation:r.timeframe==="Just curious"?"Curious about value":"",source:"Appraisal page",traits:[],personal:"",notes:dup?"Also in the book as "+dup.kind+": "+dup.name:"",status:"Nurturing",nextFollowUp:todayStr(),log:[{date:todayStr(),kind:"Website lead",by:"",note:note}],createdAt:nowIso()};
+  } else {
+    coll="buyers";
+    var b=parseRange(r.budget||"");
+    rec={name:r.name||"",phone:r.phone||"",email:r.email||"",budgetMin:b.min||null,budgetMax:b.max||null,beds:firstInt(r.bedrooms),suburbs:r.suburbs?normList(r.suburbs,SUBURBS):[],types:/land/i.test(r.bedrooms||"")?["Land"]:[],finance:FIN_MAP[r.finance]||"",timeframe:TIMEFRAME.indexOf(r.timeframe)>-1?r.timeframe:"",mustHaves:[],source:"Website buyer list",status:"Active",notes:r.wants?"Wants: "+r.wants:"",log:[{date:todayStr(),kind:"Website lead",by:"",note:note}],createdAt:nowIso()};
+  }
+  save(coll,null,rec).then(function(){return state.db.collection("inbox").doc(id).delete();}).then(function(){toast(coll==="buyers"?"Added to buyers":"Added to potential sellers. Call them today.");}).catch(writeErr);
+}
+
+/* ---------- access (Jason only) ---------- */
+function membersCard(){
+  var u=state.user;if(!u)return "";
+  var h='<section class="card pad gsec"><h3>Signed in</h3><p class="why">'+esc(u.email)+(u.admin?' · admin':'')+'</p><div><button class="btn small" data-act="sign-out">Sign out</button></div>';
+  if(u.admin){
+    var M=(state.book.members||[]),N=state.book.names||{};
+    h+='<h3 style="font-size:18px;margin-top:8px">Who can open the book</h3><p class="why">Add the Google account email each person signs in with. Pick the name they use in "Viewing as" and the book opens on their view.</p><div class="memlist">'+(M.length?M.map(function(e){return '<div class="memrow"><span><b>'+esc(N[e]||"")+'</b> '+esc(e)+'</span><button class="btn small danger" data-act="mem-del" data-email="'+esc(e)+'">Remove</button></div>';}).join(""):'<p class="why">Nobody yet. Jason can always get in.</p>')+'</div>'+
+       '<div class="g2"><label class="f"><span>Google email</span><input id="memEmail" type="email" autocomplete="off" placeholder="name@gmail.com"></label><label class="f"><span>Name</span><select id="memName"><option value="">No default view</option>'+agents().map(function(a){return '<option>'+esc(a)+'</option>';}).join("")+'</select></label></div><div><button class="btn small primary" data-act="mem-add">Give access</button></div>';
+  }
+  return h+'</section>';
+}
+
+/* ---------- guide ---------- */
+function vGuide(){
+  var b=state.settings.bands;
+  return '<div class="head"><div><h2>How to use the Buyer Book</h2><p>Ten minutes a day keeps every buyer and every future seller warm.</p></div></div>'+
+  '<div class="rhythm">'+
+   '<section class="card"><b>Every morning · 10 min</b><h4>Work the Today page</h4><p>Call everyone under <span class="k">Call these buyers</span> and <span class="k">Seller follow-ups due</span>. Log each one so the next date sets itself. Today should end at zero.</p></section>'+
+   '<section class="card"><b>After every home open</b><h4>Add every buyer</h4><p>Within the hour, while you remember them. Name, mobile, budget, finance, timing, beds, suburbs, must-haves. Under a minute each on your phone.</p></section>'+
+   '<section class="card"><b>Every Monday · 15 min</b><h4>Clean and check</h4><p>Mark buyers who bought as <span class="k">Bought</span>. Check each listing\'s match list. Look at the Potential sellers tab and make sure nobody sits on <span class="k">No follow-up set</span>.</p></section>'+
+  '</div>'+
+  '<section class="card pad gsec"><h3>Buyers</h3><ol>'+
+   '<li><span class="k">Add:</span> tap <span class="k">+ Buyer</span>. Type budgets as 650, 650k or 650000.</li>'+
+   '<li><span class="k">Hot, warm or cold is automatic.</span> Hot = pre-approved or cash and buying within 3 months. Cold = just looking, or must sell first and not ready. Everyone else is warm. Keep finance and timing up to date and the heat stays right.</li>'+
+   '<li><span class="k">Call rhythm:</span> hot buyers show up to call after 7 days, warm after 14. Tap <span class="k">Called today</span> to reset the clock. Every call counts on the Scorecard.</li>'+
+   '<li><span class="k">About them:</span> note what they loved or hated at inspections. It makes the next call easy.</li>'+
+  '</ol></section>'+
+  '<section class="card pad gsec"><h3>Buyer pools</h3><p>Active buyers are grouped by their top budget into three pools: under '+money(b[0])+', '+money(b[0])+'–'+money(b[1])+', and '+money(b[1])+'+. Change the limits at the top of the page to suit the market.</p><p>Each pool shows how many buyers are hot, and what they mostly want (beds, type, suburbs, must-haves). Use it at listing presentations: <i>"We have 14 buyers between $650k and $850k, and 5 of them want a 4-bed in Mount Richon."</i></p></section>'+
+  '<section class="card pad gsec"><h3>Potential sellers</h3><ol>'+
+   '<li><span class="k">Add</span> anyone who asks for an estimate, chats at a door knock or open home, or says "maybe next year".</li>'+
+   '<li><span class="k">Fill in what they\'re like.</span> Tags (prefers text, busy mornings) and the About them box show in the yellow <span class="k">Remember</span> panel every time you open them. Read it before you call.</li>'+
+   '<li><span class="k">Log every follow-up.</span> Pick call, text, email and so on, add a one-line note, tap <span class="k">Log it</span>. The next date sets itself from their timing: every 3 days if selling this month, weekly if 1–3 months, fortnightly if 3–6, monthly if 6–12, every 2 months after that. Change it with +3d, +1w, +1m or +3m.</li>'+
+   '<li><span class="k">Use the next-call idea.</span> It changes as you go (thank-you, a nearby sale, a market update, a drop-in) and fits their reason for selling. If buyers in the book fit their home, it tells you how many. Lead with that.</li>'+
+   '<li><span class="k">Convert to seller</span> when they book an appraisal. Their notes and history move with them.</li>'+
+  '</ol></section>'+
+  '<section class="card pad gsec"><h3>Sellers</h3><p>Appraisal → Pre-market → Listed → Under offer → Sold. Each stage has its own follow-up idea and pace (every 3–7 days). Open a seller to log updates. Tap <span class="k">See matching buyers</span> to call the best fits first.</p></section>'+
+  '<section class="card pad gsec"><h3>Match</h3><ol>'+
+   '<li>Pick a seller, or use <span class="k">Quick check</span> at an appraisal: type a price, suburb and beds to see how many buyers you already have.</li>'+
+   '<li>Each buyer gets a score out of 100: budget 40, suburb 20, beds 15, must-haves 15, type 10. <span class="k">80+</span> strong, <span class="k">65–79</span> good, <span class="k">50–64</span> possible. Ticks and crosses show why.</li>'+
+   '<li>For an off-market listing: copy the message and the names and numbers, send the texts from your phone, then tap <span class="k">Mark all as contacted</span>.</li>'+
+  '</ol></section>'+
+  '<section class="card pad gsec"><h3>Open homes and vendor reports</h3><ol>'+
+   '<li>Open a listed seller and tap <span class="k">+ Log open home</span> after each inspection. Enter groups through and each person you spoke to: name, mobile, price feedback, interest, and what they said.</li>'+
+   '<li>New people go straight into Buyers (suburb, type and beds filled from the property). People already in the book get the visit added to their history. You never type a buyer twice.</li>'+
+   '<li>Tap <span class="k">Vendor report</span> every week. It writes the update for you from the last 7 days: open homes, groups through, price feedback, hot buyers, database buyers contacted, and buyer comments. Add next week\'s plan, copy, send.</li>'+
+  '</ol></section>'+
+  '<section class="card pad gsec"><h3>Past clients</h3><p>When a seller moves to <span class="k">Sold</span>, or a buyer is marked <span class="k">Bought</span>, they land in Past clients with their sale date. Today reminds you 14 days before each anniversary, and sold owners get a check-in every 3 months. Copy the anniversary text, send it, log it. Most repeat listings and referrals come from here.</p></section>'+
+  '<section class="card pad gsec"><h3>Scorecard</h3><p>Counts what you both do each week: follow-ups logged (calls, texts, door knocks, open home chats), new buyers, appraisals booked, and new listings. Set the weekly targets together. Hit the follow-up target to build your streak. The 8-week view shows how many follow-ups it takes to win an appraisal, so you know the number to hit.</p></section>'+
+  '<section class="card pad gsec"><h3>Jayden, James, or both</h3><p>Pick your name in <span class="k">Viewing as</span> at the top. Today then shows your calls plus anything shared, and your progress against half the team target. Every record can belong to one of you (the <span class="k">Whose is this?</span> chips) or be left shared. Lists show yours plus shared, with an <span class="k">Everyone</span> switch. Buyer pools, Match and Suburbs always use the whole book, because every buyer is a buyer for both of you.</p></section>'+
+  '<section class="card pad gsec"><h3>Messages</h3><p>Open anyone and tap <span class="k">Messages</span>. You get ready-to-send texts written for that person: their name, their address, the buyers that fit their home, and the right message for their stage. Tips show if they prefer calls or are busy in the mornings. <span class="k">Copy + log as sent</span> copies it and logs the follow-up in one tap.</p></section>'+
+  '<section class="card pad gsec"><h3>Buyer demand report</h3><p>The listing winner. Open a potential seller or seller and tap <span class="k">Demand report</span>, or use Match at an appraisal. It writes a summary for the owner: how many buyers fit their home, how many are ready now, how many want their suburb, and short anonymised descriptions of them. Read it out at the kitchen table, or send it after.</p></section>'+
+  '<section class="card pad gsec"><h3>Suburbs</h3><p>Shows where your active buyers want to live, how many are hot, their typical budget, and how many homes you have there. <span class="k">Prospect here</span> means buyers are waiting and you have nothing to show them: door-knock and letterbox those streets first.</p></section>'+
+  '<section class="card pad gsec"><h3>Find anyone</h3><p>The search box at the top of Today looks through every buyer, potential seller and seller by name, mobile, address, suburb or notes.</p></section>'+
+  '<section class="card pad gsec"><h3>Moving across from Excel</h3><ol>'+
+   '<li>Tap <span class="k">Import from Excel</span> on Buyers, Potential sellers or Sellers, and choose your spreadsheet (.xlsx or .csv). Use one row per person with a heading row.</li>'+
+   '<li>Check the column matches. Budgets like "600-700k", "$650,000" or "up to 750" are read automatically, and so are beds like "3x2", suburb lists, and finance or timing notes.</li>'+
+   '<li>Check the preview, then Import. People already in the book are skipped, and columns you don\'t match go into notes so nothing is lost.</li>'+
+   '<li>Do one sheet at a time (buyers first). After that, stop using the spreadsheet. Two lists means neither is right.</li>'+
+  '</ol></section>'+
+  '<section class="card pad gsec"><h3>Duplicates</h3><p>Type a mobile number and the book checks it against every buyer, potential seller and seller. If they\'re already there you\'ll see who, before you save a second copy.</p></section>'+
+  '<section class="card pad gsec"><h3>Settings and backup</h3><div class="g2" style="max-width:420px"><label class="f"><span>Agent 1</span><input id="ag0" value="'+esc(agents()[0])+'" '+(state.canWrite?"":"disabled")+'></label><label class="f"><span>Agent 2</span><input id="ag1" value="'+esc(agents()[1])+'" '+(state.canWrite?"":"disabled")+'></label></div><div class="tools">'+(state.canWrite?'<button class="btn small" data-act="save-agents">Save names</button>':'')+'<button class="btn small primary" data-act="backup">Download full backup (Excel)</button></div><p class="why">The backup has every buyer, potential seller and seller on separate sheets. Download one each month and keep it somewhere safe.</p></section>'+
+  membersCard()+
+  '<section class="card pad gsec"><h3>Use it on your phone</h3><p>Open this page in Safari (iPhone) or Chrome (Android), tap <span class="k">Share</span> then <span class="k">Add to Home Screen</span>. It opens full screen like an app, and anything you add with bad signal saves as soon as you\'re back online.</p></section>'+
+  '<section class="card pad gsec"><h3>Rules that keep it useful</h3><ul>'+
+   '<li>Everyone goes in. A buyer you didn\'t record is a buyer you can\'t call when the right home lists.</li>'+
+   '<li>One person per record. Couples share one buyer.</li>'+
+   '<li>Never leave a potential seller without a next follow-up date.</li>'+
+   '<li>Jayden and James both work from the same book. Changes show for both straight away.</li>'+
+   '<li>Export buyers to a spreadsheet any time from the Buyers tab.</li>'+
+  '</ul></section>';
+}
+
+/* ---------- potential sellers ---------- */
+function prospectRow(r){
+  var bf=buyersForHome(r).length;
+  return '<button class="row" data-act="open-prospect" data-id="'+esc(r.id)+'"><span class="nm">'+esc(r.name||"Unnamed")+' <span class="pill p-'+ptemp(r)+'">'+esc(r.timeframe||"timing unknown")+'</span>'+agentTag(r)+((r.status&&r.status!=="Nurturing")?' <span class="pill p-stage">'+esc(r.status)+'</span>':'')+(r.example?' <span class="pill p-ex">example</span>':'')+'</span><span class="right">'+duePill(r.nextFollowUp)+'</span><span class="sub">'+esc([r.address,r.suburb,r.estValue?"~"+money(r.estValue):"",r.motivation].filter(Boolean).join(" · "))+(bf?' · <b class="num">'+bf+'</b> buyer'+(bf===1?"":"s")+' would fit':'')+'</span></button>';
+}
+function vProspects(){
+  var h='<div class="head"><div><h2>Potential sellers</h2><p>Owners who might sell. Keep in touch until they\'re ready, then convert them to a seller.</p></div>'+exBadge()+(state.canWrite?'<button class="btn small" data-act="import" data-v="prospects">Import from Excel</button>':'')+'</div>';
+  if(!state.prospects.length)return h+'<div class="card pad" style="display:grid;gap:10px"><p style="color:var(--muted);max-width:60ch">Add anyone who asks for an estimate, chats at a door knock, or says "maybe next year". Each one gets a follow-up date, a note of what they\'re like, and an idea for what to say next time.</p>'+(state.canWrite?'<div class="tools"><button class="btn primary" data-act="new-prospect">+ Add a potential seller</button>'+(state.buyers.length||state.sellers.length?'':'<button class="btn" data-act="load-examples">Try it with example records</button>')+'</div>':'')+'</div>';
+  h+='<div class="tools"><input type="search" id="pq" placeholder="Search name, address, suburb or notes" value="'+esc(state.pq)+'" aria-label="Search potential sellers">'+scopeSeg()+'</div>';
+  var q=state.pq.toLowerCase();
+  var list=state.prospects.filter(function(r){if(!inScope(r))return false;if(!q)return true;return [r.name,r.phone,r.address,r.suburb,r.notes,r.personal,(r.traits||[]).join(" ")].join(" ").toLowerCase().indexOf(q)>-1;});
+  var groups=[["Due now",function(r){var n=dueIn(r.nextFollowUp);return n!=null&&n<=0;}],["This week",function(r){var n=dueIn(r.nextFollowUp);return n!=null&&n>0&&n<=7;}],["Later",function(r){var n=dueIn(r.nextFollowUp);return n!=null&&n>7;}],["No follow-up set",function(r){return !r.nextFollowUp;}]];
+  var open=list.filter(function(r){var s=r.status||"Nurturing";return s==="Nurturing"||s==="Appraisal booked";}),closed=list.filter(function(r){return open.indexOf(r)<0;});
+  groups.forEach(function(g){var l=open.filter(g[1]).sort(function(a,c){return (dueIn(a.nextFollowUp)||0)-(dueIn(c.nextFollowUp)||0)||{hot:0,warm:1,cold:2}[ptemp(a)]-{hot:0,warm:1,cold:2}[ptemp(c)];});if(!l.length)return;h+='<section class="card"><div class="sec-title"><h3>'+g[0]+'</h3><span class="num">'+l.length+'</span></div><div class="list">'+l.map(prospectRow).join("")+'</div></section>';});
+  if(closed.length)h+='<section class="card"><div class="sec-title"><h3>Closed</h3><span>listed, lost or not selling</span></div><div class="list">'+closed.map(prospectRow).join("")+'</div></section>';
+  if(!open.length&&!closed.length)h+='<div class="card pad empty">No potential sellers match that search.</div>';
+  return h;
+}
+function contactDetail(kind,r){
+  var isP=kind==="prospect",title=isP?(r.name||"Potential seller"):(r.address||"Seller");
+  var bf=buyersForHome(r);
+  var h='<header><h2>'+esc(title)+'</h2><button class="btn small" data-act="close">Close</button></header><div class="body"><div class="detail">';
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap">'+(isP?'<span class="pill p-'+ptemp(r)+'">'+esc(r.timeframe||"timing unknown")+'</span><span class="pill p-stage">'+esc(r.status||"Nurturing")+'</span>':'<span class="pill p-stage">'+esc(r.stage||"Appraisal")+'</span>')+(r.example?'<span class="pill p-ex">example</span>':'')+'</div>';
+  if((r.traits&&r.traits.length)||r.personal)h+='<div class="remember"><h3>Remember</h3>'+((r.traits||[]).length?'<div>'+r.traits.map(function(t){return '<span class="tag">'+esc(t)+'</span>';}).join("")+'</div>':'')+(r.personal?'<p>'+esc(r.personal)+'</p>':'')+'</div>';
+  h+='<div class="idea"><b>Next follow-up</b><div class="nextrow">'+duePill(r.nextFollowUp)+'<span class="why">'+esc(niceDate(r.nextFollowUp))+'</span></div><p>'+esc(nextIdea(r,kind))+'</p>'+(bf.length?'<p><b style="color:var(--good);text-transform:none;letter-spacing:0;font-size:14px">'+bf.length+' buyer'+(bf.length===1?"":"s")+' in your book would fit this home.</b> That\'s the reason to call.</p>':'')+'</div>';
+  if(state.canWrite){
+    h+='<div class="logbox"><span style="font-weight:700;font-size:14px">Log a follow-up</span>'+chipGroup("touchKind",TOUCH,"Call",true)+'<input id="touchNote" placeholder="What happened? e.g. still 6 months off, daughter starting uni" autocomplete="off"><div class="nextrow"><span class="why">Next follow-up</span><input type="date" id="touchNext" value="'+esc(addDays(cadence(r)))+'"><button class="btn small" data-act="nxt" data-d="3">+3d</button><button class="btn small" data-act="nxt" data-d="7">+1w</button><button class="btn small" data-act="nxt" data-d="30">+1m</button><button class="btn small" data-act="nxt" data-d="90">+3m</button></div><button class="btn primary" data-act="log-touch" data-kind="'+kind+'" data-id="'+esc(r.id)+'">Log it</button></div>';
+  }
+  h+='<dl class="kv">'+(isP?'<dt>Phone</dt><dd class="num">'+esc(r.phone||"–")+'</dd><dt>Email</dt><dd>'+esc(r.email||"–")+'</dd><dt>Property</dt><dd>'+esc([r.address,r.suburb].filter(Boolean).join(", ")||"–")+'</dd><dt>Est. value</dt><dd class="num">'+(r.estValue?money(r.estValue):"–")+'</dd><dt>Home</dt><dd>'+esc([r.beds?r.beds+" bed":"",r.type].filter(Boolean).join(" · ")||"–")+'</dd><dt>Why selling</dt><dd>'+esc(r.motivation||"–")+'</dd><dt>Came from</dt><dd>'+esc(r.source||"–")+'</dd>':'<dt>Owner</dt><dd>'+esc(r.owner||"–")+'</dd><dt>Phone</dt><dd class="num">'+esc(r.phone||"–")+'</dd><dt>Price</dt><dd class="num">'+money(r.price)+'</dd><dt>Home</dt><dd>'+esc([r.suburb,r.beds?r.beds+" bed":"",r.type].filter(Boolean).join(" · ")||"–")+'</dd>')+'<dt>Notes</dt><dd style="white-space:pre-wrap">'+esc(r.notes||"–")+'</dd></dl>';
+  if(!isP&&r.stage&&r.stage!=="Appraisal"){
+    var ins=(r.inspections||[]).slice().reverse();
+    h+='<div><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px"><h3 style="font-size:18px">Open homes</h3><div style="display:flex;gap:6px">'+(state.canWrite?'<button class="btn small" data-act="new-inspection" data-id="'+esc(r.id)+'">+ Log open home</button>':'')+'<button class="btn small" data-act="vendor-report" data-id="'+esc(r.id)+'">Vendor report</button></div></div>'+(ins.length?'<div class="hist">'+ins.map(function(x){var p=x.people||[];var c={g:0,a:0,t:0};p.forEach(function(q){if(q.price==="Good value")c.g++;else if(q.price==="About right")c.a++;else if(q.price==="Too high")c.t++;});return '<div><span class="d">'+esc(niceDate(x.date))+'</span><span><b class="num">'+(x.groups||0)+' groups</b> · '+p.length+' spoken to'+(c.g+c.a+c.t?' · price: '+c.g+' value, '+c.a+' right, '+c.t+' high':'')+'</span></div>';}).join("")+'</div>':'<p class="why">No open homes logged yet.</p>')+'</div>';
+  }
+  if(!isP&&r.stage==="Sold"){var sd=(r.stageDates||{}).Sold;var an=anniv(sd);if(an)h+='<p class="why">Sold '+esc(niceDate(sd))+'. Next sale anniversary '+esc(niceDate(an.date))+'.</p>';}
+  var log=(r.log||[]).slice().reverse();
+  h+='<div><h3 style="font-size:18px;margin-bottom:6px">History</h3>'+(log.length?'<div class="hist">'+log.map(function(e){return '<div><span class="d">'+esc(niceDate(e.date))+'</span><span><b>'+esc(e.kind)+'</b>'+(e.note?' · '+esc(e.note):'')+'</span></div>';}).join("")+'</div>':'<p class="why">No follow-ups logged yet.</p>')+'</div>';
+  h+='</div></div><footer><button class="btn" data-act="msgs" data-kind="'+kind+'" data-id="'+esc(r.id)+'">Messages</button><button class="btn" data-act="demand" data-kind="'+kind+'" data-id="'+esc(r.id)+'">Demand report</button>';
+  if(state.canWrite)h+=(isP?'<button class="btn" data-act="edit-prospect" data-id="'+esc(r.id)+'">Edit</button>'+((r.status||"Nurturing")!=="Listed with us"?'<button class="btn" data-act="convert" data-id="'+esc(r.id)+'">Convert to seller</button>':''):'<button class="btn" data-act="edit-seller" data-id="'+esc(r.id)+'">Edit</button>');
+  h+='<button class="btn" data-act="go-match-home" data-kind="'+kind+'" data-id="'+esc(r.id)+'">See matching buyers</button></footer>';
+  return h;
+}
+function openProspect(id,edit){
+  var r=id?state.prospects.filter(function(x){return x.id===id;})[0]:null;
+  if(id&&!r)return;
+  if(r&&!edit)return showDrawer(contactDetail("prospect",r));
+  draft={kind:"prospect",id:id||null,data:r?JSON.parse(JSON.stringify(r)):{type:"House",traits:[],status:"Nurturing",log:[],nextFollowUp:addDays(1)}};
+  showDrawer(prospectForm(draft.data));
+}
+function prospectForm(d){
+  return '<header><h2>'+(draft.id?"Edit potential seller":"New potential seller")+'</h2><button class="btn small" data-act="close">Cancel</button></header><form class="body" id="draftForm" novalidate>'+agentField(draft.data)+
+  '<div class="g2"><label class="f"><span>Name</span><input id="fName" value="'+esc(d.name)+'" autocomplete="off"></label><label class="f"><span>Mobile</span><input id="fPhone" type="tel" inputmode="tel" value="'+esc(d.phone)+'"></label></div><div id="dupWarn" class="dup" hidden></div>'+
+  '<label class="f"><span>Email</span><input id="fEmail" type="email" value="'+esc(d.email)+'"></label>'+
+  '<label class="f"><span>Property address</span><input id="fAddr" value="'+esc(d.address)+'" autocomplete="off"></label>'+
+  '<div class="g3"><label class="f"><span>Suburb</span><select id="fSub"><option value="">Choose…</option>'+SUBURBS.map(function(s){return '<option'+(d.suburb===s?" selected":"")+'>'+s+'</option>';}).join("")+'<option'+(d.suburb==="Other"?" selected":"")+'>Other</option></select></label><label class="f"><span>Est. value</span><input id="fVal" inputmode="decimal" placeholder="e.g. 720k" value="'+esc(d.estValue?Math.round(d.estValue/1000)+"k":"")+'"></label><label class="f"><span>Beds</span><select id="fBeds"><option value="">–</option>'+[1,2,3,4,5,6].map(function(n){return '<option'+(d.beds===n?" selected":"")+'>'+n+'</option>';}).join("")+'</select></label></div>'+
+  '<div class="f"><span>Type</span>'+chipGroup("type",TYPES,d.type,true)+'</div>'+
+  '<div class="f"><span>When might they sell?</span>'+chipGroup("timeframe",PTIME,d.timeframe,true)+'</div>'+
+  '<div class="f"><span>Why</span>'+chipGroup("motivation",MOTIVE,d.motivation,true)+'</div>'+
+  '<div class="g2"><label class="f"><span>Came from</span><select id="fSrc"><option value="">Choose…</option>'+PSOURCE.map(function(s){return '<option'+(d.source===s?" selected":"")+'>'+s+'</option>';}).join("")+'</select></label><label class="f"><span>Status</span><select id="fStatus">'+PSTATUS.map(function(s){return '<option'+((d.status||"Nurturing")===s?" selected":"")+'>'+s+'</option>';}).join("")+'</select></label></div>'+
+  '<div class="f"><span>What they\'re like</span>'+chipGroup("traits",TRAITS,d.traits)+'</div>'+
+  '<label class="f"><span>About them</span><textarea id="fPersonal" placeholder="Kids, pets, job, footy team, hobbies, what matters most to them">'+esc(d.personal)+'</textarea><small>Shows at the top every time you open them, so each call feels personal.</small></label>'+
+  '<label class="f"><span>Property notes</span><textarea id="fNotes" placeholder="Renovations, what they think it\'s worth, other agents they\'ve spoken to">'+esc(d.notes)+'</textarea></label>'+
+  '<label class="f"><span>Next follow-up</span><input type="date" id="fNext" value="'+esc(d.nextFollowUp||"")+'"></label><p class="err" id="fErr" hidden></p></form>'+
+  '<footer><div class="confirm" id="delWrap">'+(draft.id?'<button class="btn danger" data-act="ask-delete">Delete</button>':'')+'</div><button class="btn primary" data-act="save-draft">Save</button></footer>';
+}
+function logTouch(kind,id){
+  var coll=kind==="prospect"?"prospects":"sellers";
+  var r=state[coll].filter(function(x){return x.id===id;})[0];if(!r)return;
+  var k=chipsVal("touchKind")||"Call",note=val("touchNote"),next=val("touchNext");
+  var log=(r.log||[]).concat([{date:todayStr(),kind:k,by:state.me||"",note:note}]).slice(-100);
+  var btn=document.querySelector('[data-act="log-touch"]');if(btn){btn.disabled=true;btn.textContent="Saving…";}
+  patch(coll,id,{log:log,lastContact:nowIso(),nextFollowUp:next||addDays(cadence(r)),updatedAt:nowIso()}).then(function(){toast("Logged. Next follow-up "+niceDate(next||addDays(cadence(r))));closeDrawer();}).catch(function(e){if(btn){btn.disabled=false;btn.textContent="Log it";}writeErr(e);});
+}
+function convertProspect(id){
+  var r=state.prospects.filter(function(x){return x.id===id;})[0];if(!r)return;
+  var s={address:r.address||r.name||"",suburb:r.suburb||"",price:r.estValue||null,owner:r.name||"",phone:r.phone||"",beds:r.beds||null,type:r.type||"House",stage:"Appraisal",stageDates:{Appraisal:todayStr()},features:r.features||[],traits:r.traits||[],personal:r.personal||"",notes:r.notes||"",log:r.log||[],nextFollowUp:addDays(2),createdAt:nowIso(),fromProspect:id};
+  if(r.example)s.example=true;
+  save("sellers",null,s).then(function(){return patch("prospects",id,{status:"Appraisal booked"});}).then(function(){toast("Moved to Sellers as an appraisal");closeDrawer();setTab("sellers");}).catch(writeErr);
+}
+
+/* ---------- examples (clearly marked) ---------- */
+function loadExamples(){
+  var B=[
+    {name:"Example – Sam & Priya",phone:"0400 000 001",budgetMin:600000,budgetMax:700000,finance:"Pre-approved",timeframe:"Ready now",beds:3,types:["House"],suburbs:["Kelmscott","Armadale"],mustHaves:["Side access"],source:"Example record"},
+    {name:"Example – Lena T",phone:"0400 000 002",budgetMax:560000,finance:"Needs finance",timeframe:"3–6 months",beds:2,types:["Unit","Townhouse/villa"],suburbs:["Armadale","Gosnells"],mustHaves:[],source:"Example record"},
+    {name:"Example – Mark (investor)",phone:"0400 000 003",budgetMin:450000,budgetMax:620000,finance:"Cash",timeframe:"1–3 months",beds:3,types:["House"],suburbs:[],mustHaves:[],source:"Example record"},
+    {name:"Example – The Nguyens",phone:"0400 000 004",budgetMin:780000,budgetMax:900000,finance:"Must sell first",timeframe:"3–6 months",beds:4,types:["House"],suburbs:["Mount Richon","Kelmscott"],mustHaves:["Pool","Big block 700m²+"],source:"Example record"},
+    {name:"Example – Dave R",phone:"0400 000 005",budgetMin:950000,budgetMax:1200000,finance:"Pre-approved",timeframe:"Ready now",beds:4,types:["House","Acreage"],suburbs:["Roleystone","Bedfordale"],mustHaves:["Shed/workshop"],source:"Example record"},
+    {name:"Example – Grace & Tom",phone:"0400 000 006",budgetMin:650000,budgetMax:780000,finance:"Pre-approved",timeframe:"1–3 months",beds:4,types:["House"],suburbs:["Seville Grove","Mount Richon"],mustHaves:["Single storey"],source:"Example record"}
+  ];
+  var S=[
+    {address:"Example – 12 Sample St",suburb:"Kelmscott",price:689000,type:"House",beds:3,baths:1,stage:"Pre-market",features:["Side access","Shed/workshop"],owner:"Example owner"},
+    {address:"Example – 9 Sold Pl",suburb:"Armadale",price:610000,type:"House",beds:3,baths:1,stage:"Sold",stageDates:{Sold:shiftDays(todayStr(),-358)},features:[],owner:"Example – Pat & Lou",nextFollowUp:addDays(20),log:[]},
+    {address:"Example – 4 Demo Way",suburb:"Mount Richon",price:829000,type:"House",beds:4,baths:2,stage:"Appraisal",features:["Pool","Big block 700m²+"],owner:"Example owner"}
+  ];
+  var P=[
+    {name:"Example – Carol W",phone:"0400 000 011",address:"Example – 7 Test Rd",suburb:"Kelmscott",estValue:640000,beds:3,type:"House",timeframe:"3–6 months",motivation:"Downsizing",source:"Appraisal page",traits:["Prefers calls","Wants detail"],personal:"Retired teacher. Two grandkids in Byford she minds on Tuesdays. Loves her roses, worried about leaving the garden.",nextFollowUp:todayStr(),status:"Nurturing",log:[{date:addDays(-14),kind:"Call",note:"Asked for an estimate after seeing a flyer"}]},
+    {name:"Example – Raj & Mei",phone:"0400 000 012",address:"Example – 22 Trial Ave",suburb:"Seville Grove",estValue:760000,beds:4,type:"House",timeframe:"1–3 months",motivation:"Relocating",source:"Door knock",traits:["Prefers text","Busy mornings"],personal:"Moving to Brisbane for Raj's job in March. Mei is a nurse on night shifts, so text after 2pm.",nextFollowUp:addDays(2),status:"Nurturing",log:[]}
+  ];
+  var ops=[];P.forEach(function(r){r.example=true;r.createdAt=nowIso();ops.push(["prospects",r]);});B.forEach(function(b){b.example=true;b.status="Active";b.createdAt=nowIso();ops.push(["buyers",b]);});S.forEach(function(s){s.example=true;s.createdAt=nowIso();ops.push(["sellers",s]);});
+  (function next(i){if(i>=ops.length){toast("Example records added. Remove them any time.");return;}save(ops[i][0],null,ops[i][1]).then(function(){next(i+1);}).catch(writeErr);})(0);
+}
+function clearExamples(){
+  var ops=state.prospects.filter(function(r){return r.example;}).map(function(r){return ["prospects",r.id];}).concat(state.buyers.filter(function(b){return b.example;}).map(function(b){return ["buyers",b.id];})).concat(state.sellers.filter(function(s){return s.example;}).map(function(s){return ["sellers",s.id];}));
+  (function next(i){if(i>=ops.length){toast("Example records removed.");return;}remove(ops[i][0],ops[i][1]).then(function(){next(i+1);}).catch(writeErr);})(0);
+}
+
+/* ---------- CSV ---------- */
+function exportCsv(){
+  var cols=["name","phone","email","budgetMin","budgetMax","finance","timeframe","beds","baths","types","suburbs","mustHaves","status","source","lastContact","notes"];
+  var rows=[cols.join(",")].concat(state.buyers.map(function(b){return cols.map(function(c){var v=b[c];if(Array.isArray(v))v=v.join("; ");v=v==null?"":String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(",");}));
+  claude.use("downloads").then(function(dl){if(!dl){toast("Export isn't available in this view.");return;}return dl.save({filename:"buyers-"+new Date().toISOString().slice(0,10)+".csv",data:rows.join("\n")});}).catch(function(e){if(e&&e.code!=="declined")toast("Export didn't work here.");});
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click",function(e){
+  var fm=document.getElementById("fabmenu"),fb=document.getElementById("fab");
+  if(e.target.closest&&e.target.closest("#fab")){fm.hidden=!fm.hidden;fb.setAttribute("aria-expanded",String(!fm.hidden));fb.textContent=fm.hidden?"+":"×";return;}
+  if(fm&&!fm.hidden){fm.hidden=true;fb.setAttribute("aria-expanded","false");fb.textContent="+";}
+  var t=e.target.closest("[data-tab],[data-act],[data-chip]");if(!t)return;
+  if(t.dataset.tab){setTab(t.dataset.tab);return;}
+  if(t.dataset.chip!=null&&!t.dataset.act){var g=t.closest("[data-chips]");if(g&&g.dataset.single){g.querySelectorAll(".chip").forEach(function(c){if(c!==t)c.setAttribute("aria-pressed","false");});}t.setAttribute("aria-pressed",t.getAttribute("aria-pressed")==="true"?"false":"true");return;}
+  var a=t.dataset.act,id=t.dataset.id;
+  if(a==="new-buyer"){if(state.canWrite)openBuyer(null,true);}
+  else if(a==="new-seller"){if(state.canWrite)openSeller(null,true);}
+  else if(a==="open-buyer")openBuyer(id,false);
+  else if(a==="edit-buyer")openBuyer(id,true);
+  else if(a==="open-seller"){var s0=state.sellers.filter(function(x){return x.id===id;})[0];if(s0)showDrawer(contactDetail("seller",s0));}
+  else if(a==="inbox-accept"){acceptInbox(id);}
+  else if(a==="inbox-dismiss"){state.db.collection("inbox").doc(id).delete().then(function(){toast("Dismissed");}).catch(writeErr);}
+  else if(a==="sign-out"){if(window.BB)window.BB.signOut();}
+  else if(a==="mem-add"){var em=(val("memEmail")||"").toLowerCase(),nm=val("memName");if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){toast("Enter a full email address.");return;}var M=(state.book.members||[]).slice();if(M.indexOf(em)<0)M.push(em);var N=Object.assign({},state.book.names||{});if(nm)N[em]=nm;else delete N[em];window.BB.saveMembers(M,N).then(function(){toast("Access given to "+em);}).catch(writeErr);}
+  else if(a==="mem-del"){var de=t.dataset.email;var M2=(state.book.members||[]).filter(function(x){return x!==de;});var N2=Object.assign({},state.book.names||{});delete N2[de];window.BB.saveMembers(M2,N2).then(function(){toast("Removed "+de);}).catch(writeErr);}
+  else if(a==="scope"){state.scope=t.dataset.v;render();}
+  else if(a==="score-who"){state.scoreWho=t.dataset.v;render();}
+  else if(a==="msgs"){openTemplates(t.dataset.kind,id);}
+  else if(a==="tpl-log"){var srcE=document.getElementById(t.dataset.src);var txt=srcE?srcE.value:"";try{navigator.clipboard.writeText(txt).catch(function(){});}catch(x){}logRecord(t.dataset.kind,id,"Text","Sent: "+t.dataset.label).then(function(){toast("Copied and logged");}).catch(writeErr);}
+  else if(a==="demand"){var colD=t.dataset.kind==="prospect"?"prospects":"sellers";var rD=state[colD].filter(function(x){return x.id===id;})[0];if(rD){var hm=homeFrom(t.dataset.kind,rD);if(!hm.price){toast("Add a price or estimated value first.");return;}openDemand(hm);}}
+  else if(a==="demand-match"){openDemand(state.lastMatchP);}
+  else if(a==="backup"){backupAll();}
+  else if(a==="save-agents"){var n0=val("ag0"),n1=val("ag1");if(!n0||!n1||n0===n1){toast("Enter two different names.");return;}state.settings.agents=[n0,n1];saveSettings().then(function(){toast("Names saved");}).catch(writeErr);}
+  else if(a==="import"){openImport(t.dataset.v||"buyers");}
+  else if(a==="imp-target"){imp.target=t.dataset.v;if(imp.head)guessMap();showDrawer(importHtml());}
+  else if(a==="imp-reset"){imp.rows=null;imp.head=null;showDrawer(importHtml());}
+  else if(a==="imp-go"){runImport();}
+  else if(a==="new-prospect"){if(state.canWrite)openProspect(null,true);}
+  else if(a==="open-prospect")openProspect(id,false);
+  else if(a==="edit-prospect")openProspect(id,true);
+  else if(a==="log-touch"){logTouch(t.dataset.kind,id);}
+  else if(a==="nxt"){var ti=document.getElementById("touchNext");if(ti)ti.value=addDays(Number(t.dataset.d));}
+  else if(a==="convert"){convertProspect(id);}
+  else if(a==="go-match-home"){var col=t.dataset.kind==="prospect"?"prospects":"sellers";var r0=state[col].filter(function(x){return x.id===id;})[0];closeDrawer();if(t.dataset.kind==="seller"){state.matchSel=id;}else if(r0){state.matchSel="";state.quick={price:r0.estValue?Math.round(r0.estValue/1000)+"k":"",suburb:r0.suburb||"",beds:r0.beds||"",type:r0.type||"House"};}setTab("match");}
+  else if(a==="edit-seller"){openSeller(id,true);}
+  else if(a==="go-match"){state.matchSel=id;closeDrawer();setTab("match");}
+  else if(a==="close")closeDrawer();
+  else if(a==="save-draft"){e.preventDefault();saveDraft();}
+  else if(a==="ask-delete"){document.getElementById("delWrap").innerHTML='<span>Delete for good?</span><button class="btn danger small" data-act="do-delete">Yes, delete</button><button class="btn small" data-act="no-delete">Keep</button>';}
+  else if(a==="no-delete"){document.getElementById("delWrap").innerHTML='<button class="btn danger" data-act="ask-delete">Delete</button>';}
+  else if(a==="do-delete"){var coll={buyer:"buyers",seller:"sellers",prospect:"prospects"}[draft.kind];remove(coll,draft.id).then(function(){toast("Deleted");if(state.matchSel===draft.id)state.matchSel="";closeDrawer();}).catch(writeErr);}
+  else if(a==="contacted"){logBuyer(id,"Call","").then(function(){toast("Logged as called today");closeDrawer();}).catch(writeErr);}
+  else if(a==="mark-all"){var ids=(t.dataset.ids||"").split(",").filter(Boolean),why=t.dataset.why||"";(function next(i){if(i>=ids.length){toast(ids.length+" buyers logged as contacted");return;}logBuyer(ids[i],"Text",why).then(function(){next(i+1);}).catch(writeErr);})(0);}
+  else if(a==="save-targets"){var tg={};["touches","buyers","appraisals","listings"].forEach(function(k){var n=parseInt(val("tg_"+k),10);tg[k]=isFinite(n)&&n>=0?n:state.settings.targets[k];});state.settings.targets=tg;saveSettings().then(function(){toast("Targets saved");}).catch(writeErr);}
+  else if(a==="new-inspection"){openInspection(id);}
+  else if(a==="add-att"){addAttRow();}
+  else if(a==="save-inspection"){saveInspection();}
+  else if(a==="vendor-report"){openVendorReport(id);}
+  else if(a==="dup-ok"){if(draft){draft.dupOk=true;saveDraft();}}
+  else if(a==="open-past"){if(t.dataset.kind==="seller"){var sp=state.sellers.filter(function(x){return x.id===id;})[0];if(sp)showDrawer(contactDetail("seller",sp));}else openBuyer(id,false);}
+  else if(a==="heatf"){state.heatF=t.dataset.v;render();}
+  else if(a==="save-bands"){var b0=parseMoney(val("band0")),b1=parseMoney(val("band1"));if(!b0||!b1||b0>=b1){toast("Pool 2's limit must be higher than pool 1's.");return;}state.settings.bands=[b0,b1];saveSettings().then(function(){toast("Pools updated");}).catch(writeErr);}
+  else if(a==="copy"){var src=document.getElementById(t.dataset.src);if(!src)return;var txt=src.value;var done=function(){toast("Copied");};try{navigator.clipboard.writeText(txt).then(done,function(){src.select();toast("Selected. Press copy on your keyboard.");});}catch(x){src.select();toast("Selected. Press copy on your keyboard.");}}
+  else if(a==="load-examples"){loadExamples();}
+  else if(a==="clear-examples"){clearExamples();}
+  else if(a==="export"){exportCsv();}
+});
+document.addEventListener("input",function(e){
+  var t=e.target;
+  if((t.id==="fPhone"||t.id==="fOPhone")&&draft){var w=document.getElementById("dupWarn");var dd=findDup(t.value,draft.id);if(w){if(dd){w.textContent="Already in the book: "+dd.name+" ("+dd.kind+"). Check before adding them twice.";w.hidden=false;}else w.hidden=true;}}
+  if(t.id==="gq"){state.gq=t.value;var gp=t.selectionStart;render();var gn=document.getElementById("gq");if(gn){gn.focus();try{gn.setSelectionRange(gp,gp);}catch(x){}}}
+  if(t.id==="pq"){state.pq=t.value;var pp=t.selectionStart;render();var pn=document.getElementById("pq");if(pn){pn.focus();try{pn.setSelectionRange(pp,pp);}catch(x){}}}
+  if(t.id==="q"){state.q=t.value;var pos=t.selectionStart;render();var n=document.getElementById("q");if(n){n.focus();try{n.setSelectionRange(pos,pos);}catch(x){}}}
+  if(t.id==="qPrice"){state.quick.price=t.value;clearTimeout(window.__qp);window.__qp=setTimeout(function(){var p=t.selectionStart;render();var n=document.getElementById("qPrice");if(n){n.focus();try{n.setSelectionRange(p,p);}catch(x){}}},350);}
+});
+document.addEventListener("change",function(e){
+  var t=e.target;
+  if(t.id==="impFile"&&t.files&&t.files[0]){readFile(t.files[0]);return;}
+  if(t.id==="meSel"){state.me=t.value;state.scoreWho=null;state.scope="mine";try{localStorage.setItem("bb_me",state.me);}catch(x){}render();return;}
+  if(t.dataset&&t.dataset.impCol!=null&&imp){var c=t.dataset.impCol;if(t.value){Object.keys(imp.map).forEach(function(k){if(imp.map[k]===t.value&&k!==c)delete imp.map[k];});imp.map[c]=t.value;}else delete imp.map[c];var sc=document.querySelector(".drawer .body").scrollTop;showDrawer(importHtml());document.querySelector(".drawer .body").scrollTop=sc;return;}
+  if(t.id==="impSkipDup"&&imp){imp.skipDup=t.checked;showDrawer(importHtml());return;}
+  if(t.id==="impKeep"&&imp){imp.keepOther=t.checked;showDrawer(importHtml());return;}
+  if(t.id==="impSheet"&&imp&&imp.wb){imp.sheet=t.value;setGrid(sheetGrid(window.XLSX,imp.wb,imp.sheet));return;}
+  if(t.id==="matchSel"){state.matchSel=t.value;render();}
+  if(t.id==="qSuburb"){state.quick.suburb=t.value;render();}
+  if(t.id==="qBeds"){state.quick.beds=t.value;render();}
+  if(t.id==="qType"){state.quick.type=t.value;render();}
+});
+document.addEventListener("dragover",function(e){var d=e.target.closest&&e.target.closest("#dropZone");if(d){e.preventDefault();d.classList.add("over");}});
+document.addEventListener("dragleave",function(e){var d=e.target.closest&&e.target.closest("#dropZone");if(d)d.classList.remove("over");});
+document.addEventListener("drop",function(e){var d=e.target.closest&&e.target.closest("#dropZone");if(d){e.preventDefault();d.classList.remove("over");if(e.dataTransfer.files[0])readFile(e.dataTransfer.files[0]);}});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&document.querySelector(".drawer"))closeDrawer();});
+document.addEventListener("submit",function(e){e.preventDefault();});
+window.addEventListener("hashchange",function(){var h=location.hash.slice(1);if(["today","pools","demand","buyers","prospects","sellers","past","match","score","guide"].indexOf(h)>-1&&h!==state.tab){state.tab=h;render();}});
+
+/* ---------- boot ---------- */
+try{state.me=localStorage.getItem("bb_me")||"";}catch(x){state.me="";}
+(function(){var h=location.hash.slice(1);if(["today","pools","demand","buyers","prospects","sellers","past","match","score","guide"].indexOf(h)>-1)state.tab=h;})();
+render();
+var booted=false,subs=[];
+function goLocal(){if(booted)return;booted=true;state.dbMode="local";state.ready={b:true,s:true,p:true};render();}
+function gate(msg,showBtn,err,showOut){var g=document.getElementById("gate");g.hidden=false;document.getElementById("gateMsg").textContent=msg;document.getElementById("gateBtn").hidden=!showBtn;var ge=document.getElementById("gateErr");ge.hidden=!err;ge.textContent=err||"";document.getElementById("gateOut").hidden=!showOut;}
+document.getElementById("gateBtn").addEventListener("click",function(){var b=this;b.disabled=true;document.getElementById("gateMsg").textContent="Opening Google…";window.BB.signIn().catch(function(e){b.disabled=false;gate("Sign in to open the book.",true,"Sign-in didn't finish"+(e&&e.code?" ("+e.code+")":"")+". Try again.");});});
+document.getElementById("gateOut").addEventListener("click",function(){if(window.BB)window.BB.signOut();});
+var bootTimer=setTimeout(function(){if(!window.BB)gate("Couldn't load the book.",false,"Check your internet connection, then reload this page.");},15000);
+function rows(snap){return snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});}
+window.addEventListener("bb-auth",function(ev){
+  var d=ev.detail||{};clearTimeout(bootTimer);
+  subs.forEach(function(u){try{u();}catch(x){}});subs=[];
+  if(d.state==="out"){state.db=null;state.user=null;gate("Sign in with the Google account Jason gave access to.",true);return;}
+  if(d.state==="denied"){gate("This account doesn't have access yet.",false,(d.email||"This account")+" isn't on the access list. Ask Jason to add it, then reload.",true);return;}
+  if(d.state==="error"){gate("Couldn't open the book.",false,"Something went wrong: "+(d.code||"unknown")+". Reload to try again.",true);return;}
+  if(d.state!=="ok")return;
+  document.getElementById("gate").hidden=true;
+  state.db=d.db;state.user={email:d.email,admin:d.admin};state.dbMode="db";state.canWrite=true;booted=true;
+  state.ready={b:false,s:false,p:false};
+  var myName=d.name||"";if(!state.me&&myName&&agents().indexOf(myName)>-1){state.me=myName;try{localStorage.setItem("bb_me",myName);}catch(x){}}
+  render();
+  function fail(e){if(e&&e.code==="permission-denied"){gate("Your access has changed.",false,"Ask Jason to check you're still on the access list.",true);}render();}
+  subs.push(d.db.collection("buyers").onSnapshot(function(s){state.buyers=rows(s);state.ready.b=true;render();},fail));
+  subs.push(d.db.collection("sellers").onSnapshot(function(s){state.sellers=rows(s);state.ready.s=true;render();},fail));
+  subs.push(d.db.collection("prospects").onSnapshot(function(s){state.prospects=rows(s);state.ready.p=true;render();},fail));
+  subs.push(d.db.collection("inbox").onSnapshot(function(s){state.inbox=rows(s);var t=document.querySelector('[data-tab="today"]');if(t)t.innerHTML="Today"+(state.inbox.length?' <span class="ct num">'+state.inbox.length+' new</span>':"");render();},function(){}));
+  subs.push(d.db.doc("settings/main").onSnapshot(function(x){if(x.exists){var v=x.data();if(v&&v.bands&&v.bands.length===2)state.settings=Object.assign({},state.settings,v);if(v&&v.team)document.getElementById("teamName").textContent=v.team;render();}},function(){}));
+  subs.push(d.onBook(function(b){state.book=b||{members:[],names:{}};if(state.tab==="guide")render();}));
+});
+})();
+</script>
+<script type="module">
+const V="10.12.2", BASE="https://www.gstatic.com/firebasejs/"+V+"/";
+const CFG={apiKey:"AIzaSyC0ES1GZsgtl4_vC6Dpp-4aG-Iy4DtXlCE",authDomain:"baker-leads.firebaseapp.com",projectId:"baker-leads",storageBucket:"baker-leads.firebasestorage.app",messagingSenderId:"544396406010",appId:"1:544396406010:web:9e7289e545fa0a0c8a6d43"};
+const BOOK="cooke-harper", ADMINS=["admin@bakerproduction.com","jasonbaker@bakerproduction.com"];
+const send=(detail)=>window.dispatchEvent(new CustomEvent("bb-auth",{detail}));
+try{
+  const {initializeApp}=await import(BASE+"firebase-app.js");
+  const A=await import(BASE+"firebase-auth.js");
+  const F=await import(BASE+"firebase-firestore.js");
+  const app=initializeApp(CFG,"buyerbook");
+  const auth=A.getAuth(app);
+  let fdb;
+  try{ fdb=F.initializeFirestore(app,{localCache:F.persistentLocalCache({tabManager:F.persistentMultipleTabManager()})}); }
+  catch(e){ fdb=F.getFirestore(app); }
+  const root="bb/"+BOOK;
+  const err=(e)=>{ const x=new Error(e&&e.message||String(e)); x.code=e&&e.code||"unavailable"; return x; };
+  const wrapDoc=(r)=>({id:r.id,
+    set:(d)=>F.setDoc(r,d).catch(e=>{throw err(e);}),
+    update:(d)=>F.updateDoc(r,d).catch(e=>{throw err(e);}),
+    delete:()=>F.deleteDoc(r).catch(e=>{throw err(e);}),
+    onSnapshot:(n,ecb)=>F.onSnapshot(r,(s)=>n({id:s.id,exists:s.exists(),data:()=>s.data()}),(e)=>ecb&&ecb(err(e)))});
+  const db={
+    collection:(c)=>{const col=F.collection(fdb,root+"/"+c);return{
+      doc:(id)=>wrapDoc(id?F.doc(col,id):F.doc(col)),
+      onSnapshot:(n,ecb)=>F.onSnapshot(col,(s)=>n({docs:s.docs.map(d=>({id:d.id,data:()=>d.data()})),size:s.size}),(e)=>ecb&&ecb(err(e)))};},
+    doc:(p)=>wrapDoc(F.doc(fdb,root+"/"+p))
+  };
+  const bookRef=F.doc(fdb,root);
+  window.BB={
+    signIn:async()=>{const p=new A.GoogleAuthProvider();p.setCustomParameters({prompt:"select_account"});
+      try{ await A.signInWithPopup(auth,p); }
+      catch(e){ if(e&&/popup|operation-not-supported|web-storage/.test(e.code||"")){ await A.signInWithRedirect(auth,p); } else throw e; }},
+    signOut:()=>A.signOut(auth),
+    saveMembers:(members,names)=>F.setDoc(bookRef,{members,names},{merge:true}).catch(e=>{throw err(e);})
+  };
+  A.getRedirectResult(auth).catch(()=>{});
+  A.onAuthStateChanged(auth, async (u)=>{
+    if(!u){ send({state:"out"}); return; }
+    const email=(u.email||"").toLowerCase(), admin=ADMINS.includes(email);
+    try{
+      let s=await F.getDoc(bookRef);
+      if(!s.exists()&&admin){ await F.setDoc(bookRef,{members:[],names:{},createdAt:new Date().toISOString()}); s=await F.getDoc(bookRef); }
+      if(!s.exists()){ send({state:"denied",email}); return; }
+      const data=s.data()||{};
+      if(!admin&&!(data.members||[]).includes(email)){ send({state:"denied",email}); return; }
+      const onBook=(cb)=>F.onSnapshot(bookRef,(x)=>cb(x.exists()?x.data():{members:[],names:{}}),()=>{});
+      send({state:"ok",db,email,admin,name:(data.names||{})[email]||"",onBook});
+    }catch(e){
+      if(e&&e.code==="permission-denied") send({state:"denied",email});
+      else send({state:"error",email,code:e&&e.code||String(e)});
+    }
+  });
+}catch(e){
+  send({state:"error",code:"load-failed"});
+}
+</script>
+</body>
+</html>

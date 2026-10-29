@@ -93,6 +93,15 @@
   var src = 'website';
   try { src = new URLSearchParams(location.search).get('src') || 'website'; } catch (e) {}
 
+  /* Also drop the lead into the Buyer Book inbox (Firestore, baker-leads). Best effort: email is the backup. */
+  var FS = 'https://firestore.googleapis.com/v1/projects/baker-leads/databases/(default)/documents/bb/cooke-harper/inbox?key=AIzaSyC0ES1GZsgtl4_vC6Dpp-4aG-Iy4DtXlCE';
+  function toBook(kind, d) {
+    var keys = kind === 'appraisal' ? ['name', 'phone', 'email', 'address', 'suburb', 'bedrooms', 'timeframe'] : ['name', 'phone', 'email', 'budget', 'bedrooms', 'suburbs', 'finance', 'timeframe', 'wants'];
+    var f = { kind: { stringValue: kind }, source: { stringValue: String(src).slice(0, 60) }, createdAt: { stringValue: new Date().toISOString() } };
+    keys.forEach(function (k) { if (d[k]) f[k] = { stringValue: String(d[k]).slice(0, 500) }; });
+    try { fetch(FS, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: f }), keepalive: true }).catch(function () {}); } catch (e) {}
+  }
+
   document.querySelectorAll('form.lead').forEach(function (form) {
     var kind = form.getAttribute('data-kind');
     var status = form.querySelector('.status');
@@ -124,6 +133,7 @@
         payload['Buying timeframe'] = d.timeframe || '-'; payload['Must haves'] = d.wants || '-';
       }
       if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+      toBook(kind, d);
       fetch('https://formsubmit.co/ajax/' + TO, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
