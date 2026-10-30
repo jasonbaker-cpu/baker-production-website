@@ -21,6 +21,7 @@ async def drag(pg, paths):
 async def clickImg(pg,x,y):
     sx,sy = await pg.evaluate(f"window.__bae.imgToScreen({x},{y})"); await pg.mouse.move(sx,sy,steps=8); await pg.mouse.click(sx,sy); await pg.wait_for_timeout(300)
 async def export(pg,name):
+    if os.environ.get('PLAIN_JOB'): await pg.evaluate('window.__bae.plain()'); await pg.wait_for_timeout(300)   # 30 Oct: agent wants clean photos
     async with pg.expect_download() as d: await pg.click('#exportBtn')
     dl=await d.value; await dl.save_as(OUT+name)
 async def busy(pg): await pg.wait_for_function("document.getElementById('busy').hidden===true", timeout=400000)
@@ -36,6 +37,7 @@ async def main():
         if JOBS and JOBS[0].get('tune'): await pg.evaluate('t=>{window.__TUNE=t}', JOBS[0]['tune'])
         report={}
         for job in JOBS:
+            os.environ['PLAIN_JOB'] = '1' if job.get('plain') else ''
             await pg.click('#tabBtnPins')
             await pg.evaluate("o=>{window.__edgeOff=o}", job.get('edgeOff',{}))
             if job.get('snap'): await pg.evaluate("c=>{window.__snapCfg=c}", job['snap'])

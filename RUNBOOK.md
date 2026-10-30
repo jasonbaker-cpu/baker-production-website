@@ -181,3 +181,10 @@ Push-notify him.
 - At least 6 places. Pins never covered: labels are placed around reserved pin boxes, and places under the photo are dropped (printed) — move the photo corner or the crop if that loses one you need.
 - Bins, cars or clutter in the inset photo: `lama.py in.jpg mask.png out.jpg` (LaMa ONNX from opencv_zoo, models/lama.onnx — download from media.githubusercontent.com opencv_zoo inpainting_lama_2025jan.onnx).
 - satpop.py (frosted cards + pop-up) and oblique.py stay available only when asked.
+
+## Clean photos for agents who add their own graphics (Jason, 30 Oct 2026)
+- Drew Dwyer / One Residential (oneresidential.com.au, e.g. 217 Marmion St Palmyra) wants ALL drone images with NO graphics or markings — they do it in house. agency_map value `plain` → prep_day sets `plain` (no pins, no house pin, no boundary, no lot text); t12 calls `__bae.plain()` before every export. Sky, levelling and grade still apply.
+- Re-export a published job clean: `PLAIN=1 node resky.js <day> <slug>`.
+- Any other agent who asks for no graphics: add their domain to agency_map as `plain`.
+## Horizon smear fix (30 Oct)
+- core.js: hazy distant land was toned toward the new sky (band 3.5% below the land line) and bright pixels got the short fade → white streaky band along the skyline (Marmion, Keymer, Throttle). Defaults now toneBelow 0, toneK 0.5, brtK 0. resky.js takes TUNE='{...}' and ONLY=<file numbers>.

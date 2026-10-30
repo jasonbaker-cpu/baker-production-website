@@ -484,10 +484,11 @@ function finishImage(base, p){
             const wS = uS >= 1 ? 1 : (uS <= 0 ? 0 : uS*uS*(3-2*uS)), wL = uL >= 1 ? 1 : (uL <= 0 ? 0 : uL*uL*(3-2*uL));
             const tYb = (rowTone && rowTone[y*3] >= 0) ? (rowTone[y*3]+rowTone[y*3+1]+rowTone[y*3+2])/3 : refY[x];
             const brt = Math.min(1, Math.max(0, (g1[j] - (Math.min(tYb, refY[x]) - 28))/16));
-            ww = wL + (wS - wL)*brt;
+            ww = wL + (wS - wL)*brt*(TT.brtK!=null ? TT.brtK : 0);
             // original sky near the horizon (between the fade and the land) is toned toward the new sky instead of cut out
-            if (ww < 1 && y < landEnv[x] + 0.035*h && rowTone[y*3] >= 0){ const q = SKYP.rm[SKYP.h-2], tY = (rowTone[y*3]+rowTone[y*3+1]+rowTone[y*3+2])/3, skyish = Math.min(1, Math.max(0, (g3[j] - (tY - 22))/18)),
-                kt = 0.8 * skyish * Math.min(1, Math.max(0, (landEnv[x] + 0.035*h - y)/(0.015*h)));
+            const TB = TT.toneBelow!=null ? TT.toneBelow : 0, TK = TT.toneK!=null ? TT.toneK : 0.5;   // 30 Oct: was 0.035/0.8 — toned hazy distant land into a white smeared band (Marmion)
+            if (ww < 1 && y < landEnv[x] + TB*h && rowTone[y*3] >= 0){ const q = SKYP.rm[SKYP.h-2], tY = (rowTone[y*3]+rowTone[y*3+1]+rowTone[y*3+2])/3, skyish = Math.min(1, Math.max(0, (g3[j] - (tY - 22))/18)),
+                kt = TK * skyish * Math.min(1, Math.max(0, (landEnv[x] + TB*h - y)/(0.015*h)));
               r += (q[0]-rowTone[y*3])*kt; g += (q[1]-rowTone[y*3+1])*kt; b += (q[2]-rowTone[y*3+2])*kt; }
           } else {
           const o0=px[i], o1=px[i+1], o2=px[i+2], Yp = .299*o0+.587*o1+.114*o2, mn = Math.min(o0,o1,o2), mx = Math.max(o0,o1,o2);
