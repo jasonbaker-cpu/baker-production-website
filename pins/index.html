@@ -663,7 +663,7 @@ function finishImage(base, p){
   // Golden-hour / dawn sky: warm, not blue. Editors leave these alone — so do we.
   if (sky){ let r=0,b=0,n=0; const hz = Math.max(4, Math.min(h-1, sky.b|0)), st = Math.max(1, Math.round(w/300));
     let g=0; for (let y=0; y<hz*0.8; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4; r+=px[i]; g+=px[i+1]; b+=px[i+2]; n++; }
-    if (n && (r - b)/n > 6 && (r+g+b)/(3*n) < 236) { p.skyWarm = true; sky = null; } }
+    if (n && (r - b)/n > 6 && (r+g+b)/(3*n) < 236 && !(Object.assign({},TUNE,window.__TUNE||{}).forceSky || (typeof prefs!=='undefined' && prefs.skyPlate==='S'))) { p.skyWarm = true; sky = null; } }   // 30 Oct: twilight jobs (plate S) DO get the editors' sunset sky
   // Keep a good real sky (blue with proper clouds): the editors only swap washed-out or blown skies.
   p.skyKept = false;
   if (sky && p.skyKeepReal === true){
