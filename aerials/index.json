@@ -54,23 +54,6 @@
      "portrait": false
     },
     {
-     "slug": "3_throttle_st",
-     "addr": "3 Throttle St, Brabham WA 6055",
-     "who": "Nigel Ndlovu \u00b7 Armadale Real Estate",
-     "agency": "flags-p",
-     "full": false,
-     "fullPhotos": [],
-     "src": "29-oct-2026/3_throttle_st/src/",
-     "map": "3_throttle_st_places.json",
-     "project": "project.json",
-     "photos": [
-      "DJI_20261029193020_0164_D.jpg",
-      "DJI_20261029193135_0167_D.jpg"
-     ],
-     "notes": "",
-     "portrait": false
-    },
-    {
      "slug": "2993_albany_hwy",
      "addr": "2993 Albany Hwy, Kelmscott WA 6111",
      "who": "Jayden Cooke \u00b7 Rodway Group",
@@ -92,6 +75,29 @@
       "DJI_20261029220119_0176_D.jpg",
       "DJI_20261029220134_0177_D.jpg",
       "DJI_20261029220150_0178_D.jpg"
+     ],
+     "notes": "",
+     "portrait": false
+    },
+    {
+     "slug": "4_throttle_st",
+     "addr": "4 Throttle St, Brabham WA 6055",
+     "who": "Nigel Ndlovu \u00b7 Armadale Real Estate",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261029192941_0162_D.jpg",
+      "DJI_20261029192933_0161_D_r270.jpg"
+     ],
+     "src": "29-oct-2026/4_throttle_st/src/",
+     "map": "4_throttle_st_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261029192941_0162_D.jpg",
+      "DJI_20261029192933_0161_D_r270.jpg",
+      "DJI_20261029193003_0163_D.jpg",
+      "DJI_20261029193020_0164_D.jpg",
+      "DJI_20261029193135_0167_D.jpg"
      ],
      "notes": "",
      "portrait": false
