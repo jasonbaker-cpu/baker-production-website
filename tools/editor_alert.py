@@ -31,7 +31,7 @@ with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=ctx) as s:
         lines += ["", "Please edit sky, colour and horizon only — no graphics.",
                   f"When done, drop your finished photos onto https://bakerproduction.com/pins/?open={d['id']}/{j['slug']} — our pins, boundary and labels go on automatically. Check each pin against the map, drag any that are off, then click Send to Baker. That's it — no need to send files back.", ""]
         if has_map: lines += [f"Map of every place: {base}{j['slug']}/editor_map.jpg"]
-        lines += [f"Our reference version: {base}", "", "Thanks,", "Baker Production"]
+        lines += [f"Our reference version: {base}", "Step-by-step guide: https://bakerproduction.com/pins/guide/", "", "Thanks,", "Baker Production"]
         m = EmailMessage(); m['From'] = f'Baker Production <{frm}>'; m['To'] = to
         m['Subject'] = f"Drone edit needed — {j['addr']}"; m.set_content('\n'.join(lines))
         s.send_message(m); sent[key] = True; n += 1; print('sent', key)
