@@ -192,3 +192,10 @@ Push-notify him.
 - Twilight jobs: sky plate S IS applied (the editor used to skip warm dusk skies, leaving a flat white sky) and the finish is ON with the dusk grade setAdj {exp:-45, con:18, sat:18, hl:-25}. Don't publish twilight with noFinish/flat drone colour.
 - Re-export: `ADJ='{"exp":-45,"con":18,"sat":18,"hl":-25}' FINISH=1 node resky.js <day> <slug>`.
 - A 90/270 street-rotated top-down whose mirror pad shows (blurry blobs, smeared street lights) is dropped if the other top-down already has the street at the bottom.
+
+## HARD JOBS AND ALL TWILIGHT JOBS GO TO THE PHOTO EDITOR (Jason, 30 Oct 2026)
+"Any hard ones to edit lets give to our photo editor from now on" + "and all twilight ones".
+- EVERY twilight / dusk / night drone job → photo editor. No exceptions.
+- Also any job that is HARD after your best attempt: fence check still failing after 3 rounds or the boundary can't be drawn (no cadastre/title, odd or multi-part lot, subdivision); drone GPS doesn't match the booked address (e.g. booked 3 Throttle St, flown over 4 Throttle St); fewer than 3 usable aerials; independent QC still sees a visible defect (smeared/hazy horizon, sky painted over buildings, tilted horizon, white sky, blurry mirror padding); a booking note you couldn't follow.
+- What to do: still publish your best version to the gallery for reference, but set `"toEditor": true` and a one-line `"editorReason"` on the job in aerials/index.json and start its gallery section heading with "SEND TO EDITOR — <reason>". Do NOT contact the editor and don't create tasks anywhere — Jason/the VA send the raws.
+- Report: add a line "To editor: <address — reason>, …" (or "To editor: none") to the final message, before the other flags.
