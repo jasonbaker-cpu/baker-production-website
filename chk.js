@@ -655,7 +655,7 @@ const AGENCIES = {
   "navy":        { name:"Navy pins + emblem (Biljana)",                     kind:"pin",  color:"#122068", scale:.88, house:{ type:"board", w:170, h:143, stem:300, mark:"emblem" } },
   "navy-h":      { name:"Harcourts — navy pins + H board (Tim Fidock, Mario Condipodero)",          kind:"pin",  color:"#022048", house:{ type:"board", w:178, h:178, stem:240, mark:"hboard" } },
   "fn":          { name:"Blue pins + First National board (Suresh Sama, Nish Jayant)",   kind:"pin",  color:"#004480", scale:.88, house:{ type:"board", w:142, h:142, stem:250, mark:"fn" } },
-  "orange":      { name:"Orange pins (Raymond Chen)",                       kind:"pin",  color:"#F4783C", scale:.88, house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
+  "orange":      { name:"Top Realty — orange pins + small black house pin on a white post (Raymond Chen)", kind:"pin",  color:"#F4783C", house:{ type:"pin", w:144, h:196, stem:296, mark:"house", color:"#111111" } },
   "green-belle": { name:"Green pins + belle (Shane Garrett, Cory Garrett, Megan Topham)", kind:"pin", color:"#22644E", house:{ type:"pin", w:176, h:281, mark:"belle", markR:.91 } },
   "flags-p":     { name:"Red flags + P pin (Professionals: Annique Woodford, Nic Pulvirenti, Stephanie Briers, Emma Scharf, James Kennedy; Armadale: Grant Wilson)", kind:"flag", color:"#FF2744", house:{ type:"pin", w:192, h:273, color:"#3C3C3C", mark:"p", markR:.85 } },
   "yellow":      { name:"Yellow labels + address (Gregory Swiatek, Shah Akbari)", kind:"ylab", color:"#F4DC00", house:{ type:"label" } },
@@ -673,7 +673,13 @@ const HOUSE_STYLES = {
   board:     { name:"Square sign on a post", house:{ type:"board", w:170, h:170, stem:220, mark:"houseboard" } },
   big:       { name:"Big pin", house:{ type:"pin", w:290, h:410, mark:"house" } }
 };
-function agency(){ const A = AGENCIES[prefs.agency] || AGENCIES.grey, o = HOUSE_STYLES[prefs.houseStyle||""]; return o && o.house ? Object.assign({}, A, { house:o.house }) : A; }
+// 31 Oct 2026 (Jason): every job uses the same SMALL pins — pin head ≈109 px wide and label ≈95 px tall per 3000 px of photo
+// (measured from his Top Realty reference). One size for all agencies; house pins capped to the same small size.
+const PIN_K = .77, HOUSE_MAXW = 144;
+function agency(){ const A0 = AGENCIES[prefs.agency] || AGENCIES.grey, o = HOUSE_STYLES[prefs.houseStyle||""];
+  const A = Object.assign({}, A0, { scale:PIN_K }, o && o.house ? { house:o.house } : {});
+  const H = A.house; if (H && H.type === "pin" && H.w > HOUSE_MAXW && prefs.houseStyle !== "big") A.house = Object.assign({}, H, { w:HOUSE_MAXW, h:Math.round(HOUSE_MAXW*H.h/H.w) });
+  return A; }
 function pinColour(){ return prefs.pinColor || agency().color; }
 function houseColour(){ const h = agency().house; return h.color || pinColour(); }
 function shade(hex, pct){ const n=parseInt(hex.slice(1),16); const f=v=>Math.max(0,Math.min(255,Math.round(v + 255*pct/100))); return `rgb(${f(n>>16&255)},${f(n>>8&255)},${f(n&255)})`; }
