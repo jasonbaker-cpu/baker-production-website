@@ -49,6 +49,8 @@ for j in D['jobs']:
     if j.get('skyPlate'): base['skyPlate'] = j['skyPlate']   # e.g. 'S' = editors' sunset sky for twilight shoots
     if j.get('noSky'): base['noSky'] = 1   # twilight / sunset shoot: keep the real sky
     if j.get('noFinish'): base['noFinish'] = 1   # twilight: no brightening grade either
+    if base.get('skyPlate') == 'S':   # 30 Oct (Jason): twilight = sunset plate + finish ON + dusk grade (flat drone colour looked 'really bad')
+        base.pop('noFinish', None); base.pop('noSky', None); base.setdefault('adj', {'exp': -45, 'con': 18, 'sat': 18, 'hl': -25})
     if j.get('plain') or base['agency'] == 'plain':   # 30 Oct (Jason): agents who add their own graphics get clean photos — no pins, no boundary, no text
         base['plain'] = 1; base['agency'] = 'grey'; j['poly'] = None
     if j.get('portrait'): base['portrait'] = 1   # booking note asked for vertical drone photos

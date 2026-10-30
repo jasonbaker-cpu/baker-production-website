@@ -104,6 +104,7 @@ async def main():
                         if job.get('portrait'):
                             im=Image.open(fn); w_,h_=im.size; c_=int(h_*0.8); x_=(w_-c_)//2; im.crop((x_,0,x_+c_,h_)).resize((1800,2250),Image.LANCZOS).save(fn,quality=93)
                     continue
+                if job.get('adj'): await pg.evaluate('a=>window.__bae.setAdj(a)', job['adj']); await pg.wait_for_timeout(300)   # 30 Oct: twilight dusk grade
                 if job.get('noFinish'): await pg.evaluate("window.__bae.setFinish(false)"); await pg.wait_for_timeout(300)   # twilight: keep the drone's own colour and dusk mood
                 if job.get('noSky'): await pg.evaluate("window.__bae.setSky(false)"); await pg.wait_for_timeout(300); await busy(pg)   # twilight/sunset shoots keep their real sky
                 st = job.get('steps',{}).get(ph,{})
