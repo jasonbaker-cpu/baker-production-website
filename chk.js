@@ -1792,9 +1792,10 @@ async function addFiles(files){
       m = b.match(/_(\d{4})_\d{10,}_photo/); if (m) return "fly_"+m[1]; m = b.match(/dsc0*(\d{3,})/); if (m) return "dsc"+m[1]; return b.replace(/[-_ ](edited|final|edit|v\d+|r\d+|\(\d+\))+$/,""); };
     const swapped = [];
     for (const f of imgs.slice()){
-      const q = photos.find(x => !x.sample && fkey(x.name) === fkey(f.name) && x.name !== f.name);
-      if (!q) continue;
-      try{
+      // 31 Oct: the editor keeps the original file name, so a same-name file IS the edited version — swap it (was skipped before).
+      const qs = photos.filter(x => !x.sample && fkey(x.name) === fkey(f.name));
+      if (!qs.length) continue;
+      for (const q of qs) try{
         let bmp; try { bmp = await createImageBitmap(f); } catch(e){ bmp = await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=URL.createObjectURL(f); }); }
         const nw = bmp.width, nh = bmp.height, c = document.createElement("canvas"); c.width = q.w; c.height = q.h; const cx = c.getContext("2d"); cx.imageSmoothingQuality = "high";
         let fit = "full";
@@ -1805,8 +1806,8 @@ async function addFiles(files){
         commit && (P()===q) && commit();
         q.base = c; q.finishOn = false; q.skyOn = false; q.adj = Object.assign({}, ADJ0); q.fin = null; q.finKey = null; q._adj = null; q._blur = null; q.editorPhoto = f.name; q.editorFit = fit;
         makeThumb(q); swapped.push(q.name + (fit === "stretched" ? " (different shape — check carefully)" : ""));
-        imgs.splice(imgs.indexOf(f), 1);
       }catch(err){ console.error(err); }
+      if (qs.some(q => q.editorPhoto === f.name)) imgs.splice(imgs.indexOf(f), 1);
     }
     if (swapped.length){ refreshAll(); requestDraw(); toast(`Editor's photo${swapped.length>1?"s":""} swapped in on ${swapped.length} — pins and boundary kept. Check each against the map.`, 6000); }
     if (!imgs.length) return;
