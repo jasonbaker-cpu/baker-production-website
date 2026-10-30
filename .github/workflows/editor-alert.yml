@@ -4,6 +4,10 @@ on:
     branches: [main]
     paths: ['aerials/index.json']
   workflow_dispatch:
+    inputs:
+      test:
+        description: 'Send a test email to the sender only'
+        default: ''
 permissions:
   contents: write
 concurrency: editor-alert
@@ -17,6 +21,7 @@ jobs:
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           EDITOR_EMAIL: ${{ vars.EDITOR_EMAIL }}
           FROM_EMAIL: ${{ vars.FROM_EMAIL }}
+          TEST: ${{ inputs.test }}
         run: python3 tools/editor_alert.py
       - name: Remember which jobs were sent
         run: |

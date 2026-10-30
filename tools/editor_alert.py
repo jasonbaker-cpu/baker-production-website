@@ -6,6 +6,11 @@ SENT = 'aerials/editor_sent.json'
 pw, to = os.environ.get('GMAIL_APP_PASSWORD'), (os.environ.get('EDITOR_EMAIL') or 'editingprofocus@gmail.com')   # Profocus (Jason 30 Oct)
 frm = os.environ.get('FROM_EMAIL') or 'jasonbaker@bakerproduction.com'   # sender account with 2-Step + app password (Jason 31 Oct)
 if not pw or not to: print('not set up yet (GMAIL_APP_PASSWORD secret / EDITOR_EMAIL variable missing) — nothing sent'); sys.exit(0)
+if os.environ.get('TEST'):   # login check: one email to the sender's own inbox only
+    m = EmailMessage(); m['From'] = f'Baker Production <{frm}>'; m['To'] = frm
+    m['Subject'] = 'Editor alert test — working'; m.set_content('The automatic Profocus email is set up. Flagged drone jobs will now email ' + to + ' on their own.')
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=ssl.create_default_context()) as s: s.login(frm, pw); s.send_message(m)
+    print('test sent to', frm); sys.exit(0)
 I = json.load(open('aerials/index.json')); sent = json.load(open(SENT)) if os.path.exists(SENT) else {}
 todo = []
 for d in I.get('days', []):
