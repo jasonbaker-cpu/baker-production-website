@@ -2378,6 +2378,8 @@ async function openRemoteJob(entry){
     if (mapF) await loadJobFile(mapF);
     await addFiles(files);
     if (entry.agency){ prefs.agency = entry.agency; savePrefs(); }
+    window.__cloudEdit = null; window.__curJob = { id: String(entry.src||"").split("/")[0] + "__" + entry.slug, addr: entry.addr };
+    try { await loadCloudEdits(); } catch(e){ console.error(e); }
     refreshAll(); requestDraw();
     showCheckMap(entry);   // 29 Oct (Jason): the map + boundary sit beside the photo while you edit
     toast(entry.addr + " opened. Edit, then Export.");
@@ -2480,6 +2482,59 @@ $("fixJump").onclick = ()=>{ const p=P(); if(!p) return; const sh=p.shapes.find(
   setTimeout(()=>{ const f=document.querySelector(".fixb"); if (f) f.scrollIntoView({behavior:"smooth", block:"start"}); }, 80); };
 setInterval(()=>{ const p=P(), b=$("fixJump"); if (b) b.hidden = !(p && p.shapes.some(x=>x.type==="poly")); }, 600);
 window.__bae.renderOut = async ()=>{ const p=P(); await fontsReady(); await waitFinished(p); const b=await renderFull(p); return await new Promise(res=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(b); }); };
+
+
+window.__FS_API_KEY = "AIzaSyC0ES1GZsgtl4_vC6Dpp-4aG-Iy4DtXlCE";   // baker-leads web key (public by design; access is set by Firestore rules)
+// ===== 31 Oct 2026 (Jason): the photo editor's edits are SAVED ONLINE so the VA sees them in the editor =====
+// Profocus drops their edited photos on the job (swap-in keeps every pin), clicks "Send to Baker";
+// the photos go to Firestore (baker-leads, collection aerial_edits, chunked). Anyone opening the same job link
+// later gets those photos swapped in automatically, then checks pins and exports.
+const FS_BASE = "https://firestore.googleapis.com/v1/projects/baker-leads/databases/(default)/documents/aerial_edits";
+const FS_CHUNK = 700000;
+function fsKey(){ return window.__FS_API_KEY; }
+const b64 = buf => { let s = "", u = new Uint8Array(buf); for (let i=0;i<u.length;i+=0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i+0x8000)); return btoa(s); };
+const unb64 = t => { const s = atob(t), u = new Uint8Array(s.length); for (let i=0;i<s.length;i++) u[i] = s.charCodeAt(i); return u; };
+async function fsPut(path, fields){ const r = await fetch(`${FS_BASE}/${path}?key=${fsKey()}`, { method:"PATCH", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ fields }) });
+  if (!r.ok) throw new Error(r.status === 403 ? "Baker's online storage isn't switched on yet" : "save failed ("+r.status+")"); return r.json(); }
+async function fsGet(path){ const r = await fetch(`${FS_BASE}/${path}?key=${fsKey()}`); if (r.status === 404) return null; if (!r.ok) throw new Error("load failed ("+r.status+")"); return r.json(); }
+const fv = (d, k) => { const f = d && d.fields && d.fields[k]; return f ? (f.stringValue ?? f.integerValue ?? f.bytesValue ?? (f.arrayValue ? (f.arrayValue.values||[]).map(v=>v.stringValue) : undefined)) : undefined; };
+async function sendToBaker(){
+  const J = window.__curJob; if (!J){ toast("Open the job from its link first."); return; }
+  const ed = photos.filter(q => q.editorPhoto && q.base);
+  if (!ed.length){ toast("Drag your edited photos onto the page first."); return; }
+  const who = (prompt("Your name (so Baker knows who sent it):", localStorage.getItem("bae_who")||"") || "").trim();   // prompt may be null in some frames
+  try { if (who) localStorage.setItem("bae_who", who); } catch(e){}
+  $("busy").hidden = false; const names = [];
+  try{
+    for (let i=0;i<ed.length;i++){ const q = ed[i]; $("busy").textContent = `Sending photo ${i+1} of ${ed.length} to Baker…`;
+      const blob = await new Promise(r => q.base.toBlob(r, "image/jpeg", .93)); const buf = await blob.arrayBuffer(); const n = Math.ceil(buf.byteLength / FS_CHUNK);
+      const id = encodeURIComponent(q.name.replace(/\.[^.]+$/,""));
+      for (let c=0;c<n;c++) await fsPut(`${J.id}/photos/${id}/c/${c}`, { b:{ bytesValue: b64(buf.slice(c*FS_CHUNK, (c+1)*FS_CHUNK)) } });
+      await fsPut(`${J.id}/photos/${id}`, { name:{ stringValue:q.name }, file:{ stringValue:q.editorPhoto }, chunks:{ integerValue:String(n) } });
+      names.push(q.name); }
+    await fsPut(J.id, { addr:{ stringValue:J.addr||"" }, by:{ stringValue:who||"photo editor" }, at:{ stringValue:new Date().toISOString() }, status:{ stringValue:"ready for VA check" },
+      photos:{ arrayValue:{ values: names.map(n=>({ stringValue:n })) } } });
+    $("busy").hidden = true; toast(`Sent ${names.length} photo${names.length>1?"s":""} to Baker. Thanks — you're done.`, 7000);
+  }catch(err){ console.error(err); $("busy").hidden = true; toast("Couldn't send: " + err.message, 8000); }
+}
+async function loadCloudEdits(){
+  const J = window.__curJob; if (!J || !fsKey()) return;
+  const d = await fsGet(J.id); if (!d) return;
+  const names = fv(d, "photos") || []; const files = [];
+  for (let i=0;i<names.length;i++){ $("busy").hidden = false; $("busy").textContent = `Loading the editor's photo ${i+1} of ${names.length}…`;
+    const id = encodeURIComponent(names[i].replace(/\.[^.]+$/,"")); const m = await fsGet(`${J.id}/photos/${id}`); if (!m) continue;
+    const n = +fv(m, "chunks") || 0, parts = [];
+    for (let c=0;c<n;c++){ const cd = await fsGet(`${J.id}/photos/${id}/c/${c}`); parts.push(unb64(fv(cd, "b"))); }
+    files.push(new File(parts, fv(m, "name") || names[i], { type:"image/jpeg" })); }
+  $("busy").hidden = true;
+  if (files.length){ await addFiles(files); window.__cloudEdit = { by: fv(d,"by"), at: fv(d,"at"), n: files.length };
+    toast(`${fv(d,"by")||"The editor"}'s edited photos are in (${files.length}, sent ${new Date(fv(d,"at")).toLocaleString("en-AU",{dateStyle:"medium",timeStyle:"short"})}). Check every pin, then Export all.`, 9000); }
+}
+(()=>{ const ex = $("exportAllBtn"); if (!ex) return; const b = el(`<button class="btn" id="sendBakerBtn" title="Save your edited photos to Baker for checking" hidden>Send to Baker</button>`);
+  const tag = el(`<span class="btn" id="cloudTag" style="background:#1f7a3a;color:#fff;cursor:default" hidden></span>`);
+  ex.parentNode.insertBefore(b, ex); ex.parentNode.insertBefore(tag, b); b.onclick = sendToBaker;
+  setInterval(()=>{ const C = window.__cloudEdit; b.hidden = !(window.__curJob && photos.some(q => q.editorPhoto && q.base) && !C);
+    tag.hidden = !C; if (C) tag.textContent = `✓ ${C.by||"Editor"}'s photos in — check pins, then Export all`; }, 800); })();
 
 })();
 </script>
