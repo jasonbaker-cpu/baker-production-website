@@ -29,7 +29,7 @@ with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=ctx) as s:
         if j.get('lot'): lines += [f"Lot: {j['lot']}"]
         if j.get('notes'): lines += ["", "Agent's booking notes:", j['notes']]
         lines += ["", "Please edit sky, colour and horizon only — no graphics.",
-                  f"When done, drop your finished photos onto https://bakerproduction.com/pins/?open={d['id']}/{j['slug']} — our pins, boundary and labels go on automatically. Check each pin against the map, drag any that are off, then Export all.", ""]
+                  f"When done, drop your finished photos onto https://bakerproduction.com/pins/?open={d['id']}/{j['slug']} — our pins, boundary and labels go on automatically. Check each pin against the map, drag any that are off, then click Send to Baker. That's it — no need to send files back.", ""]
         if has_map: lines += [f"Map of every place: {base}{j['slug']}/editor_map.jpg"]
         lines += [f"Our reference version: {base}", "", "Thanks,", "Baker Production"]
         m = EmailMessage(); m['From'] = f'Baker Production <{frm}>'; m['To'] = to
