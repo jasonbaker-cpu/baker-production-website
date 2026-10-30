@@ -4,7 +4,7 @@ import json, os, smtplib, ssl, sys
 from email.message import EmailMessage
 SENT = 'aerials/editor_sent.json'
 pw, to = os.environ.get('GMAIL_APP_PASSWORD'), (os.environ.get('EDITOR_EMAIL') or 'editingprofocus@gmail.com')   # Profocus (Jason 30 Oct)
-frm = os.environ.get('FROM_EMAIL') or 'admin@bakerproduction.com'
+frm = os.environ.get('FROM_EMAIL') or 'jasonbaker@bakerproduction.com'   # sender account with 2-Step + app password (Jason 31 Oct)
 if not pw or not to: print('not set up yet (GMAIL_APP_PASSWORD secret / EDITOR_EMAIL variable missing) — nothing sent'); sys.exit(0)
 I = json.load(open('aerials/index.json')); sent = json.load(open(SENT)) if os.path.exists(SENT) else {}
 todo = []
