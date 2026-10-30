@@ -188,3 +188,7 @@ Push-notify him.
 - Any other agent who asks for no graphics: add their domain to agency_map as `plain`.
 ## Horizon smear fix (30 Oct)
 - core.js: hazy distant land was toned toward the new sky (band 3.5% below the land line) and bright pixels got the short fade → white streaky band along the skyline (Marmion, Keymer, Throttle). Defaults now toneBelow 0, toneK 0.5, brtK 0. resky.js takes TUNE='{...}' and ONLY=<file numbers>.
+## Twilight look (Jason 30 Oct: "the drone photo editing looks really bad" on 2993 Albany Hwy)
+- Twilight jobs: sky plate S IS applied (the editor used to skip warm dusk skies, leaving a flat white sky) and the finish is ON with the dusk grade setAdj {exp:-45, con:18, sat:18, hl:-25}. Don't publish twilight with noFinish/flat drone colour.
+- Re-export: `ADJ='{"exp":-45,"con":18,"sat":18,"hl":-25}' FINISH=1 node resky.js <day> <slug>`.
+- A 90/270 street-rotated top-down whose mirror pad shows (blurry blobs, smeared street lights) is dropped if the other top-down already has the street at the bottom.

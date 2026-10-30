@@ -2,8 +2,9 @@
 // usage: node resky.js <day> <slug>   (needs the website served on :8766)
 const { chromium } = require('playwright'); const fs = require('fs');
 (async () => {
-  const [day, slug] = process.argv.slice(2), out = `qc/resky/${slug}`; fs.mkdirSync(out, { recursive: true });
+  const [day, slug] = process.argv.slice(2), out = process.env.OUT || `qc/resky/${slug}`; fs.mkdirSync(out, { recursive: true });
   const b = await chromium.launch(); const ctx = await b.newContext({ viewport: { width: 1900, height: 950 }, acceptDownloads: true }); const pg = await ctx.newPage();
+  if (process.env.TUNE) await pg.addInitScript(t => { window.__TUNE = JSON.parse(t); }, process.env.TUNE);   // 30 Oct: editor tuning overrides for a re-export
   const FD = '/tmp/claude-0/-home-claude/123b6bc4-adfa-5095-9578-7622ec75f692/scratchpad/fontpkg/package/files/';
   const ffc = (fam, file, w) => `@font-face{font-family:'${fam}';font-weight:${w};font-style:normal;src:url(data:font/woff2;base64,${fs.readFileSync(FD+file).toString('base64')}) format('woff2');}`;
   const CSS = [300,400,700].map(w=>ffc('Source Sans 3', `source-sans-3-latin-${w}-normal.woff2`, w)).join('') + [400,700].map(w=>ffc('Open Sans', `open-sans-latin-${w}-normal.woff2`, w)).join('');
@@ -16,12 +17,18 @@ const { chromium } = require('playwright'); const fs = require('fs');
   if (process.env.AGENCY) { await pg.selectOption('#agSel', process.env.AGENCY); await pg.waitForTimeout(500); }
   const n = await pg.evaluate(() => document.querySelectorAll('.thumb').length);
   const busy = () => pg.waitForFunction(() => document.getElementById('busy').hidden === true, null, { timeout: 400000 });
+  const only = process.env.ONLY ? process.env.ONLY.split(',') : null;
+  const pnames = JSON.parse(fs.readFileSync(`/home/claude/baker-production-website/aerials/${day}/${slug}/src/project.json`)).photos.map(q => q.name);
   for (let i = 0; i < n; i++) {
+    if (only && !only.some(o => (pnames[i] || '').includes(o))) continue;
     await pg.locator('.thumb').nth(i).click(); await busy(); await pg.waitForTimeout(500);
     if (process.env.MAXPINS) { const drop = await pg.evaluate((mx) => { const ph = window.__bae.photo(); const P = (typeof job !== 'undefined' && job && job.places) || [];
         const pins = ph.pins.filter(q => !q.house).map(q => ({ n: q.name, d: ((P.find(x => x.name === q.name) || {}).dist) || 1e9 })).sort((a, b) => a.d - b.d); return pins.slice(+mx).map(x => x.n); }, process.env.MAXPINS);
       for (const nm of drop) { await pg.locator('.place', { hasText: nm }).first().click(); await pg.waitForTimeout(250); } if (drop.length) { await pg.evaluate(() => window.__bae.retidy()); await pg.waitForTimeout(300); } console.log('  dropped', drop.join(', ')); }
     if (process.env.SKYPLATE) await pg.evaluate((k) => { prefs.skyPlate = k; return new Promise(r => loadSkyPlate(k, () => { photos.forEach(q => { q.finKey = null; q.fin = null; }); r(); })); }, process.env.SKYPLATE);
+    if (process.env.ADJ) await pg.evaluate(a => window.__bae.setAdj(JSON.parse(a)), process.env.ADJ);
+    if (process.env.FINISH) await pg.evaluate(f => window.__bae.setFinish(f === '1'), process.env.FINISH);
+    if (process.env.PLAIN) await pg.evaluate(() => window.__bae.plain());   // 30 Oct: agent wants clean photos, no graphics
     if (process.env.RETIDY) { await pg.evaluate(() => window.__bae.retidy()); await pg.waitForTimeout(400); }
     const ok = await pg.evaluate(() => window.__bae.setSky(true)); await pg.waitForTimeout(400); await busy(); await pg.waitForTimeout(1200);
     const [dl] = await Promise.all([pg.waitForEvent('download'), pg.click('#exportBtn')]);
