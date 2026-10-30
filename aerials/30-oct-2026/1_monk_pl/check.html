@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 1 Monk Pl, Noranda WA 6062</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary · 700 m²</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (14)</div></div></div>
+<script>const D={"lat": -31.8768856, "lng": 115.8845332, "poly": [[-31.8768852, 115.8847071], [-31.8770684, 115.8844059], [-31.8769215, 115.8842832], [-31.8767383, 115.8845844]], "places": [{"name": "Perth CBD", "lat": -31.952854, "lng": 115.857314, "d": "8.8 km"}, {"name": "Dianella Plaza", "lat": -31.895503400000003, "lng": 115.8730566, "d": "2.3 km"}, {"name": "North Morley Primary School", "lat": -31.8782531, "lng": 115.8783113, "d": "610 m"}, {"name": "Banksia Montessori School", "lat": -31.892263099999997, "lng": 115.8682856, "d": "2.3 km"}, {"name": "Morley Senior High School", "lat": -31.8755407, "lng": 115.8835805, "d": "170 m"}, {"name": "Mirrabooka Bus Station", "lat": -31.87002, "lng": 115.85854999999998, "d": "2.6 km"}, {"name": "St. Andrew's Grammar", "lat": -31.870242899999997, "lng": 115.87455050000001, "d": "1.2 km"}, {"name": "Luderman Park", "lat": -31.8704523, "lng": 115.8835981, "d": "720 m"}, {"name": "Ballajura Station", "lat": -31.84978, "lng": 115.92254000000001, "d": "4.7 km"}, {"name": "Hawaiian's Noranda", "lat": -31.876578199999997, "lng": 115.8950934, "d": "1000 m"}, {"name": "Robert Thompson Park", "lat": -31.874708199999993, "lng": 115.8949464, "d": "1.0 km"}, {"name": "Galleria Shopping Centre", "lat": -31.8971626, "lng": 115.8992309, "d": "2.7 km"}, {"name": "Morley Station", "lat": -31.89598, "lng": 115.91994000000001, "d": "4.0 km"}, {"name": "Infant Jesus School", "lat": -31.8931799, "lng": 115.8892002, "d": "1.9 km"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[40,40],maxZoom:20});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[230,40]});
+</script></body></html>

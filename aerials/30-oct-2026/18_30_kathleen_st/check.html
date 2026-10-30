@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 18/30 Kathleen St, Yokine WA 6060</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (15)</div></div></div>
+<script>const D={"lat": -31.8919781, "lng": 115.839531, "poly": [], "places": [{"name": "Stirling Station", "lat": -31.8941455, "lng": 115.8045988, "d": "3.3 km"}, {"name": "Westfield Innaloo", "lat": -31.901450599999997, "lng": 115.7992006, "d": "4.0 km"}, {"name": "Wattle Street Reserve", "lat": -31.891220899999997, "lng": 115.83585159999998, "d": "360 m"}, {"name": "Nollamara Primary School", "lat": -31.884372, "lng": 115.8396248, "d": "850 m"}, {"name": "St Lawrence Primary School", "lat": -31.879163799999997, "lng": 115.8277715, "d": "1.8 km"}, {"name": "St. Gerard's Catholic Primary School", "lat": -31.8699463, "lng": 115.84882929999999, "d": "2.6 km"}, {"name": "Constance Nanson Reserve", "lat": -31.886529999999997, "lng": 115.84130999999998, "d": "630 m"}, {"name": "The Square Mirrabooka", "lat": -31.871325799999994, "lng": 115.8617108, "d": "3.1 km"}, {"name": "Our Lady of Lourdes School Nollamara", "lat": -31.887880499999998, "lng": 115.8492644, "d": "1.0 km"}, {"name": "Dianella Plaza", "lat": -31.895503400000003, "lng": 115.8730566, "d": "3.2 km"}, {"name": "Carmel School", "lat": -31.8998162, "lng": 115.8630638, "d": "2.4 km"}, {"name": "Knight Avenue Reserve", "lat": -31.891786600000003, "lng": 115.8457446, "d": "590 m"}, {"name": "Flinders Square", "lat": -31.909758300000004, "lng": 115.8483812, "d": "2.1 km"}, {"name": "Tuart Hill Primary School", "lat": -31.9012438, "lng": 115.8399573, "d": "1.0 km"}, {"name": "Heaton Royal Reserve", "lat": -31.896148999999994, "lng": 115.841713, "d": "510 m"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[40,40],maxZoom:20});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[230,40]});
+</script></body></html>

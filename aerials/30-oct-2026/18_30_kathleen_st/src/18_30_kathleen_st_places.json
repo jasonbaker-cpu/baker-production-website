@@ -1,0 +1,369 @@
+{
+ "address": "18/30 Kathleen St, Yokine WA 6060",
+ "lat": -31.8919781,
+ "lng": 115.839531,
+ "pins": [
+  {
+   "name": "Milestones Early Learning Yokine",
+   "cat": "childcare",
+   "lat": -31.8930142,
+   "lng": 115.83956839999999,
+   "desc": "Childcare & kindy"
+  },
+  {
+   "name": "Wattle Street Reserve",
+   "cat": "park",
+   "lat": -31.891220899999997,
+   "lng": 115.83585159999998,
+   "desc": "Pocket park"
+  },
+  {
+   "name": "Heaton Royal Reserve",
+   "cat": "park",
+   "lat": -31.896148999999994,
+   "lng": 115.841713,
+   "desc": "Playground & picnic bench"
+  },
+  {
+   "name": "Royal Street Reserve",
+   "cat": "park",
+   "lat": -31.896911,
+   "lng": 115.83767990000001,
+   "desc": "Neighbourhood playground"
+  },
+  {
+   "name": "Knight Avenue Reserve",
+   "cat": "park",
+   "lat": -31.891786600000003,
+   "lng": 115.8457446,
+   "desc": "Shaded playground, walk paths"
+  },
+  {
+   "name": "Constance Nanson Reserve",
+   "cat": "park",
+   "lat": -31.886529999999997,
+   "lng": 115.84130999999998,
+   "desc": "Walking trails & shaded playground"
+  },
+  {
+   "name": "Royal Villiers Reserve",
+   "cat": "park",
+   "lat": -31.8953706,
+   "lng": 115.84532270000001,
+   "desc": "Local reserve"
+  },
+  {
+   "name": "Woodchester Reserve",
+   "cat": "park",
+   "lat": -31.887569999999997,
+   "lng": 115.84479999999999,
+   "desc": "Soccer pitch & toilets"
+  },
+  {
+   "name": "Nollamara Primary School",
+   "cat": "school",
+   "lat": -31.884372,
+   "lng": 115.8396248,
+   "desc": "Government K-6",
+   "school": "zoned"
+  },
+  {
+   "name": "Royal Lockwood Reserve",
+   "cat": "park",
+   "lat": -31.896922399999998,
+   "lng": 115.8464551,
+   "desc": "Fenced toddler playground"
+  },
+  {
+   "name": "Robinson Reserve",
+   "cat": "park",
+   "lat": -31.895581,
+   "lng": 115.83077099999998,
+   "desc": "Fenced playground, skate area & BBQs"
+  },
+  {
+   "name": "West Coast Steiner School",
+   "cat": "school",
+   "lat": -31.883416600000004,
+   "lng": 115.84025869999998,
+   "desc": "Independent primary",
+   "school": "private"
+  },
+  {
+   "name": "Our Lady of Lourdes School Nollamara",
+   "cat": "school",
+   "lat": -31.887880499999998,
+   "lng": 115.8492644,
+   "desc": "Catholic primary",
+   "school": "private"
+  },
+  {
+   "name": "Tuart Hill Primary School",
+   "cat": "school",
+   "lat": -31.9012438,
+   "lng": 115.8399573,
+   "desc": "Government K-6",
+   "school": "zoned"
+  },
+  {
+   "name": "Maroog Narla Reserve",
+   "cat": "park",
+   "lat": -31.884887199999994,
+   "lng": 115.84678500000001,
+   "desc": "Local reserve"
+  },
+  {
+   "name": "Stirling Libraries - Osborne",
+   "cat": "library",
+   "lat": -31.896193399999994,
+   "lng": 115.82936009999999,
+   "desc": "Library in Osborne Community Hub"
+  },
+  {
+   "name": "Marion Stainton Park",
+   "cat": "park",
+   "lat": -31.881824499999997,
+   "lng": 115.8378559,
+   "desc": "Local park"
+  },
+  {
+   "name": "Nollamara Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.881264499999997,
+   "lng": 115.8408972,
+   "desc": "IGA, pharmacy, post office"
+  },
+  {
+   "name": "Osborne Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.8975711,
+   "lng": 115.82860779999999,
+   "desc": "Main St centre, IGA & deli"
+  },
+  {
+   "name": "Williams Walney Reserve",
+   "cat": "park",
+   "lat": -31.8908973,
+   "lng": 115.85278539999997,
+   "desc": "Playground, elevated views"
+  },
+  {
+   "name": "The Western Australian Golf Club",
+   "cat": "golf",
+   "lat": -31.8959266,
+   "lng": 115.852163,
+   "desc": "Golf course, city views"
+  },
+  {
+   "name": "Grenville Reserve",
+   "cat": "park",
+   "lat": -31.9032247,
+   "lng": 115.83578399999999,
+   "desc": "Oval, playground, courts"
+  },
+  {
+   "name": "Servite College",
+   "cat": "school",
+   "lat": -31.9025882,
+   "lng": 115.8329301,
+   "desc": "Catholic secondary",
+   "school": "private"
+  },
+  {
+   "name": "St Kieran Catholic Primary School",
+   "cat": "school",
+   "lat": -31.9029425,
+   "lng": 115.83104610000001,
+   "desc": "Catholic primary",
+   "school": "private"
+  },
+  {
+   "name": "Des Penman Reserve",
+   "cat": "park",
+   "lat": -31.877604499999997,
+   "lng": 115.8405531,
+   "desc": "Large oval, courts, playground"
+  },
+  {
+   "name": "Stirling Leisure \u2013 Yokine Community Centre",
+   "cat": "aquatic",
+   "lat": -31.9059117,
+   "lng": 115.84801859999997,
+   "desc": "Community & recreation centre"
+  },
+  {
+   "name": "Joondanna Reserve",
+   "cat": "park",
+   "lat": -31.9074296,
+   "lng": 115.83614550000001,
+   "desc": "Ovals, playground, city views"
+  },
+  {
+   "name": "Grindleford Reserve",
+   "cat": "park",
+   "lat": -31.8832276,
+   "lng": 115.8240598,
+   "desc": "Shaded playground, open space"
+  },
+  {
+   "name": "St Lawrence Primary School",
+   "cat": "school",
+   "lat": -31.879163799999997,
+   "lng": 115.8277715,
+   "desc": "Catholic primary",
+   "school": "private"
+  },
+  {
+   "name": "St Denis Catholic Primary School",
+   "cat": "school",
+   "lat": -31.909735599999994,
+   "lng": 115.84456579999998,
+   "desc": "Catholic primary",
+   "school": "private"
+  },
+  {
+   "name": "Dianella Secondary College",
+   "cat": "school",
+   "lat": -31.877699999999997,
+   "lng": 115.8530934,
+   "desc": "Government 7-12",
+   "school": "zoned"
+  },
+  {
+   "name": "Dog Swamp Reserve",
+   "cat": "park",
+   "lat": -31.9095652,
+   "lng": 115.84641719999999,
+   "desc": "Wetland lake & footbridge"
+  },
+  {
+   "name": "Flinders Square",
+   "cat": "shopping",
+   "lat": -31.909758300000004,
+   "lng": 115.8483812,
+   "desc": "Shopping centre, Coles"
+  },
+  {
+   "name": "Dog Swamp Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.9106486,
+   "lng": 115.84713969999999,
+   "desc": "Coles, Woolworths, Aldi"
+  },
+  {
+   "name": "Carmel School",
+   "cat": "school",
+   "lat": -31.8998162,
+   "lng": 115.8630638,
+   "desc": "Independent PP-12",
+   "school": "private"
+  },
+  {
+   "name": "St. Gerard's Catholic Primary School",
+   "cat": "school",
+   "lat": -31.8699463,
+   "lng": 115.84882929999999,
+   "desc": "Catholic primary",
+   "school": "private"
+  },
+  {
+   "name": "Banksia Montessori School",
+   "cat": "school",
+   "lat": -31.892263099999997,
+   "lng": 115.8682856,
+   "desc": "Montessori primary",
+   "school": "private"
+  },
+  {
+   "name": "Glendalough Station",
+   "cat": "train",
+   "lat": -31.914689599999996,
+   "lng": 115.82312519999998,
+   "desc": "Yanchep line, train + bus"
+  },
+  {
+   "name": "Rickman Delawney Reserve",
+   "cat": "park",
+   "lat": -31.8677325,
+   "lng": 115.82592729999999,
+   "desc": "Adventure playground, courts, ovals"
+  },
+  {
+   "name": "Mirrabooka Bus Station",
+   "cat": "bus",
+   "lat": -31.87002,
+   "lng": 115.85854999999998,
+   "desc": "Bus interchange"
+  },
+  {
+   "name": "Yokine Regional Open Space",
+   "cat": "park",
+   "lat": -31.909566199999997,
+   "lng": 115.86449520000001,
+   "desc": "Regional park, play space, parkrun"
+  },
+  {
+   "name": "The Square Mirrabooka",
+   "cat": "shopping",
+   "lat": -31.871325799999994,
+   "lng": 115.8617108,
+   "desc": "Regional centre, Big W, Kmart"
+  },
+  {
+   "name": "Dianella Plaza",
+   "cat": "shopping",
+   "lat": -31.895503400000003,
+   "lng": 115.8730566,
+   "desc": "Coles & Woolworths"
+  },
+  {
+   "name": "Stirling Station",
+   "cat": "train",
+   "lat": -31.8941455,
+   "lng": 115.8045988,
+   "desc": "Yanchep line, train + bus"
+  },
+  {
+   "name": "Stirling Leisure - Inglewood",
+   "cat": "aquatic",
+   "lat": -31.9088154,
+   "lng": 115.87001140000001,
+   "desc": "Aquatic centre, 50 m outdoor pool"
+  },
+  {
+   "name": "Dianella Regional Open Space",
+   "cat": "park",
+   "lat": -31.8849013,
+   "lng": 115.8753653,
+   "desc": "Regional park, ovals, fenced dog park"
+  },
+  {
+   "name": "Mirrabooka Regional Open Space",
+   "cat": "park",
+   "lat": -31.867308500000004,
+   "lng": 115.86233869999998,
+   "desc": "Regional open space"
+  },
+  {
+   "name": "Herdsman Lake Regional Park",
+   "cat": "park",
+   "lat": -31.910986999999995,
+   "lng": 115.80450470000001,
+   "desc": "Wetland, 7.7 km lake loop"
+  },
+  {
+   "name": "Westfield Innaloo",
+   "cat": "shopping",
+   "lat": -31.901450599999997,
+   "lng": 115.7992006,
+   "desc": "Regional shopping centre"
+  },
+  {
+   "name": "Galup Reserve",
+   "cat": "park",
+   "lat": -31.934007899999997,
+   "lng": 115.8218237,
+   "desc": "Lake Monger, lit lake loop"
+  }
+ ]
+}

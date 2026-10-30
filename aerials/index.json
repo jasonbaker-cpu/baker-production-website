@@ -1,6 +1,110 @@
 {
  "days": [
   {
+   "id": "30-oct-2026",
+   "label": "Fri 30 Oct 2026",
+   "gallery": "30-oct-2026/",
+   "jobs": [
+    {
+     "slug": "75_roberts_st",
+     "addr": "75 Roberts St, Bayswater WA 6053",
+     "who": "Wesley Majeks \u00b7 Peard",
+     "agency": "peard",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261030124548_0340_D_r90.jpg"
+     ],
+     "src": "30-oct-2026/75_roberts_st/src/",
+     "map": "75_roberts_st_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261030124548_0340_D_r90.jpg",
+      "DJI_20261030124123_0329_D.jpg",
+      "DJI_20261030124139_0330_D.jpg",
+      "DJI_20261030124300_0332_D.jpg",
+      "DJI_20261030124319_0333_D.jpg",
+      "DJI_20261030124424_0336_D.jpg",
+      "DJI_20261030124442_0337_D.jpg",
+      "DJI_20261030124501_0338_D.jpg"
+     ],
+     "notes": "Entry Notes: meet wesley at the property. Amenities or features to highlight: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
+     "portrait": false
+    },
+    {
+     "slug": "1_finch_pl",
+     "addr": "1 Finch Pl, Bull Creek WA 6149",
+     "who": "Raymond Chen \u00b7 Top Realty",
+     "agency": "orange",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261030151841_0350_D_r270.jpg"
+     ],
+     "src": "30-oct-2026/1_finch_pl/src/",
+     "map": "1_finch_pl_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261030151841_0350_D_r270.jpg",
+      "DJI_20261030151941_0351_D.jpg",
+      "DJI_20261030151958_0352_D.jpg",
+      "DJI_20261030152016_0353_D.jpg",
+      "DJI_20261030152105_0354_D.jpg"
+     ],
+     "notes": "Entry Notes: Seller will meet you at the property. Amenities or features to highlight: No. Strata: -. Land size: -. Title/land plan: Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line. Specific boundaries or land features to mark: -.",
+     "portrait": false
+    },
+    {
+     "slug": "18_30_kathleen_st",
+     "addr": "18/30 Kathleen St, Yokine WA 6060",
+     "who": "Tandin Das \u00b7 Peard",
+     "agency": "peard",
+     "full": false,
+     "fullPhotos": [],
+     "src": "30-oct-2026/18_30_kathleen_st/src/",
+     "map": "18_30_kathleen_st_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261030183441_0355_D.jpg",
+      "DJI_20261030183458_0356_D.jpg",
+      "DJI_20261030183514_0357_D.jpg",
+      "DJI_20261030183529_0358_D.jpg",
+      "DJI_20261030183543_0359_D.jpg",
+      "DJI_20261030183609_0361_D.jpg"
+     ],
+     "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
+     "portrait": false
+    },
+    {
+     "slug": "1_monk_pl",
+     "addr": "1 Monk Pl, Noranda WA 6062",
+     "who": "Manuel Sammut \u00b7 Sammut Real Estate",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261030214947_0368_D.jpg"
+     ],
+     "src": "30-oct-2026/1_monk_pl/src/",
+     "map": "1_monk_pl_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261030214947_0368_D.jpg",
+      "DJI_20261030215102_0371_D.jpg",
+      "DJI_20261030215115_0372_D.jpg",
+      "DJI_20261030215130_0373_D.jpg",
+      "DJI_20261030215143_0374_D.jpg",
+      "DJI_20261030215200_0375_D.jpg",
+      "DJI_20261030215216_0376_D.jpg",
+      "DJI_20261030215232_0377_D.jpg"
+     ],
+     "notes": "Entry Notes: Selling rep will meet you onsite to open up. Amenities or features to highlight: Upper deck outlook / Outdoor entertaining areas / City skyline views. Land size: 700. Title/land plan: yes. Specific boundaries or land features to mark: Shops, schools, City and whatever you think. Client Preferences: We're not wanting the virtual tour on this one.  The clients just wanted the other items in the package.  Photos, floor plan, drone, listing video and twilight shots.  thanks",
+     "portrait": false,
+     "toEditor": true,
+     "editorReason": "Twilight/dusk drone job (twilight add-on, lights on) \u2014 dusk horizon band needs a hand edit",
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/30-10-2026/1 Monk Pl, Noranda WA 6062, Australia/Aerial - Drone Photography",
+     "lot": "700 m\u00b2 \u2014 35 / 20 / 35 / 20 m (title)"
+    }
+   ]
+  },
+  {
    "id": "29-oct-2026",
    "label": "Thu 29 Oct 2026",
    "gallery": "29-oct-2026/",

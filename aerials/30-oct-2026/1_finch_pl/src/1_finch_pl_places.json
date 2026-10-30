@@ -1,0 +1,269 @@
+{
+ "address": "1 Finch Pl, Bull Creek WA 6149",
+ "lat": -32.0594562,
+ "lng": 115.8720487,
+ "pins": [
+  {
+   "name": "Trevor Gribble Reserve",
+   "cat": "reserve",
+   "lat": -32.055621699999996,
+   "lng": 115.870903,
+   "desc": "Sports oval & creekside bush walks"
+  },
+  {
+   "name": "Brockman Park",
+   "cat": "park",
+   "lat": -32.0524617,
+   "lng": 115.87106870000001,
+   "desc": "Playground, entry to Bull Creek bushland trail"
+  },
+  {
+   "name": "Gabbiljee Reserve",
+   "cat": "reserve",
+   "lat": -32.0507172,
+   "lng": 115.8719216,
+   "desc": "Creekline reserve with walking trails"
+  },
+  {
+   "name": "Shelley Foreshore",
+   "cat": "park",
+   "lat": -32.0282884,
+   "lng": 115.8825416,
+   "desc": "Canning River foreshore, playground, sunset views"
+  },
+  {
+   "name": "Willetton Library",
+   "cat": "library",
+   "lat": -32.05573700000001,
+   "lng": 115.8790382,
+   "desc": "City of Canning public library"
+  },
+  {
+   "name": "Kingfisher Park",
+   "cat": "park",
+   "lat": -32.050042,
+   "lng": 115.87898690000002,
+   "desc": "Local park with playground"
+  },
+  {
+   "name": "Willetton Park",
+   "cat": "park",
+   "lat": -32.0467337,
+   "lng": 115.8805597,
+   "desc": "Sports ovals, pavilion, playground"
+  },
+  {
+   "name": "Riverton Leisureplex",
+   "cat": "aquatic",
+   "lat": -32.0383835,
+   "lng": 115.9020767,
+   "desc": "Aquatic & leisure centre"
+  },
+  {
+   "name": "Sovereign Park",
+   "cat": "park",
+   "lat": -32.0596117,
+   "lng": 115.87615209999998,
+   "desc": "Quiet local park"
+  },
+  {
+   "name": "Willetton Senior High School",
+   "cat": "school",
+   "lat": -32.060414699999995,
+   "lng": 115.8789346,
+   "desc": "Government secondary, Years 7-12",
+   "school": "zoned"
+  },
+  {
+   "name": "HomeCo. Southlands Boulevarde",
+   "cat": "shopping",
+   "lat": -32.0577016,
+   "lng": 115.87992059999999,
+   "desc": "Shopping centre: Woolworths, Coles, cinema"
+  },
+  {
+   "name": "Burrendah Park",
+   "cat": "lake",
+   "lat": -32.0558486,
+   "lng": 115.88248910000002,
+   "desc": "Ovals, lake & playground"
+  },
+  {
+   "name": "Hilltop Park",
+   "cat": "park",
+   "lat": -32.0633052,
+   "lng": 115.88323349999999,
+   "desc": "Elevated pocket park with playground"
+  },
+  {
+   "name": "Ernest Wild Park",
+   "cat": "park",
+   "lat": -32.0676475,
+   "lng": 115.876493,
+   "desc": "Local park with playground"
+  },
+  {
+   "name": "Ranford Road Station",
+   "cat": "train",
+   "lat": -32.076,
+   "lng": 115.897,
+   "desc": "Thornlie-Cockburn line (opened 2025)"
+  },
+  {
+   "name": "Mint Child Care & Kindy",
+   "cat": "childcare",
+   "lat": -32.0653305,
+   "lng": 115.871569,
+   "desc": "Nearest childcare & kindy centre"
+  },
+  {
+   "name": "Beasley Park",
+   "cat": "park",
+   "lat": -32.0717265,
+   "lng": 115.8692334,
+   "desc": "Oval, playground, junior footy"
+  },
+  {
+   "name": "John Connell Reserve",
+   "cat": "reserve",
+   "lat": -32.072699,
+   "lng": 115.87565889999998,
+   "desc": "Fenced playground, walking paths"
+  },
+  {
+   "name": "Melville Glades Golf Club",
+   "cat": "golf",
+   "lat": -32.0743408,
+   "lng": 115.8752059,
+   "desc": "18-hole golf course"
+  },
+  {
+   "name": "Elizabeth Manion Park",
+   "cat": "park",
+   "lat": -32.061461,
+   "lng": 115.868842,
+   "desc": "Local park with new playground"
+  },
+  {
+   "name": "William Hall Park",
+   "cat": "park",
+   "lat": -32.0671114,
+   "lng": 115.86291049999998,
+   "desc": "Local park"
+  },
+  {
+   "name": "Leeming Forum",
+   "cat": "shopping",
+   "lat": -32.0785923,
+   "lng": 115.8571822,
+   "desc": "Shopping centre (IGA, specialty stores)"
+  },
+  {
+   "name": "Fiona Stanley Hospital",
+   "cat": "hospital",
+   "lat": -32.0703883,
+   "lng": 115.84626689999999,
+   "desc": "Major public tertiary hospital"
+  },
+  {
+   "name": "South Metropolitan TAFE Murdoch campus",
+   "cat": "tafe",
+   "lat": -32.0749747,
+   "lng": 115.84492789999999,
+   "desc": "TAFE campus"
+  },
+  {
+   "name": "Oberthur Primary School",
+   "cat": "school",
+   "lat": -32.059425,
+   "lng": 115.86874759999999,
+   "desc": "Government primary, K-6",
+   "school": "zoned"
+  },
+  {
+   "name": "John Creaney Reserve",
+   "cat": "reserve",
+   "lat": -32.0563862,
+   "lng": 115.861534,
+   "desc": "Large reserve, skate park, off-leash area"
+  },
+  {
+   "name": "Bull Creek Central",
+   "cat": "shopping",
+   "lat": -32.0644549,
+   "lng": 115.8570491,
+   "desc": "Shopping centre: Woolworths, Target"
+  },
+  {
+   "name": "Bob Gordon Reserve",
+   "cat": "reserve",
+   "lat": -32.0578038,
+   "lng": 115.85593759999999,
+   "desc": "Fenced destination playground, water play, BMX track"
+  },
+  {
+   "name": "Murdoch Station",
+   "cat": "train",
+   "lat": -32.06612,
+   "lng": 115.85049,
+   "desc": "Mandurah line train & bus interchange"
+  },
+  {
+   "name": "St John of God Murdoch Hospital",
+   "cat": "hospital",
+   "lat": -32.0678117,
+   "lng": 115.8446467,
+   "desc": "Major private hospital"
+  },
+  {
+   "name": "Piney Lakes Reserve",
+   "cat": "lake",
+   "lat": -32.0496183,
+   "lng": 115.83868849999999,
+   "desc": "Wetland reserve, sensory playground, dog areas"
+  },
+  {
+   "name": "Murdoch University",
+   "cat": "university",
+   "lat": -32.0679659,
+   "lng": 115.8352366,
+   "desc": "University campus"
+  },
+  {
+   "name": "All Saints' College",
+   "cat": "school",
+   "lat": -32.0512991,
+   "lng": 115.86678549999999,
+   "desc": "Independent school, PP-12",
+   "school": "private"
+  },
+  {
+   "name": "Aviation Heritage Museum",
+   "cat": "landmark",
+   "lat": -32.0492675,
+   "lng": 115.8587223,
+   "desc": "Aircraft museum, family attraction"
+  },
+  {
+   "name": "Bull Creek Station",
+   "cat": "train",
+   "lat": -32.0470374,
+   "lng": 115.8541449,
+   "desc": "Mandurah line train & bus interchange"
+  },
+  {
+   "name": "Rossmoyne Foreshore",
+   "cat": "park",
+   "lat": -32.0385237,
+   "lng": 115.8607555,
+   "desc": "Canning River foreshore path"
+  },
+  {
+   "name": "Westfield Booragoon",
+   "cat": "shopping",
+   "lat": -32.0339503,
+   "lng": 115.836029,
+   "desc": "Regional shopping centre"
+  }
+ ]
+}
