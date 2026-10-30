@@ -1,0 +1,196 @@
+{
+ "label": "Fri 30 Oct 2026",
+ "jobs": [
+  {
+   "slug": "75_roberts_st",
+   "addr": "75 Roberts St, Bayswater WA 6053",
+   "who": "Wesley Majeks \u00b7 Peard",
+   "agency": "peard",
+   "photos": "batch/75_roberts_st/raw",
+   "map": "batch/75_roberts_st/75_roberts_st_map.html",
+   "poly": [
+    [
+     -31.9242867,
+     115.9139333
+    ],
+    [
+     -31.9244431,
+     115.9141164
+    ],
+    [
+     -31.9244604,
+     115.9141108
+    ],
+    [
+     -31.9245195,
+     115.9138403
+    ],
+    [
+     -31.9246434,
+     115.9136948
+    ],
+    [
+     -31.9245664,
+     115.9136047
+    ]
+   ],
+   "notes": "Entry Notes: meet wesley at the property. Amenities or features to highlight: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
+   "streetRot": {
+    "75_roberts_st__nadir": 90
+   },
+   "nadirPick": [
+    "0340"
+   ],
+   "skip": [
+    "Kings Lake Shopping Centre",
+    "Maylands Waterland",
+    "Halliday Park"
+   ],
+   "pick": [
+    "0329",
+    "0330",
+    "0332",
+    "0333",
+    "0336",
+    "0337",
+    "0338"
+   ]
+  },
+  {
+   "slug": "1_finch_pl",
+   "addr": "1 Finch Pl, Bull Creek WA 6149",
+   "who": "Raymond Chen \u00b7 Top Realty",
+   "agency": "orange",
+   "photos": "batch/1_finch_pl/raw",
+   "map": "batch/1_finch_pl/1_finch_pl_places.json",
+   "poly": [
+    [
+     -32.0595237,
+     115.8722085
+    ],
+    [
+     -32.0595765,
+     115.8721436
+    ],
+    [
+     -32.0595745,
+     115.8719188
+    ],
+    [
+     -32.0595376,
+     115.8718345
+    ],
+    [
+     -32.0593782,
+     115.8718365
+    ],
+    [
+     -32.0593816,
+     115.8722146
+    ]
+   ],
+   "area": 735,
+   "areaSource": "title (CT 1458/230, Lot 42 P11822)",
+   "lens": [
+    8.48,
+    21.22,
+    8.95,
+    17.68,
+    35.71,
+    15.77
+   ],
+   "notes": "Entry Notes: Seller will meet you at the property. Amenities or features to highlight: No. Strata: -. Land size: -. Title/land plan: Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line. Specific boundaries or land features to mark: -.",
+   "streetRot": {
+    "1_finch_pl__nadir": 270
+   },
+   "nadirPick": [
+    "0350"
+   ],
+   "edgeOff": {
+    "1": -0.5,
+    "5": 0.8
+   }
+  },
+  {
+   "slug": "18_30_kathleen_st",
+   "addr": "18/30 Kathleen St, Yokine WA 6060",
+   "who": "Tandin Das \u00b7 Peard",
+   "agency": "peard",
+   "photos": "batch/18_30_kathleen_st/raw",
+   "map": "batch/18_30_kathleen_st/18_30_kathleen_st_places.json",
+   "poly": null,
+   "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
+   "skip": [
+    "Osborne Shopping Centre"
+   ],
+   "pick": [
+    "0355",
+    "0356",
+    "0357",
+    "0358",
+    "0359",
+    "0361"
+   ]
+  },
+  {
+   "slug": "1_monk_pl",
+   "addr": "1 Monk Pl, Noranda WA 6062",
+   "who": "Manuel Sammut \u00b7 Sammut Real Estate",
+   "agency": "grey",
+   "photos": "batch/1_monk_pl/raw",
+   "map": "batch/1_monk_pl/1_monk_pl_map.html",
+   "poly": [
+    [
+     -31.8768852,
+     115.8847071
+    ],
+    [
+     -31.8770684,
+     115.8844059
+    ],
+    [
+     -31.8769215,
+     115.8842832
+    ],
+    [
+     -31.8767383,
+     115.8845844
+    ]
+   ],
+   "area": 700,
+   "areaSource": "title (CT 1452/741, Lot 385 P11788)",
+   "lens": [
+    35.0,
+    20.0,
+    35.0,
+    20.0
+   ],
+   "skyPlate": "S",
+   "must": [
+    "Perth CBD",
+    "Galleria Shopping Centre",
+    "Hawaiian's Noranda",
+    "Morley Senior High School",
+    "North Morley Primary School"
+   ],
+   "notes": "Entry Notes: Selling rep will meet you onsite to open up. Amenities or features to highlight: Upper deck outlook / Outdoor entertaining areas / City skyline views. Land size: 700. Title/land plan: yes. Specific boundaries or land features to mark: Shops, schools, City and whatever you think. Client Preferences: We're not wanting the virtual tour on this one.  The clients just wanted the other items in the package.  Photos, floor plan, drone, listing video and twilight shots.  thanks",
+   "streetRot": {},
+   "nadirPick": [
+    "0368"
+   ],
+   "edgeOff": {
+    "0": 0.7,
+    "2": -0.35
+   },
+   "pick": [
+    "0371",
+    "0372",
+    "0373",
+    "0374",
+    "0375",
+    "0376",
+    "0377"
+   ]
+  }
+ ]
+}
