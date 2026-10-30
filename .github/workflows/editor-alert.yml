@@ -1,0 +1,26 @@
+name: Email photo editor about flagged drone jobs
+on:
+  push:
+    branches: [main]
+    paths: ['aerials/index.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: editor-alert
+jobs:
+  alert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Send emails for new SEND TO EDITOR jobs
+        env:
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          EDITOR_EMAIL: ${{ vars.EDITOR_EMAIL }}
+          FROM_EMAIL: ${{ vars.FROM_EMAIL }}
+        run: python3 tools/editor_alert.py
+      - name: Remember which jobs were sent
+        run: |
+          if [ -n "$(git status --porcelain aerials/editor_sent.json)" ]; then
+            git config user.name "baker-bot"; git config user.email "admin@bakerproduction.com"
+            git add aerials/editor_sent.json && git commit -m "editor alerts sent [skip ci]" && git push
+          fi
