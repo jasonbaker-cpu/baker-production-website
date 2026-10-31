@@ -233,7 +233,7 @@ function analyseSky(img, w, h){
   return { m, b:b*s, s, sw, sh, skyc, tex, cloud };
 }
 const LOOK0 = { y:114, rg:1.075, bg:0.876, sat:0.29, lo:24, hi:210 }, LOOK = LOOK0;
-const TUNE = Object.assign({ fine:1.3, mid:1.0, sat:0.30, lutMix:0.2, relSat:0.03,   // 26 Oct: natural texture (was fine 2.3 / mid 1.35 / full LUT = crunchy)
+const TUNE = Object.assign({ fine:0.3, mid:0.4,   /* 31 Oct (Jason: "photo quality looks weird") — was 1.3/1.0, crunchy painted look */ sat:0.30, lutMix:0.2, relSat:0.03,   // 26 Oct: natural texture (was fine 2.3 / mid 1.35 / full LUT = crunchy)
   noDehaze:false, skyTop:[140,180,222], skyHz:[188,201,212], plateMix:0.95, realMix:0.9, farSoft:0, hzStart:0.5, hzAmt:0.9, lookY:108, lookLo:14, lookHi:210, lookBg:0.91, lookRg:1.075, lvlAmt:0.65 }, (typeof window!=='undefined' && window.__TUNE) || {});
 function lookStats(px, w, h){
   const st = Math.max(1, Math.round(Math.sqrt(w*h/120000))), ys=[]; let R=0,G=0,B=0,S=0,n=0;

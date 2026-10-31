@@ -430,11 +430,30 @@ async function addFiles(files){
   // each one replaces the matching drone photo and KEEPS its pins, boundary and labels, so they only check placement against the map.
   { const fkey = n => { const b = String(n).toLowerCase().replace(/\.[a-z0-9]+$/,""); let m = b.match(/(\d{14})_(\d{4})/); if (m) return m[1]+"_"+m[2];
       m = b.match(/_(\d{4})_\d{10,}_photo/); if (m) return "fly_"+m[1]; m = b.match(/dsc0*(\d{3,})/); if (m) return "dsc"+m[1]; return b.replace(/[-_ ](edited|final|edit|v\d+|r\d+|\(\d+\))+$/,""); };
-    const swapped = [];
-    for (const f of imgs.slice()){
-      // 31 Oct: the editor keeps the original file name, so a same-name file IS the edited version — swap it (was skipped before).
-      const qs = photos.filter(x => !x.sample && fkey(x.name) === fkey(f.name));
-      if (!qs.length) continue;
+    const swapped = [], pairs = [], used = new Set();
+    for (const f of imgs){ const qs = photos.filter(x => !x.sample && fkey(x.name) === fkey(f.name)); if (qs.length){ pairs.push([f, qs]); qs.forEach(q => used.add(q)); } }
+    // 31 Oct: renamed files (no DJI number) are matched by what's in the photo — the land below the horizon, ignoring the sky/grade
+    { const left = imgs.filter(f => !pairs.some(x => x[0] === f)), cands = photos.filter(x => !x.sample && !used.has(x));
+      if (left.length && cands.length){
+        const W = 48, H = 32, sig = (img, sx, sy, sw, sh) => { const c = document.createElement("canvas"); c.width = W; c.height = H; const x = c.getContext("2d");
+          x.drawImage(img, sx, sy + sh*.35, sw, sh*.65, 0, 0, W, H); const d = x.getImageData(0,0,W,H).data, g = new Float32Array(W*H);
+          for (let i=0;i<W*H;i++) g[i] = .3*d[i*4] + .59*d[i*4+1] + .11*d[i*4+2];
+          const e = new Float32Array((W-1)*(H-1)); for (let yy=0;yy<H-1;yy++) for (let xx=0;xx<W-1;xx++){ const i=yy*W+xx; e[yy*(W-1)+xx] = (g[i+1]-g[i]) + (g[i+W]-g[i]); }
+          let m=0; e.forEach(v=>m+=v); m/=e.length; let sd=0; e.forEach(v=>sd+=(v-m)*(v-m)); sd=Math.sqrt(sd/e.length)||1; return e.map(v=>(v-m)/sd); };
+        const ncc = (A, B) => { let t=0; for (let i=0;i<A.length;i++) t += A[i]*B[i]; return t/A.length; };
+        const scores = [];
+        for (const f of left){ let bmp; try { bmp = await createImageBitmap(f); } catch(e){ continue; }
+          for (const q of cands){ let sf;
+            if (Math.abs(bmp.width/bmp.height - q.ow/q.oh) < 0.02){ const k = bmp.width/q.ow; sf = sig(bmp, q.x0*k, q.y0*k, q.w/q.k*k, q.h/q.k*k); }
+            else { const ar = q.w/q.h; let sw = bmp.width, sh = sw/ar; if (sh > bmp.height){ sh = bmp.height; sw = sh*ar; } sf = sig(bmp, (bmp.width-sw)/2, (bmp.height-sh)/2, sw, sh); }
+            scores.push([ncc(sf, sig(q.base, 0, 0, q.w, q.h)), f, q]); }
+          if (bmp.close) bmp.close(); }
+        scores.sort((x, y) => y[0] - x[0]); const fdone = new Set();
+        for (const [sc, f, q] of scores){ if (sc < .45 || fdone.has(f) || used.has(q)) continue;
+          const second = scores.filter(x => x[1] === f && x[2] !== q && !used.has(x[2]))[0]; if (second && sc - second[0] < .05) continue;
+          pairs.push([f, [q]]); fdone.add(f); used.add(q); }
+      } }
+    for (const [f, qs] of pairs){
       for (const q of qs) try{
         let bmp; try { bmp = await createImageBitmap(f); } catch(e){ bmp = await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=URL.createObjectURL(f); }); }
         const nw = bmp.width, nh = bmp.height, c = document.createElement("canvas"); c.width = q.w; c.height = q.h; const cx = c.getContext("2d"); cx.imageSmoothingQuality = "high";
@@ -463,6 +482,7 @@ async function addFiles(files){
       const p = newPhoto(f.name, d.canvas, meta, false);
       Object.assign(p, { ow:d.ow, oh:d.oh, x0:d.x0, y0:d.y0, k:d.k, w:d.canvas.width, h:d.canvas.height });
       if (p.cam && !p.cam.fromGimbal){ p.horizon = horizonFor(p); }
+      if (window.__curJob){ p.finishOn = false; p.skyOn = false; p.extraEdited = true; }   // 31 Oct: an editor's photo added to an open job is never re-edited
       makeThumb(p); photos.push(p);
     }catch(err){ console.error(err); toast(`Couldn't open ${f.name}. RAW/DNG won't load; use the JPG.`); }
   }
@@ -738,18 +758,30 @@ function showCheckMap(entry){
   const url = DAYS_ROOT + entry.src.replace(/src\/?$/, "") + "check.html?v=" + Date.now();
   box = document.createElement("div"); box.id = "chkBox";
   const notes = (entry.notes||"").trim(); const esc = t => t.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-  box.innerHTML = (notes ? `<div class="chkNotes"><b>Booking notes — follow these:</b> ${esc(notes)}</div>` : "") + `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary" loading="lazy"></iframe>`;
+  box.innerHTML = (notes ? `<div class="chkNotes"><b>Booking notes — follow these:</b> ${esc(notes)}</div>` : "") + `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost chkTab on" data-v="b" title="Show the lot boundary">Boundary</button><button class="btn ghost chkTab" data-v="a" title="Show every pinned place">Map</button><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary" loading="lazy"></iframe>`;
   ($("stage") || document.body).appendChild(box);
   let small = false; try { small = localStorage.getItem("chkMin") === "1"; } catch(e){}
   const set = () => { box.classList.toggle("min", small); try { localStorage.setItem("chkMin", small ? "1" : "0"); } catch(e){} };
   box.querySelector("#chkMin").onclick = () => { small = !small; set(); };
-  box.querySelector("#chkBig").onclick = () => box.classList.toggle("big");
+  box.querySelector("#chkBig").onclick = () => { box.classList.toggle("big"); setTimeout(() => show(view), 50); };
   set();
+  // 31 Oct (Jason): one button to flip between the boundary and the map of pinned places, each shown full size
+  let view = "b"; try { view = localStorage.getItem("chkView") || "b"; } catch(e){}
+  const fr = box.querySelector("iframe");
+  const show = v => { view = v; try { localStorage.setItem("chkView", v); } catch(e){}
+    box.querySelectorAll(".chkTab").forEach(t => t.classList.toggle("on", t.dataset.v === v));
+    try { const d = fr.contentDocument, w = fr.contentWindow; if (!d || !d.querySelector(".w")) return;
+      d.querySelector(".w").style.gridTemplateColumns = "1fr"; d.querySelector(".w").style.gridAutoRows = "100%";
+      const ps = d.querySelectorAll(".w > .p"); ps.forEach(pn => { pn.style.display = pn.querySelector("#" + v) ? "" : "none"; });
+      w.eval(v === "a" ? "a.invalidateSize(); a.fitBounds(L.latLngBounds(pts),{padding:[30,30]})" : "b.invalidateSize()");
+    } catch(e){ console.error(e); } };
+  box.querySelectorAll(".chkTab").forEach(t => t.onclick = () => show(t.dataset.v));
+  fr.addEventListener("load", () => setTimeout(() => show(view), 300));
 }
 async function openRemoteJob(entry){
   try{
     if (photos.some(q=>!q.sample) && !confirm("Close the photos you have open and load "+entry.addr+"?")) return;
-    photos = []; job = null; pendingProject = null; cur = -1;
+    photos = []; job = null; pendingProject = null; cur = -1; window.__curJob = null;
     prefs.outMode = entry.full ? "full" : "finals"; savePrefs();
     window.__fullNames = new Set(entry.fullPhotos || []);
     window.__portrait = !!entry.portrait;   // 29 Oct: booking asked for vertical   // 29 Oct: top-down travels in the same set as the aerials, but keeps its full frame
@@ -922,3 +954,4 @@ async function loadCloudEdits(){
   ex.parentNode.insertBefore(b, ex); ex.parentNode.insertBefore(tag, b); b.onclick = sendToBaker;
   setInterval(()=>{ const C = window.__cloudEdit; b.hidden = !(window.__curJob && photos.some(q => q.editorPhoto && q.base) && !C);
     tag.hidden = !C; if (C) tag.textContent = `✓ ${C.by||"Editor"}'s photos in — check pins, then Export all`; }, 800); })();
+window.__bae.editorMap = () => photos.map(q => [q.name, q.editorPhoto || ""]);
