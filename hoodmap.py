@@ -15,7 +15,7 @@ def gpx(lat, lng):
     n = 2**S['z']; x = (lng+180)/360*n; la = math.radians(lat); y = (1-math.log(math.tan(la)+1/math.cos(la))/math.pi)/2*n
     return (x-S['x0'])*256, (y-S['y0'])*256
 hlat, hlng = C['house']; HX, HY = gpx(hlat, hlng)
-AR = C.get('aspect', 1.6); cw = min(base.width, int(base.height*AR)); ch = int(cw/AR)
+AR = C.get('aspect', 1.72); cw = min(base.width, int(base.height*AR), int(C.get('cropW', 1e9))); ch = int(cw/AR)   # cropW: source px across (Crib zoom ≈ 11 km wide)
 ox = int(min(max(HX-cw*C.get('houseX', 0.5), 0), base.width-cw)); oy = int(min(max(HY-ch*C.get('houseY', 0.5), 0), base.height-ch))
 W = C.get('W', 3000); H = int(W/AR); k = W/cw
 img = base.crop((ox, oy, ox+cw, oy+ch)).resize((W, H), Image.LANCZOS)
@@ -26,8 +26,8 @@ def dist(lat, lng):
 def dtxt(m):
     if m < 1000: return f"{int(round(m/50)*50)}m"
     v = round(m/1000, 1); return f"{v:g}km"
-U = W/3000; R = int(46*U); TIP = int(118*U)          # pin head radius, tip-to-head-centre height
-LH = int(64*U); FS = int(34*U); TRACK = 2.2*U; GAP = int(10*U)
+U = W/3000; R = int(C.get('pinR', 63)*U); TIP = int(C.get('pinTip', 92)*U)   # 31 Oct: measured from the Crib Creative map (bigger pins, shorter tip)
+LH = int(68*U); FS = int(44*U); TRACK = 4.4*U; GAP = int(8*U)
 font = ImageFont.truetype(FONT, FS)
 def tw(t): d = ImageDraw.Draw(Image.new('L', (1, 1))); return sum(d.textlength(c, font=font) for c in t)+TRACK*(len(t)-1)
 def icon(name, size):
@@ -50,8 +50,7 @@ def pin(x, y, ic):
     img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(7*U)))
     d = ImageDraw.Draw(img)
     d.polygon([(cx-R*0.74, cy+R*0.62), (cx+R*0.74, cy+R*0.62), (x, y)], fill=(16, 16, 16, 255)); d.ellipse([cx-R, cy-R, cx+R, cy+R], fill=(16, 16, 16, 255))
-    d.ellipse([cx-R*0.80, cy-R*0.80, cx+R*0.80, cy+R*0.80], outline=(255, 255, 255, 255), width=max(2, int(3*U)))
-    s = int(R*1.0); img.alpha_composite(icon(ic, s), (int(cx-s/2), int(cy-s/2)))
+    s = int(R*1.12); img.alpha_composite(icon(ic, s), (int(cx-s/2), int(cy-s/2)))
     return cx, cy
 img = img.convert('RGBA')
 # photo inset (white frame), in the corner with fewest places, away from the house
@@ -59,7 +58,7 @@ placed = []
 def hits(bb): return any(not (bb[2] < p[0] or bb[0] > p[2] or bb[3] < p[1] or bb[1] > p[3]) for p in placed)
 hx, hy = P(hlat, hlng)
 pts = [P(p['lat'], p['lng']) for p in C['places']]
-PWf = C.get('photoW', 0.30); PW = int(W*PWf); FR = int(9*U); M = int(36*U)
+PWf = C.get('photoW', 0.33); PW = int(W*PWf); FR = int(9*U); M = int(36*U)
 if C.get('photo'):
     ph = Image.open(C['photo']).convert('RGB'); PH = int(PW*ph.height/ph.width)
     corners = {'tl': (M, M), 'tr': (W-M-PW-2*FR, M), 'bl': (M, H-M-PH-2*FR), 'br': (W-M-PW-2*FR, H-M-PH-2*FR)}
@@ -86,7 +85,7 @@ for i in order:
     p = C['places'][i]; x, y = pts[i]
     if not (R < x < W-R and TIP+R < y < H): print('off map', p['name']); continue
     t = f"{p.get('label', p['name']).upper()} - {dtxt(dist(p['lat'], p['lng']))}"
-    bw = tw(t)+2*int(16*U); cy = y-TIP; done = None
+    bw = tw(t)+2*int(18*U); cy = y-TIP; done = None
     for side in ([1, -1] if p.get('side', 'r') == 'r' else [-1, 1]):
         for dy in (0, -LH*0.9, LH*0.9, -LH*1.8, LH*1.8):
             bx = x+R+GAP if side > 0 else x-R-GAP-bw; by = cy-LH/2+dy
@@ -101,7 +100,7 @@ for (bb, t) in labels:
     sh = Image.new('RGBA', img.size, (0, 0, 0, 0)); ImageDraw.Draw(sh).rectangle([bb[0]+3, bb[1]+6, bb[2]+3, bb[3]+6], fill=(0, 0, 0, 90))
     img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(6*U)))
     d = ImageDraw.Draw(img); d.rectangle(bb, fill=(255, 255, 255, 255))
-    xx = bb[0]+int(16*U); yy = (bb[1]+bb[3])/2+1
+    xx = bb[0]+int(18*U); yy = (bb[1]+bb[3])/2+1
     for c in t: d.text((xx, yy), c, font=font, fill=(20, 20, 20), anchor='lm'); xx += d.textlength(c, font=font)+TRACK
 for (x, y, ic) in pins_: pin(x, y, ic)
 pin(hx, hy, 'house')
