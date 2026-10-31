@@ -1699,7 +1699,11 @@ function refreshPinsTab(){
     const f = placeFilter.trim().toLowerCase(); let on = 0;
     const groups = [["Nearby (amenity map)", allPlaces().filter(q=>!q.landmark)], ["Landmarks", allPlaces().filter(q=>q.landmark).sort((a,b)=>a.dist-b.dist)]];
     for (const [gname, items] of groups){
-      const shown = items.filter(q=>!f || q.name.toLowerCase().includes(f) || (q.cat||"").includes(f));
+      // 31 Oct (Jason): places that show up in THIS photo come first (ticked ones on top), the rest after
+      const seen = q => p.cam && p.cam.ready ? !!autoPoint(p, q.lat, q.lng) : true;
+      const shown = items.filter(q=>!f || q.name.toLowerCase().includes(f) || (q.cat||"").includes(f))
+        .map((q,i)=>({ q, i, v: seen(q), h: p.pins.some(x=>x.key===q.key) }))
+        .sort((a,b)=>(b.v-a.v) || (b.h-a.h) || (a.i-b.i)).map(o=>o.q);
       if (!shown.length) continue;
       list.appendChild(el(`<div class="grp">${gname}</div>`));
       for (const q of shown){
