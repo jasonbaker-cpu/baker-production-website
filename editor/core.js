@@ -233,8 +233,10 @@ function analyseSky(img, w, h){
   return { m, b:b*s, s, sw, sh, skyc, tex, cloud };
 }
 const LOOK0 = { y:114, rg:1.075, bg:0.876, sat:0.29, lo:24, hi:210 }, LOOK = LOOK0;
-const TUNE = Object.assign({ fine:0.3, mid:0.4,   /* 31 Oct (Jason: "photo quality looks weird") — was 1.3/1.0, crunchy painted look */ sat:0.30, lutMix:0.2, relSat:0.03,   // 26 Oct: natural texture (was fine 2.3 / mid 1.35 / full LUT = crunchy)
-  noDehaze:false, skyTop:[140,180,222], skyHz:[188,201,212], plateMix:0.95, realMix:0.9, farSoft:0, hzStart:0.5, hzAmt:0.9, lookY:108, lookLo:14, lookHi:210, lookBg:0.91, lookRg:1.075, lvlAmt:0.65 }, (typeof window!=='undefined' && window.__TUNE) || {});
+// 31 Oct 2026 (Jason): DAY look matched to the Holdsworth / REIWA reference (23 Karabil Way): bright (land median ~145),
+// clean whites, neutral-warm, crisp but not crunchy, bright airy sky. Twilight (plate S) keeps the old darker dusk targets (DUSK below).
+const TUNE = Object.assign({ fine:1.0, mid:1.1, sat:0.36, lutMix:0.2, relSat:0.03, relative:false,
+  noDehaze:false, skyTop:[192,221,253], skyHz:[214,233,253], plateMix:0.35, realMix:0.9, farSoft:0, hzStart:0.5, hzAmt:0.9, lookY:172, lookLo:42, lookHi:243, lookBg:0.9, lookRg:1.06, lvlAmt:1.0 }, (typeof window!=='undefined' && window.__TUNE) || {});
 function lookStats(px, w, h){
   const st = Math.max(1, Math.round(Math.sqrt(w*h/120000))), ys=[]; let R=0,G=0,B=0,S=0,n=0;
   for (let y=Math.floor(h*.45); y<h; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2], Y=.299*r+.587*g+.114*b; ys.push(Y); if (Y>30 && Y<225){ R+=r; G+=g; B+=b; const mx=Math.max(r,g,b), mn=Math.min(r,g,b); S+=(mx-mn)/(mx+1e-3); n++; } }
@@ -244,7 +246,9 @@ function lookStats(px, w, h){
 function normaliseLook(px, w, h){
   const s = lookStats(px, w, h), cl = (v,a,b)=>Math.max(a,Math.min(b,v)), TT = Object.assign({}, TUNE, window.__TUNE||{}), LOOK = Object.assign({}, LOOK0, { y:TT.lookY, lo:TT.lookLo, hi:TT.lookHi, bg:TT.lookBg, rg:TT.lookRg });
   // Editors keep each photo's own exposure and cast, then lift it a touch, warm it and add saturation.
-  const RS = window.__rawSt, rel = !(window.__TUNE && window.__TUNE.lookY) && TT.relative !== false && RS;
+  const DUSK = typeof prefs !== 'undefined' && prefs.skyPlate === 'S';   // twilight keeps the old relative dusk look
+  if (DUSK){ Object.assign(LOOK, { y:108, lo:14, hi:210, bg:0.91, rg:1.075 }); TT.lvlAmt = 0.65; }
+  const RS = window.__rawSt, rel = !(window.__TUNE && window.__TUNE.lookY) && (TT.relative !== false || DUSK) && RS;
   if (rel){ LOOK.y = cl(RS.med + (TT.relY||10), 100, 158); LOOK.rg = cl(RS.rg + (TT.relRg||0.03), 0.98, 1.24); LOOK.bg = cl(RS.bg - (TT.relBg||0.04), 0.72, 1.0); }
   const satT = rel ? cl(RS.sat + (TT.relSat||0.07), 0.2, 0.42) : (window.__TUNE&&window.__TUNE.sat||TUNE.sat);
   const kr = cl(Math.pow(LOOK.rg/s.rg, .7), .9, 1.1), kb = cl(Math.pow(LOOK.bg/s.bg, .7), .9, 1.1);

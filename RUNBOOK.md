@@ -204,3 +204,6 @@ Push-notify him.
 
 ## Pin size (Jason, 31 Oct 2026)
 Every job uses the same SMALL pins: head ~109 px and label ~95 px tall per 3000 px of photo (PIN_K .77 in render.js; house pins capped at 144 before scale). Top Realty (toprealty.com.au, "orange"): orange place pins + small black house pin with white house on a thin white post. Never enlarge pins per job.
+
+## Day look (Jason, 31 Oct 2026)
+Every DAY drone photo must look like the Holdsworth/REIWA reference (23 Karabil Way, Nollamara): bright land (median ~145), clean whites, neutral-warm, crisp not crunchy, bright airy pale-blue sky. Defaults in editor/core.js TUNE (lookY 172, lvlAmt 1, fine 1.0, mid 1.1, sat .36, relative off). Twilight (plate S) keeps the darker dusk targets.
