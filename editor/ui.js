@@ -38,7 +38,7 @@ function updateUndo(){ const p=P(); $("undoBtn").disabled=!p||!p.undo.length; $(
 
 // ================= finish (async so the page stays responsive) =================
 let finishing = 0;
-function ensureFinish(p){
+function ensureFinish(p){ if (p && (p.editorPhoto || p.extraEdited)){ p.finishOn = false; p.fin = null; return; }   /* 31 Oct: editor photos are never re-finished */
   if (!p.finishOn || p.sample) return;
   const key = p.skyOn ? "skyP"+(prefs.skyPlate||"C") : "nosky";
   if (p.fin && p.finKey === key) return;

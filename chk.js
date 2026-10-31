@@ -1090,7 +1090,7 @@ function updateUndo(){ const p=P(); $("undoBtn").disabled=!p||!p.undo.length; $(
 
 // ================= finish (async so the page stays responsive) =================
 let finishing = 0;
-function ensureFinish(p){
+function ensureFinish(p){ if (p && (p.editorPhoto || p.extraEdited)){ p.finishOn = false; p.fin = null; return; }   /* 31 Oct: editor photos are never re-finished */
   if (!p.finishOn || p.sample) return;
   const key = p.skyOn ? "skyP"+(prefs.skyPlate||"C") : "nosky";
   if (p.fin && p.finKey === key) return;
@@ -1631,6 +1631,9 @@ function refreshPhotoTab(){
   const s1 = el(`<section class="sec"><h2><span>Baker finish</span></h2></section>`);
   if (!p){ box.appendChild(s1); return; }
   if (p.sample){ s1.appendChild(el(`<p class="note">The finish is off for the sample. Add a real drone photo to see it.</p>`)); box.appendChild(s1); }
+  else if (p.editorPhoto || p.extraEdited){   // 31 Oct (Jason): anything the photo editor edited is never touched by us
+    s1.appendChild(el(`<p class="note"><b>Edited by the photo editor — left exactly as they edited it.</b> Only pins, boundary and labels go on top.</p>`)); box.appendChild(s1);
+  }
   else {
     const f = el(`<label class="check"><input type="checkbox" ${p.finishOn?"checked":""}> Colour, contrast and sharpening</label>`);
     f.querySelector("input").onchange = ev=>{ commit(); p.finishOn = ev.target.checked; prefs.finish = p.finishOn; savePrefs(); ensureFinish(p); refreshStrip(); requestDraw(); };
@@ -1646,7 +1649,7 @@ function refreshPhotoTab(){
     s1.appendChild(el(`<p class="note">Learned from our delivered aerials: brighter midtones, about 25% more colour, crisper detail, and the clean blue sky our editor uses. Hold <b>Hold for before</b> (or the \\ key) to compare.</p>`));
     box.appendChild(s1);
   }
-  if (!p.sample){
+  if (!p.sample && !p.editorPhoto && !p.extraEdited){
     if (!p.adj) p.adj = Object.assign({}, ADJ0);
     const sa = el(`<section class="sec"><h2><span>Adjust photo</span></h2></section>`);
     sa.appendChild(el(`<p class="note">Changes the picture only. Pins, boundary lines and text stay exactly as they are.</p>`));
@@ -1655,7 +1658,7 @@ function refreshPhotoTab(){
     A.forEach(([k,lab])=>sa.appendChild(slider("adj_"+k, lab, -100, 100, 1, p.adj[k]||0, v=>(v>0?"+":"")+v, v=>{ p.adj[k]=v; redraw(); }, commit)));
     const rb = el(`<div class="row"><button class="btn">Reset</button><button class="btn">Copy to all photos</button></div>`);
     rb.children[0].onclick=()=>{ commit(); p.adj=Object.assign({}, ADJ0); p._blur=null; refreshPhotoTab(); refreshStrip(); requestDraw(); };
-    rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample){ q.adj=Object.assign({}, p.adj); q._blur=null; } }); toast(`Copied to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
+    rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample && !q.editorPhoto && !q.extraEdited){ q.adj=Object.assign({}, p.adj); q._blur=null; } }); toast(`Copied to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
     sa.appendChild(rb); box.appendChild(sa);
     const sp = el(`<section class="sec"><h2><span>Project</span></h2></section>`);
     sp.appendChild(el(`<p class="note">Save the whole job (pins, boundaries, text, adjustments) to reopen later. To reopen: add the same photos, then the project file.</p>`));
@@ -2095,7 +2098,7 @@ function lotSnap(p, pts, ll){ const C=Object.assign({ on:true, R:2.5, rot:3, sc:
   return P1;
 }
 function shadeHex(h,k){ const n=parseInt(h.slice(1),16); const f=v=>Math.round(v*k).toString(16).padStart(2,"0"); return "#"+f(n>>16&255)+f(n>>8&255)+f(n&255); }
-window.__bae = { project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) return false; commit(); p.pins=[]; p.shapes=[]; p.texts=[]; p.outside='none'; refreshAll(); return true; },   /* 30 Oct: clean photo, no graphics (agent asked) */ setFinish:(on)=>{ const p=P(); if(!p) return false; p.finishOn=!!on; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return true; }, setSky:(on)=>{ const p=P(); if(!p) return false; p.skyOn=!!on; p.finKey=null; ensureFinish(p); refreshAll(); return true; }, setAdj:(o)=>{ const p=P(); if(!p) return false; p.adj=Object.assign({}, ADJ0, o); refreshAll(); return true; }, setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt, pxo)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts= pxo ? pxo.map(q=>toWork(p, q)) : ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); /* pxo: boundary hand-traced on the fences (original-photo pixels) */ if (pts.some(q=>!q)) return false; commit();
+window.__bae = { project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) return false; commit(); p.pins=[]; p.shapes=[]; p.texts=[]; p.outside='none'; refreshAll(); return true; },   /* 30 Oct: clean photo, no graphics (agent asked) */ setFinish:(on)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.finishOn=!!on; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return true; }, setSky:(on)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.skyOn=!!on; p.finKey=null; ensureFinish(p); refreshAll(); return true; }, setAdj:(o)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.adj=Object.assign({}, ADJ0, o); refreshAll(); return true; }, setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt, pxo)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts= pxo ? pxo.map(q=>toWork(p, q)) : ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); /* pxo: boundary hand-traced on the fences (original-photo pixels) */ if (pts.some(q=>!q)) return false; commit();
     try { const R=lotSnap(p, pts, ll); if (R) { pts.splice(0, pts.length, ...R); } } catch(e){ console.warn(e); }
     try { const EO=window.__edgeOff; if (EO && Object.keys(EO).length){ const n=pts.length; let per_px=0, per_m=0; const mLat=111132.92, mLng=111412.84*Math.cos(ll[0][0]*Math.PI/180);
         for (let i=0;i<ll.length;i++){ const a=ll[i], b=ll[(i+1)%ll.length]; per_m+=Math.hypot((b[0]-a[0])*mLat,(b[1]-a[1])*mLng); }

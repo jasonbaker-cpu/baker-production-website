@@ -210,3 +210,6 @@ Every DAY drone photo must look like the Holdsworth/REIWA reference (23 Karabil 
 
 ## Twilight = editor only (Jason, 31 Oct 2026)
 Twilight/dusk drone jobs are edited only by Profocus. Do NOT grade, sky-replace or re-export them, and don't 'fix' their look later. Pipeline still publishes the job (untouched photos + pins/boundary/editor map) flagged SEND TO EDITOR so the automatic email goes out and Profocus can swap in and Send to Baker.
+
+## Editor-edited photos are never touched (Jason, 31 Oct 2026)
+Any photo the photo editor edited (swapped in, or saved via Send to Baker) is never re-graded, sky-replaced, adjusted or re-exported by us. The editor locks finish/sky/adjust on those photos and the __bae.setSky/setFinish/setAdj calls do nothing on them. Never run resky or any re-export on a job with editor photos; pins/boundary/labels only.
