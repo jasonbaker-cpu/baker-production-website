@@ -2174,8 +2174,9 @@ async function openRemoteJob(entry){
     if (mapF) await loadJobFile(mapF);
     await addFiles(files);
     if (entry.agency){ prefs.agency = entry.agency; savePrefs(); }
-    window.__cloudEdit = null; window.__savedOnline = null; window.__curJob = { id: String(entry.src||"").split("/")[0] + "__" + entry.slug, addr: entry.addr };
+    window.__cloudEdit = null; window.__savedOnline = null; window.__checked = null; window.__curJob = { id: String(entry.src||"").split("/")[0] + "__" + entry.slug, addr: entry.addr };
     try { await loadCloudState(); } catch(e){ console.error(e); }
+    try { const c = await fsGet(`${window.__curJob.id}/state/check`); if (c) window.__checked = { by: fv(c,'by') }; } catch(e){}
     try { await loadCloudEdits(); } catch(e){ console.error(e); }
     refreshAll(); requestDraw();
     showCheckMap(entry);   // 29 Oct (Jason): the map + boundary sit beside the photo while you edit
@@ -2192,7 +2193,14 @@ async function showDays(){
     list.appendChild(el(`<h3>${d.label}</h3>`));
     if (d.gallery){ const g = el(`<a class="note" target="_blank" href="${DAYS_ROOT + d.gallery}">View finished photos</a>`); list.appendChild(g); }
     d.jobs.forEach(j=>{ const row = el(`<div class="job"><div><b>${j.addr}</b><small>${j.who||""} · ${j.photos.length} photo${j.photos.length>1?"s":""}${j.full?" · top-down":""}</small></div><button class="btn">Open</button></div>`);
-      row.querySelector("button").onclick = ()=>{ m.remove(); openRemoteJob(j); }; list.appendChild(row); });
+      row.querySelector("button").onclick = ()=>{ m.remove(); openRemoteJob(j); }; list.appendChild(row);
+      // 1 Nov (Jason): show whether the VA has checked this job (and whether the photo editor sent theirs)
+      const jid = String(j.src||"").split("/")[0] + "__" + j.slug, small = row.querySelector("small");
+      if (fsKey()) Promise.all([fsGet(`${jid}/state/check`).catch(()=>null), fsGet(jid).catch(()=>null)]).then(([c, e])=>{
+        if (e) small.insertAdjacentHTML("beforeend", ` · <span style="color:#7fc8ff">editor's photos in</span>`);
+        if (c) small.insertAdjacentHTML("beforeend", ` · <span style="color:#5fd38a">✓ checked by ${esc2(fv(c,"by")||"VA")}</span>`);
+        else small.insertAdjacentHTML("beforeend", ` · <span style="color:#f0b429">not checked yet</span>`);
+      }); });
   });
   if (!(idx.days||[]).length) list.appendChild(el(`<p class="note">Nothing published yet.</p>`));
   m.querySelector("[data-x]").onclick = ()=>m.remove(); m.onclick = e=>{ if (e.target===m) m.remove(); };
@@ -2357,5 +2365,19 @@ async function loadCloudState(){
 (()=>{ const ex = $("exportAllBtn"); if (!ex) return; const b = el(`<button class="btn" id="saveOnlineBtn" title="Save this job online so anyone opening the link sees it" hidden>Save online</button>`);
   ex.parentNode.insertBefore(b, ex); b.onclick = saveOnline;
   setInterval(()=>{ b.hidden = !window.__curJob; b.textContent = window.__savedOnline ? "Save online ✓" : "Save online"; }, 800); })();
+
+// ===== 1 Nov 2026 (Jason): "Checked ✓" — the VA marks a job checked once pins/boundary are verified =====
+const esc2 = t => String(t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+async function markChecked(){
+  const J = window.__curJob; if (!J){ toast("Open the job from Previous days first."); return; }
+  let who = ""; try { who = localStorage.getItem("bae_who") || ""; } catch(e){}
+  if (!who){ const w = prompt("Your name:", ""); who = (w || "").trim(); try { if (who) localStorage.setItem("bae_who", who); } catch(e){} }
+  try { await fsPut(`${J.id}/state/check`, { by:{ stringValue: who || "VA" }, at:{ stringValue: new Date().toISOString() } });
+    window.__checked = { by: who || "VA" }; toast("Marked checked ✓", 4000);
+  } catch(err){ toast("Couldn't mark checked: " + err.message, 8000); }
+}
+(()=>{ const ex = $("exportAllBtn"); if (!ex) return; const b = el(`<button class="btn" id="checkedBtn" title="Mark this job as checked (pins and boundary verified)" hidden>Mark checked</button>`);
+  ex.parentNode.insertBefore(b, ex); b.onclick = markChecked;
+  setInterval(()=>{ b.hidden = !window.__curJob; b.textContent = window.__checked ? "Checked ✓" : "Mark checked"; }, 800); })();
 
 })();
