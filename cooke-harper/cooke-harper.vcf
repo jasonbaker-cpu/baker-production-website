@@ -1,0 +1,23 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Cooke;Jayden;;;
+FN:Jayden Cooke
+ORG:Rodway Group
+TITLE:Sales Representative
+TEL;TYPE=CELL,VOICE:+61433565670
+TEL;TYPE=WORK,VOICE:+61893904777
+EMAIL;TYPE=INTERNET,WORK:jaydencooke@rodwaygroup.com.au
+ADR;TYPE=WORK:;;2904 Albany Highway;Kelmscott;WA;6111;Australia
+URL:https://www.bakerproduction.com/cooke-harper/
+NOTE:Cooke & Harper, Rodway Group Kelmscott. Free price estimates: bakerproduction.com/cooke-harper
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Harper;James;;;
+FN:James Harper
+ORG:Rodway Group
+TEL;TYPE=WORK,VOICE:+61893904777
+EMAIL;TYPE=INTERNET,WORK:jamesharper@rodwaygroup.com.au
+ADR;TYPE=WORK:;;2904 Albany Highway;Kelmscott;WA;6111;Australia
+URL:https://www.bakerproduction.com/cooke-harper/
+END:VCARD

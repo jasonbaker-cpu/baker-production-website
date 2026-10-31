@@ -209,3 +209,17 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px;padding:0}
 #appraisal .chip span{padding:7px 11px;font-size:13.5px}
 #appraisal .row2{grid-template-columns:1fr 1fr}
 @media (max-width:340px){#appraisal .row2{grid-template-columns:1fr}}
+/* Thank-you actions */
+.done-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.done-acts .btn{flex:1 1 150px}
+/* Bigger footer tap targets */
+.foot .col a{display:inline-block;padding:6px 0}
+/* Mobile action bar */
+.mbar{display:none}
+@media (max-width:760px){
+  .mbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:1fr 1.4fr;gap:8px;padding:10px max(12px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:rgba(19,36,27,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,.08);transition:transform .25s ease}
+  .mbar .btn{padding:13px 12px;font-size:15px}
+  .mbar.off{transform:translateY(110%)}
+  body.has-mbar .foot .wrap{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+}
+@media (prefers-reduced-motion:reduce){.mbar{transition:none}}

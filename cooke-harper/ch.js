@@ -158,5 +158,21 @@
     });
   });
 
+  /* Mobile action bar: call + the page's main action. Hides while the form is on screen. */
+  (function () {
+    var onHome = !!document.getElementById('appraisal');
+    var onBuyers = /buyers\.html$/.test(location.pathname);
+    var bar = document.createElement('div');
+    bar.className = 'mbar';
+    bar.innerHTML = '<a class="btn btn-ghost-dark num" href="tel:0433565670">Call Jayden</a>' +
+      (onBuyers ? '<a class="btn btn-sun" href="#buyerform">Join the buyer list</a>' : '<a class="btn btn-sun" href="' + (onHome ? '#appraisal' : './#appraisal') + '">Free price estimate</a>');
+    document.body.appendChild(bar);
+    document.body.classList.add('has-mbar');
+    var target = onHome ? document.getElementById('appraisal') : (onBuyers ? document.querySelector('[data-form-wrap]') : null);
+    if (target && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { bar.classList.toggle('off', es[0].isIntersecting); }, { threshold: 0.15 }).observe(target);
+    }
+  })();
+
   var y = document.getElementById('year'); if (y) y.textContent = new Date().getFullYear();
 })();

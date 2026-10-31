@@ -287,7 +287,9 @@ input,select,textarea{font-size:16px}
 .fabmenu button{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:12px 18px;font:inherit;font-weight:700;box-shadow:0 8px 20px -10px rgba(0,0,0,.4);min-height:46px}
 @media (max-width:640px){.addbtns{display:none!important}.fab{display:block}main{padding-bottom:96px}.bar .wrap{padding-block:8px 0}.brand b{font-size:18px}}
 .inbox .row{cursor:default}
-.inbox .acts{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.inbox .acts{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.inbox .acts .btn{min-height:40px;text-decoration:none}
+.inbox .acts a.btn:not(.primary){color:var(--ink)}
 .memlist{display:grid;gap:6px}
 .memrow{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:14px}
 .memrow span{min-width:0;overflow-wrap:anywhere}
@@ -1137,13 +1139,20 @@ function backupAll(){
 /* ---------- website inbox ---------- */
 var APPR_TIME={"Within 3 months":"1–3 months","3–6 months":"3–6 months","6–12 months":"6–12 months","Just curious":"12+ months / unsure"};
 var FIN_MAP={"Pre-approved":"Pre-approved","Cash":"Cash","Need to sell first":"Must sell first","Still arranging":"Needs finance"};
+function digits(p){var d=String(p||"").replace(/[^\d+]/g,"");if(/^4\d{8}$/.test(d))d="0"+d;return d;}
+function waitMins(iso){var t=Date.parse(iso||"");return isNaN(t)?null:Math.max(0,Math.round((Date.now()-t)/60000));}
+function waitLabel(m){if(m==null)return "";if(m<1)return "just now";if(m<60)return m+" min ago";if(m<1440)return Math.round(m/60)+" hr ago";return ago(new Date(Date.now()-m*60000).toISOString());}
+function smsBody(r){var me=state.me||"Jayden",first=String(r.name||"").trim().split(/\s+/)[0]||"there";
+  return r.kind==="appraisal"?"Hi "+first+", it's "+me+" from Rodway Group. Thanks for asking for a price estimate on "+(r.address||"your home")+". Is now a good time for a quick call, or is later today better?"
+  :"Hi "+first+", it's "+me+" from Rodway Group. Thanks for joining our buyer list. I'll send you homes that fit before they hit the portals. Is now a good time for a quick chat about what you're after?";}
 function inboxSection(){
   var L=state.inbox.slice().sort(function(a,b){return String(b.createdAt||"").localeCompare(String(a.createdAt||""));});
   if(!L.length)return "";
   return '<section class="card inbox"><div class="sec-title"><h3>New from your website</h3><span class="num">'+L.length+' waiting</span></div><div class="list">'+L.map(function(r){
     var isA=r.kind==="appraisal";
     var sub=isA?[r.address,r.suburb,r.bedrooms?r.bedrooms+" bed":"",r.timeframe].filter(Boolean).join(" · "):[r.budget,r.bedrooms?r.bedrooms+" bed":"",r.suburbs,r.finance,r.timeframe].filter(Boolean).join(" · ");
-    return '<div class="row"><span class="nm">'+esc(r.name||"No name")+' <span class="pill '+(isA?"p-hot":"p-warm")+'">'+(isA?"wants a price estimate":"buyer sign-up")+'</span></span><span class="right num">'+esc(r.phone||"")+'</span><span class="sub">'+esc(sub)+(r.wants?' · wants: '+esc(r.wants):'')+(r.source&&r.source!=="website"?' · from '+esc(r.source):'')+' · '+esc(ago(r.createdAt))+'</span>'+(state.canWrite?'<span class="acts"><button class="btn small primary" data-act="inbox-accept" data-id="'+esc(r.id)+'">'+(isA?"Add to potential sellers":"Add to buyers")+'</button><button class="btn small" data-act="inbox-dismiss" data-id="'+esc(r.id)+'">Dismiss</button></span>':'')+'</div>';
+    var wm=waitMins(r.createdAt),ph=digits(r.phone),urgent=wm!=null&&wm<1440;
+    return '<div class="row"><span class="nm">'+esc(r.name||"No name")+' <span class="pill '+(isA?"p-hot":"p-warm")+'">'+(isA?"wants a price estimate":"buyer sign-up")+'</span>'+(urgent&&wm<60?' <span class="pill p-due">call now</span>':'')+'</span><span class="right num">'+esc(r.phone||"")+'</span><span class="sub">'+esc(sub)+(r.wants?' · wants: '+esc(r.wants):'')+(r.source&&r.source!=="website"?' · from '+esc(r.source):'')+' · '+esc(waitLabel(wm))+'</span>'+(state.canWrite?'<span class="acts">'+(ph?'<a class="btn small primary" href="tel:'+esc(ph)+'">Call</a><a class="btn small" href="sms:'+esc(ph)+'?&body='+encodeURIComponent(smsBody(r))+'">Text</a>':'')+'<button class="btn small" data-act="inbox-accept" data-id="'+esc(r.id)+'">'+(isA?"Save as potential seller":"Save as buyer")+'</button><button class="btn small" data-act="inbox-dismiss" data-id="'+esc(r.id)+'">Dismiss</button></span>':'')+'</div>';
   }).join("")+'</div></section>';
 }
 function acceptInbox(id){
@@ -1446,6 +1455,9 @@ function gate(msg,showBtn,err,showOut){var g=document.getElementById("gate");g.h
 document.getElementById("gateBtn").addEventListener("click",function(){var b=this;b.disabled=true;document.getElementById("gateMsg").textContent="Opening Google…";window.BB.signIn().catch(function(e){b.disabled=false;gate("Sign in to open the book.",true,"Sign-in didn't finish"+(e&&e.code?" ("+e.code+")":"")+". Try again.");});});
 document.getElementById("gateOut").addEventListener("click",function(){if(window.BB)window.BB.signOut();});
 var bootTimer=setTimeout(function(){if(!window.BB)gate("Couldn't load the book.",false,"Check your internet connection, then reload this page.");},15000);
+function newLeadAlert(){toast("New website lead. Call them now.");try{navigator.vibrate&&navigator.vibrate([200,100,200]);}catch(x){}
+  try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var a=new C(),t=a.currentTime;[880,1320].forEach(function(f,i){var o=a.createOscillator(),g=a.createGain();o.frequency.value=f;g.gain.setValueAtTime(0.0001,t+i*.18);g.gain.exponentialRampToValueAtTime(0.25,t+i*.18+.02);g.gain.exponentialRampToValueAtTime(0.0001,t+i*.18+.16);o.connect(g);g.connect(a.destination);o.start(t+i*.18);o.stop(t+i*.18+.17);});}catch(x){}}
+setInterval(function(){if(state.inbox&&state.inbox.length&&state.tab==="today"&&!(document.getElementById("overlay")||{}).innerHTML&&!/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||""))render();},60000);
 function rows(snap){return snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});}
 window.addEventListener("bb-auth",function(ev){
   var d=ev.detail||{};clearTimeout(bootTimer);
@@ -1463,7 +1475,7 @@ window.addEventListener("bb-auth",function(ev){
   subs.push(d.db.collection("buyers").onSnapshot(function(s){state.buyers=rows(s);state.ready.b=true;render();},fail));
   subs.push(d.db.collection("sellers").onSnapshot(function(s){state.sellers=rows(s);state.ready.s=true;render();},fail));
   subs.push(d.db.collection("prospects").onSnapshot(function(s){state.prospects=rows(s);state.ready.p=true;render();},fail));
-  subs.push(d.db.collection("inbox").onSnapshot(function(s){state.inbox=rows(s);var t=document.querySelector('[data-tab="today"]');if(t)t.innerHTML="Today"+(state.inbox.length?' <span class="ct num">'+state.inbox.length+' new</span>':"");render();},function(){}));
+  subs.push(d.db.collection("inbox").onSnapshot(function(s){var prev=state.inboxSeen;state.inbox=rows(s);var ids=state.inbox.map(function(x){return x.id;});if(prev&&ids.some(function(i){return prev.indexOf(i)<0;}))newLeadAlert();state.inboxSeen=ids;document.title=(state.inbox.length?"("+state.inbox.length+") ":"")+"Cooke & Harper Buyer Book";var t=document.querySelector('[data-tab="today"]');if(t)t.innerHTML="Today"+(state.inbox.length?' <span class="ct num">'+state.inbox.length+' new</span>':"");render();},function(){}));
   subs.push(d.db.doc("settings/main").onSnapshot(function(x){if(x.exists){var v=x.data();if(v&&v.bands&&v.bands.length===2)state.settings=Object.assign({},state.settings,v);if(v&&v.team)document.getElementById("teamName").textContent=v.team;render();}},function(){}));
   subs.push(d.onBook(function(b){state.book=b||{members:[],names:{}};if(state.tab==="guide")render();}));
 });
@@ -1525,5 +1537,6 @@ try{
   send({state:"error",code:"load-failed"});
 }
 </script>
+<script>if("serviceWorker" in navigator&&location.protocol==="https:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
 </body>
 </html>
