@@ -800,7 +800,8 @@ async function openRemoteJob(entry){
     if (mapF) await loadJobFile(mapF);
     await addFiles(files);
     if (entry.agency){ prefs.agency = entry.agency; savePrefs(); }
-    window.__cloudEdit = null; window.__curJob = { id: String(entry.src||"").split("/")[0] + "__" + entry.slug, addr: entry.addr };
+    window.__cloudEdit = null; window.__savedOnline = null; window.__curJob = { id: String(entry.src||"").split("/")[0] + "__" + entry.slug, addr: entry.addr };
+    try { await loadCloudState(); } catch(e){ console.error(e); }
     try { await loadCloudEdits(); } catch(e){ console.error(e); }
     refreshAll(); requestDraw();
     showCheckMap(entry);   // 29 Oct (Jason): the map + boundary sit beside the photo while you edit
@@ -958,3 +959,27 @@ async function loadCloudEdits(){
   setInterval(()=>{ const C = window.__cloudEdit; b.hidden = !(window.__curJob && photos.some(q => q.editorPhoto && q.base) && !C);
     tag.hidden = !C; if (C) tag.textContent = `✓ ${C.by||"Editor"}'s photos in — check pins, then Export all`; }, 800); })();
 window.__bae.editorMap = () => photos.map(q => [q.name, q.editorPhoto || ""]);
+
+// ===== 31 Oct 2026 (Jason): "make a way to save photos online" — the whole job (pins, boundary, labels, adjustments)
+// is saved to Baker's online storage; anyone who opens the same job link gets exactly that version.
+async function saveOnline(){
+  const J = window.__curJob; if (!J){ toast("Open the job from Previous days first."); return; }
+  try { commit && commit(); } catch(e){}
+  $("busy").hidden = false; $("busy").textContent = "Saving online…";
+  try{
+    const who = (()=>{ try { return localStorage.getItem("bae_who") || ""; } catch(e){ return ""; } })();
+    await fsPut(`${J.id}/state/project`, { json:{ stringValue: projectJSON() }, at:{ stringValue:new Date().toISOString() }, by:{ stringValue: who || "Baker" } });
+    window.__savedOnline = new Date(); $("busy").hidden = true; toast("Saved online. Anyone opening this job now sees this version.", 6000);
+  }catch(err){ console.error(err); $("busy").hidden = true; toast("Couldn't save online: " + err.message, 8000); }
+}
+async function loadCloudState(){
+  const J = window.__curJob; if (!J || !fsKey()) return;
+  const d = await fsGet(`${J.id}/state/project`); if (!d) return;
+  const json = fv(d, "json"); if (!json) return;
+  await addFiles([new File([json], "project.json", { type:"application/json" })]);
+  window.__savedOnline = new Date(fv(d, "at"));
+  toast(`Loaded the version saved online ${window.__savedOnline.toLocaleString("en-AU",{dateStyle:"medium",timeStyle:"short"})}.`, 6000);
+}
+(()=>{ const ex = $("exportAllBtn"); if (!ex) return; const b = el(`<button class="btn" id="saveOnlineBtn" title="Save this job online so anyone opening the link sees it" hidden>Save online</button>`);
+  ex.parentNode.insertBefore(b, ex); b.onclick = saveOnline;
+  setInterval(()=>{ b.hidden = !window.__curJob; b.textContent = window.__savedOnline ? "Save online ✓" : "Save online"; }, 800); })();

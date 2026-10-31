@@ -25,7 +25,7 @@ function newPhoto(name, base, meta, sample){
     pins:[], shapes:[], texts:[],
     finishOn: !sample && prefs.finish, skyOn: prefs.sky,
     outside: prefs.outside, blurAmt: prefs.blurAmt, darkAmt: prefs.darkAmt,
-    disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0), undo:[], redo:[] };
+    disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0, (!sample && prefs.skyPlate !== "S") ? { con:10 } : {}), undo:[], redo:[] };
   return p;
 }
 const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj"];
