@@ -8,7 +8,7 @@ import json, sys, math, os
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
 HERE = os.path.dirname(os.path.abspath(__file__))
 C = json.load(open(sys.argv[1])); OUT = sys.argv[2]
-FONT = '/usr/share/fonts/truetype/google-fonts/Poppins-Regular.ttf'
+FONT = '/usr/share/fonts/truetype/google-fonts/Poppins-'+C.get('fontW','Regular')+'.ttf'
 if not os.path.exists(FONT): FONT = '/usr/share/fonts/opentype/inter/Inter-Regular.otf'
 S = json.load(open(C['sat']+'.json')); base = Image.open(C['sat']+'.jpg').convert('RGB')
 def gpx(lat, lng):
@@ -27,7 +27,7 @@ def dtxt(m):
     if m < 1000: return f"{int(round(m/50)*50)}m"
     v = round(m/1000, 1); return f"{v:g}km"
 U = W/3000; R = int(C.get('pinR', 63)*U); TIP = int(C.get('pinTip', 92)*U)   # 31 Oct: measured from the Crib Creative map (bigger pins, shorter tip)
-LH = int(68*U); FS = int(44*U); TRACK = 4.4*U; GAP = int(8*U)
+LH = int(68*U); FS = int(C.get('fs',40)*U); TRACK = C.get('track',0.5)*U; GAP = int(8*U)
 font = ImageFont.truetype(FONT, FS)
 def tw(t): d = ImageDraw.Draw(Image.new('L', (1, 1))); return sum(d.textlength(c, font=font) for c in t)+TRACK*(len(t)-1)
 def icon(name, size):
@@ -84,7 +84,8 @@ labels, pins_ = [], []
 for i in order:
     p = C['places'][i]; x, y = pts[i]
     if not (R < x < W-R and TIP+R < y < H): print('off map', p['name']); continue
-    t = f"{p.get('label', p['name']).upper()} - {dtxt(dist(p['lat'], p['lng']))}"
+    nm = p.get('label', p['name']); nm = nm.upper() if C.get('labelCase', 'upper') == 'upper' else nm
+    t = f"{nm} - {dtxt(dist(p['lat'], p['lng']))}"
     bw = tw(t)+2*int(18*U); cy = y-TIP; done = None
     for side in ([1, -1] if p.get('side', 'r') == 'r' else [-1, 1]):
         for dy in (0, -LH*0.9, LH*0.9, -LH*1.8, LH*1.8):
