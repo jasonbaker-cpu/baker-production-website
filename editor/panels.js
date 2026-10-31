@@ -758,7 +758,7 @@ function showCheckMap(entry){
   const url = DAYS_ROOT + entry.src.replace(/src\/?$/, "") + "check.html?v=" + Date.now();
   box = document.createElement("div"); box.id = "chkBox";
   const notes = (entry.notes||"").trim(); const esc = t => t.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-  box.innerHTML = (notes ? `<div class="chkNotes"><b>Booking notes — follow these:</b> ${esc(notes)}</div>` : "") + `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost chkTab on" data-v="b" title="Show the lot boundary">Boundary</button><button class="btn ghost chkTab" data-v="a" title="Show every pinned place">Map</button><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary" loading="lazy"></iframe>`;
+  box.innerHTML = (notes ? `<div class="chkNotes"><b>Booking notes — follow these:</b> ${esc(notes)}</div>` : "") + `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost chkTab on" data-v="b" title="Show the lot boundary">Boundary</button><button class="btn ghost chkTab" data-v="a" title="Show every pinned place">Map</button><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary"></iframe>`;
   ($("stage") || document.body).appendChild(box);
   let small = false; try { small = localStorage.getItem("chkMin") === "1"; } catch(e){}
   const set = () => { box.classList.toggle("min", small); try { localStorage.setItem("chkMin", small ? "1" : "0"); } catch(e){} };
