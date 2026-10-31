@@ -76,11 +76,11 @@
       el.innerHTML = list.map(function (s, i) { return card(s, current === 'All' && i === 0); }).join('');
       if (bar) bar.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-sub') === current)); });
       var c = document.getElementById('salesCount');
-      if (c) c.textContent = list.length + (list.length === 1 ? ' sale' : ' sales') + (current === 'All' ? '' : ' in ' + current);
+      if (c) c.textContent = current === 'All' ? 'Recent sales' : 'Sales in ' + current;
     }
     if (bar) {
       bar.innerHTML = ['All'].concat(subs).map(function (s) {
-        return '<button type="button" data-sub="' + esc(s) + '">' + esc(s) + (s === 'All' ? '' : ' <span class="num">' + counts[s] + '</span>') + '</button>';
+        return '<button type="button" data-sub="' + esc(s) + '">' + esc(s) + (s === 'All' ? '' : '') + '</button>';
       }).join('');
       bar.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; current = b.getAttribute('data-sub'); draw(); });
     }
