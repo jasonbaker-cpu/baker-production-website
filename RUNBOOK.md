@@ -207,3 +207,6 @@ Every job uses the same SMALL pins: head ~109 px and label ~95 px tall per 3000 
 
 ## Day look (Jason, 31 Oct 2026)
 Every DAY drone photo must look like the Holdsworth/REIWA reference (23 Karabil Way, Nollamara): bright land (median ~145), clean whites, neutral-warm, crisp not crunchy, bright airy pale-blue sky. Defaults in editor/core.js TUNE (lookY 172, lvlAmt 1, fine 1.0, mid 1.1, sat .36, relative off). Twilight (plate S) keeps the darker dusk targets.
+
+## Twilight = editor only (Jason, 31 Oct 2026)
+Twilight/dusk drone jobs are edited only by Profocus. Do NOT grade, sky-replace or re-export them, and don't 'fix' their look later. Pipeline still publishes the job (untouched photos + pins/boundary/editor map) flagged SEND TO EDITOR so the automatic email goes out and Profocus can swap in and Send to Baker.
