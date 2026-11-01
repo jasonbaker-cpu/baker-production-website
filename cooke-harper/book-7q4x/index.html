@@ -290,6 +290,14 @@ input,select,textarea{font-size:16px}
 .inbox .acts{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .inbox .acts .btn{min-height:40px;text-decoration:none}
 .inbox .acts a.btn:not(.primary){color:var(--ink)}
+.oh-head{display:grid;gap:2px;padding:12px 18px 4px}
+.oh-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 18px 16px;border-top:1px solid var(--line)}
+.oh-foot .why{flex-basis:100%}
+.ohsel{font:inherit;font-size:14px;min-height:40px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:0 8px;max-width:100%}
+.qrbox{background:#fff;border-radius:14px;padding:12px;width:min(280px,100%);margin:6px auto}
+.qrbox svg{display:block;width:100%;height:auto}
+.linkbox{width:100%;font:inherit;font-size:13px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--sunk,#eee);color:var(--ink)}
+.steps-mini{margin:0;padding-left:20px;display:grid;gap:6px;font-size:14.5px}
 .memlist{display:grid;gap:6px}
 .memrow{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:14px}
 .memrow span{min-width:0;overflow-wrap:anywhere}
@@ -1139,19 +1147,22 @@ function backupAll(){
 /* ---------- website inbox ---------- */
 var APPR_TIME={"Within 3 months":"1–3 months","3–6 months":"3–6 months","6–12 months":"6–12 months","Just curious":"12+ months / unsure"};
 var FIN_MAP={"Pre-approved":"Pre-approved","Cash":"Cash","Need to sell first":"Must sell first","Still arranging":"Needs finance"};
-function digits(p){var d=String(p||"").replace(/[^\d+]/g,"");if(/^4\d{8}$/.test(d))d="0"+d;return d;}
+function telDigits(p){var d=String(p||"").replace(/[^\d+]/g,"");if(/^4\d{8}$/.test(d))d="0"+d;return d;}
 function waitMins(iso){var t=Date.parse(iso||"");return isNaN(t)?null:Math.max(0,Math.round((Date.now()-t)/60000));}
 function waitLabel(m){if(m==null)return "";if(m<1)return "just now";if(m<60)return m+" min ago";if(m<1440)return Math.round(m/60)+" hr ago";return ago(new Date(Date.now()-m*60000).toISOString());}
 function smsBody(r){var me=state.me||"Jayden",first=String(r.name||"").trim().split(/\s+/)[0]||"there";
   return r.kind==="appraisal"?"Hi "+first+", it's "+me+" from Rodway Group. Thanks for asking for a price estimate on "+(r.address||"your home")+". Is now a good time for a quick call, or is later today better?"
   :"Hi "+first+", it's "+me+" from Rodway Group. Thanks for joining our buyer list. I'll send you homes that fit before they hit the portals. Is now a good time for a quick chat about what you're after?";}
 function inboxSection(){
-  var L=state.inbox.slice().sort(function(a,b){return String(b.createdAt||"").localeCompare(String(a.createdAt||""));});
+  return ohSection()+webSection();
+}
+function webSection(){
+  var L=state.inbox.filter(function(x){return x.kind!=="openhome";}).sort(function(a,b){return String(b.createdAt||"").localeCompare(String(a.createdAt||""));});
   if(!L.length)return "";
   return '<section class="card inbox"><div class="sec-title"><h3>New from your website</h3><span class="num">'+L.length+' waiting</span></div><div class="list">'+L.map(function(r){
     var isA=r.kind==="appraisal";
     var sub=isA?[r.address,r.suburb,r.bedrooms?r.bedrooms+" bed":"",r.timeframe].filter(Boolean).join(" · "):[r.budget,r.bedrooms?r.bedrooms+" bed":"",r.suburbs,r.finance,r.timeframe].filter(Boolean).join(" · ");
-    var wm=waitMins(r.createdAt),ph=digits(r.phone),urgent=wm!=null&&wm<1440;
+    var wm=waitMins(r.createdAt),ph=telDigits(r.phone),urgent=wm!=null&&wm<1440;
     return '<div class="row"><span class="nm">'+esc(r.name||"No name")+' <span class="pill '+(isA?"p-hot":"p-warm")+'">'+(isA?"wants a price estimate":"buyer sign-up")+'</span>'+(urgent&&wm<60?' <span class="pill p-due">call now</span>':'')+'</span><span class="right num">'+esc(r.phone||"")+'</span><span class="sub">'+esc(sub)+(r.wants?' · wants: '+esc(r.wants):'')+(r.source&&r.source!=="website"?' · from '+esc(r.source):'')+' · '+esc(waitLabel(wm))+'</span>'+(state.canWrite?'<span class="acts">'+(ph?'<a class="btn small primary" href="tel:'+esc(ph)+'">Call</a><a class="btn small" href="sms:'+esc(ph)+'?&body='+encodeURIComponent(smsBody(r))+'">Text</a>':'')+'<button class="btn small" data-act="inbox-accept" data-id="'+esc(r.id)+'">'+(isA?"Save as potential seller":"Save as buyer")+'</button><button class="btn small" data-act="inbox-dismiss" data-id="'+esc(r.id)+'">Dismiss</button></span>':'')+'</div>';
   }).join("")+'</div></section>';
 }
@@ -1169,6 +1180,101 @@ function acceptInbox(id){
     rec={name:r.name||"",phone:r.phone||"",email:r.email||"",budgetMin:b.min||null,budgetMax:b.max||null,beds:firstInt(r.bedrooms),suburbs:r.suburbs?normList(r.suburbs,SUBURBS):[],types:/land/i.test(r.bedrooms||"")?["Land"]:[],finance:FIN_MAP[r.finance]||"",timeframe:TIMEFRAME.indexOf(r.timeframe)>-1?r.timeframe:"",mustHaves:[],source:"Website buyer list",status:"Active",notes:r.wants?"Wants: "+r.wants:"",log:[{date:todayStr(),kind:"Website lead",by:"",note:note}],createdAt:nowIso()};
   }
   save(coll,null,rec).then(function(){return state.db.collection("inbox").doc(id).delete();}).then(function(){toast(coll==="buyers"?"Added to buyers":"Added to potential sellers. Call them today.");}).catch(writeErr);
+}
+
+
+/* ---------- open home sign-ins ---------- */
+var OH_INT=["","Hot","Warm","Not for them"],OH_PRICE=["","Good value","About right","Too high"];
+function localDay(iso){var d=new Date(iso||Date.now());return isNaN(d)?todayStr():ymd(d);}
+function ohKey(r){return (r.listingId||r.property||"open")+"|"+localDay(r.createdAt);}
+function ohGroups(){var g={};state.inbox.filter(function(x){return x.kind==="openhome";}).forEach(function(r){var k=ohKey(r);(g[k]=g[k]||{key:k,listingId:r.listingId||"",property:r.property||"",date:localDay(r.createdAt),items:[]}).items.push(r);});
+  return Object.keys(g).map(function(k){var x=g[k];x.items.sort(function(a,b){return String(a.createdAt||"").localeCompare(String(b.createdAt||""));});return x;}).sort(function(a,b){return b.date.localeCompare(a.date);});}
+function ohListing(gr){var s=gr.listingId?state.sellers.filter(function(x){return x.id===gr.listingId;})[0]:null;
+  if(!s&&gr.property){var a=gr.property.toLowerCase();s=state.sellers.filter(function(x){return x.address&&a.indexOf(String(x.address).toLowerCase())===0;})[0];}return s||null;}
+function ohSms(r,gr){var me=state.me||"Jayden",first=String(r.name||"").trim().split(/\s+/)[0]||"there",where=gr.property||"the open home";
+  if(r.buyerType==="Neighbour")return "Hi "+first+", it's "+me+" from Rodway Group. Thanks for popping in to "+where+" today. If you ever want to know what your place would sell for, I'm happy to give you a free estimate.";
+  return "Hi "+first+", it's "+me+" from Rodway Group. Thanks for coming through "+where+" today. What did you think of it? Happy to answer any questions or send you the price guide.";}
+function ohTags(r){var t=[];if(r.buyerType)t.push(r.buyerType);if(r.budget)t.push(r.budget);if(r.finance)t.push(r.finance);
+  if(r.sellerStatus&&r.sellerStatus!=="No")t.push("may sell: "+r.sellerStatus.toLowerCase()+(r.sellWhere?" ("+r.sellWhere+")":""));if(r.consent==="no")t.push("no listing alerts");return t.join(" · ");}
+function ohSection(){
+  var G=ohGroups();if(!G.length)return "";
+  return G.map(function(gr){
+    var s=ohListing(gr),sellers=gr.items.filter(function(r){return r.sellerStatus&&r.sellerStatus!=="No"||r.buyerType==="Neighbour";}).length;
+    return '<section class="card inbox oh"><div class="sec-title"><h3>Open home sign-ins</h3><span class="num">'+gr.items.length+' people</span></div>'+
+    '<div class="pad oh-head"><b>'+esc(gr.property||(s&&s.address)||"Open home")+'</b><span class="why">'+esc(niceDate(gr.date))+(sellers?' · <b style="color:var(--good)">'+sellers+' possible seller'+(sellers===1?"":"s")+'</b>':'')+(s?'':' · not linked to a listing')+'</span></div>'+
+    '<div class="list">'+gr.items.map(function(r){var ph=telDigits(r.phone);
+      return '<div class="row"><span class="nm">'+esc(r.name||"No name")+(r.sellerStatus==="Yes, soon"?' <span class="pill p-hot">may sell soon</span>':'')+'</span><span class="right num">'+esc(r.phone||"")+'</span><span class="sub">'+esc(ohTags(r))+'</span>'+
+      (state.canWrite?'<span class="acts">'+(ph?'<a class="btn small primary" href="tel:'+esc(ph)+'">Call</a><a class="btn small" href="sms:'+esc(ph)+'?&body='+encodeURIComponent(ohSms(r,gr))+'">Text</a>':'')+
+      '<select class="ohsel" data-oh-int="'+esc(r.id)+'" aria-label="Interest">'+OH_INT.map(function(o){return '<option value="'+o+'">'+(o||"Interest…")+'</option>';}).join("")+'</select>'+
+      '<select class="ohsel" data-oh-price="'+esc(r.id)+'" aria-label="Price feedback">'+OH_PRICE.map(function(o){return '<option value="'+o+'">'+(o||"Price feedback…")+'</option>';}).join("")+'</select></span>':'')+'</div>';}).join("")+'</div>'+
+    (state.canWrite?'<div class="pad oh-foot"><button class="btn primary" data-act="oh-save" data-key="'+esc(gr.key)+'">Save all '+gr.items.length+' to the book</button><button class="btn small" data-act="oh-dismiss" data-key="'+esc(gr.key)+'">Dismiss all</button><span class="why">New people become buyers or potential sellers. People already in the book get this visit in their history.'+(s?' Attendance is added to the listing for the vendor report.':'')+'</span></div>':'')+
+    '</section>';
+  }).join("");
+}
+function ohSave(key){
+  var gr=ohGroups().filter(function(x){return x.key===key;})[0];if(!gr)return;
+  var s=ohListing(gr),addr=gr.property||(s&&s.address)||"open home",date=gr.date,by=state.me||"";
+  var btn=document.querySelector('[data-act="oh-save"][data-key="'+key.replace(/"/g,'\\"')+'"]');if(btn){btn.disabled=true;btn.textContent="Saving…";}
+  var people=[],nb=0,np=0,upd=0;
+  function pick(attr,id){var el=document.querySelector('['+attr+'="'+id+'"]');return el?el.value:"";}
+  (function next(i){
+    if(i>=gr.items.length){
+      var done=function(){Promise.all(gr.items.map(function(r){return state.db?state.db.collection("inbox").doc(r.id).delete():Promise.resolve();})).then(function(){toast("Saved: "+nb+" new buyer"+(nb===1?"":"s")+", "+np+" potential seller"+(np===1?"":"s")+", "+upd+" already in the book");}).catch(writeErr);};
+      if(s){var ins=(s.inspections||[]).slice(),ex=ins.filter(function(x){return x.date===date&&x.source==="sign-in";})[0];
+        if(ex){ex.people=(ex.people||[]).concat(people);ex.groups=Math.max(ex.groups||0,ex.people.length);}else ins.push({date:date,groups:people.length,people:people,source:"sign-in"});
+        var lg=(s.log||[]).concat([{date:date,kind:"Open home",by:by,note:people.length+" signed in"}]).slice(-100);
+        patch("sellers",s.id,{inspections:ins.slice(-60),log:lg}).then(done).catch(writeErr);}
+      else done();
+      return;
+    }
+    var r=gr.items[i],interest=pick("data-oh-int",r.id),price=pick("data-oh-price",r.id);
+    var isBuyer=r.buyerType!=="Neighbour",isSeller=(r.sellerStatus&&r.sellerStatus!=="No")||r.buyerType==="Neighbour";
+    var note="Open home "+addr+(r.buyerType?" · "+r.buyerType.toLowerCase():"")+(price?" · price: "+price.toLowerCase():"")+(interest?" · "+interest.toLowerCase():"");
+    var entry={date:date,kind:"Open home",by:by,note:note};
+    var person={name:r.name||"",phone:r.phone||"",price:price,interest:interest,note:r.sellerStatus&&r.sellerStatus!=="No"?"May sell ("+r.sellerStatus.toLowerCase()+")":""};
+    var dup=r.phone?findDup(r.phone,null):null,jobs=[];
+    if(dup&&(dup.kind==="buyer"||dup.kind==="potential seller")){
+      var coll=dup.kind==="buyer"?"buyers":"prospects";var up={log:(dup.rec.log||[]).concat([entry]).slice(-100)};if(coll==="buyers")up.lastContact=nowIso();
+      jobs.push(patch(coll,dup.rec.id,up));upd++;person.buyerId=dup.kind==="buyer"?dup.rec.id:"";
+      if(dup.kind==="buyer"&&isSeller&&!state.prospects.some(function(p){return last4(p.phone)===last4(r.phone);})){jobs.push(save("prospects",null,ohProspect(r,s,date,by,note)));np++;}
+    } else {
+      if(isBuyer){var b=parseRange(r.budget||"");nb++;
+        var rec={name:r.name||"Open home buyer",phone:r.phone||"",email:r.email||"",status:"Active",source:"Open home – "+addr,budgetMin:b.min||null,budgetMax:b.max||null,
+          suburbs:s&&s.suburb?[s.suburb]:[],types:s&&s.type?[s.type]:[],beds:s&&s.beds||null,
+          timeframe:interest==="Hot"?"1–3 months":r.buyerType==="Just looking"||interest==="Not for them"?"Just looking":"3–6 months",
+          finance:FIN_MAP[r.finance]||"",mustHaves:[],notes:[r.buyerType==="Investing"?"Investor":"",r.consent==="no"?"Didn't want listing alerts":""].filter(Boolean).join(". "),createdAt:nowIso(),lastContact:nowIso(),log:[entry]};
+        jobs.push(save("buyers",null,rec).then(function(id){person.buyerId=id;}));}
+      if(isSeller){jobs.push(save("prospects",null,ohProspect(r,s,date,by,note)));np++;}
+    }
+    people.push(person);
+    Promise.all(jobs).then(function(){next(i+1);}).catch(function(e){if(btn){btn.disabled=false;btn.textContent="Save all to the book";}writeErr(e);});
+  })(0);
+}
+function ohProspect(r,s,date,by,note){
+  var where=r.sellWhere||"",nbr=r.buyerType==="Neighbour";
+  return {name:r.name||"",phone:r.phone||"",email:r.email||"",address:where||(nbr&&s?"Near "+(s.address||""):""),suburb:(where&&SUBURBS.filter(function(x){return where.toLowerCase().indexOf(x.toLowerCase())>-1;})[0])||(s&&s.suburb)||"",estValue:null,beds:null,type:"House",
+    timeframe:r.sellerStatus==="Yes, soon"?"1–3 months":"6–12 months",motivation:nbr&&(!r.sellerStatus||r.sellerStatus==="No")?"Curious about value":"",source:"Home open",traits:[],personal:"",
+    notes:nbr?"Neighbour at the open home":"Buying too. Check whether they need to sell first.",status:"Nurturing",nextFollowUp:addDays(r.sellerStatus==="Yes, soon"?1:7),log:[{date:date,kind:"Open home",by:by,note:note}],createdAt:nowIso()};
+}
+function ohPrint(sid){
+  var s=state.sellers.filter(function(x){return x.id===sid;})[0];if(!s)return;var url=ohLink(s),qr="";
+  try{var q=qrcode(0,"M");q.addData(url);q.make();qr=q.createSvgTag({cellSize:8,margin:1,scalable:true});}catch(e){toast("QR code unavailable offline.");return;}
+  var w=window.open("","_blank");if(!w){toast("Allow pop-ups to print the sign.");return;}
+  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Sign in · '+esc(s.address||"")+'</title><style>@page{size:A4;margin:18mm}body{font-family:Georgia,serif;text-align:center;color:#17221c;margin:0}h1{font-size:54px;font-weight:400;margin:10mm 0 4mm}p{font-family:system-ui,sans-serif;font-size:20px;margin:0 0 8mm;color:#444}.qr{width:120mm;margin:0 auto}.qr svg{width:100%;height:auto}.addr{font-family:system-ui,sans-serif;font-weight:700;font-size:22px;margin-top:8mm}.who{font-family:system-ui,sans-serif;font-size:16px;color:#555;margin-top:3mm}</style></head><body><h1>Welcome. Please sign in.</h1><p>Scan with your phone camera. It takes 20 seconds.</p><div class="qr">'+qr+'</div><div class="addr">'+esc([s.address,s.suburb].filter(Boolean).join(", "))+'</div><div class="who">Jayden Cooke &amp; James Harper · Rodway Group</div><script>onload=function(){setTimeout(function(){print()},300)}<\/script></body></html>');
+  w.document.close();
+}
+function ohDismiss(key){var gr=ohGroups().filter(function(x){return x.key===key;})[0];if(!gr)return;
+  Promise.all(gr.items.map(function(r){return state.db.collection("inbox").doc(r.id).delete();})).then(function(){toast("Dismissed "+gr.items.length+" sign-ins");}).catch(writeErr);}
+function ohLink(s){return location.origin+location.pathname.replace(/book-7q4x\/?.*$/,"open/")+"?l="+encodeURIComponent(s.id)+"&a="+encodeURIComponent([s.address,s.suburb].filter(Boolean).join(", "));}
+function openSignin(sid){
+  var s=state.sellers.filter(function(x){return x.id===sid;})[0];if(!s)return;
+  var url=ohLink(s),qr="";
+  try{var q=qrcode(0,"M");q.addData(url);q.make();qr=q.createSvgTag({cellSize:6,margin:2,scalable:true});}catch(e){qr='<p class="why">QR code unavailable offline. Use the link below.</p>';}
+  draft=null;
+  showDrawer('<header><h2>Open home sign-in</h2><button class="btn small" data-act="close">Close</button></header><div class="body"><p class="why">'+esc(s.address||"")+'</p>'+
+  '<ol class="steps-mini"><li>Open the sign-in on an iPad or spare phone and leave it at the door, or print this QR code so visitors sign in on their own phones.</li><li>After the open home, check <b>Today</b>. Everyone who signed in is there, ready to call and save to the book in one tap.</li></ol>'+
+  '<div class="qrbox">'+qr+'</div><input class="linkbox" id="ohUrl" readonly value="'+esc(url)+'" aria-label="Sign-in link"></div>'+
+  '<footer><button class="btn" data-act="copy" data-src="ohUrl">Copy link</button><button class="btn" data-act="oh-print" data-id="'+esc(s.id)+'">Print door sign</button><a class="btn primary" href="'+esc(url)+'" target="_blank" rel="noopener">Open sign-in on this device</a></footer>');
 }
 
 /* ---------- access (Jason only) ---------- */
@@ -1213,7 +1319,8 @@ function vGuide(){
    '<li>For an off-market listing: copy the message and the names and numbers, send the texts from your phone, then tap <span class="k">Mark all as contacted</span>.</li>'+
   '</ol></section>'+
   '<section class="card pad gsec"><h3>Open homes and vendor reports</h3><ol>'+
-   '<li>Open a listed seller and tap <span class="k">+ Log open home</span> after each inspection. Enter groups through and each person you spoke to: name, mobile, price feedback, interest, and what they said.</li>'+
+   '<li>Before each open home, open the listing and tap <span class="k">Sign-in sheet</span>. Leave the sign-in on an iPad at the door, or print the door sign so visitors scan the QR code. Afterwards everyone who signed in is on <span class="k">Today</span>: call or text them, set interest and price feedback, then <span class="k">Save all</span>. Buyers, potential sellers and the listing\'s attendance all update at once.</li>'+
+   '<li>No sign-in on the day? Open a listed seller and tap <span class="k">+ Log open home</span> after each inspection. Enter groups through and each person you spoke to: name, mobile, price feedback, interest, and what they said.</li>'+
    '<li>New people go straight into Buyers (suburb, type and beds filled from the property). People already in the book get the visit added to their history. You never type a buyer twice.</li>'+
    '<li>Tap <span class="k">Vendor report</span> every week. It writes the update for you from the last 7 days: open homes, groups through, price feedback, hot buyers, database buyers contacted, and buyer comments. Add next week\'s plan, copy, send.</li>'+
   '</ol></section>'+
@@ -1274,7 +1381,7 @@ function contactDetail(kind,r){
   h+='<dl class="kv">'+(isP?'<dt>Phone</dt><dd class="num">'+esc(r.phone||"–")+'</dd><dt>Email</dt><dd>'+esc(r.email||"–")+'</dd><dt>Property</dt><dd>'+esc([r.address,r.suburb].filter(Boolean).join(", ")||"–")+'</dd><dt>Est. value</dt><dd class="num">'+(r.estValue?money(r.estValue):"–")+'</dd><dt>Home</dt><dd>'+esc([r.beds?r.beds+" bed":"",r.type].filter(Boolean).join(" · ")||"–")+'</dd><dt>Why selling</dt><dd>'+esc(r.motivation||"–")+'</dd><dt>Came from</dt><dd>'+esc(r.source||"–")+'</dd>':'<dt>Owner</dt><dd>'+esc(r.owner||"–")+'</dd><dt>Phone</dt><dd class="num">'+esc(r.phone||"–")+'</dd><dt>Price</dt><dd class="num">'+money(r.price)+'</dd><dt>Home</dt><dd>'+esc([r.suburb,r.beds?r.beds+" bed":"",r.type].filter(Boolean).join(" · ")||"–")+'</dd>')+'<dt>Notes</dt><dd style="white-space:pre-wrap">'+esc(r.notes||"–")+'</dd></dl>';
   if(!isP&&r.stage&&r.stage!=="Appraisal"){
     var ins=(r.inspections||[]).slice().reverse();
-    h+='<div><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px"><h3 style="font-size:18px">Open homes</h3><div style="display:flex;gap:6px">'+(state.canWrite?'<button class="btn small" data-act="new-inspection" data-id="'+esc(r.id)+'">+ Log open home</button>':'')+'<button class="btn small" data-act="vendor-report" data-id="'+esc(r.id)+'">Vendor report</button></div></div>'+(ins.length?'<div class="hist">'+ins.map(function(x){var p=x.people||[];var c={g:0,a:0,t:0};p.forEach(function(q){if(q.price==="Good value")c.g++;else if(q.price==="About right")c.a++;else if(q.price==="Too high")c.t++;});return '<div><span class="d">'+esc(niceDate(x.date))+'</span><span><b class="num">'+(x.groups||0)+' groups</b> · '+p.length+' spoken to'+(c.g+c.a+c.t?' · price: '+c.g+' value, '+c.a+' right, '+c.t+' high':'')+'</span></div>';}).join("")+'</div>':'<p class="why">No open homes logged yet.</p>')+'</div>';
+    h+='<div><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px"><h3 style="font-size:18px">Open homes</h3><div style="display:flex;gap:6px">'+(state.canWrite?'<button class="btn small primary" data-act="oh-signin" data-id="'+esc(r.id)+'">Sign-in sheet</button><button class="btn small" data-act="new-inspection" data-id="'+esc(r.id)+'">+ Log open home</button>':'')+'<button class="btn small" data-act="vendor-report" data-id="'+esc(r.id)+'">Vendor report</button></div></div>'+(ins.length?'<div class="hist">'+ins.map(function(x){var p=x.people||[];var c={g:0,a:0,t:0};p.forEach(function(q){if(q.price==="Good value")c.g++;else if(q.price==="About right")c.a++;else if(q.price==="Too high")c.t++;});return '<div><span class="d">'+esc(niceDate(x.date))+'</span><span><b class="num">'+(x.groups||0)+' groups</b> · '+p.length+(x.source==="sign-in"?' signed in':' spoken to')+(c.g+c.a+c.t?' · price: '+c.g+' value, '+c.a+' right, '+c.t+' high':'')+'</span></div>';}).join("")+'</div>':'<p class="why">No open homes logged yet.</p>')+'</div>';
   }
   if(!isP&&r.stage==="Sold"){var sd=(r.stageDates||{}).Sold;var an=anniv(sd);if(an)h+='<p class="why">Sold '+esc(niceDate(sd))+'. Next sale anniversary '+esc(niceDate(an.date))+'.</p>';}
   var log=(r.log||[]).slice().reverse();
@@ -1371,6 +1478,10 @@ document.addEventListener("click",function(e){
   else if(a==="edit-buyer")openBuyer(id,true);
   else if(a==="open-seller"){var s0=state.sellers.filter(function(x){return x.id===id;})[0];if(s0)showDrawer(contactDetail("seller",s0));}
   else if(a==="inbox-accept"){acceptInbox(id);}
+  else if(a==="oh-save"){ohSave(t.dataset.key);}
+  else if(a==="oh-dismiss"){ohDismiss(t.dataset.key);}
+  else if(a==="oh-signin"){openSignin(id);}
+  else if(a==="oh-print"){ohPrint(id);}
   else if(a==="inbox-dismiss"){state.db.collection("inbox").doc(id).delete().then(function(){toast("Dismissed");}).catch(writeErr);}
   else if(a==="sign-out"){if(window.BB)window.BB.signOut();}
   else if(a==="mem-add"){var em=(val("memEmail")||"").toLowerCase(),nm=val("memName");if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){toast("Enter a full email address.");return;}var M=(state.book.members||[]).slice();if(M.indexOf(em)<0)M.push(em);var N=Object.assign({},state.book.names||{});if(nm)N[em]=nm;else delete N[em];window.BB.saveMembers(M,N).then(function(){toast("Access given to "+em);}).catch(writeErr);}
@@ -1537,6 +1648,7 @@ try{
   send({state:"error",code:"load-failed"});
 }
 </script>
+<script src="qrcode.js"></script>
 <script>if("serviceWorker" in navigator&&location.protocol==="https:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
 </body>
 </html>

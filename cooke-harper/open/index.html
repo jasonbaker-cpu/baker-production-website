@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#1f3a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Open Home">
+<title>Open Home Sign-in | Cooke &amp; Harper, Rodway Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../ch.css?v=3">
+<style>
+body{background:var(--gum);min-height:100vh;min-height:100dvh}
+.k{max-width:640px;margin:0 auto;padding:max(20px,env(safe-area-inset-top,0px)) 16px calc(28px + env(safe-area-inset-bottom,0px))}
+.k-top{color:var(--gum-ink);display:grid;gap:4px;margin:6px 0 18px}
+.k-top .who{font-family:var(--display);font-size:20px}
+.k-top .who span{display:block;font-family:var(--body);font-size:13.5px;color:var(--gum-muted)}
+.k-top h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,6vw,42px);line-height:1.08;margin:14px 0 0}
+.k-top .addr{color:var(--sun);font-weight:700;font-size:17px}
+.card{padding:22px}
+form.lead{margin-top:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip span{padding:10px 15px;font-size:15px}
+fieldset{border:0;margin:0;padding:0;display:grid;gap:8px}
+legend{font-weight:700;font-size:14px;padding:0;margin-bottom:8px}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:14.5px}
+.consent input{width:22px;height:22px;margin:1px 0 0;accent-color:var(--gum);flex:none}
+.btn-sun{width:100%;padding:16px;font-size:17px}
+.thanks{position:fixed;inset:0;background:var(--gum);color:var(--gum-ink);display:grid;place-items:center;text-align:center;padding:24px;z-index:5}
+.thanks h2{font-family:var(--display);font-weight:400;font-size:clamp(34px,7vw,52px);line-height:1.1;margin:0 0 10px}
+.thanks p{color:var(--gum-muted);font-size:18px;margin:0 0 22px}
+.thanks .btn{min-width:220px}
+.q{color:var(--gum-muted);font-size:12.5px;text-align:center;margin-top:14px}
+.status{color:var(--err);font-weight:600;margin:0}
+.when-buy[hidden],.when-sell[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main class="k">
+  <div class="k-top">
+    <div class="who">Cooke &amp; Harper<span>Jayden Cooke &amp; James Harper · Rodway Group</span></div>
+    <h1>Welcome. Please sign in.</h1>
+    <div class="addr" id="addr"></div>
+  </div>
+  <div class="card">
+    <form class="lead" id="f" novalidate autocomplete="off">
+      <div class="row2">
+        <label class="fl" for="name">Your name<input id="name" name="name" autocomplete="name" required></label>
+        <label class="fl" for="phone">Mobile<input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required></label>
+      </div>
+      <fieldset>
+        <legend>What brings you here?</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="buyerType" value="Buying a home" checked><span>Buying a home</span></label>
+          <label class="chip"><input type="radio" name="buyerType" value="Investing"><span>Investing</span></label>
+          <label class="chip"><input type="radio" name="buyerType" value="Neighbour"><span>I'm a neighbour</span></label>
+          <label class="chip"><input type="radio" name="buyerType" value="Just looking"><span>Just looking</span></label>
+        </div>
+      </fieldset>
+      <div class="row2 when-buy">
+        <label class="fl" for="budget">Budget up to
+          <select id="budget" name="budget"><option value="">Choose…</option><option>Under $500k</option><option>$500k–$600k</option><option>$600k–$700k</option><option>$700k–$800k</option><option>$800k–$900k</option><option>$900k–$1m</option><option>$1m–$1.3m</option><option>$1.3m+</option></select>
+        </label>
+        <label class="fl" for="finance">Finance
+          <select id="finance" name="finance"><option value="">Choose…</option><option>Pre-approved</option><option>Cash</option><option>Need to sell first</option><option>Still arranging</option></select>
+        </label>
+      </div>
+      <fieldset>
+        <legend>Do you have a home you might sell?</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="sellerStatus" value="Yes, soon"><span>Yes, soon</span></label>
+          <label class="chip"><input type="radio" name="sellerStatus" value="Maybe later"><span>Maybe later</span></label>
+          <label class="chip"><input type="radio" name="sellerStatus" value="No" checked><span>No</span></label>
+        </div>
+      </fieldset>
+      <label class="fl when-sell" for="sellWhere" hidden>Where is it? <small>Street or suburb is fine</small><input id="sellWhere" name="sellWhere"></label>
+      <label class="fl" for="email">Email <small>optional</small><input id="email" name="email" type="email" autocomplete="email"></label>
+      <label class="consent"><input type="checkbox" name="consent" id="consent" checked><span>Send me homes like this one before they're advertised.</span></label>
+      <div class="hp" aria-hidden="true"><label>Leave empty<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></div>
+      <button class="btn btn-sun" type="submit">Sign in</button>
+      <p class="status" id="st" role="alert" hidden></p>
+      <p class="fine">Your details go only to Jayden and James at Rodway Group, for this home and homes like it. We never pass them on.</p>
+    </form>
+  </div>
+  <p class="q" id="q" hidden></p>
+</main>
+<div class="thanks" id="thanks" hidden role="status">
+  <div>
+    <h2>Thanks, <span id="tn">there</span>.</h2>
+    <p>Enjoy the home. Ask us anything as you look around.</p>
+    <button class="btn btn-sun" id="next" type="button">Next person</button>
+  </div>
+</div>
+<script>
+(function(){
+  'use strict';
+  var FS='https://firestore.googleapis.com/v1/projects/baker-leads/databases/(default)/documents/bb/cooke-harper/inbox?key=AIzaSyC0ES1GZsgtl4_vC6Dpp-4aG-Iy4DtXlCE';
+  var QK='ch_openhome_queue';
+  var p={};try{p=Object.fromEntries(new URLSearchParams(location.search));}catch(e){}
+  var addr=String(p.a||'').slice(0,200), lid=String(p.l||'').slice(0,60);
+  document.getElementById('addr').textContent=addr?'Open home · '+addr:'Open home';
+  if(addr)document.title='Sign in · '+addr;
+  var f=document.getElementById('f'),st=document.getElementById('st'),th=document.getElementById('thanks'),qEl=document.getElementById('q');
+  function val(n){var el=f.elements[n];if(!el)return'';if(el.length&&!el.tagName){for(var i=0;i<el.length;i++)if(el[i].checked)return el[i].value;return'';}return el.type==='checkbox'?(el.checked?'yes':'no'):String(el.value||'').trim();}
+  function sync(){var bt=val('buyerType'),ss=val('sellerStatus');
+    f.querySelector('.when-buy').hidden=!(bt==='Buying a home'||bt==='Investing');
+    f.querySelector('.when-sell').hidden=!(ss==='Yes, soon'||ss==='Maybe later');}
+  f.addEventListener('change',sync);sync();
+  function load(){try{return JSON.parse(localStorage.getItem(QK)||'[]');}catch(e){return[];}}
+  function store(q){try{localStorage.setItem(QK,JSON.stringify(q));}catch(e){}}
+  function showQ(){var n=load().length;qEl.hidden=!n;qEl.textContent=n?n+(n===1?' sign-in is':' sign-ins are')+' waiting for signal. They send automatically.':'';}
+  var busy=false;
+  function flush(){if(busy)return;var q=load();if(!q.length){showQ();return;}busy=true;
+    fetch(FS,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:q[0]})})
+      .then(function(r){if(r.ok||r.status===400){var q2=load();q2.shift();store(q2);}busy=false;showQ();if(r.ok&&load().length)flush();})
+      .catch(function(){busy=false;showQ();});}
+  setInterval(flush,15000);addEventListener('online',flush);flush();
+  var timer=null;
+  function reset(){clearTimeout(timer);th.hidden=true;f.reset();sync();st.hidden=true;window.scrollTo(0,0);}
+  document.getElementById('next').addEventListener('click',reset);
+  f.addEventListener('submit',function(e){
+    e.preventDefault();st.hidden=true;
+    if(f.elements._honey.value)return;
+    var name=val('name'),phone=val('phone');
+    var miss=[];if(!name)miss.push('your name');if(phone.replace(/\D/g,'').length<8)miss.push('your mobile');
+    if(miss.length){st.textContent='Please add '+miss.join(' and ')+'.';st.hidden=false;return;}
+    var bt=val('buyerType'),ss=val('sellerStatus'),buy=bt==='Buying a home'||bt==='Investing',sell=ss!=='No';
+    var d={kind:'openhome',source:'openhome',createdAt:new Date().toISOString(),name:name,phone:phone,email:val('email'),
+      buyerType:bt,sellerStatus:ss,sellWhere:sell?val('sellWhere'):'',budget:buy?val('budget'):'',finance:buy?val('finance'):'',
+      consent:val('consent'),property:addr,listingId:lid};
+    var fields={};Object.keys(d).forEach(function(k){if(d[k])fields[k]={stringValue:String(d[k]).slice(0,k==='source'?60:k==='createdAt'?40:500)};});
+    var q=load();q.push(fields);store(q);flush();
+    document.getElementById('tn').textContent=name.split(/\s+/)[0];
+    th.hidden=false;document.getElementById('next').focus();
+    timer=setTimeout(reset,8000);
+  });
+})();
+</script>
+</body>
+</html>
