@@ -8,13 +8,18 @@
       "editor": "Profocus",
       "photos": 49,
       "score": 7.0,
-      "summary": "Interiors are a good warm premium look, but the replaced sky on the fronts looks fake and pasted on.",
+      "summary": "Interiors are a good warm premium look, but on the fronts the new sky has leaked into the windows, so the house looks fake.",
       "good": [
         "Interiors have the warm cream premium look, with windows pulled",
         "Ocean and balcony views are clear and natural",
         "Verticals straight across the set"
       ],
       "fixes": [
+        {
+          "photos": "DSC06267, DSC06262 (fronts)",
+          "code": "SKY",
+          "fix": "The sky replacement has gone into the windows: the glass is flat cyan with a purple/green sheen instead of real reflections (worst on the big upper-right window in 06267, the balcony doors, and the ground-floor windows in 06262). Remove the new sky from all window and balcony glass and keep the original reflections. Only replace the sky above the roof."
+        },
         {
           "photos": "DSC06267, DSC06262 (fronts)",
           "code": "SKY",
