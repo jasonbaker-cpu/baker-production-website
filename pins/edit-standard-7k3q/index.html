@@ -38,6 +38,15 @@ a{color:var(--accent);font-weight:600}
 .scores{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
 .scores .card{display:grid;gap:4px}
 .scores .lbl{color:var(--muted);font-size:14px}
+.rv{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:grid;gap:10px}
+.rv-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.rv-top h3{margin:0}
+.rv-meta{color:var(--muted);font-size:14px}
+.badge{font:800 26px/1 var(--display);white-space:nowrap}
+.badge small{font-size:14px;color:var(--muted);font-weight:600}
+.code{display:inline-block;font:700 11px/1 var(--display);letter-spacing:.05em;padding:4px 6px;border-radius:5px;background:var(--soft);color:var(--accent);margin-right:6px;vertical-align:1px}
+.rv ul{gap:6px}
+.rv .lbl2{font:700 13px/1 var(--display);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:4px 0 2px}
 </style>
 </head>
 <body><div class="wrap">
@@ -69,6 +78,13 @@ a{color:var(--accent);font-weight:600}
 <tr><td>Verticals</td><td class="n">8.5</td><td class="n hi">9</td><td>Good already. Keep every line straight.</td></tr>
 <tr><td>Skies</td><td class="n">8</td><td class="n hi">8.5</td><td>Good already. Keep them pale and soft.</td></tr>
 </tbody></table></div>
+</section>
+
+<section id="reviews">
+<h2>Job reviews</h2>
+<p>Baker reviews delivered jobs every day. Each review gets a score out of 10 and a list of what to fix, by photo number in the gallery. Read these before your next job: the same faults should not come back.</p>
+<div class="scores" id="rv-stats"></div>
+<div id="rv-list" style="display:grid;gap:14px;margin-top:14px"><p class="note">Loading reviews…</p></div>
 </section>
 
 <section class="soft">
@@ -215,5 +231,36 @@ a{color:var(--accent);font-weight:600}
 <p class="note" style="margin-top:12px">Baker checks random jobs every day against this page.</p>
 </section>
 
-</div></body>
+</div>
+<script>
+(function(){
+  var CODES={WB:"White balance",EXPO:"Exposure / contrast",WIN:"Windows",VERT:"Verticals",SKY:"Sky",GLOW:"Twilight glow",ART:"Artefacts",TV:"TV screens",DUP:"Duplicate",RET:"Retouching"};
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function cls(n){return n>=8.5?"hi":(n<7.5?"lo":"");}
+  function fmtDate(d){try{return new Date(d+"T12:00:00").toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"numeric"});}catch(e){return d;}}
+  fetch("reviews.json",{cache:"no-store"}).then(function(r){return r.json();}).then(function(data){
+    var rv=(data.reviews||[]).slice().sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0;});
+    var list=document.getElementById("rv-list"), stats=document.getElementById("rv-stats");
+    if(!rv.length){list.innerHTML='<p class="note">No reviews yet.</p>';return;}
+    var last=rv.slice(0,10), avg=last.reduce(function(s,x){return s+x.score;},0)/last.length;
+    var counts={}; rv.slice(0,20).forEach(function(x){(x.fixes||[]).forEach(function(f){counts[f.code]=(counts[f.code]||0)+1;});});
+    var top=Object.keys(counts).sort(function(a,b){return counts[b]-counts[a];})[0];
+    stats.innerHTML='<div class="card"><span class="lbl">Average, last '+last.length+' jobs</span><span class="big '+cls(avg)+'">'+avg.toFixed(1)+'</span><span class="note">target 8.5</span></div>'+
+      '<div class="card"><span class="lbl">Jobs reviewed</span><span class="big">'+rv.length+'</span><span class="note">since '+fmtDate(rv[rv.length-1].date)+'</span></div>'+
+      (top?'<div class="card"><span class="lbl">Most common fault</span><span class="big" style="font-size:28px">'+esc(CODES[top]||top)+'</span><span class="note">'+counts[top]+' times recently</span></div>':'');
+    list.innerHTML=rv.slice(0,30).map(function(x){
+      var good=(x.good||[]).map(function(g){return "<li>"+esc(g)+"</li>";}).join("");
+      var fixes=(x.fixes||[]).map(function(f){return '<li><span class="code">'+esc(f.code)+'</span><strong>'+esc(f.photos)+':</strong> '+esc(f.fix)+"</li>";}).join("");
+      return '<article class="rv"><div class="rv-top"><div><h3>'+esc(x.address)+'</h3><div class="rv-meta">'+fmtDate(x.date)+' · '+esc(x.set)+(x.photos?' · '+x.photos+' photos':'')+'</div></div>'+
+        '<div class="badge '+cls(x.score)+'">'+Number(x.score).toFixed(1)+' <small>/10</small></div></div>'+
+        (x.summary?'<p style="margin:0">'+esc(x.summary)+'</p>':'')+
+        (fixes?'<div class="lbl2">Fix</div><ul>'+fixes+'</ul>':'<p class="hi" style="margin:0"><strong>Nothing to fix.</strong></p>')+
+        (good?'<div class="lbl2">Good</div><ul>'+good+'</ul>':'')+
+        (x.compare?'<p class="note" style="margin:0">Compare against: '+esc(x.compare)+' reference above.</p>':'')+
+        '</article>';
+    }).join("");
+  }).catch(function(){document.getElementById("rv-list").innerHTML='<p class="note">Reviews could not load. Refresh the page.</p>';});
+})();
+</script>
+</body>
 </html>

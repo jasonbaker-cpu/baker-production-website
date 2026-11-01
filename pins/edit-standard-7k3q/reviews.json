@@ -1,0 +1,47 @@
+{
+  "updated": "2026-11-01",
+  "reviews": [
+    {
+      "date": "2026-11-01",
+      "address": "24 Armand Dr",
+      "set": "Standard day",
+      "editor": "Profocus",
+      "photos": 29,
+      "score": 7.5,
+      "summary": "Clean and neutral, a clear step up. Interiors need more depth and the alfresco needs work.",
+      "good": [
+        "Whites are clean white, no grey-blue cast",
+        "Window pulls excellent on every frame, no halos",
+        "Kitchen and living shots (19-24) are the strongest in the set",
+        "Front exteriors (27-29) have the right soft pale-blue sky"
+      ],
+      "fixes": [
+        { "photos": "All interiors", "code": "EXPO", "fix": "Rooms look flat: white walls, white ceiling, dark floor and not much in between. Add mid-tone contrast and a little clarity so the rooms have depth." },
+        { "photos": "25, 26", "code": "SKY", "fix": "Alfresco sky is hazy and washed out. Replace it with the same pale-blue sky as the front shots." },
+        { "photos": "26", "code": "EXPO", "fix": "Hard sun stripes across the concrete pull the eye. Soften the highlights." }
+      ],
+      "compare": "Living and dining"
+    },
+    {
+      "date": "2026-11-01",
+      "address": "22 Lichfield St",
+      "set": "Standard day",
+      "editor": "Profocus",
+      "photos": 24,
+      "score": 6.5,
+      "summary": "Straight and bright, but the whole set is cold and grey. Needs warmth and depth.",
+      "good": [
+        "Verticals straight and compositions clean",
+        "Window pulls natural, garden visible, no halos",
+        "Exterior skies (12-14, 23, 24) soft pale blue"
+      ],
+      "fixes": [
+        { "photos": "All interiors", "code": "WB", "fix": "Walls read blue-grey and the rooms feel cold. Warm the white balance about +200K so whites are clean and slightly warm." },
+        { "photos": "17", "code": "WB", "fix": "Ensuite is almost black-and-white. Bring back the real tile colour, add warmth and some contrast." },
+        { "photos": "8", "code": "EXPO", "fix": "Sun patch on the floor is close to blown. Pull the highlights down until the floor texture shows." },
+        { "photos": "All interiors", "code": "EXPO", "fix": "Ceilings are flat and washed out. Keep some tone in them." }
+      ],
+      "compare": "Living and dining"
+    }
+  ]
+}
