@@ -1,6 +1,39 @@
 {
-  "updated": "2026-11-01",
+  "updated": "2026-11-02",
   "reviews": [
+    {
+      "date": "2026-11-02",
+      "address": "1 Monk Pl",
+      "set": "Standard day",
+      "editor": "Profocus",
+      "photos": 39,
+      "score": 7.5,
+      "summary": "Twilight exteriors are the strongest part. Bedrooms are grey and flat, and one stairwell shot is washed out.",
+      "good": [
+        "Twilight exteriors (28-39) have a warm sunset sky and the house lights glow evenly",
+        "Hero front (39) looks premium, with sky showing cleanly through the tree",
+        "Kitchen and living shots (6-15) are bright and straight, windows pulled",
+        "Theatre room (1-3) keeps its dark ceiling and colour"
+      ],
+      "fixes": [
+        {
+          "photos": "4, 5, 25, 27",
+          "code": "WB",
+          "fix": "Empty bedrooms read cool grey and flat. Warm the white balance slightly and add a little contrast so the walls look clean white, not grey."
+        },
+        {
+          "photos": "21",
+          "code": "EXPO",
+          "fix": "Stairwell shot looking up is almost all white with no detail. Bring the highlights down so the walls and pendant lights have shape, or leave this frame out."
+        },
+        {
+          "photos": "23",
+          "code": "EXPO",
+          "fix": "Balcony is dark and heavy next to the bright sky. Lift the shadows on the brick and tiles."
+        }
+      ],
+      "compare": "Twilight, orange and pink"
+    },
     {
       "date": "2026-11-01",
       "address": "1 Finch Pl",
