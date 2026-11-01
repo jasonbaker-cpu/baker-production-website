@@ -213,3 +213,9 @@ Twilight/dusk drone jobs are edited only by Profocus. Do NOT grade, sky-replace 
 
 ## Editor-edited photos are never touched (Jason, 31 Oct 2026)
 Any photo the photo editor edited (swapped in, or saved via Send to Baker) is never re-graded, sky-replaced, adjusted or re-exported by us. The editor locks finish/sky/adjust on those photos and the __bae.setSky/setFinish/setAdj calls do nothing on them. Never run resky or any re-export on a job with editor photos; pins/boundary/labels only.
+
+## 2 Nov 2026 (Sun 1 Nov run)
+- `nadirSplit: 1` on a job in days/<day>.json gives the top-down its own `__nadir` job (street-at-bottom turn via `streetRot`) even with no boundary (subdivided / strata lot, pins only).
+- House pin follows the amenity map's `P` (property point). If the geocode lands on the road (3 Hythe Way did), copy the map html into batch/<slug>/ with `P` set to the roof (top-down GPS) and point the day file at the copy — otherwise every oblique pins the verge.
+- Icon fix: "Ocean Village Park" and other "<x> Village Park/Green/Reserve" names now get the park icon (the later `village` → shop rule caught them).
+- mkday sorts days by real date (01-nov sorted after 30-oct as a string).

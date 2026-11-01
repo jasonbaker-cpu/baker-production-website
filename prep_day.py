@@ -57,7 +57,7 @@ for j in D['jobs']:
     if j.get('portrait'): base['portrait'] = 1   # booking note asked for vertical drone photos
     for k in ('area', 'areaSource', 'lens'):   # from the title / strata plan / agent's sketch in Dropbox
         if j.get(k): base[k] = j[k]
-    if j.get('poly') and nad:
+    if nad and (j.get('poly') or j.get('nadirSplit')):   # 2 Nov: nadirSplit = top-down gets its own job (street-at-bottom turn) even with no boundary (subdivided/strata lot)
         obl = [f for f in ph if f not in nad]
         run.append(dict(base, slug=j['slug'], photos=obl, poly=j['poly'], cams={f: cams[f] for f in obl if f in cams}))
         alt = lambda f: float((re.search(r'RelativeAltitude="([-+\d.]+)"', open(f,'rb').read(400000).decode('latin1')) or [0,'0'])[1])

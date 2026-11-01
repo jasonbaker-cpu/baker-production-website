@@ -1,0 +1,29 @@
+{
+ "label": "Sun 1 Nov 2026",
+ "jobs": [
+  {
+   "slug": "3_hythe_way",
+   "addr": "3 Hythe Way, Wembley Downs WA 6019",
+   "who": "Biljana Trifunoska \u00b7 Gest Real Estate",
+   "agency": "grey",
+   "photos": "batch/3_hythe_way/jpg",
+   "map": "batch/3_hythe_way/3_hythe_way_map.html",
+   "poly": null,
+   "nadirSplit": 1,
+   "twilight": true,
+   "notes": "Entry Notes: meet biljana at the property. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
+   "streetRot": {
+    "3_hythe_way__nadir": 90
+   },
+   "pick": [
+    "0407",
+    "0408",
+    "0409",
+    "0410",
+    "0411",
+    "0412",
+    "0413"
+   ]
+  }
+ ]
+}

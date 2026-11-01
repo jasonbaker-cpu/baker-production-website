@@ -1,0 +1,103 @@
+{
+ "sat": "sat/3_hythe_way_z15",
+ "house": [
+  -31.912072,
+  115.771168
+ ],
+ "photo": "batch/3_hythe_way/lvl/DJI_20261101215531_0407_D.jpg",
+ "places": [
+  {
+   "name": "Brenda Morton Reserve",
+   "lat": -31.911734100000004,
+   "lng": 115.77018559999998,
+   "icon": "park"
+  },
+  {
+   "name": "Cobb Drabble Reserve",
+   "lat": -31.908686499999998,
+   "lng": 115.7658926,
+   "icon": "park"
+  },
+  {
+   "name": "Ocean Village Park",
+   "lat": -31.911875499999997,
+   "lng": 115.7643325,
+   "icon": "park"
+  },
+  {
+   "name": "Holy Spirit Primary School",
+   "lat": -31.916997600000002,
+   "lng": 115.7654575,
+   "icon": "school"
+  },
+  {
+   "name": "Stirling Leisure - Scarborough Beach",
+   "lat": -31.895651299999997,
+   "lng": 115.75608979999998,
+   "icon": "pool"
+  },
+  {
+   "name": "Karrinyup Shopping Centre",
+   "lat": -31.877347699999998,
+   "lng": 115.7781686,
+   "icon": "shop"
+  },
+  {
+   "name": "Stirling Station",
+   "lat": -31.8941455,
+   "lng": 115.8045988,
+   "icon": "train"
+  },
+  {
+   "name": "The Downs Shopping Centre",
+   "lat": -31.9105556,
+   "lng": 115.7741667,
+   "icon": "shop"
+  },
+  {
+   "name": "Westfield Innaloo",
+   "lat": -31.901450599999997,
+   "lng": 115.7992006,
+   "icon": "shop"
+  },
+  {
+   "name": "Floreat Forum",
+   "lat": -31.9380276,
+   "lng": 115.79289159999999,
+   "icon": "shop"
+  },
+  {
+   "name": "Herdsman Lake Regional Park",
+   "lat": -31.910986999999995,
+   "lng": 115.80450470000001,
+   "icon": "lake"
+  },
+  {
+   "name": "Laurie Leckie Park",
+   "lat": -31.9165388,
+   "lng": 115.7745357,
+   "icon": "park"
+  },
+  {
+   "name": "Empire Village",
+   "lat": -31.926236799999995,
+   "lng": 115.7671005,
+   "icon": "shop"
+  },
+  {
+   "name": "Bold Park Aquatic",
+   "lat": -31.9320392,
+   "lng": 115.77579599999999,
+   "icon": "pool"
+  },
+  {
+   "name": "City Beach",
+   "lat": -31.9375659,
+   "lng": 115.75560329999999,
+   "icon": "sand"
+  }
+ ],
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto"
+}

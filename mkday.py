@@ -140,6 +140,7 @@ if os.environ.get('MERGE'):
     prev = next((x for x in idx['days'] if x['id'] == day), None)
     if prev: jobs_idx = [x for x in prev['jobs'] if x['slug'] not in {y['slug'] for y in jobs_idx} and x['slug'].replace('__nadir','') not in {y['slug'] for y in jobs_idx}] + jobs_idx
 idx['days'] = [x for x in idx['days'] if x['id'] != day] + [{'id': day, 'label': label, 'gallery': f'{day}/', 'jobs': jobs_idx}]
-idx['days'].sort(key=lambda x: x.get('sort', x['id']), reverse=True)
+import datetime as _dt   # 2 Nov: sort by real date (string sort put 01-nov after 30-oct)
+idx['days'].sort(key=lambda x: x.get('sort') or _dt.datetime.strptime(x['id'], '%d-%b-%Y').strftime('%Y%m%d'), reverse=True)
 open(ip, 'w').write(json.dumps(idx, indent=1))
 print(day, len(jobs_idx), 'jobs')
