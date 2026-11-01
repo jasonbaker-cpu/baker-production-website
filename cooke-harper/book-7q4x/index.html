@@ -1211,44 +1211,83 @@ function ohSection(){
     '</section>';
   }).join("");
 }
+function ohPerson(r,s,addr,date,by,interest,price,cnt){
+  var isBuyer=r.buyerType!=="Neighbour",isSeller=(r.sellerStatus&&r.sellerStatus!=="No")||r.buyerType==="Neighbour";
+  var note="Open home "+addr+(r.buyerType?" · "+r.buyerType.toLowerCase():"")+(price?" · price: "+price.toLowerCase():"")+(interest?" · "+interest.toLowerCase():"")+(r.note?" · "+r.note:"");
+  var entry={date:date,kind:"Open home",by:by,note:note};
+  var person={name:r.name||"",phone:r.phone||"",price:price,interest:interest,note:[r.note||"",r.sellerStatus&&r.sellerStatus!=="No"?"May sell ("+r.sellerStatus.toLowerCase()+")":""].filter(Boolean).join(" · ")};
+  var dup=r.phone?findDup(r.phone,null):null,jobs=[];
+  if(dup&&(dup.kind==="buyer"||dup.kind==="potential seller")){
+    var coll=dup.kind==="buyer"?"buyers":"prospects";var up={log:(dup.rec.log||[]).concat([entry]).slice(-100)};if(coll==="buyers")up.lastContact=nowIso();
+    jobs.push(patch(coll,dup.rec.id,up));cnt.upd++;person.buyerId=dup.kind==="buyer"?dup.rec.id:"";
+    if(dup.kind==="buyer"&&isSeller&&!state.prospects.some(function(p){return last4(p.phone)===last4(r.phone);})){jobs.push(save("prospects",null,ohProspect(r,s,date,by,note)));cnt.np++;}
+  } else {
+    if(isBuyer){var b=parseRange(r.budget||"");cnt.nb++;
+      var rec={name:r.name||"Open home buyer",phone:r.phone||"",email:r.email||"",status:"Active",source:"Open home – "+addr,budgetMin:b.min||null,budgetMax:b.max||null,
+        suburbs:s&&s.suburb?[s.suburb]:[],types:s&&s.type?[s.type]:[],beds:s&&s.beds||null,
+        timeframe:interest==="Hot"?"1–3 months":r.buyerType==="Just looking"||interest==="Not for them"?"Just looking":"3–6 months",
+        finance:FIN_MAP[r.finance]||"",mustHaves:[],notes:[r.buyerType==="Investing"?"Investor":"",r.consent==="no"?"Didn't want listing alerts":"",r.note||""].filter(Boolean).join(". "),createdAt:nowIso(),lastContact:nowIso(),log:[entry]};
+      jobs.push(save("buyers",null,rec).then(function(id){person.buyerId=id;}));}
+    if(isSeller){jobs.push(save("prospects",null,ohProspect(r,s,date,by,note)));cnt.np++;}
+  }
+  return Promise.all(jobs).then(function(){return person;});
+}
+function ohAttend(s,date,by,people,label){
+  if(!s||!people.length)return Promise.resolve();
+  var cur=state.sellers.filter(function(x){return x.id===s.id;})[0]||s;
+  var ins=JSON.parse(JSON.stringify(cur.inspections||[])),ex=ins.filter(function(x){return x.date===date&&x.source==="sign-in";})[0];
+  if(ex){ex.people=(ex.people||[]).concat(people);ex.groups=Math.max(ex.groups||0,ex.people.length);}else ins.push({date:date,groups:people.length,people:people,source:"sign-in"});
+  var lg=(cur.log||[]).concat([{date:date,kind:"Open home",by:by,note:label}]).slice(-100);
+  return patch("sellers",cur.id,{inspections:ins.slice(-60),log:lg});
+}
 function ohSave(key){
   var gr=ohGroups().filter(function(x){return x.key===key;})[0];if(!gr)return;
   var s=ohListing(gr),addr=gr.property||(s&&s.address)||"open home",date=gr.date,by=state.me||"";
   var btn=document.querySelector('[data-act="oh-save"][data-key="'+key.replace(/"/g,'\\"')+'"]');if(btn){btn.disabled=true;btn.textContent="Saving…";}
-  var people=[],nb=0,np=0,upd=0;
+  var people=[],cnt={nb:0,np:0,upd:0};
   function pick(attr,id){var el=document.querySelector('['+attr+'="'+id+'"]');return el?el.value:"";}
   (function next(i){
     if(i>=gr.items.length){
-      var done=function(){Promise.all(gr.items.map(function(r){return state.db?state.db.collection("inbox").doc(r.id).delete():Promise.resolve();})).then(function(){toast("Saved: "+nb+" new buyer"+(nb===1?"":"s")+", "+np+" potential seller"+(np===1?"":"s")+", "+upd+" already in the book");}).catch(writeErr);};
-      if(s){var ins=(s.inspections||[]).slice(),ex=ins.filter(function(x){return x.date===date&&x.source==="sign-in";})[0];
-        if(ex){ex.people=(ex.people||[]).concat(people);ex.groups=Math.max(ex.groups||0,ex.people.length);}else ins.push({date:date,groups:people.length,people:people,source:"sign-in"});
-        var lg=(s.log||[]).concat([{date:date,kind:"Open home",by:by,note:people.length+" signed in"}]).slice(-100);
-        patch("sellers",s.id,{inspections:ins.slice(-60),log:lg}).then(done).catch(writeErr);}
-      else done();
+      ohAttend(s,date,by,people,people.length+" signed in").then(function(){return Promise.all(gr.items.map(function(r){return state.db?state.db.collection("inbox").doc(r.id).delete():Promise.resolve();}));})
+        .then(function(){toast("Saved: "+cnt.nb+" new buyer"+(cnt.nb===1?"":"s")+", "+cnt.np+" potential seller"+(cnt.np===1?"":"s")+", "+cnt.upd+" already in the book");}).catch(writeErr);
       return;
     }
-    var r=gr.items[i],interest=pick("data-oh-int",r.id),price=pick("data-oh-price",r.id);
-    var isBuyer=r.buyerType!=="Neighbour",isSeller=(r.sellerStatus&&r.sellerStatus!=="No")||r.buyerType==="Neighbour";
-    var note="Open home "+addr+(r.buyerType?" · "+r.buyerType.toLowerCase():"")+(price?" · price: "+price.toLowerCase():"")+(interest?" · "+interest.toLowerCase():"");
-    var entry={date:date,kind:"Open home",by:by,note:note};
-    var person={name:r.name||"",phone:r.phone||"",price:price,interest:interest,note:r.sellerStatus&&r.sellerStatus!=="No"?"May sell ("+r.sellerStatus.toLowerCase()+")":""};
-    var dup=r.phone?findDup(r.phone,null):null,jobs=[];
-    if(dup&&(dup.kind==="buyer"||dup.kind==="potential seller")){
-      var coll=dup.kind==="buyer"?"buyers":"prospects";var up={log:(dup.rec.log||[]).concat([entry]).slice(-100)};if(coll==="buyers")up.lastContact=nowIso();
-      jobs.push(patch(coll,dup.rec.id,up));upd++;person.buyerId=dup.kind==="buyer"?dup.rec.id:"";
-      if(dup.kind==="buyer"&&isSeller&&!state.prospects.some(function(p){return last4(p.phone)===last4(r.phone);})){jobs.push(save("prospects",null,ohProspect(r,s,date,by,note)));np++;}
-    } else {
-      if(isBuyer){var b=parseRange(r.budget||"");nb++;
-        var rec={name:r.name||"Open home buyer",phone:r.phone||"",email:r.email||"",status:"Active",source:"Open home – "+addr,budgetMin:b.min||null,budgetMax:b.max||null,
-          suburbs:s&&s.suburb?[s.suburb]:[],types:s&&s.type?[s.type]:[],beds:s&&s.beds||null,
-          timeframe:interest==="Hot"?"1–3 months":r.buyerType==="Just looking"||interest==="Not for them"?"Just looking":"3–6 months",
-          finance:FIN_MAP[r.finance]||"",mustHaves:[],notes:[r.buyerType==="Investing"?"Investor":"",r.consent==="no"?"Didn't want listing alerts":""].filter(Boolean).join(". "),createdAt:nowIso(),lastContact:nowIso(),log:[entry]};
-        jobs.push(save("buyers",null,rec).then(function(id){person.buyerId=id;}));}
-      if(isSeller){jobs.push(save("prospects",null,ohProspect(r,s,date,by,note)));np++;}
-    }
-    people.push(person);
-    Promise.all(jobs).then(function(){next(i+1);}).catch(function(e){if(btn){btn.disabled=false;btn.textContent="Save all to the book";}writeErr(e);});
+    var r=gr.items[i];
+    ohPerson(r,s,addr,date,by,pick("data-oh-int",r.id),pick("data-oh-price",r.id),cnt).then(function(pp){people.push(pp);next(i+1);}).catch(function(e){if(btn){btn.disabled=false;btn.textContent="Save all to the book";}writeErr(e);});
   })(0);
+}
+/* Agent entry: Jayden types each visitor in himself, saved straight to the book */
+var ohE=null;
+function ohEntryForm(){
+  var ch=function(name,opts,def){return '<div class="chips" data-chips="'+name+'" data-single="1">'+opts.map(function(o){return '<button type="button" class="chip" data-chip="'+esc(o)+'" aria-pressed="'+(o===def)+'">'+esc(o)+'</button>';}).join("")+'</div>';};
+  var sel=function(id,label,opts){return '<label class="f"><span>'+label+'</span><select id="'+id+'"><option value="">–</option>'+opts.map(function(o){return '<option>'+esc(o)+'</option>';}).join("")+'</select></label>';};
+  return '<div class="g2"><label class="f"><span>Name</span><input id="eName" autocomplete="off"></label><label class="f"><span>Mobile</span><input id="ePhone" type="tel" inputmode="tel" autocomplete="off"></label></div>'+
+  '<div class="f"><span>They are</span>'+ch("eType",["Buying a home","Investing","Neighbour","Just looking"],"Buying a home")+'</div>'+
+  '<div class="g2">'+sel("eBudget","Budget up to",["Under $500k","$500k–$600k","$600k–$700k","$700k–$800k","$800k–$900k","$900k–$1m","$1m–$1.3m","$1.3m+"])+sel("eFin","Finance",["Pre-approved","Cash","Need to sell first","Still arranging"])+'</div>'+
+  '<div class="f"><span>Home to sell?</span>'+ch("eSell",["Yes, soon","Maybe later","No"],"No")+'</div><label class="f"><span>Where (if selling)</span><input id="eWhere" autocomplete="off" placeholder="Street or suburb"></label>'+
+  '<div class="g2">'+sel("eInt","Interest",["Hot","Warm","Not for them"])+sel("ePrice","Price feedback",["Good value","About right","Too high"])+'</div>'+
+  '<label class="f"><span>What they said</span><input id="eNote" autocomplete="off" placeholder="e.g. loved the kitchen, worried about the road"></label>'+
+  '<label class="f"><span>Email (optional)</span><input id="eEmail" type="email" autocomplete="off"></label>';
+}
+function openOhEntry(sid){
+  var s=state.sellers.filter(function(x){return x.id===sid;})[0];if(!s)return;
+  ohE={sid:sid,date:todayStr(),n:0};draft=null;
+  showDrawer('<header><h2>Open home: add visitors</h2><button class="btn small" data-act="close">Done</button></header><div class="body"><p class="why">'+esc(s.address||"")+' · <span id="eCount">0 added</span>. Each person is saved to the book as you go: new buyers, potential sellers, or a visit added to someone already in the book.</p><div id="eForm" style="display:grid;gap:12px">'+ohEntryForm()+'</div></div><footer><span class="why">Only name or mobile is needed.</span><button class="btn primary" data-act="oh-entry-save">Save and next person</button></footer>');
+  setTimeout(function(){var n=document.getElementById("eName");if(n)n.focus();},50);
+}
+function ohEntrySave(){
+  if(!ohE)return;var s=state.sellers.filter(function(x){return x.id===ohE.sid;})[0];if(!s)return;
+  var chip=function(n){var b=document.querySelector('[data-chips="'+n+'"] [aria-pressed="true"]');return b?b.dataset.chip:"";};
+  var r={name:val("eName").trim(),phone:val("ePhone").trim(),email:val("eEmail").trim(),buyerType:chip("eType")||"Buying a home",sellerStatus:chip("eSell")||"No",sellWhere:val("eWhere").trim(),budget:val("eBudget"),finance:val("eFin"),note:val("eNote").trim()};
+  if(!r.name&&!r.phone){toast("Add a name or mobile first.");return;}
+  var btn=document.querySelector('[data-act="oh-entry-save"]');if(btn){btn.disabled=true;btn.textContent="Saving…";}
+  var cnt={nb:0,np:0,upd:0},by=state.me||"",addr=[s.address,s.suburb].filter(Boolean).join(", ")||"open home";
+  ohPerson(r,s,addr,ohE.date,by,val("eInt"),val("ePrice"),cnt).then(function(pp){return ohAttend(s,ohE.date,by,[pp],"Visitor added: "+(r.name||r.phone));}).then(function(){
+    ohE.n++;var c=document.getElementById("eCount");if(c)c.textContent=ohE.n+" added";
+    toast("Saved "+(r.name||r.phone)+(cnt.upd?" (already in the book, visit added)":cnt.nb&&cnt.np?" as a buyer and potential seller":cnt.np?" as a potential seller":" as a buyer")+". Next person.");
+    var f=document.getElementById("eForm");if(f)f.innerHTML=ohEntryForm();if(btn){btn.disabled=false;btn.textContent="Save and next person";}
+    var n=document.getElementById("eName");if(n)n.focus();
+  }).catch(function(e){if(btn){btn.disabled=false;btn.textContent="Save and next person";}writeErr(e);});
 }
 function ohProspect(r,s,date,by,note){
   var where=r.sellWhere||"",nbr=r.buyerType==="Neighbour";
@@ -1381,7 +1420,7 @@ function contactDetail(kind,r){
   h+='<dl class="kv">'+(isP?'<dt>Phone</dt><dd class="num">'+esc(r.phone||"–")+'</dd><dt>Email</dt><dd>'+esc(r.email||"–")+'</dd><dt>Property</dt><dd>'+esc([r.address,r.suburb].filter(Boolean).join(", ")||"–")+'</dd><dt>Est. value</dt><dd class="num">'+(r.estValue?money(r.estValue):"–")+'</dd><dt>Home</dt><dd>'+esc([r.beds?r.beds+" bed":"",r.type].filter(Boolean).join(" · ")||"–")+'</dd><dt>Why selling</dt><dd>'+esc(r.motivation||"–")+'</dd><dt>Came from</dt><dd>'+esc(r.source||"–")+'</dd>':'<dt>Owner</dt><dd>'+esc(r.owner||"–")+'</dd><dt>Phone</dt><dd class="num">'+esc(r.phone||"–")+'</dd><dt>Price</dt><dd class="num">'+money(r.price)+'</dd><dt>Home</dt><dd>'+esc([r.suburb,r.beds?r.beds+" bed":"",r.type].filter(Boolean).join(" · ")||"–")+'</dd>')+'<dt>Notes</dt><dd style="white-space:pre-wrap">'+esc(r.notes||"–")+'</dd></dl>';
   if(!isP&&r.stage&&r.stage!=="Appraisal"){
     var ins=(r.inspections||[]).slice().reverse();
-    h+='<div><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px"><h3 style="font-size:18px">Open homes</h3><div style="display:flex;gap:6px">'+(state.canWrite?'<button class="btn small primary" data-act="oh-signin" data-id="'+esc(r.id)+'">Sign-in sheet</button><button class="btn small" data-act="new-inspection" data-id="'+esc(r.id)+'">+ Log open home</button>':'')+'<button class="btn small" data-act="vendor-report" data-id="'+esc(r.id)+'">Vendor report</button></div></div>'+(ins.length?'<div class="hist">'+ins.map(function(x){var p=x.people||[];var c={g:0,a:0,t:0};p.forEach(function(q){if(q.price==="Good value")c.g++;else if(q.price==="About right")c.a++;else if(q.price==="Too high")c.t++;});return '<div><span class="d">'+esc(niceDate(x.date))+'</span><span><b class="num">'+(x.groups||0)+' groups</b> · '+p.length+(x.source==="sign-in"?' signed in':' spoken to')+(c.g+c.a+c.t?' · price: '+c.g+' value, '+c.a+' right, '+c.t+' high':'')+'</span></div>';}).join("")+'</div>':'<p class="why">No open homes logged yet.</p>')+'</div>';
+    h+='<div><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px"><h3 style="font-size:18px">Open homes</h3><div style="display:flex;gap:6px">'+(state.canWrite?'<button class="btn small primary" data-act="oh-entry" data-id="'+esc(r.id)+'">Add visitors</button><button class="btn small" data-act="oh-signin" data-id="'+esc(r.id)+'">Sign-in sheet</button><button class="btn small" data-act="new-inspection" data-id="'+esc(r.id)+'">+ Log open home</button>':'')+'<button class="btn small" data-act="vendor-report" data-id="'+esc(r.id)+'">Vendor report</button></div></div>'+(ins.length?'<div class="hist">'+ins.map(function(x){var p=x.people||[];var c={g:0,a:0,t:0};p.forEach(function(q){if(q.price==="Good value")c.g++;else if(q.price==="About right")c.a++;else if(q.price==="Too high")c.t++;});return '<div><span class="d">'+esc(niceDate(x.date))+'</span><span><b class="num">'+(x.groups||0)+' groups</b> · '+p.length+(x.source==="sign-in"?' signed in':' spoken to')+(c.g+c.a+c.t?' · price: '+c.g+' value, '+c.a+' right, '+c.t+' high':'')+'</span></div>';}).join("")+'</div>':'<p class="why">No open homes logged yet.</p>')+'</div>';
   }
   if(!isP&&r.stage==="Sold"){var sd=(r.stageDates||{}).Sold;var an=anniv(sd);if(an)h+='<p class="why">Sold '+esc(niceDate(sd))+'. Next sale anniversary '+esc(niceDate(an.date))+'.</p>';}
   var log=(r.log||[]).slice().reverse();
@@ -1482,6 +1521,8 @@ document.addEventListener("click",function(e){
   else if(a==="oh-dismiss"){ohDismiss(t.dataset.key);}
   else if(a==="oh-signin"){openSignin(id);}
   else if(a==="oh-print"){ohPrint(id);}
+  else if(a==="oh-entry"){openOhEntry(id);}
+  else if(a==="oh-entry-save"){ohEntrySave();}
   else if(a==="inbox-dismiss"){state.db.collection("inbox").doc(id).delete().then(function(){toast("Dismissed");}).catch(writeErr);}
   else if(a==="sign-out"){if(window.BB)window.BB.signOut();}
   else if(a==="mem-add"){var em=(val("memEmail")||"").toLowerCase(),nm=val("memName");if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){toast("Enter a full email address.");return;}var M=(state.book.members||[]).slice();if(M.indexOf(em)<0)M.push(em);var N=Object.assign({},state.book.names||{});if(nm)N[em]=nm;else delete N[em];window.BB.saveMembers(M,N).then(function(){toast("Access given to "+em);}).catch(writeErr);}
