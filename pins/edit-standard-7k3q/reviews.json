@@ -3,6 +3,139 @@
   "reviews": [
     {
       "date": "2026-11-01",
+      "address": "1 Finch Pl",
+      "set": "Standard day",
+      "editor": "Profocus",
+      "photos": 37,
+      "score": 7.5,
+      "summary": "Bright and consistent, but a smeared mirror and sky halos in the trees pull it down.",
+      "good": [
+        "Bright, neutral standard look across the whole set",
+        "Windows pulled",
+        "No photographer in either bathroom mirror",
+        "Verticals straight"
+      ],
+      "fixes": [
+        {
+          "photos": "DSC05602",
+          "code": "ART",
+          "fix": "Ragged dark smear along the top edge of the ensuite mirror. Clean it up so the mirror edge is straight and smooth."
+        },
+        {
+          "photos": "DSC05633, DSC05618",
+          "code": "SKY",
+          "fix": "White speckle halos through the gum trees after the sky swap. Refine the sky mask round the leaves so no white dots or outlines show at 100%."
+        }
+      ],
+      "compare": "Day front"
+    },
+    {
+      "date": "2026-11-01",
+      "address": "21/5 Waterway Ct",
+      "set": "Standard day",
+      "editor": "Profocus",
+      "photos": 25,
+      "score": 8.0,
+      "summary": "Clean, bright interiors. One exterior still shows bits of the old grey sky.",
+      "good": [
+        "Interiors bright and clean, wall colour true to the paint",
+        "Windows pulled with clean security-mesh detail",
+        "No photographer in the bathroom mirror"
+      ],
+      "fixes": [
+        {
+          "photos": "DSC09120",
+          "code": "SKY",
+          "fix": "Original grey-white sky still showing between the branches, top left and right. Replace it so blue sky fills every gap."
+        },
+        {
+          "photos": "DSC09105",
+          "code": "SKY",
+          "fix": "Faint white outlines round the palm fronds. Refine the sky mask."
+        },
+        {
+          "photos": "DSC09029, DSC09074, DSC09085",
+          "code": "DUP",
+          "fix": "Near-identical to DSC09024, DSC09068 and DSC09079. Only deliver one of each."
+        }
+      ],
+      "compare": "Day front"
+    },
+    {
+      "date": "2026-11-01",
+      "address": "2993 Albany Hwy",
+      "set": "Twilight",
+      "editor": "Profocus",
+      "photos": 24,
+      "score": 6.0,
+      "summary": "The sky swap is messy and the house doesn't glow enough.",
+      "good": [
+        "Interiors clean and bright",
+        "Pool frames acceptable"
+      ],
+      "fixes": [
+        {
+          "photos": "DSC05360 (hero), DSC05355",
+          "code": "SKY",
+          "fix": "White speckle halos in the palms and orange halos on the trees along the horizon. Refine the sky mask and check at 100%."
+        },
+        {
+          "photos": "DSC05275, DSC05300",
+          "code": "SKY",
+          "fix": "Sunset sky on one side, original grey sky behind the trees on the other. Use one sky across the whole frame."
+        },
+        {
+          "photos": "DSC05320",
+          "code": "SKY",
+          "fix": "Flat cream-grey sky. Replace it with a proper sunset sky from the Twilight picks folder."
+        },
+        {
+          "photos": "DSC05310",
+          "code": "ART",
+          "fix": "Ghosted white diagonal streak through the tree. Remove it."
+        },
+        {
+          "photos": "All fronts",
+          "code": "GLOW",
+          "fix": "Only 2 windows and the door are lit and the garage is dark. Make every front window and the door glow evenly and warm. The door glass looks flat yellow."
+        }
+      ],
+      "compare": "Twilight, orange and pink"
+    },
+    {
+      "date": "2026-11-01",
+      "address": "1 Monk Pl",
+      "set": "Twilight",
+      "editor": "Profocus",
+      "photos": 14,
+      "score": 7.0,
+      "summary": "Good warm glow on the house, but the sky swap leaves halos round the trees.",
+      "good": [
+        "Front windows and pergola lights warm and even",
+        "Garden and alfresco lights clean",
+        "Interiors bright and neutral"
+      ],
+      "fixes": [
+        {
+          "photos": "DSC05958",
+          "code": "SKY",
+          "fix": "On the city view the tree tops look melted, with blue halo outlines. Redo the sky mask round the trees."
+        },
+        {
+          "photos": "DSC06036, DSC06046 (hero fronts)",
+          "code": "SKY",
+          "fix": "White and blue halos round the gum leaves, and old grey sky left inside the canopy. Fill every gap in the canopy with the new sky."
+        },
+        {
+          "photos": "All twilight frames",
+          "code": "SKY",
+          "fix": "The upper sky is washed out grey-white. Use a sky with more colour at the top so the frame doesn't look faded."
+        }
+      ],
+      "compare": "Twilight, soft orange"
+    },
+    {
+      "date": "2026-11-01",
       "address": "24 Armand Dr",
       "set": "Standard day",
       "editor": "Profocus",
@@ -16,9 +149,21 @@
         "Front exteriors (27-29) have the right soft pale-blue sky"
       ],
       "fixes": [
-        { "photos": "All interiors", "code": "EXPO", "fix": "Rooms look flat: white walls, white ceiling, dark floor and not much in between. Add mid-tone contrast and a little clarity so the rooms have depth." },
-        { "photos": "25, 26", "code": "SKY", "fix": "Alfresco sky is hazy and washed out. Replace it with the same pale-blue sky as the front shots." },
-        { "photos": "26", "code": "EXPO", "fix": "Hard sun stripes across the concrete pull the eye. Soften the highlights." }
+        {
+          "photos": "All interiors",
+          "code": "EXPO",
+          "fix": "Rooms look flat: white walls, white ceiling, dark floor and not much in between. Add mid-tone contrast and a little clarity so the rooms have depth."
+        },
+        {
+          "photos": "25, 26",
+          "code": "SKY",
+          "fix": "Alfresco sky is hazy and washed out. Replace it with the same pale-blue sky as the front shots."
+        },
+        {
+          "photos": "26",
+          "code": "EXPO",
+          "fix": "Hard sun stripes across the concrete pull the eye. Soften the highlights."
+        }
       ],
       "compare": "Living and dining"
     },
@@ -36,10 +181,49 @@
         "Exterior skies (12-14, 23, 24) soft pale blue"
       ],
       "fixes": [
-        { "photos": "All interiors", "code": "WB", "fix": "Walls read blue-grey and the rooms feel cold. Warm the white balance about +200K so whites are clean and slightly warm." },
-        { "photos": "17", "code": "WB", "fix": "Ensuite is almost black-and-white. Bring back the real tile colour, add warmth and some contrast." },
-        { "photos": "8", "code": "EXPO", "fix": "Sun patch on the floor is close to blown. Pull the highlights down until the floor texture shows." },
-        { "photos": "All interiors", "code": "EXPO", "fix": "Ceilings are flat and washed out. Keep some tone in them." }
+        {
+          "photos": "All interiors",
+          "code": "WB",
+          "fix": "Walls read blue-grey and the rooms feel cold. Warm the white balance about +200K so whites are clean and slightly warm."
+        },
+        {
+          "photos": "17",
+          "code": "WB",
+          "fix": "Ensuite is almost black-and-white. Bring back the real tile colour, add warmth and some contrast."
+        },
+        {
+          "photos": "8",
+          "code": "EXPO",
+          "fix": "Sun patch on the floor is close to blown. Pull the highlights down until the floor texture shows."
+        },
+        {
+          "photos": "All interiors",
+          "code": "EXPO",
+          "fix": "Ceilings are flat and washed out. Keep some tone in them."
+        }
+      ],
+      "compare": "Living and dining"
+    },
+    {
+      "date": "2026-10-31",
+      "address": "18/30 Kathleen St",
+      "set": "Standard day",
+      "editor": "Profocus",
+      "photos": 23,
+      "score": 9.0,
+      "summary": "Clean pass. This is the standard every job should hit.",
+      "good": [
+        "Bright, neutral look consistent across the set",
+        "Light-blue sky on the fronts, clean edges at 100%",
+        "No reflections in the gilt mirror or vanity mirrors",
+        "Windows pulled"
+      ],
+      "fixes": [
+        {
+          "photos": "DSC05818",
+          "code": "DUP",
+          "fix": "Near-identical to DSC05773 (dining). Only deliver one."
+        }
       ],
       "compare": "Living and dining"
     }
