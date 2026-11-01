@@ -238,7 +238,7 @@ a{color:var(--accent);font-weight:600}
   function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
   function cls(n){return n>=8.5?"hi":(n<7.5?"lo":"");}
   function fmtDate(d){try{return new Date(d+"T12:00:00").toLocaleDateString("en-AU",{day:"numeric",month:"short",year:"numeric"});}catch(e){return d;}}
-  fetch("reviews.json",{cache:"no-store"}).then(function(r){return r.json();}).then(function(data){
+  fetch("reviews.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(data){
     var rv=(data.reviews||[]).slice().sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0;});
     var list=document.getElementById("rv-list"), stats=document.getElementById("rv-stats");
     if(!rv.length){list.innerHTML='<p class="note">No reviews yet.</p>';return;}
