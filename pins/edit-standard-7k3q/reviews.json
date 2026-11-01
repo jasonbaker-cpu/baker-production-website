@@ -3,6 +3,47 @@
   "reviews": [
     {
       "date": "2026-11-02",
+      "address": "64 Amethyst Cres",
+      "set": "Standard day",
+      "editor": "Profocus",
+      "photos": 57,
+      "score": 5.5,
+      "summary": "Shot at dusk but edited like a day job, so everything outside is flat, grey and over-processed. Too many garden photos.",
+      "good": [
+        "Kitchen (25-27) and living areas are straight with windows pulled",
+        "Interior verticals are correct"
+      ],
+      "fixes": [
+        {
+          "photos": "All exteriors (31-57)",
+          "code": "EXPO",
+          "fix": "Neither a day look nor a twilight look. The sky is sunset pink but the house and garden are flat and grey. Pick one: either a bright day edit with a pale-blue sky, or a proper twilight with the house lights glowing warm and the house brighter than the sky."
+        },
+        {
+          "photos": "Garden shots (32-49)",
+          "code": "ART",
+          "fix": "Heavy HDR look: crunchy leaves, grey shadows, no contrast. Lower clarity and sharpening on foliage and bring back real shadows and colour."
+        },
+        {
+          "photos": "51, 53, 55 (fronts)",
+          "code": "ART",
+          "fix": "Power lines across the sky. Remove them on the front shots."
+        },
+        {
+          "photos": "16-20 (coloured bedrooms)",
+          "code": "WB",
+          "fix": "Blue and green walls look electric and over-saturated. Bring the saturation down so they look like real paint."
+        },
+        {
+          "photos": "Interiors",
+          "code": "EXPO",
+          "fix": "Ceilings and tiled floors read grey. Lift and warm the whites slightly."
+        }
+      ],
+      "compare": "Day front"
+    },
+    {
+      "date": "2026-11-02",
       "address": "8 Challenger Rise",
       "set": "Premium day",
       "editor": "Profocus",
