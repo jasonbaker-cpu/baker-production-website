@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Baker Photo Editing Standard</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+:root{--bg:#F6F5F2;--fg:#1E2125;--muted:#5D646C;--card:#FFFFFF;--line:#E2E0DA;--accent:#E36A00;--soft:#FFF1E3;--good:#1F7A4D;--bad:#B3361F;
+--display:"Archivo","Helvetica Neue",Arial,sans-serif;--body:"Source Sans 3","Segoe UI",Arial,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15171A;--fg:#ECEDEE;--muted:#A3A9B0;--card:#1E2125;--line:#30343A;--accent:#FF8A2A;--soft:#2B2116;--good:#5BC48C;--bad:#FF7A5C;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15171A;--fg:#ECEDEE;--muted:#A3A9B0;--card:#1E2125;--line:#30343A;--accent:#FF8A2A;--soft:#2B2116;--good:#5BC48C;--bad:#FF7A5C;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.55 var(--body)}
+.wrap{max-width:900px;margin:0 auto;padding:40px max(16px,env(safe-area-inset-right,0px)) 64px max(16px,env(safe-area-inset-left,0px));display:grid;gap:40px}
+h1{font:800 clamp(28px,5vw,42px)/1.1 var(--display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font:700 24px/1.25 var(--display);margin:0 0 12px;text-wrap:balance}
+h3{font:700 18px/1.3 var(--display);margin:18px 0 8px}
+p{margin:0 0 10px;max-width:68ch}
+ul,ol{margin:0;padding-left:22px;display:grid;gap:6px}
+.lede{color:var(--muted);margin-top:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.soft{background:var(--soft);border-radius:14px;padding:20px 22px}
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:15px;min-width:560px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:700 13px/1.3 var(--display);text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.n{font:700 16px/1.2 var(--display);white-space:nowrap}
+.lo{color:var(--bad)}.hi{color:var(--good)}
+a{color:var(--accent);font-weight:600}
+.two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.two ul{gap:4px}
+.tag{display:inline-block;font:700 12px/1 var(--display);text-transform:uppercase;letter-spacing:.05em;padding:5px 8px;border-radius:6px;background:var(--accent);color:#fff;margin-bottom:10px}
+.note{color:var(--muted);font-size:15px}
+.big{font:800 clamp(34px,7vw,54px)/1 var(--display)}
+.scores{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.scores .card{display:grid;gap:4px}
+.scores .lbl{color:var(--muted);font-size:14px}
+</style>
+</head>
+<body><div class="wrap">
+
+<header>
+<h1>Baker Photo Editing Standard</h1>
+<p class="lede">For every Baker Production editor. Follow this on every photo, every job. Updated 1 Nov 2026.</p>
+</header>
+
+<section>
+<h2>Where we are now</h2>
+<p>Baker's edits are clean and usable, but they are not yet at the level of the best photographer in Perth. Our target is Crib Creative.</p>
+<div class="scores">
+  <div class="card"><span class="lbl">Baker standard (Nov 2026)</span><span class="big lo">7.0</span><span class="note">out of 10</span></div>
+  <div class="card"><span class="lbl">Crib Creative standard</span><span class="big hi">8.5</span><span class="note">out of 10</span></div>
+  <div class="card"><span class="lbl">Baker premium</span><span class="big lo">7.5</span><span class="note">out of 10</span></div>
+  <div class="card"><span class="lbl">Crib Creative natural premium</span><span class="big hi">9.0</span><span class="note">out of 10</span></div>
+</div>
+<p class="note" style="margin-top:12px">Baker scores come from two recent standard jobs and our premium test set. Crib scores come from current Holdsworth and Beaucott listings.</p>
+
+<div class="tbl" style="margin-top:16px"><table>
+<thead><tr><th>Area</th><th>Baker</th><th>Crib</th><th>What we need to fix</th></tr></thead>
+<tbody>
+<tr><td>White balance</td><td class="n lo">6</td><td class="n hi">9</td><td>Our walls go grey-blue and cold. Crib whites are clean and slightly warm.</td></tr>
+<tr><td>Contrast and depth</td><td class="n lo">6</td><td class="n hi">8.5</td><td>Our rooms look flat. Crib has real blacks and some tone in the ceilings.</td></tr>
+<tr><td>Retouching</td><td class="n lo">6</td><td class="n hi">9</td><td>We leave cables, power boards and driveway stains in.</td></tr>
+<tr><td>Highlights</td><td class="n lo">7</td><td class="n hi">9</td><td>Our sun patches on floors blow out to white.</td></tr>
+<tr><td>Windows</td><td class="n">8</td><td class="n hi">9</td><td>Good already. Keep every window pulled.</td></tr>
+<tr><td>Verticals</td><td class="n">8.5</td><td class="n hi">9</td><td>Good already. Keep every line straight.</td></tr>
+<tr><td>Skies</td><td class="n">8</td><td class="n hi">8.5</td><td>Good already. Keep them pale and soft.</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="soft">
+<h2>The goal</h2>
+<p>Every Baker photo should look bright, clean and true to life: straight lines, clean white walls, a clear view out every window, and a soft pale-blue sky. The agent should never need to ask for a fix. If a photo looks grey, flat, cold or cluttered, it isn't finished.</p>
+</section>
+
+<section>
+<h2>Compare your edit against these</h2>
+<p>These are Crib Creative's photos. Open the matching listing next to your edit. If yours looks darker, greyer or flatter, keep going.</p>
+<div class="tbl"><table>
+<thead><tr><th>Shot type</th><th>Reference listing</th><th>What to match</th></tr></thead>
+<tbody>
+<tr><td>Day front</td><td><a href="https://holdsworth.com.au/property/sales/22a-st-albans-road-nollamara-wa/" target="_blank" rel="noopener">22A St Albans Rd, Nollamara</a></td><td>Pale blue sky, soft clouds, bright even facade</td></tr>
+<tr><td>Living and dining</td><td><a href="https://holdsworth.com.au/property/sales/44-norham-street-north-perth-wa/" target="_blank" rel="noopener">44 Norham St, North Perth</a></td><td>Clean whites, golden timber, no dark corners</td></tr>
+<tr><td>Kitchen and modern interiors</td><td><a href="https://holdsworth.com.au/property/sales/10b-ida-street-balcatta-wa/" target="_blank" rel="noopener">10B Ida St, Balcatta</a></td><td>Crisp benchtops, dark cabinets keep detail, windows pulled</td></tr>
+<tr><td>Twilight, orange and pink</td><td><a href="https://holdsworth.com.au/property/sales/9b-moldavia-street-tuart-hill-wa/" target="_blank" rel="noopener">9B Moldavia St, Tuart Hill</a></td><td>Bright sunset sky, warm glowing house lights</td></tr>
+<tr><td>Twilight, soft orange</td><td><a href="https://holdsworth.com.au/property/sales/37-coralvine-grange-stirling-wa/" target="_blank" rel="noopener">37 Coralvine Grange, Stirling</a></td><td>Gentle sunset, sky brighter than the house</td></tr>
+<tr><td>Twilight, modern home</td><td><a href="https://holdsworth.com.au/property/sales/269a-cape-street-yokine-wa/" target="_blank" rel="noopener">269A Cape St, Yokine</a></td><td>Strong interior and wall lights against a soft sky</td></tr>
+<tr><td>Twilight, pink and purple</td><td><a href="https://holdsworth.com.au/property/sales/44-norham-street-north-perth-wa/" target="_blank" rel="noopener">44 Norham St, North Perth</a></td><td>The limit for purple: bright and soft. Any darker or heavier is too much.</td></tr>
+<tr><td><strong>Premium natural day</strong></td><td><a href="https://www.beaucott.com.au/listing/l43341196-1338-third-avenue-mount-lawley-wa-6050/" target="_blank" rel="noopener">13/38 Third Ave, Mount Lawley</a></td><td>Soft natural window light, neutral whites, gentle shadows. See the premium section below.</td></tr>
+</tbody></table></div>
+<p class="note" style="margin-top:10px">Listings sell and links change. If one stops working, use any current Holdsworth or Beaucott listing.</p>
+</section>
+
+<section>
+<h2>Every photo: the 7 basics</h2>
+<div class="tbl"><table>
+<thead><tr><th>#</th><th>Check</th><th>Target</th><th>Fault to avoid</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Verticals</td><td>Every wall edge, door frame and window frame perfectly vertical. Horizon level.</td><td>Leaning walls, tilted benches</td></tr>
+<tr><td>2</td><td>White balance</td><td>White walls read clean white, slightly warm. Never grey or blue.</td><td>Cool, blue-grey walls</td></tr>
+<tr><td>3</td><td>Exposure</td><td>Bright and airy. Highlights keep detail. Only light bulbs may be pure white.</td><td>Sun patches blown to white</td></tr>
+<tr><td>4</td><td>Contrast</td><td>Real blacks in dark areas. Ceilings keep some tone.</td><td>Flat, washed-out rooms</td></tr>
+<tr><td>5</td><td>Windows</td><td>Every window pulled. You can see the garden, fence, sky or street outside.</td><td>Blown windows, grey halos around frames</td></tr>
+<tr><td>6</td><td>Colour</td><td>Natural. Timber stays timber, tiles keep their real colour, lawns green but not neon.</td><td>Orange timber, neon grass</td></tr>
+<tr><td>7</td><td>No HDR look</td><td>Blend the brackets by hand. No one-click HDR merge.</td><td>Halos, grey midtones, flat whites</td></tr>
+</tbody></table></div>
+<p class="note" style="margin-top:10px">The HDR merge is the main cause of flat, grey Baker photos. Blending the brackets gives clean whites and real blacks.</p>
+</section>
+
+<section>
+<h2>Skies and exteriors</h2>
+<ul>
+<li><strong>Day skies:</strong> soft pale blue with a few light white clouds, fading to warm cream at the horizon. Replace any grey, white or blown sky.</li>
+<li><strong>Never deep blue.</strong> Dark blue skies make the house look dark.</li>
+<li><strong>Clean edges.</strong> No halo around rooflines, trees or aerials after a sky swap.</li>
+<li><strong>Hard sun stripes</strong> across alfresco floors: soften them so they don't distract.</li>
+<li><strong>Lawns and gardens:</strong> green and healthy, not neon.</li>
+<li><strong>The front hero shot</strong> is the agent's main photo. Spend the most time on it.</li>
+</ul>
+</section>
+
+<section>
+<h2>Twilight</h2>
+<ul>
+<li>House lights on and glowing warm. Sky can be blue, orange, soft pink or soft purple, like a real Perth sunset.</li>
+<li><strong>Never super dark or heavy purple, and never a colour that looks fake.</strong> If the sky is darker than the house, it's too dark.</li>
+<li>Use skies from the Dropbox folder <strong>Twilight Sky / Twilight picks - Perth dusk</strong>, a different one on each job.</li>
+</ul>
+</section>
+
+<section class="card">
+<span class="tag">Premium jobs</span>
+<h2>Premium natural day look</h2>
+<p>Premium jobs are shot as ambient brackets with the house lights off. They should look like <a href="https://www.beaucott.com.au/listing/l43341196-1338-third-avenue-mount-lawley-wa-6050/" target="_blank" rel="noopener">13/38 Third Ave, Mount Lawley</a>: calm, soft and natural, like a magazine.</p>
+<div class="two" style="margin-top:12px">
+<div><h3>Do</h3><ul>
+<li>Light comes from the windows and falls off gently across the room.</li>
+<li>Whites are clean and neutral, slightly warm. Not blown.</li>
+<li>Keep soft shadows under furniture and in corners. They give depth.</li>
+<li>Exposure a little lower than standard jobs.</li>
+<li>True blacks in tapware, frames and black fittings.</li>
+<li>Windows bright and soft. A gentle view outside is enough.</li>
+</ul></div>
+<div><h3>Don't</h3><ul>
+<li>Don't flatten the light so every corner is equally bright.</li>
+<li>Don't add punchy clarity or saturation.</li>
+<li>Don't use an HDR merge.</li>
+<li>Don't make the room look lit by flash.</li>
+</ul></div>
+</div>
+</section>
+
+<section>
+<h2>Retouching: remove vs keep</h2>
+<p>Remove obvious mess. Keep anything that belongs to the home. When unsure, leave it in.</p>
+<div class="two">
+<div class="card"><h3 style="margin-top:0">Always remove</h3><ul>
+<li>Loose cables, cords and power boards</li>
+<li>Oil and water stains on driveways and pavers</li>
+<li>Rubbish, bins and hoses in shot</li>
+<li>Photographer, tripod or camera in mirrors and glass</li>
+<li>Small marks on walls and ceilings</li>
+</ul></div>
+<div class="card"><h3 style="margin-top:0">Always keep</h3><ul>
+<li>Furniture, rugs, lamps, decor</li>
+<li>Curtains, blinds, mirrors, artwork</li>
+<li>Light fittings, appliances, fixtures</li>
+<li>Plants and outdoor furniture</li>
+<li>Anything that looks intentionally placed</li>
+</ul></div>
+</div>
+</section>
+
+<section>
+<h2>Room by room</h2>
+<ul>
+<li><strong>Bathrooms:</strong> keep the real tile colour and a touch of warmth. Never grey or black-and-white. Check mirrors for the photographer.</li>
+<li><strong>Kitchens:</strong> benchtops clean white with stone veins visible. Appliances keep detail.</li>
+<li><strong>Living areas:</strong> windows pulled, floor reflections kept, no blown sun patches.</li>
+<li><strong>Bedrooms:</strong> white walls neutral, carpet its real colour, window pulled on every frame.</li>
+<li><strong>Sun patches on floors:</strong> bring highlights down until the texture shows.</li>
+<li><strong>Dark or glossy floors:</strong> keep the reflections. Don't crush to black or lift to grey.</li>
+<li><strong>Ceilings:</strong> keep some tone. Downlights can be white, not huge glowing blobs.</li>
+</ul>
+</section>
+
+<section>
+<h2>Drone and client rules</h2>
+<ul>
+<li>Always replace the drone sky, even when it looks fine. Horizon perfectly level.</li>
+<li>Read the booking notes and the job's Dropbox folder before editing.</li>
+<li>Twilight drone jobs: you do all the editing. Then drag the photos into the Baker pins editor with the original DJI file names. <a href="/pins/guide/">Step-by-step guide</a></li>
+<li><strong>One Residential (Drew Dwyer):</strong> drone photos go out clean, with no pins, lines or text.</li>
+<li><strong>Belle Property:</strong> drone skies deeper blue with puffy clouds, to match Belle's own listings.</li>
+</ul>
+</section>
+
+<section class="soft">
+<h2>Final check before you deliver</h2>
+<p>Look at the whole set side by side. Every answer must be yes.</p>
+<ol>
+<li>Are all verticals straight and horizons level?</li>
+<li>Do white walls look white in every photo, with none grey or blue?</li>
+<li>Can you see outside through every window?</li>
+<li>Are there no blown sun patches or glowing ceilings?</li>
+<li>Is every day sky soft pale blue, and every twilight sky bright and natural, not dark or fake purple?</li>
+<li>Have cables, stains and reflections been removed?</li>
+<li>Do all photos in the set match each other in colour and brightness?</li>
+<li>Have the booking notes and client rules been followed?</li>
+<li>Side by side with the Crib reference, does yours look as good?</li>
+</ol>
+<p class="note" style="margin-top:12px">Baker checks random jobs every day against this page.</p>
+</section>
+
+</div></body>
+</html>
