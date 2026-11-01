@@ -3,6 +3,43 @@
   "reviews": [
     {
       "date": "2026-11-02",
+      "address": "8 Challenger Rise",
+      "set": "Premium day",
+      "editor": "Profocus",
+      "photos": 49,
+      "score": 7.0,
+      "summary": "Interiors are a good warm premium look, but the replaced sky on the fronts looks fake and pasted on.",
+      "good": [
+        "Interiors have the warm cream premium look, with windows pulled",
+        "Ocean and balcony views are clear and natural",
+        "Verticals straight across the set"
+      ],
+      "fixes": [
+        {
+          "photos": "DSC06267, DSC06262 (fronts)",
+          "code": "SKY",
+          "fix": "The new sky is too saturated cyan at the top and fades to hazy white at the roofline, so the house looks cut out and pasted on. Use a soft pale-blue sky that matches the real light, the same on both fronts."
+        },
+        {
+          "photos": "DSC06267",
+          "code": "SKY",
+          "fix": "Faint ghost cloud outlines in the sky on the left, and a thin magenta line along the top of the gutter. Clean both at 100% zoom."
+        },
+        {
+          "photos": "DSC06262",
+          "code": "SKY",
+          "fix": "Dark speckles in the sky next to the trees, and the tree edges look crunchy and over-sharpened. Refine the sky mask and lower sharpening on the foliage."
+        },
+        {
+          "photos": "DSC06287-HDR, DSC06287",
+          "code": "DUP",
+          "fix": "Same alfresco shot delivered twice. Only deliver one."
+        }
+      ],
+      "compare": "Day front"
+    },
+    {
+      "date": "2026-11-02",
       "address": "1 Monk Pl",
       "set": "Standard day",
       "editor": "Profocus",
