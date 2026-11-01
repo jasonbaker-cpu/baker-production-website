@@ -1,6 +1,42 @@
 {
  "days": [
   {
+   "id": "01-nov-2026",
+   "label": "Sun 1 Nov 2026",
+   "gallery": "01-nov-2026/",
+   "jobs": [
+    {
+     "slug": "3_hythe_way",
+     "addr": "3 Hythe Way, Wembley Downs WA 6019",
+     "who": "Biljana Trifunoska \u00b7 Gest Real Estate",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261101215452_0406_D_r90.jpg"
+     ],
+     "src": "01-nov-2026/3_hythe_way/src/",
+     "map": "3_hythe_way_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261101215452_0406_D_r90.jpg",
+      "DJI_20261101215531_0407_D.jpg",
+      "DJI_20261101215559_0408_D.jpg",
+      "DJI_20261101215617_0409_D.jpg",
+      "DJI_20261101215629_0410_D.jpg",
+      "DJI_20261101215644_0411_D.jpg",
+      "DJI_20261101215702_0412_D.jpg",
+      "DJI_20261101215721_0413_D.jpg"
+     ],
+     "notes": "Entry Notes: meet biljana at the property. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
+     "portrait": false,
+     "toEditor": true,
+     "editorReason": "twilight \u2014 all twilight jobs go to the photo editor; no boundary (lot subdivided, cadastre shows only the 1147 m\u00b2 parent lot)",
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/01-11-2026/3 hythe way, wembley downs wa 6019, australia/Aerial - Drone Photography",
+     "lot": "no boundary \u2014 subdivided lot, no survey-strata plan in Dropbox (pins only)"
+    }
+   ]
+  },
+  {
    "id": "30-oct-2026",
    "label": "Fri 30 Oct 2026",
    "gallery": "30-oct-2026/",
