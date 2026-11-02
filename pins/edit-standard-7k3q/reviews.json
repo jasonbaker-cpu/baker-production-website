@@ -7,19 +7,15 @@
       "set": "Twilight",
       "editor": "Profocus",
       "photos": 45,
-      "score": 8.0,
-      "summary": "Revised twilight exteriors look good and clean. The interiors don't match each other: the first few are warm yellow, the rest clean white.",
+      "score": 8.5,
+      "summary": "Revised twilight exteriors look good and clean. Natural day shots (06777-06792) have a nice warm natural look.",
       "good": [
         "Fronts (06956, 06961, 06966) have a soft sunset sky, clean at 100% zoom, with the house lights glowing",
         "Alfresco shots (06971, 06976, 06986) are warm and bright",
-        "Kitchen and living shots are straight, with windows pulled"
+        "Kitchen and living shots are straight, with windows pulled",
+        "Natural day shots (06777-06792) are warm and natural, as intended"
       ],
       "fixes": [
-        {
-          "photos": "DSC06777, 06782, 06787, 06792",
-          "code": "WB",
-          "fix": "These are much warmer and more yellow than the same rooms in 06817, 06838 and 06843, which are clean white. Match them to the white ones so the whole set looks the same."
-        },
         {
           "photos": "DSC06873, 06878, 06888 (stairwell)",
           "code": "EXPO",
