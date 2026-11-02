@@ -8,18 +8,13 @@
       "editor": "Profocus",
       "photos": 57,
       "score": 7.0,
-      "summary": "Clear improvement: warmer and brighter, the house now glows. Power lines still there and the coloured walls are still strong.",
+      "summary": "Clear improvement: warmer and brighter, the house now glows. The coloured walls are still strong.",
       "good": [
         "Fronts and garden are warmer and brighter, no longer grey",
         "Front windows glow warm",
         "Ceilings and whites inside are cleaner"
       ],
       "fixes": [
-        {
-          "photos": "51, 53, 55 (fronts)",
-          "code": "ART",
-          "fix": "Power lines across the sky are still there. Remove them."
-        },
         {
           "photos": "16-20 (coloured bedrooms)",
           "code": "WB",
@@ -60,11 +55,6 @@
           "photos": "Garden shots (32-49)",
           "code": "ART",
           "fix": "Too much HDR: crunchy leaves and grey shadows. Lower clarity and sharpening on the plants and add warmth so the garden looks lit at dusk, not grey."
-        },
-        {
-          "photos": "51, 53, 55 (fronts)",
-          "code": "ART",
-          "fix": "Remove the power lines across the sky."
         },
         {
           "photos": "16-20 (coloured bedrooms)",
