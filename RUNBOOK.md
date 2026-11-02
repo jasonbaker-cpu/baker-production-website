@@ -219,3 +219,6 @@ Any photo the photo editor edited (swapped in, or saved via Send to Baker) is ne
 - House pin follows the amenity map's `P` (property point). If the geocode lands on the road (3 Hythe Way did), copy the map html into batch/<slug>/ with `P` set to the roof (top-down GPS) and point the day file at the copy — otherwise every oblique pins the verge.
 - Icon fix: "Ocean Village Park" and other "<x> Village Park/Green/Reserve" names now get the park icon (the later `village` → shop rule caught them).
 - mkday sorts days by real date (01-nov sorted after 30-oct as a string).
+
+## Potential lots tool (Jason 2 Nov 2026)
+bakerproduction.com/lots/ — open a clean top-down (or the gallery's "Lots" button, which preloads the job's src top-down + street name), click the 4 block corners, click the street edge, set number of lots / layout / driveway / frontage / total area, drag the blue dots to resize, Download JPG (3000 px). North arrow auto from DJI yaw when the file has XMP; `&north=<deg>` in the link overrides. mkday runs lotslinks.py to add the button.
