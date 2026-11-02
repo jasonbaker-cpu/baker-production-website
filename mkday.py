@@ -146,3 +146,5 @@ open(ip, 'w').write(json.dumps(idx, indent=1))
 print(day, len(jobs_idx), 'jobs')
 import subprocess as _sp, os as _os   # 2 Nov: "Lots" button on every gallery job (bakerproduction.com/lots)
 _sp.run(['python3', _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'lotslinks.py'), SITE.rstrip('/')])
+# 2 Nov (Jason: "every property that has space in the backyard do this potential thing"): potential-lots image for qualifying jobs
+_sp.run(['python3', _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'potlots.py'), day], cwd=_os.path.dirname(_os.path.abspath(__file__)))
