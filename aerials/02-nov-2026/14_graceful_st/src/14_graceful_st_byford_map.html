@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>14 Graceful St, Byford WA 6122, Australia — 360° Amenities | Baker Production</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;font-family:-apple-system,'Segoe UI',Arial,sans-serif}
+#bar{position:fixed;top:0;left:0;right:0;min-height:64px;background:linear-gradient(120deg,#0B1626,#13314A);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 18px;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+#bar .l{display:flex;align-items:center;gap:12px;min-width:0}#bar .home{font-size:24px}#bar .addr{font-weight:800;font-size:16px}
+#bar .meta{font-size:11.5px;color:#AFC6D6;margin-top:2px}#bar .br{text-align:right;font-size:11px;line-height:1.35;color:#CFE0EA;white-space:nowrap}
+#bar .br b{color:#fff;font-size:12.5px;letter-spacing:.4px}#map{position:absolute;top:64px;bottom:0;left:0;right:0}
+.home-pin{width:34px;height:34px;background:#D4537E;border-radius:50%;border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:17px}
+.am-pin{width:26px;height:26px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;color:#fff;font:700 8.5px/1 Arial}
+.pop b.dir{display:inline-block;background:#0E1B2A;color:#fff;font:700 10px/1 Arial;padding:3px 7px;border-radius:5px;letter-spacing:.5px;margin:0 4px 5px 0}
+.pop .nm{font-weight:800;font-size:14px;margin:2px 0 3px}.pop .nt{font-size:12px;color:#333}
+.pop .bd{display:inline-block;font:700 9.5px/1 Arial;padding:3px 6px;border-radius:4px;color:#fff}
+.legend{background:rgba(14,27,42,.92);color:#fff;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.9;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+.legend i{display:inline-block;width:13px;height:13px;border-radius:50%;border:2px solid #fff;vertical-align:-2px;margin-right:7px}
+@media(max-width:640px){#bar .br{display:none}#bar .meta{font-size:10.5px}}
+</style></head><body>
+<div id="bar"><div class="l"><span class="home">🏠</span><div><div class="addr">14 Graceful St, Byford WA 6122, Australia</div><div class="meta">The Glades estate, Byford · Shire of Serpentine Jarrahdale · School zoning unverified</div></div></div>
+<div class="br"><b>Baker Production Pty Ltd</b><br>Real Estate Photography</div></div>
+<div id="map"></div>
+<script>
+var PROP=[-32.232752578441, 115.9790694788];
+var M=[{"name": "Woodland Grove Primary School", "lat": -32.2269493, "lng": 115.9809144, "dist": 669, "dir": "N", "color": "#B8860B", "badge": "zoning unverified", "cat": "school", "notes": "669 m N · government primary school, McMillan Rd"}, {"name": "Peridot Park", "lat": -32.222311, "lng": 115.97869, "dist": 1163, "dir": "N", "color": "#185FA5", "badge": "", "cat": "park", "notes": "1.2 km N · park on Peridot Pkwy"}, {"name": "The Springs Club", "lat": -32.158407, "lng": 115.959237, "dist": 8484, "dir": "N", "color": "#185FA5", "badge": "", "cat": "golf", "notes": "8.5 km N · nearest golf course, Forrestdale"}, {"name": "Cristonia Reserve", "lat": -32.2302, "lng": 115.9822, "dist": 409, "dir": "NE", "color": "#185FA5", "badge": "", "cat": "reserve", "notes": "409 m NE · reserve off Cristonia Tce"}, {"name": "Nido Early School Byford", "lat": -32.22495, "lng": 115.98721, "dist": 1158, "dir": "NE", "color": "#185FA5", "badge": "", "cat": "childcare", "notes": "1.2 km NE · early learning centre, Covenant Lane"}, {"name": "Lakeside Plaza Byford", "lat": -32.224794, "lng": 115.988086, "dist": 1227, "dir": "NE", "color": "#185FA5", "badge": "", "cat": "shopping", "notes": "1.2 km NE · nearest shopping centre"}, {"name": "Salvado Catholic College", "lat": -32.22358, "lng": 115.99697, "dist": 1971, "dir": "NE", "color": "#185FA5", "badge": "private", "cat": "school", "notes": "2.0 km NE · Catholic K-12 college"}, {"name": "Byford Market Place", "lat": -32.221054, "lng": 116.004722, "dist": 2744, "dir": "NE", "color": "#185FA5", "badge": "", "cat": "shopping", "notes": "2.7 km NE · shopping centre, Abernethy Rd"}, {"name": "Byford Village Shopping Centre", "lat": -32.219858, "lng": 116.00685, "dist": 2984, "dir": "NE", "color": "#185FA5", "badge": "", "cat": "shopping", "notes": "3.0 km NE · Coles-anchored centre, Abernethy Rd"}, {"name": "Serpentine Jarrahdale Library", "lat": -32.2207, "lng": 116.0094, "dist": 3155, "dir": "NE", "color": "#185FA5", "badge": "", "cat": "library", "notes": "3.2 km NE · shire public library, Byford"}, {"name": "Byford Station", "lat": -32.21646, "lng": 116.007381, "dist": 3224, "dir": "NE", "color": "#185FA5", "badge": "", "cat": "train", "notes": "3.2 km NE · Armadale/Byford line terminus"}, {"name": "Icaria Park", "lat": -32.2328, "lng": 115.9834, "dist": 408, "dir": "E", "color": "#185FA5", "badge": "", "cat": "park", "notes": "408 m E · local park, Goodenia Vista"}, {"name": "Beenyup Park", "lat": -32.2334, "lng": 115.9909, "dist": 1116, "dir": "E", "color": "#185FA5", "badge": "", "cat": "park", "notes": "1.1 km E · park on Shepparton Blvd"}, {"name": "Byford John Calvin School", "lat": -32.2241, "lng": 116.0062, "dist": 2730, "dir": "E", "color": "#185FA5", "badge": "private", "cat": "school", "notes": "2.7 km E · independent school, Soldiers Rd"}, {"name": "Cardup Nature Reserve", "lat": -32.2436247, "lng": 115.9886738, "dist": 1511, "dir": "SE", "color": "#185FA5", "badge": "", "cat": "regional_park", "notes": "1.5 km SE · bushland nature reserve"}, {"name": "The Glades Dog Park", "lat": -32.23329, "lng": 115.97804, "dist": 114, "dir": "SW", "color": "#185FA5", "badge": "", "cat": "park", "notes": "114 m SW · dog park around the corner"}];
+var esri='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+var sat1=L.tileLayer(esri,{maxZoom:19,attribution:'Esri World Imagery'}),sat2=L.tileLayer(esri,{maxZoom:19,attribution:'Esri World Imagery'});
+var ref=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:19});
+var osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'});
+var labelled=L.layerGroup([sat1,ref]);
+var map=L.map('map',{layers:[labelled]}).setView(PROP,15);
+L.control.layers({'Satellite with labels':labelled,'Satellite clean':sat2,'Street (OSM)':osm},null,{position:'topright'}).addTo(map);
+L.marker(PROP,{icon:L.divIcon({className:'',html:'<div class="home-pin">🏠</div>',iconSize:[34,34],iconAnchor:[17,17],popupAnchor:[0,-16]}),zIndexOffset:1000}).addTo(map)
+ .bindPopup('<div class="pop"><b class="dir">SUBJECT</b><div class="nm">14 Graceful St, Byford WA 6122, Australia</div><div class="nt">The Glades estate, Byford · Shire of Serpentine Jarrahdale · School zoning unverified</div></div>');
+var near=[PROP];
+M.forEach(function(m){
+  var close=m.dist<300;
+  var bd=m.badge?'<span class="bd" style="background:'+m.color+'">'+m.badge+'</span>':'';
+  if(close)L.polyline([PROP,[m.lat,m.lng]],{color:'#fff',weight:2,dashArray:'4 4',opacity:.9}).addTo(map);
+  L.marker([m.lat,m.lng],{zIndexOffset:close?2000:0,icon:L.divIcon({className:'',html:'<div class="am-pin" style="background:'+m.color+'">'+m.dir+'</div>',iconSize:[26,26],iconAnchor:[13,13],popupAnchor:[0,-12]})}).addTo(map)
+   .bindPopup('<div class="pop"><b class="dir">'+m.dir+'</b>'+bd+'<div class="nm">'+m.name+'</div><div class="nt">'+m.notes+'</div></div>')
+   .bindTooltip('['+m.dir+'] '+m.name+(close?' · '+m.dist+' m':''),{direction:close?(m.lng<PROP[1]?'left':'right'):'top',offset:close?[m.lng<PROP[1]?-12:12,0]:[0,-12],permanent:close});
+  if(m.dist<1500)near.push([m.lat,m.lng]);
+});
+if(near.length>1)map.fitBounds(near,{padding:[40,40],maxZoom:16});
+var lg=L.control({position:'bottomleft'});
+lg.onAdd=function(){var d=L.DomUtil.create('div','legend');d.innerHTML='<i style="background:#D4537E"></i>Property<br><i style="background:#185FA5"></i>Amenity / private school<br><i style="background:#0F6E56"></i>Zoned government school<br><i style="background:#B8860B"></i>Government school (zoning unverified)';return d;};
+lg.addTo(map);
+</script></body></html>

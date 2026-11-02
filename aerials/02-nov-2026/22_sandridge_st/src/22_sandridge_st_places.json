@@ -1,0 +1,196 @@
+{
+ "address": "22 Sandridge St, Gosnells WA 6110",
+ "lat": -32.076529996505,
+ "lng": 115.98640003986,
+ "pins": [
+  {
+   "name": "Sandridge Street Reserve",
+   "cat": "park",
+   "lat": -32.07621,
+   "lng": 115.98678,
+   "desc": "reserve a few doors along Sandridge St"
+  },
+  {
+   "name": "Rede Street Reserve",
+   "cat": "park",
+   "lat": -32.07578,
+   "lng": 115.9844,
+   "desc": "local reserve off Nicholas St"
+  },
+  {
+   "name": "Trent Street Reserve",
+   "cat": "park",
+   "lat": -32.07729,
+   "lng": 115.98891,
+   "desc": "local reserve on Trent St"
+  },
+  {
+   "name": "Crandon Street Reserve",
+   "cat": "park",
+   "lat": -32.073340011795,
+   "lng": 115.986940002063,
+   "desc": "local reserve, 66 Crandon St (address point)"
+  },
+  {
+   "name": "Prescott Drive Reserve",
+   "cat": "park",
+   "lat": -32.0787,
+   "lng": 115.9829,
+   "desc": "local reserve off Astinal Dr"
+  },
+  {
+   "name": "Otterden Street Reserve",
+   "cat": "park",
+   "lat": -32.0729,
+   "lng": 115.9831,
+   "desc": "local reserve off Ospringe St"
+  },
+  {
+   "name": "Banksia Estate Reserve",
+   "cat": "park",
+   "lat": -32.0761777,
+   "lng": 115.9807476,
+   "desc": "local reserve off Oakajee Ct"
+  },
+  {
+   "name": "Chale Street Reserve",
+   "cat": "park",
+   "lat": -32.0741,
+   "lng": 115.99144,
+   "desc": "local reserve on Chale St"
+  },
+  {
+   "name": "Ivanhoe Place Reserve",
+   "cat": "park",
+   "lat": -32.0810345,
+   "lng": 115.9826711,
+   "desc": "local reserve off Gleed Ct"
+  },
+  {
+   "name": "Chelsfield Park",
+   "cat": "park",
+   "lat": -32.07045,
+   "lng": 115.98549,
+   "desc": "neighbourhood park off Drilby Way"
+  },
+  {
+   "name": "Anaconda Drive Reserve",
+   "cat": "park",
+   "lat": -32.0795375,
+   "lng": 115.9797874,
+   "desc": "local reserve off Bayley Cl"
+  },
+  {
+   "name": "Keston Place Reserve",
+   "cat": "park",
+   "lat": -32.07782,
+   "lng": 115.99385,
+   "desc": "local reserve on Keston Pl"
+  },
+  {
+   "name": "Miranda Park",
+   "cat": "park",
+   "lat": -32.08427,
+   "lng": 115.99059,
+   "desc": "neighbourhood park off Miranda Way"
+  },
+  {
+   "name": "Swingler Park",
+   "cat": "park",
+   "lat": -32.0848782,
+   "lng": 115.9843968,
+   "desc": "neighbourhood park off Swingler Way"
+  },
+  {
+   "name": "St Munchin's Catholic School",
+   "cat": "school",
+   "lat": -32.081957,
+   "lng": 115.987349,
+   "desc": "Catholic primary school, 1 Isdell Pl"
+  },
+  {
+   "name": "Wirrabirra Primary School",
+   "cat": "school",
+   "lat": -32.07444,
+   "lng": 115.9794,
+   "desc": "government primary school (zoning not verified); Wirrabirra Childcare and Early Learning Centre on site"
+  },
+  {
+   "name": "Lumen Christi College",
+   "cat": "school",
+   "lat": -32.0693211,
+   "lng": 116.0138339,
+   "desc": "Catholic secondary college, 81 Station St, Martin"
+  },
+  {
+   "name": "Sacred Heart Primary School",
+   "cat": "school",
+   "lat": -32.067893618749,
+   "lng": 115.956536157036,
+   "desc": "Catholic primary school, 40 Ovens Rd, Thornlie"
+  },
+  {
+   "name": "Gosnells Station",
+   "cat": "train",
+   "lat": -32.071279,
+   "lng": 115.999676,
+   "desc": "Armadale/Byford line"
+  },
+  {
+   "name": "Seaforth Station",
+   "cat": "train",
+   "lat": -32.084753,
+   "lng": 116.011127,
+   "desc": "Armadale/Byford line"
+  },
+  {
+   "name": "Nicholson Road Station",
+   "cat": "train",
+   "lat": -32.06159,
+   "lng": 115.934678,
+   "desc": "Thornlie\u2013Cockburn line"
+  },
+  {
+   "name": "Gosnells Knowledge Centre",
+   "cat": "library",
+   "lat": -32.0707204,
+   "lng": 116.0019784,
+   "desc": "City of Gosnells library, 2232D Albany Hwy"
+  },
+  {
+   "name": "Leisure World",
+   "cat": "aquatic",
+   "lat": -32.0547058,
+   "lng": 115.96457,
+   "desc": "City of Gosnells pool and leisure centre, Thornlie"
+  },
+  {
+   "name": "Foothills Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.0720005,
+   "lng": 116.0020905,
+   "desc": "2251 Albany Hwy, Gosnells town centre"
+  },
+  {
+   "name": "Maddington Central",
+   "cat": "shopping",
+   "lat": -32.0533579,
+   "lng": 115.9784746,
+   "desc": "shopping centre, Attfield St & Burslem Dr, Maddington"
+  },
+  {
+   "name": "Gosnells Golf Club",
+   "cat": "golf",
+   "lat": -32.094504,
+   "lng": 115.9369679,
+   "desc": "18-hole course, Warton Rd, Canning Vale"
+  },
+  {
+   "name": "Ellis Brook Valley Reserve",
+   "cat": "regional_park",
+   "lat": -32.0571291,
+   "lng": 116.0278379,
+   "desc": "bushland reserve and trails on the scarp, Martin"
+  }
+ ]
+}

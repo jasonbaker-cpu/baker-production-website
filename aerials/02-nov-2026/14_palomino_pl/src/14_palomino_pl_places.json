@@ -1,0 +1,119 @@
+{
+ "address": "14 Palomino Pl, Greenfields WA 6210",
+ "lat": -32.51019001124,
+ "lng": 115.764489991481,
+ "pins": [
+  {
+   "name": "Kanyana Park",
+   "cat": "park",
+   "lat": -32.5126165,
+   "lng": 115.7574541,
+   "desc": "park off Education Dr"
+  },
+  {
+   "name": "Bardoc Reserve",
+   "cat": "reserve",
+   "lat": -32.5171257,
+   "lng": 115.7669712,
+   "desc": "reserve off Bardoc Way"
+  },
+  {
+   "name": "Meadow Springs Reserve",
+   "cat": "park",
+   "lat": -32.5052,
+   "lng": 115.7553,
+   "desc": "sports reserve, Oakmont Ave"
+  },
+  {
+   "name": "Goegrup Lake Nature Reserve",
+   "cat": "lake",
+   "lat": -32.5246683,
+   "lng": 115.7758653,
+   "desc": "lake & nature reserve, Bulara Rd entry"
+  },
+  {
+   "name": "Watersun Beach",
+   "cat": "beach",
+   "lat": -32.505127,
+   "lng": 115.7366446,
+   "desc": "nearest ocean beach, Silver Sands"
+  },
+  {
+   "name": "Peel Health Campus",
+   "cat": "hospital",
+   "lat": -32.5323439,
+   "lng": 115.7632749,
+   "desc": "public hospital with emergency department, 110 Lakes Rd"
+  },
+  {
+   "name": "Mandurah Library",
+   "cat": "library",
+   "lat": -32.5376677,
+   "lng": 115.741373,
+   "desc": "City of Mandurah library, 331 Pinjarra Rd"
+  },
+  {
+   "name": "Meadow Springs Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.4932,
+   "lng": 115.7484,
+   "desc": "Coles-anchored centre, 25 Meadow Springs Dr"
+  },
+  {
+   "name": "Mandurah Forum",
+   "cat": "regional_shopping",
+   "lat": -32.5355705,
+   "lng": 115.7423036,
+   "desc": "regional shopping centre, 330 Pinjarra Rd"
+  },
+  {
+   "name": "Meadow Springs Country Club",
+   "cat": "golf",
+   "lat": -32.497063,
+   "lng": 115.751268,
+   "desc": "18-hole golf course, Meadow Springs Dr"
+  },
+  {
+   "name": "Mandurah Aquatic & Recreation Centre",
+   "cat": "aquatic",
+   "lat": -32.53743,
+   "lng": 115.73734,
+   "desc": "public pools & recreation centre (MARC), 303 Pinjarra Rd"
+  },
+  {
+   "name": "Frederick Irwin Anglican School",
+   "cat": "school",
+   "lat": -32.5087112,
+   "lng": 115.7530905,
+   "desc": "independent K-12, Gordon Rd"
+  },
+  {
+   "name": "Assumption Catholic Primary School",
+   "cat": "school",
+   "lat": -32.5099432,
+   "lng": 115.7464321,
+   "desc": "Catholic primary, Gordon Rd"
+  },
+  {
+   "name": "Foundation Christian College",
+   "cat": "school",
+   "lat": -32.5293162,
+   "lng": 115.7622888,
+   "desc": "independent K-12, Waldron Blvd"
+  },
+  {
+   "name": "Murdoch University Peel Campus",
+   "cat": "university",
+   "lat": -32.51444,
+   "lng": 115.7558,
+   "desc": "university campus, Education Dr"
+  },
+  {
+   "name": "Mandurah Station",
+   "cat": "train",
+   "lat": -32.527148,
+   "lng": 115.746621,
+   "desc": "Mandurah line"
+  }
+ ]
+}

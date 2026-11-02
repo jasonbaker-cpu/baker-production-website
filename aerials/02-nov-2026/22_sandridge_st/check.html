@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 22 Sandridge St, Gosnells WA 6110</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary · 716 m²</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (14)</div></div></div>
+<script>const D={"lat": -32.076529996505, "lng": 115.98640003986, "poly": [[-32.07649341, 115.98619562], [-32.07648096, 115.98621022], [-32.07635325, 115.98634768], [-32.07657189, 115.98660505], [-32.07660182, 115.98656994], [-32.07670676, 115.98644681]], "places": [{"name": "Seaforth Station", "lat": -32.084753, "lng": 116.011127, "d": "2.5 km"}, {"name": "St Munchin's Catholic School", "lat": -32.081957, "lng": 115.987349, "d": "610 m"}, {"name": "Sandridge Street Reserve", "lat": -32.07621, "lng": 115.98678, "d": "50 m"}, {"name": "Ivanhoe Place Reserve", "lat": -32.0810345, "lng": 115.9826711, "d": "610 m"}, {"name": "Miranda Park", "lat": -32.08427, "lng": 115.99059, "d": "950 m"}, {"name": "Gosnells Golf Club", "lat": -32.094504, "lng": 115.9369679, "d": "5.1 km"}, {"name": "Prescott Drive Reserve", "lat": -32.0787, "lng": 115.9829, "d": "410 m"}, {"name": "Nicholson Road Station", "lat": -32.06159, "lng": 115.934678, "d": "5.2 km"}, {"name": "Rede Street Reserve", "lat": -32.07578, "lng": 115.9844, "d": "210 m"}, {"name": "Maddington Central", "lat": -32.0533579, "lng": 115.9784746, "d": "2.7 km"}, {"name": "Wirrabirra Primary School", "lat": -32.07444, "lng": 115.9794, "d": "700 m"}, {"name": "Crandon Street Reserve", "lat": -32.073340011795, "lng": 115.986940002063, "d": "360 m"}, {"name": "Gosnells Station", "lat": -32.071279, "lng": 115.999676, "d": "1.4 km"}, {"name": "Foothills Shopping Centre", "lat": -32.0720005, "lng": 116.0020905, "d": "1.6 km"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[40,40],maxZoom:20});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[230,40]});
+</script></body></html>

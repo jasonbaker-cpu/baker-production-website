@@ -1,0 +1,210 @@
+{
+ "address": "32B Hetherington Dr, Bull Creek WA 6149",
+ "lat": -32.06558997839,
+ "lng": 115.87007003644,
+ "pins": [
+  {
+   "name": "Winchester Way Reserve",
+   "cat": "reserve",
+   "lat": -32.06611,
+   "lng": 115.8733,
+   "desc": "bushland reserve off Winchester Way"
+  },
+  {
+   "name": "Elizabeth Manion Park",
+   "cat": "park",
+   "lat": -32.0618055,
+   "lng": 115.8683666,
+   "desc": "local park, Read Pl / Oberthur Cres"
+  },
+  {
+   "name": "Kingsford Park",
+   "cat": "park",
+   "lat": -32.0648281,
+   "lng": 115.8750879,
+   "desc": "local park, Pellew Gardens"
+  },
+  {
+   "name": "Barracuda Park",
+   "cat": "park",
+   "lat": -32.0625664,
+   "lng": 115.8739596,
+   "desc": "park on Barracuda Dr, next to Barracuda Reserve bushland"
+  },
+  {
+   "name": "P J Hanley Park",
+   "cat": "park",
+   "lat": -32.0695,
+   "lng": 115.8738,
+   "desc": "local park, Arvidson Ct"
+  },
+  {
+   "name": "Ernest Wild Park",
+   "cat": "park",
+   "lat": -32.06778,
+   "lng": 115.8756,
+   "desc": "local park"
+  },
+  {
+   "name": "Bill Brown Park",
+   "cat": "park",
+   "lat": -32.0694401,
+   "lng": 115.8657479,
+   "desc": "local park, Hartfield Cres"
+  },
+  {
+   "name": "William Hall Park",
+   "cat": "park",
+   "lat": -32.0667355,
+   "lng": 115.8633574,
+   "desc": "local park, Irwin St"
+  },
+  {
+   "name": "Beasley Park",
+   "cat": "park",
+   "lat": -32.0712456,
+   "lng": 115.8683074,
+   "desc": "local park, Karel Ave"
+  },
+  {
+   "name": "Oberthur Primary School",
+   "cat": "school",
+   "lat": -32.0597698,
+   "lng": 115.8686055,
+   "desc": "government primary school"
+  },
+  {
+   "name": "Banksia Park Primary School",
+   "cat": "school",
+   "lat": -32.0717652,
+   "lng": 115.8745033,
+   "desc": "government primary school, Hicks St"
+  },
+  {
+   "name": "Willetton Senior High School",
+   "cat": "school",
+   "lat": -32.0613797,
+   "lng": 115.8775191,
+   "desc": "government secondary school, Pinetree Gully Rd"
+  },
+  {
+   "name": "All Saints' College",
+   "cat": "school",
+   "lat": -32.0513312,
+   "lng": 115.8659301,
+   "desc": "Anglican independent school K\u201312, Ewing Ave"
+  },
+  {
+   "name": "Yidarra Catholic Primary School",
+   "cat": "school",
+   "lat": -32.059402,
+   "lng": 115.8439242,
+   "desc": "Catholic primary school, Bateman"
+  },
+  {
+   "name": "Corpus Christi College",
+   "cat": "school",
+   "lat": -32.057137,
+   "lng": 115.843376,
+   "desc": "Catholic secondary college, Murdoch Dr, Bateman"
+  },
+  {
+   "name": "Fiona Stanley Hospital",
+   "cat": "hospital",
+   "lat": -32.07091,
+   "lng": 115.84696,
+   "desc": "major public hospital with emergency department"
+  },
+  {
+   "name": "St John of God Murdoch Hospital",
+   "cat": "hospital",
+   "lat": -32.06766,
+   "lng": 115.84521,
+   "desc": "private hospital with emergency department"
+  },
+  {
+   "name": "Bull Creek Library",
+   "cat": "library",
+   "lat": -32.06373,
+   "lng": 115.85558,
+   "desc": "City of Melville library, 24 Leichhardt St"
+  },
+  {
+   "name": "Willetton Library",
+   "cat": "library",
+   "lat": -32.056332836885,
+   "lng": 115.880333760698,
+   "desc": "City of Canning library, 39 Burrendah Blvd"
+  },
+  {
+   "name": "Melville Glades Golf Club",
+   "cat": "golf",
+   "lat": -32.0739616,
+   "lng": 115.875381,
+   "desc": "18-hole golf course, Beasley Rd, Leeming"
+  },
+  {
+   "name": "Riverton Leisureplex",
+   "cat": "aquatic",
+   "lat": -32.038416,
+   "lng": 115.90205,
+   "desc": "City of Canning aquatic and leisure centre (nearest public pool)"
+  },
+  {
+   "name": "Bull Creek Central Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.064534361504,
+   "lng": 115.856963757359,
+   "desc": "neighbourhood shopping centre, 46 Benningfield Rd"
+  },
+  {
+   "name": "Southlands Boulevarde",
+   "cat": "shopping",
+   "lat": -32.0570608,
+   "lng": 115.8813872,
+   "desc": "shopping centre, 45 Burrendah Blvd, Willetton"
+  },
+  {
+   "name": "Leeming Forum Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.0794569,
+   "lng": 115.8577204,
+   "desc": "shopping centre, Farrington Rd"
+  },
+  {
+   "name": "Westfield Booragoon",
+   "cat": "regional_shopping",
+   "lat": -32.0339445,
+   "lng": 115.8357877,
+   "desc": "nearest regional shopping centre, 125 Riseley St"
+  },
+  {
+   "name": "Booragoon Lake Reserve",
+   "cat": "lake",
+   "lat": -32.0452904,
+   "lng": 115.8455636,
+   "desc": "lake and bushland reserve, Aldridge Rd"
+  },
+  {
+   "name": "Piney Lakes Reserve",
+   "cat": "regional_park",
+   "lat": -32.0496181,
+   "lng": 115.8386883,
+   "desc": "wetland reserve with nature playground, Leach Hwy, Winthrop"
+  },
+  {
+   "name": "Ranford Road Station",
+   "cat": "train",
+   "lat": -32.075622,
+   "lng": 115.896809,
+   "desc": "Thornlie\u2013Cockburn line (opened Jun 2025)"
+  },
+  {
+   "name": "Murdoch Station",
+   "cat": "train",
+   "lat": -32.066208,
+   "lng": 115.850571,
+   "desc": "Mandurah line"
+  }
+ ]
+}

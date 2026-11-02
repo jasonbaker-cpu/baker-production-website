@@ -1,0 +1,98 @@
+{
+ "address": "9/95 Tyler St, Tuart Hill WA 6060",
+ "lat": -31.904745154038,
+ "lng": 115.830517427917,
+ "pins": [
+  {
+   "name": "Heaton Royal Reserve",
+   "cat": "reserve",
+   "lat": -31.8961,
+   "lng": 115.8417,
+   "desc": "local reserve, 137 Royal St"
+  },
+  {
+   "name": "Royal Street Reserve",
+   "cat": "reserve",
+   "lat": -31.8969,
+   "lng": 115.8377,
+   "desc": "local reserve, Royal St, Tuart Hill"
+  },
+  {
+   "name": "Orsova Reserve",
+   "cat": "reserve",
+   "lat": -31.8906335,
+   "lng": 115.8320098,
+   "desc": "local reserve, Orsova St, Tuart Hill"
+  },
+  {
+   "name": "Robinson Reserve",
+   "cat": "reserve",
+   "lat": -31.8948102,
+   "lng": 115.8319803,
+   "desc": "reserve, Tyler St, Tuart Hill"
+  },
+  {
+   "name": "Tuart Hill Skate Park",
+   "cat": "park",
+   "lat": -31.89571,
+   "lng": 115.83015,
+   "desc": "skate park, Tuart Hill"
+  },
+  {
+   "name": "Tuart Hill Primary School",
+   "cat": "school",
+   "lat": -31.9009566,
+   "lng": 115.839913,
+   "desc": "government primary school, Banksia St (zoning not verified)"
+  },
+  {
+   "name": "Servite College",
+   "cat": "school",
+   "lat": -31.9027045,
+   "lng": 115.8336415,
+   "desc": "Catholic secondary college, Cape St, Tuart Hill"
+  },
+  {
+   "name": "St Kieran Catholic Primary School",
+   "cat": "school",
+   "lat": -31.90273,
+   "lng": 115.83154,
+   "desc": "Catholic primary school, 116 Tyler St, Tuart Hill"
+  },
+  {
+   "name": "St Denis School",
+   "cat": "school",
+   "lat": -31.90973,
+   "lng": 115.84438,
+   "desc": "Catholic primary school, 2 Orchid St, Joondanna"
+  },
+  {
+   "name": "Western Australian Golf Club",
+   "cat": "golf",
+   "lat": -31.8966082,
+   "lng": 115.8525648,
+   "desc": "18-hole members' golf course, Hayes Ave, Yokine"
+  },
+  {
+   "name": "Westfield Innaloo",
+   "cat": "regional_shopping",
+   "lat": -31.901307,
+   "lng": 115.799797,
+   "desc": "regional shopping centre, Ellen Stirling Blvd, Innaloo"
+  },
+  {
+   "name": "Dog Swamp",
+   "cat": "reserve",
+   "lat": -31.9092458,
+   "lng": 115.8461993,
+   "desc": "wetland reserve, Farina Dr, Yokine"
+  },
+  {
+   "name": "Jackadder Lake",
+   "cat": "lake",
+   "lat": -31.90711,
+   "lng": 115.7937,
+   "desc": "lake and reserve, Woodlands"
+  }
+ ]
+}
