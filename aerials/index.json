@@ -12,15 +12,19 @@
      "agency": "grey",
      "full": false,
      "fullPhotos": [
-      "DJI_20261102132705_0002_D_r270.jpg"
+      "DJI_20261102132705_0002_D_r270.jpg",
+      "DJI_20261102132642_0001_D_r270.jpg"
      ],
      "src": "02-nov-2026/14_palomino_pl/src/",
      "map": "14_palomino_pl_places.json",
      "project": "project.json",
      "photos": [
       "DJI_20261102132705_0002_D_r270.jpg",
+      "DJI_20261102132642_0001_D_r270.jpg",
       "DJI_20261102132733_0003_D.jpg",
       "DJI_20261102132745_0004_D.jpg",
+      "DJI_20261102132803_0005_D.jpg",
+      "DJI_20261102132828_0006_D.jpg",
       "DJI_20261102132849_0007_D.jpg"
      ],
      "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
@@ -33,13 +37,15 @@
      "agency": "orange",
      "full": false,
      "fullPhotos": [
-      "dji_fly_20261102_120130_0118_1793624048044_photo_r180.jpg"
+      "dji_fly_20261102_120130_0118_1793624048044_photo_r180.jpg",
+      "dji_fly_20261102_120116_0117_1793624048701_photo_r90.jpg"
      ],
      "src": "02-nov-2026/32b_hetherington_dr/src/",
      "map": "32b_hetherington_dr_places.json",
      "project": "project.json",
      "photos": [
       "dji_fly_20261102_120130_0118_1793624048044_photo_r180.jpg",
+      "dji_fly_20261102_120116_0117_1793624048701_photo_r90.jpg",
       "dji_fly_20261102_120204_0119_1793624047389_photo.jpg",
       "dji_fly_20261102_120232_0120_1793624046706_photo.jpg",
       "dji_fly_20261102_120314_0121_1793624046011_photo.jpg",
@@ -57,13 +63,15 @@
      "agency": "grey",
      "full": false,
      "fullPhotos": [
-      "dji_fly_20261102_123202_0964_1793609126302_photo_r90.JPG"
+      "dji_fly_20261102_123202_0964_1793609126302_photo_r90.JPG",
+      "dji_fly_20261102_123204_0965_1793609124788_photo.JPG"
      ],
      "src": "02-nov-2026/3_bundalla_ct/src/",
      "map": "3_bundalla_ct_kelmscott_map.html",
      "project": "project.json",
      "photos": [
       "dji_fly_20261102_123202_0964_1793609126302_photo_r90.JPG",
+      "dji_fly_20261102_123204_0965_1793609124788_photo.JPG",
       "dji_fly_20261102_122642_0955_1793609139081_photo.JPG",
       "dji_fly_20261102_122920_0956_1793609137586_photo.JPG",
       "dji_fly_20261102_122934_0957_1793609136345_photo.JPG",
@@ -84,16 +92,22 @@
      "agency": "navy-h",
      "full": false,
      "fullPhotos": [
-      "DJI_20261102201951_0035_D.jpg"
+      "DJI_20261102201951_0035_D.jpg",
+      "DJI_20261102201940_0034_D_r90.jpg"
      ],
      "src": "02-nov-2026/14_graceful_st/src/",
      "map": "14_graceful_st_byford_map.html",
      "project": "project.json",
      "photos": [
       "DJI_20261102201951_0035_D.jpg",
+      "DJI_20261102201940_0034_D_r90.jpg",
+      "DJI_20261102202018_0036_D.jpg",
       "DJI_20261102202056_0038_D.jpg",
       "DJI_20261102202114_0039_D.jpg",
-      "DJI_20261102202130_0040_D.jpg"
+      "DJI_20261102202130_0040_D.jpg",
+      "DJI_20261102202149_0041_D.jpg",
+      "DJI_20261102202206_0042_D.jpg",
+      "DJI_20261102202224_0043_D.jpg"
      ],
      "notes": "Entry Notes: Meet Lou, the sales rep at the property. Amenities or features to highlight: No. Can Jason please take the photos. Thank you. Strata: No. Land size: 375 sqm. Title/land plan: Yes. Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line: Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line. Specific boundaries or land features to mark: Nothing specific. Client Preferences: Can Jason please attend. Thank you.",
      "portrait": false
@@ -133,16 +147,21 @@
      "agency": "grey",
      "full": false,
      "fullPhotos": [
-      "dji_fly_20261102_161908_0127_1793624042210_photo_r270.jpg"
+      "dji_fly_20261102_161908_0127_1793624042210_photo_r270.jpg",
+      "dji_fly_20261102_161928_0128_1793624041469_photo_r180.jpg"
      ],
      "src": "02-nov-2026/10_spotted_wy/src/",
      "map": "10_spotted_wy_alkimos_map.html",
      "project": "project.json",
      "photos": [
       "dji_fly_20261102_161908_0127_1793624042210_photo_r270.jpg",
+      "dji_fly_20261102_161928_0128_1793624041469_photo_r180.jpg",
       "dji_fly_20261102_162120_0130_1793624040060_photo.jpg",
+      "dji_fly_20261102_162206_0131_1793624039343_photo.jpg",
+      "dji_fly_20261102_162304_0133_1793624037995_photo.jpg",
       "dji_fly_20261102_162342_0134_1793624037277_photo.jpg",
-      "dji_fly_20261102_162530_0136_1793624035993_photo.jpg"
+      "dji_fly_20261102_162530_0136_1793624035993_photo.jpg",
+      "dji_fly_20261102_162618_0137_1793624035325_photo.jpg"
      ],
      "notes": "Entry Notes: the owner will be there and myself. Amenities or features to highlight: no nothing really. Strata: No. Land size: 242. Title/land plan: -. Specific boundaries or land features to mark: -. Client Preferences: no.",
      "portrait": false
@@ -153,11 +172,19 @@
      "who": "Telaya \u00b7 Holdsworth",
      "agency": "grey",
      "full": false,
-     "fullPhotos": [],
+     "fullPhotos": [
+      "dji_fly_20261102_173256_0139_1793624033900_photo_r90.jpg",
+      "dji_fly_20261102_173246_0138_1793624034672_photo_r90.jpg"
+     ],
      "src": "02-nov-2026/9_95_tyler_st/src/",
      "map": "9_95_tyler_st_places.json",
      "project": "project.json",
      "photos": [
+      "dji_fly_20261102_173256_0139_1793624033900_photo_r90.jpg",
+      "dji_fly_20261102_173246_0138_1793624034672_photo_r90.jpg",
+      "dji_fly_20261102_173322_0140_1793624033230_photo.jpg",
+      "dji_fly_20261102_173456_0141_1793624032570_photo.jpg",
+      "dji_fly_20261102_173538_0143_1793624031197_photo.jpg",
       "dji_fly_20261102_173558_0144_1793624030502_photo.jpg",
       "dji_fly_20261102_173628_0145_1793624029861_photo.jpg",
       "dji_fly_20261102_173650_0146_1793624029124_photo.jpg",
