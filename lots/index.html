@@ -75,6 +75,8 @@ async function loadBlob(blob,name){
     const m=txt.match(/(?:GimbalYawDegree|FlightYawDegree)="?\s*([-+]?\d+(?:\.\d+)?)/); yaw=m?parseFloat(m[1]):null; }catch(e){ yaw=null; }
   const url=URL.createObjectURL(blob); const im=new Image();
   im.onload=()=>{ img=im; pts=[]; street=-1; cuts=null; $('dropMsg').hidden=true; cv.hidden=false; $('ctl').hidden=true; $('resetBtn').disabled=false;
+    if(window.__auto){ const A=window.__auto; pts=A.c; street=A.e; if(A.yaw!==null) yaw=A.yaw; ['front','area','n','dw'].forEach(k=>{ if(A[k]) $(k).value=A[k]; }); if(A.drive) $('drive').value=A.drive;
+      if(A.n) cuts=null; $('ctl').hidden=false; $('north').value=Math.round(-(yaw||0) + frame(1000).rot*180/Math.PI); setStep('4. Set up the lots, then Download','Pre-filled from the drone job. Drag the blue dots to resize lots.'); draw(); window.__lotsReady=true; return; }
     setStep('2. Click the 4 corners of the block','Click each corner of the block, going around it. You can drag a corner after placing it.'); draw(); };
   im.src=url;
 }
@@ -86,6 +88,9 @@ $('resetBtn').onclick=()=>{ pts=[]; street=-1; cuts=null; $('ctl').hidden=true; 
 $('logoIn').onchange=e=>{ const f=e.target.files[0]; if(!f) return; const im=new Image(); im.onload=()=>{ logo=im; draw(); }; im.src=URL.createObjectURL(f); };
 { const q=new URLSearchParams(location.search).get('img'); if(q) fetch(q).then(r=>r.ok?r.blob():Promise.reject()).then(b=>loadBlob(b,q.split('/').pop())).catch(()=>setStep('Couldn\'t load that photo — open it by hand.')); }
 { const u=new URLSearchParams(location.search); if(u.get('street')) $('street').value=u.get('street'); if(u.get('north')) window.__north=+u.get('north'); }
+// 2 Nov: auto mode for the nightly drone run — c=x1,y1,..x4,y4 (corners in photo px) e=street edge index, plus front/area/n/yaw/drive
+{ const u=new URLSearchParams(location.search), c=u.get('c'); if(c){ const v=c.split(',').map(Number); if(v.length===8) window.__auto={ c:[[v[0],v[1]],[v[2],v[3]],[v[4],v[5]],[v[6],v[7]]], e:+u.get('e')||0, front:u.get('front'), area:u.get('area'), n:u.get('n'), dw:u.get('dw'), drive:u.get('drive'), yaw:u.get('yaw')!==null?+u.get('yaw'):null }; } }
+window.__lotsExport=()=>{ const c=document.createElement('canvas'); render(c.getContext('2d'),3000,false); return c.toDataURL('image/jpeg',.92); };
 
 // ---------- geometry ----------
 const add=(a,b)=>[a[0]+b[0],a[1]+b[1]], sub=(a,b)=>[a[0]-b[0],a[1]-b[1]], mul=(a,k)=>[a[0]*k,a[1]*k], lerp=(a,b,t)=>add(a,mul(sub(b,a),t));
