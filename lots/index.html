@@ -51,7 +51,7 @@ button:disabled{opacity:.4;cursor:default}
     <label>North arrow (°)<input type="number" id="north" value="0" step="1"></label></div>
     <label>Extra line (e.g. zoning)<input type="text" id="note" placeholder="Zoned R25/60"></label>
     <label class="chk"><input type="checkbox" id="square"> Square up the block</label>
-    <label class="chk"><input type="checkbox" id="blur" checked> Blur around the block</label>
+    <label class="chk"><input type="checkbox" id="blur"> Blur around the block</label>
     <label class="chk"><input type="checkbox" id="showArea"> Show approx lot sizes</label>
     <label class="chk"><input type="checkbox" id="disc" checked> "Illustration only" line</label>
     <label>Agency logo (PNG, optional)<input type="file" id="logoIn" accept="image/*"></label>
@@ -143,24 +143,38 @@ function render(g,W,interactive){
     g.save(); g.beginPath(); outer.forEach((p,i)=>i?g.lineTo(...p):g.moveTo(...p)); g.closePath(); g.clip(); drawImg(); g.restore(); }
   else drawImg();
   // lines
-  const lw=Math.max(2,OW/330); g.lineJoin='round'; g.strokeStyle='#fff'; g.lineWidth=lw;
+  const lw=Math.max(2.5,OW/240); g.lineJoin='miter'; g.strokeStyle='#fff'; g.lineWidth=lw;
   const poly=(u0,u1,v0,v1)=>{ g.beginPath(); [[u0,v0],[u1,v0],[u1,v1],[u0,v1]].forEach(([u,v],i)=>{ const p=Q(u,v); i?g.lineTo(...p):g.moveTo(...p); }); g.closePath(); g.stroke(); };
-  g.shadowColor='rgba(0,0,0,.45)'; g.shadowBlur=lw*1.5;
-  poly(0,1,0,1); pl.lots.forEach(l=>poly(...l)); if(pl.drive) poly(...pl.drive);
+  // lots: corners on the driveway side get a small splay (V notches), like the agency diagrams
+  const pxm=Math.hypot(...sub(Q(0,1),Q(1,1)))/Math.max(1,+$('front').value||30), depthM=(Math.hypot(...sub(Q(0,0),Q(0,1)))+Math.hypot(...sub(Q(1,0),Q(1,1))))/2/pxm;
+  const cutM=Math.min(2,(+$('dw').value||4)*0.4), cu=cutM/Math.max(1,+$('front').value||30), cv=cutM/Math.max(1,depthM);
+  const dside=pl.drive?($('drive').value==='a'?'a':'b'):null;
+  const lotPoly=l=>{ const [u0,u1,v0,v1]=l, C=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]], ue=dside==='a'?u0:u1, out=[];
+    C.forEach((c,i)=>{ const cut=dside && pl.lay==='stack' && Math.abs(c[0]-ue)<1e-9 && !(c[1]<1e-9);
+      if(!cut){ out.push(c); return; } const p=C[(i+3)%4], n=C[(i+1)%4];
+      const tp=Math.abs(p[0]-c[0])>1e-9?cu/Math.abs(p[0]-c[0]):cv/Math.abs(p[1]-c[1]), tn=Math.abs(n[0]-c[0])>1e-9?cu/Math.abs(n[0]-c[0]):cv/Math.abs(n[1]-c[1]);
+      out.push([c[0]+(p[0]-c[0])*Math.min(.45,tp), c[1]+(p[1]-c[1])*Math.min(.45,tp)], [c[0]+(n[0]-c[0])*Math.min(.45,tn), c[1]+(n[1]-c[1])*Math.min(.45,tn)]); });
+    return out; };
+  const strokeUV=(L,close)=>{ g.beginPath(); L.forEach(([u,v],i)=>{ const p=Q(u,v); i?g.lineTo(...p):g.moveTo(...p); }); if(close) g.closePath(); g.stroke(); };
+  g.shadowColor='rgba(0,0,0,.35)'; g.shadowBlur=lw;
+  strokeUV([[0,0],[1,0],[1,1],[0,1]],true); pl.lots.forEach(l=>strokeUV(lotPoly(l),true)); if(pl.drive && pl.lay!=='stack') poly(...pl.drive);
   g.shadowBlur=0;
   // labels
   const total=+$('area').value||0, full=shoelace(outer);
-  const text=(t,p,size,weight,angle)=>{ g.save(); g.translate(p[0],p[1]); if(angle) g.rotate(angle); g.font=`${weight} ${size}px Poppins, sans-serif`; g.textAlign='center'; g.textBaseline='middle';
-    g.lineJoin='round'; g.lineWidth=Math.max(2,size/9); g.strokeStyle='rgba(15,15,15,.9)'; g.shadowColor='rgba(0,0,0,.5)'; g.shadowBlur=size/6; g.strokeText(t,0,0); g.shadowBlur=0; g.fillStyle='#fff'; g.fillText(t,0,0); g.restore(); };
+  // dark=true: black letters with a white outline (lot names, like the sample); otherwise white with a soft shadow
+  const text=(t,p,size,weight,angle,dark)=>{ g.save(); g.translate(p[0],p[1]); if(angle) g.rotate(angle); g.font=`${weight} ${size}px Poppins, sans-serif`; g.textAlign='center'; g.textBaseline='middle'; g.lineJoin='round';
+    if(dark){ g.lineWidth=Math.max(3,size/7); g.strokeStyle='#fff'; g.shadowColor='rgba(0,0,0,.35)'; g.shadowBlur=size/10; g.strokeText(t,0,0); g.shadowBlur=0; g.fillStyle='#111'; g.fillText(t,0,0); }
+    else { g.shadowColor='rgba(0,0,0,.75)'; g.shadowBlur=size/5; g.lineWidth=Math.max(1.5,size/16); g.strokeStyle='rgba(0,0,0,.55)'; g.strokeText(t,0,0); g.shadowBlur=size/8; g.fillStyle='#fff'; g.fillText(t,0,0); }
+    g.restore(); };
   const fit=(u0,u1,v0,v1)=>{ const a=Q(u0,v0),b=Q(u1,v1); const c=Q(u0,v1), d=Q(u1,v0); const w=Math.min(Math.hypot(...sub(a,c)),Math.hypot(...sub(a,d))); return w; };
   pl.lots.forEach((l,i)=>{ const c=mul(add(Q(l[0],l[2]),Q(l[1],l[3])),.5); const boxW=Math.min(Math.hypot(...sub(Q(l[0],l[2]),Q(l[1],l[2]))),Math.hypot(...sub(Q(l[0],l[2]),Q(l[0],l[3]))));
-    const size=Math.max(14,Math.min(OW/24, boxW/2.6)); text(`Lot ${i+1}`,c,size,700,0);
-    if($('showArea').checked && total){ const a=shoelace([Q(l[0],l[2]),Q(l[1],l[2]),Q(l[1],l[3]),Q(l[0],l[3])])/full*total; text(`≈ ${Math.round(a)} m²`,[c[0],c[1]+size*0.95],size*0.45,500,0); } });
+    const size=Math.max(14,Math.min(OW/22, boxW/3.1)); text(`Lot ${i+1}`,c,size,500,0,true);
+    if($('showArea').checked && total){ const a=shoelace([Q(l[0],l[2]),Q(l[1],l[2]),Q(l[1],l[3]),Q(l[0],l[3])])/full*total; text(`≈ ${Math.round(a)} m²`,[c[0],c[1]+size*0.9],size*0.42,500,0,true); } });
   if(pl.drive){ const d=pl.drive, a=Q((d[0]+d[1])/2,0), b=Q((d[0]+d[1])/2,1); let ang=Math.atan2(b[1]-a[1],b[0]-a[0]); if(ang>Math.PI/2) ang-=Math.PI; if(ang<-Math.PI/2) ang+=Math.PI;
     const w=Math.hypot(...sub(Q(d[0],.5),Q(d[1],.5))); text('Driveway',mul(add(a,b),.5),Math.max(12,Math.min(OW/45,w*.55)),500,ang); }
   const st=$('street').value.trim().toUpperCase();
   if(st){ const f=mul(add(Q(0,1),Q(1,1)),.5); const right=$('orient').value==='right';
-    const p=right?[f[0]+(OW-f[0])*.5, f[1]]:[f[0], f[1]+(OH-f[1])*.5]; text(st,p,OW/26,700,right?-Math.PI/2:0); }
+    const p=right?[f[0]+(OW-f[0])*.5, f[1]]:[f[0], f[1]+(OH-f[1])*.5]; text(st,p,OW/24,700,right?Math.PI/2:0); }
   const note=$('note').value.trim(); if(note){ const r=$('orient').value==='right'; const yb=Math.max(...outer.map(p=>p[1])); text(note,[r?(Math.min(...outer.map(p=>p[0]))+Math.max(...outer.map(p=>p[0])))/2:OW/2, Math.min(OH-OW*.06, yb+OW*.035)],OW/40,500,0); }
   // north arrow
   { const r=OW/30, cx=OW-r*1.6, cy=r*1.6, a=(+$('north').value||0)*Math.PI/180; g.save(); g.translate(cx,cy); g.fillStyle='rgba(28,28,28,.92)'; g.beginPath(); g.arc(0,0,r,0,7); g.fill(); g.rotate(a);
