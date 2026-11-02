@@ -33,6 +33,7 @@ job folder (all subfolders, e.g. `Aerial - Drone Photography` and `Floorplan or 
   job's flight (same file names/content hash as another folder), stop and tell Jason; don't edit it.
 - Skip ground-level frames (RelativeAltitude ≈ 0).
 - Raw folder: `Raw Files/<Photographer>/<DD-MM-YYYY>/<address>/Aerial - Drone Photography`. Search for the address with the Dropbox tool.
+  Shooters sometimes use another subfolder name (e.g. `Drone`, 9/95 Tyler St 2 Nov). List the whole job folder and take every `dji_*`/`DJI_*` still (DNG/JPG) from any subfolder except video folders (Listing Video, Social Media Walkthrough). A booking with "(a la cart) Aerial / Drone Photography" is a drone job even when "Floorplan or Drone" = Floorplan.
 - Get `download_link` for the DJI files plus the `*_map.html` and any title or strata PDFs, then `curl` them into `batch/<slug>/raw/`.
 - Slug: the street part of the address, lowercase, with underscores (e.g. `28_george_st`).
 - DNG only (no JPG): run `python3 dng2jpg.py batch/<slug>/raw/*.DNG` and move the jpgs into `batch/<slug>/jpg/`. Drone XMP is kept.
