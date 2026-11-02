@@ -1,0 +1,313 @@
+{
+ "label": "Mon 2 Nov 2026",
+ "jobs": [
+  {
+   "slug": "14_palomino_pl",
+   "addr": "14 Palomino Pl, Greenfields WA 6210",
+   "who": "David Beshay \u00b7 Beshay Realty",
+   "agency": "grey",
+   "photos": "batch/14_palomino_pl/jpg",
+   "map": "batch/14_palomino_pl/14_palomino_pl_places.json",
+   "poly": [
+    [
+     -32.51088211,
+     115.76435322
+    ],
+    [
+     -32.51085683,
+     115.76432347
+    ],
+    [
+     -32.51083696,
+     115.76430008
+    ],
+    [
+     -32.51000852,
+     115.76430133
+    ],
+    [
+     -32.50981963,
+     115.76470598
+    ],
+    [
+     -32.51003874,
+     115.76470566
+    ],
+    [
+     -32.51033602,
+     115.76470521
+    ],
+    [
+     -32.51033564,
+     115.76435402
+    ],
+    [
+     -32.51085685,
+     115.76435327
+    ]
+   ],
+   "area": 2068,
+   "areaSource": "title (Lot 105 on Plan 19344)",
+   "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
+   "streetRot": {
+    "14_palomino_pl__nadir": 270,
+    "14_palomino_pl__nadir2": 270
+   },
+   "lens": [
+    0,
+    91.87,
+    43.41,
+    57.27,
+    33.0,
+    0
+   ],
+   "nadirPick": [
+    "0002"
+   ],
+   "pick": [
+    "0003",
+    "0004",
+    "0007"
+   ]
+  },
+  {
+   "slug": "32b_hetherington_dr",
+   "addr": "32B Hetherington Dr, Bull Creek WA 6149",
+   "who": "Raymond Chen \u00b7 Top Realty",
+   "agency": "orange",
+   "photos": "batch/32b_hetherington_dr/jpg",
+   "map": "batch/32b_hetherington_dr/32b_hetherington_dr_places.json",
+   "poly": null,
+   "nadirSplit": 1,
+   "notes": "Entry Notes: Please collect keys from our office. Amenities or features to highlight: no. Strata: Yes. Land size: -. Title/land plan: -. Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line: Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line. Specific boundaries or land features to mark: -.",
+   "streetRot": {
+    "32b_hetherington_dr__nadir": 180,
+    "32b_hetherington_dr__nadir2": 90
+   },
+   "nadirPick": [
+    "0118"
+   ],
+   "pick": [
+    "0119",
+    "0120",
+    "0121",
+    "0123",
+    "0125",
+    "0126"
+   ]
+  },
+  {
+   "slug": "3_bundalla_ct",
+   "addr": "3 Bundalla Ct, Kelmscott WA 6111",
+   "who": "Naomi Nation (owner)",
+   "agency": "grey",
+   "photos": "batch/3_bundalla_ct/jpg",
+   "map": "batch/3_bundalla_ct/docs/3_bundalla_ct_kelmscott_map.html",
+   "poly": [
+    [
+     -32.12833882,
+     116.01046883
+    ],
+    [
+     -32.1281969,
+     116.01058164
+    ],
+    [
+     -32.12835518,
+     116.01088164
+    ],
+    [
+     -32.12840578,
+     116.01085916
+    ],
+    [
+     -32.1285247,
+     116.01080634
+    ],
+    [
+     -32.12845154,
+     116.01067349
+    ]
+   ],
+   "area": 689,
+   "areaSource": "agent (booking form land size)",
+   "nadirPick": [
+    "0964"
+   ],
+   "notes": "Entry Notes: I will let you in. Amenities or features to highlight: Not sure need the photographers advice on what make our property stand out from others. Strata: No. Land size: 689. Title/land plan: Just title no land plan. Specific boundaries or land features to mark: -.",
+   "streetRot": {
+    "3_bundalla_ct__nadir": 90,
+    "3_bundalla_ct__nadir2": 0
+   },
+   "edgeOff": {
+    "1": -0.35,
+    "2": -0.5
+   }
+  },
+  {
+   "slug": "14_graceful_st",
+   "addr": "14 Graceful St, Byford WA 6122",
+   "who": "Lou Smith \u00b7 Harcourts",
+   "agency": "navy-h",
+   "photos": "batch/14_graceful_st/jpg",
+   "map": "batch/14_graceful_st/docs/14_graceful_st_byford_map.html",
+   "poly": [
+    [
+     -32.23280878,
+     115.97922868
+    ],
+    [
+     -32.23280918,
+     115.97891039
+    ],
+    [
+     -32.23269646,
+     115.9789102
+    ],
+    [
+     -32.23269606,
+     115.97922849
+    ]
+   ],
+   "area": 375,
+   "areaSource": "agent (booking form land size)",
+   "notes": "Entry Notes: Meet Lou, the sales rep at the property. Amenities or features to highlight: No. Can Jason please take the photos. Thank you. Strata: No. Land size: 375 sqm. Title/land plan: Yes. Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line: Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line. Specific boundaries or land features to mark: Nothing specific. Client Preferences: Can Jason please attend. Thank you.",
+   "streetRot": {
+    "14_graceful_st__nadir": 0,
+    "14_graceful_st__nadir2": 90
+   },
+   "edgeOff": {
+    "1": -0.7
+   },
+   "nadirPick": [
+    "0035"
+   ],
+   "pick": [
+    "0038",
+    "0039",
+    "0040"
+   ]
+  },
+  {
+   "slug": "22_sandridge_st",
+   "addr": "22 Sandridge St, Gosnells WA 6110",
+   "who": "Danny Sharrett \u00b7 Century 21 Team Brockhurst",
+   "agency": "c21",
+   "photos": "batch/22_sandridge_st/jpg",
+   "map": "batch/22_sandridge_st/22_sandridge_st_places.json",
+   "poly": [
+    [
+     -32.07649341,
+     115.98619562
+    ],
+    [
+     -32.07648096,
+     115.98621022
+    ],
+    [
+     -32.07635325,
+     115.98634768
+    ],
+    [
+     -32.07657189,
+     115.98660505
+    ],
+    [
+     -32.07660182,
+     115.98656994
+    ],
+    [
+     -32.07670676,
+     115.98644681
+    ]
+   ],
+   "area": 716,
+   "areaSource": "title (Lot 362 on Plan 17023, CT 1867/539)",
+   "lens": [
+    21.16,
+    34.33,
+    21.14,
+    33.5
+   ],
+   "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
+   "streetRot": {
+    "22_sandridge_st__nadir": 0,
+    "22_sandridge_st__nadir2": 270
+   },
+   "edgeOff": {
+    "2": -0.8,
+    "3": -0.35
+   },
+   "edgeOffs": {
+    "22_sandridge_st__nadir2": {
+     "2": -0.5,
+     "3": -0.4
+    }
+   }
+  },
+  {
+   "slug": "10_spotted_wy",
+   "addr": "10 Spotted Wy, Alkimos WA 6038",
+   "who": "Brodie Morris \u00b7 Northern Coast",
+   "agency": "grey",
+   "photos": "batch/10_spotted_wy/jpg",
+   "map": "batch/10_spotted_wy/docs/10_spotted_wy_alkimos_map.html",
+   "poly": [
+    [
+     -31.62249773,
+     115.68685119
+    ],
+    [
+     -31.62250399,
+     115.68681383
+    ],
+    [
+     -31.62251505,
+     115.68674776
+    ],
+    [
+     -31.6223024,
+     115.68669913
+    ],
+    [
+     -31.62228259,
+     115.68680199
+    ]
+   ],
+   "area": 242,
+   "areaSource": "agent (booking form land size)",
+   "notes": "Entry Notes: the owner will be there and myself. Amenities or features to highlight: no nothing really. Strata: No. Land size: 242. Title/land plan: -. Specific boundaries or land features to mark: -. Client Preferences: no.",
+   "streetRot": {
+    "10_spotted_wy__nadir": 270,
+    "10_spotted_wy__nadir2": 180
+   },
+   "nadirPick": [
+    "0127"
+   ],
+   "pick": [
+    "0130",
+    "0134",
+    "0136"
+   ]
+  },
+  {
+   "slug": "9_95_tyler_st",
+   "addr": "9/95 Tyler St, Tuart Hill WA 6060",
+   "who": "Telaya \u00b7 Holdsworth",
+   "agency": "grey",
+   "photos": "batch/9_95_tyler_st/jpg",
+   "map": "batch/9_95_tyler_st/9_95_tyler_st_places.json",
+   "poly": null,
+   "notes": "Entry Notes: meet owner at the property. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
+   "streetRot": {
+    "9_95_tyler_st__nadir": 90
+   },
+   "pick": [
+    "0144",
+    "0145",
+    "0146",
+    "0147"
+   ]
+  }
+ ]
+}
