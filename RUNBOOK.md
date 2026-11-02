@@ -232,3 +232,8 @@ bakerproduction.com/lots/ — open a clean top-down (or the gallery's "Lots" but
 - Drop a frame only for a real defect re-running can't fix (sky ghosting, cut terrain, tilt) and only while the job still has 6+. Otherwise publish and flag it. Shooter took fewer than 6 → publish them all and flag it.
 - ALWAYS publish BOTH top-downs when two were shot. Never drop one as a near-duplicate or for mirror padding (overrides 29/30 Oct). Set nadirPick to both frames and streetRot for both; fence-check both.
 - Stale `*_rNN` rotated files in batch/<slug>/jpg are picked up as extra top-downs by the next prep_day run — delete them before re-running prep_day.
+
+## NO PINS ON CLOSE-UPS OR TOP-DOWNS (Jason, 3 Nov 2026)
+"These like closeups and Birds Eye view don't add pins."
+- t12.py now exports with NO pins (no house pin, no place pins) any photo where the drone is under 60 m and the gimbal is above -75° (close-up obliques), and any top-down that has no boundary (strata / pins-only jobs).
+- Top-downs WITH a boundary keep the lot outline, side lengths and lot size, but never a house or place pin.

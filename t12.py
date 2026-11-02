@@ -49,6 +49,13 @@ async def main():
             if job.get('agency'): await pg.select_option('#agSel', job['agency']); await pg.wait_for_timeout(300)
             th = pg.locator('.thumb'); n = await th.count(); base = n-len(job['photos'])
             for k,ph in enumerate(job['photos']):
+                # 3 Nov (Jason): close-ups (drone under 60 m) and bird's-eye views get NO pins at all (no house pin, no places).
+                # Top-downs with a boundary keep the lot outline + size; top-downs with no boundary go out clean.
+                import re as _rq
+                _x=open(ph,'rb').read(600000).decode('latin1')
+                _alt=float((_rq.search(r'RelativeAltitude="([-+\d.]+)"',_x) or [0,'999'])[1]); _pit=float((_rq.search(r'GimbalPitchDegree="([-+\d.]+)"',_x) or [0,'0'])[1])
+                _clean = bool(job.get('plain')) or (_alt < 60 and _pit > -75) or (_pit < -75 and not job.get('poly'))
+                os.environ['PLAIN_JOB'] = '1' if _clean else ''
                 await th.nth(base+k).click(); await busy(pg); await pg.wait_for_timeout(400)
                 if job.get('cams',{}).get(ph): await pg.evaluate("o=>window.__bae.setCam(o)", job['cams'][ph]); await pg.wait_for_timeout(300)
                 if job.get('adj'): await pg.evaluate("o=>window.__bae.setAdj(o)", job['adj']); await pg.wait_for_timeout(300)
@@ -111,10 +118,10 @@ async def main():
                 if 'house' in st:
                     await pg.click('text=Click the house'); await clickImg(pg,*st['house'])
                     if 'lm' in st: await pg.select_option('#lmSel', st['lm'][0]); await pg.click('#lmGo'); await clickImg(pg,*st['lm'][1])
-                elif not job.get('plain') and await pg.locator('#plHouse').count(): await pg.click('#plHouse'); await pg.wait_for_timeout(300)
+                elif not _clean and await pg.locator('#plHouse').count(): await pg.click('#plHouse'); await pg.wait_for_timeout(300)
                 if 'housepin' in st:   # 29 Oct: move only the house pin (e.g. onto an apartment roof) without re-aiming the camera
                     await pg.evaluate(f"window.__bae.setHouse({st['housepin'][0]},{st['housepin'][1]})"); await pg.wait_for_timeout(200)
-                if job.get('plain'): pass
+                if _clean: pass
                 elif 'ticks' in st:
                     for t in st['ticks']:
                         import re as _r2   # exact name match first ("Lake Goollelal" must not hit "Lake Goollelal Boardwalk")

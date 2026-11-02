@@ -62,13 +62,14 @@
     0
    ],
    "nadirPick": [
-    "0002"
+    "0002",
+    "0001"
    ],
-   "pick": [
-    "0003",
-    "0004",
-    "0007"
-   ]
+   "edgeOffs": {
+    "14_palomino_pl__nadir2": {
+     "1": -0.5
+    }
+   }
   },
   {
    "slug": "32b_hetherington_dr",
@@ -85,7 +86,8 @@
     "32b_hetherington_dr__nadir2": 90
    },
    "nadirPick": [
-    "0118"
+    "0118",
+    "0117"
    ],
    "pick": [
     "0119",
@@ -132,7 +134,8 @@
    "area": 689,
    "areaSource": "agent (booking form land size)",
    "nadirPick": [
-    "0964"
+    "0964",
+    "0965"
    ],
    "notes": "Entry Notes: I will let you in. Amenities or features to highlight: Not sure need the photographers advice on what make our property stand out from others. Strata: No. Land size: 689. Title/land plan: Just title no land plan. Specific boundaries or land features to mark: -.",
    "streetRot": {
@@ -142,6 +145,13 @@
    "edgeOff": {
     "1": -0.35,
     "2": -0.5
+   },
+   "edgeOffs": {
+    "3_bundalla_ct__nadir2": {
+     "1": -0.25,
+     "3": -0.45,
+     "2": -0.75
+    }
    }
   },
   {
@@ -180,12 +190,17 @@
     "1": -0.7
    },
    "nadirPick": [
-    "0035"
+    "0035",
+    "0034"
    ],
    "pick": [
+    "0036",
     "0038",
     "0039",
-    "0040"
+    "0040",
+    "0041",
+    "0042",
+    "0043"
    ]
   },
   {
@@ -282,12 +297,16 @@
     "10_spotted_wy__nadir2": 180
    },
    "nadirPick": [
-    "0127"
+    "0127",
+    "0128"
    ],
    "pick": [
     "0130",
+    "0131",
+    "0133",
     "0134",
-    "0136"
+    "0136",
+    "0137"
    ]
   },
   {
@@ -300,9 +319,18 @@
    "poly": null,
    "notes": "Entry Notes: meet owner at the property. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
    "streetRot": {
-    "9_95_tyler_st__nadir": 90
+    "9_95_tyler_st__nadir": 90,
+    "9_95_tyler_st__nadir2": 90
    },
+   "nadirSplit": 1,
+   "nadirPick": [
+    "0139",
+    "0138"
+   ],
    "pick": [
+    "0140",
+    "0141",
+    "0143",
     "0144",
     "0145",
     "0146",
