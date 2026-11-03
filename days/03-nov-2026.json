@@ -1,0 +1,183 @@
+{
+ "label": "Tue 3 Nov 2026",
+ "jobs": [
+  {
+   "slug": "9_flora_ave",
+   "addr": "9 Flora Ave, Bayswater WA 6053",
+   "who": "Nic Pulvirenti \u00b7 Professionals TWT",
+   "agency": "flags-p",
+   "photos": "batch/9_flora_ave/jpg",
+   "map": "batch/9_flora_ave/raw/9_flora_ave_bayswater_map.html",
+   "poly": [
+    [
+     -31.8962966,
+     115.93155021
+    ],
+    [
+     -31.89636702,
+     115.93196738
+    ],
+    [
+     -31.89654502,
+     115.93192608
+    ],
+    [
+     -31.89647459,
+     115.93150891
+    ]
+   ],
+   "area": 809,
+   "areaSource": "deposited plan (Lot 14 on Plan 7488)",
+   "lens": [
+    40.23,
+    20.12,
+    40.23,
+    20.12
+   ],
+   "notes": "Entry Notes: lockbox access (shooter only). Amenities or features to highlight: -. Strata: -\u2014. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: --. Client preferences: -.",
+   "nadirPick": [
+    "0154",
+    "0153"
+   ],
+   "streetRot": {
+    "9_flora_ave__nadir": 180,
+    "9_flora_ave__nadir2": 0
+   }
+  },
+  {
+   "slug": "1_mills_ave",
+   "addr": "1 Mills Ave, Bayswater WA 6053",
+   "who": "Nic Pulvirenti \u00b7 Professionals TWT",
+   "agency": "flags-p",
+   "photos": "batch/1_mills_ave/jpg",
+   "map": "batch/1_mills_ave/raw/1_mills_ave_bayswater_map.html",
+   "poly": null,
+   "nadirSplit": 1,
+   "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
+   "nadirPick": [
+    "0163",
+    "0164"
+   ],
+   "streetRot": {
+    "1_mills_ave__nadir": 270,
+    "1_mills_ave__nadir2": 180
+   }
+  },
+  {
+   "slug": "17_titanium_blvd",
+   "addr": "17 Titanium Blvd, Cockburn Central WA 6164",
+   "who": "Ameli\u00e9 Blanco Bernabeu \u00b7 Raspa",
+   "agency": "charcoal",
+   "photos": "batch/17_titanium_blvd/jpg",
+   "map": "batch/17_titanium_blvd/raw/17_titanium_blvd_cockburn_central_map.html",
+   "poly": null,
+   "nadirSplit": 1,
+   "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
+   "nadirPick": [
+    "0971",
+    "0966"
+   ],
+   "streetRot": {
+    "17_titanium_blvd__nadir": 90,
+    "17_titanium_blvd__nadir2": 0
+   }
+  },
+  {
+   "slug": "19_joondanna_dr",
+   "addr": "19 Joondanna Dr, Joondanna WA 6060",
+   "who": "Dante Holdsworth \u00b7 Holdsworth",
+   "agency": "grey",
+   "photos": "batch/19_joondanna_dr/jpg",
+   "map": "batch/19_joondanna_dr/19_joondanna_dr_places.json",
+   "poly": [
+    [
+     -31.91282921,
+     115.8326031
+    ],
+    [
+     -31.91282988,
+     115.83278982
+    ],
+    [
+     -31.91317453,
+     115.83278813
+    ],
+    [
+     -31.91317626,
+     115.83260141
+    ]
+   ],
+   "area": 678,
+   "areaSource": "title (Lot 17 on Diagram 16005, CT 1149/362)",
+   "lens": [
+    17.66,
+    38.24,
+    17.66,
+    38.52
+   ],
+   "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
+   "nadirPick": [
+    "0982",
+    "0981"
+   ],
+   "streetRot": {
+    "19_joondanna_dr__nadir": 0,
+    "19_joondanna_dr__nadir2": 0
+   }
+  },
+  {
+   "slug": "29_hermitage_dr",
+   "addr": "29 Hermitage Dr, The Vines WA 6069",
+   "who": "Annique Woodford \u00b7 Granger Clark",
+   "agency": "grey",
+   "photos": "batch/29_hermitage_dr/jpg",
+   "map": "batch/29_hermitage_dr/29_hermitage_dr_places.json",
+   "poly": [
+    [
+     -31.7680082,
+     116.01098716
+    ],
+    [
+     -31.76791203,
+     116.01143858
+    ],
+    [
+     -31.76857828,
+     116.01185861
+    ],
+    [
+     -31.76870087,
+     116.01138843
+    ],
+    [
+     -31.76874919,
+     116.01127508
+    ],
+    [
+     -31.76838969,
+     116.01113539
+    ]
+   ],
+   "notes": "Entry Notes: meet agent at property (shooter only). Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
+   "nadirPick": [
+    "0181",
+    "0180"
+   ],
+   "streetRot": {
+    "29_hermitage_dr__nadir": 0,
+    "29_hermitage_dr__nadir2": 0
+   }
+  },
+  {
+   "slug": "29_hermitage_dr_twilight",
+   "addr": "29 Hermitage Dr, The Vines WA 6069",
+   "who": "Annique Woodford \u00b7 Granger Clark",
+   "agency": "grey",
+   "photos": "batch/29_hermitage_dr_twilight/jpg",
+   "map": "batch/29_hermitage_dr/29_hermitage_dr_places.json",
+   "poly": null,
+   "twilight": 1,
+   "notes": "Entry Notes: meet agent at property (shooter only). Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -."
+  }
+ ]
+}

@@ -31,7 +31,7 @@ if __name__=='__main__':
     done=json.load(open(out)) if os.path.exists(out) else {}
     tasks=[(j['slug'],ph) for j in J if os.path.exists(f"sat/{j['slug']}.jpg") for ph in j['photos'] if ph not in done]
     
-    with Pool(2) as pool:
+    with Pool(int(os.environ.get("NP","2"))) as pool:
         for r in pool.imap_unordered(work,tasks):
             done[r['ph']]=r; json.dump(done,open(out,'w'))
             print(r['slug'], r['ph'][-12:], 'ERR '+r['err'] if 'err' in r else f"{r['sc0']:.3f}->{r['sc']:.3f} {[round(x,2) for x in r['p']]} {r['t']:.0f}s", flush=True)
