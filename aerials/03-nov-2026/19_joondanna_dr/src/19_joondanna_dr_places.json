@@ -1,0 +1,235 @@
+{
+"address": "19 Joondanna Dr, Joondanna WA 6060",
+"lat": -31.913044399999997,
+"lng": 115.83269949999999,
+"pins": [
+{
+"name": "Powell Reserve",
+"cat": "park",
+"lat": -31.910639799999995,
+"lng": 115.8324626
+},
+{
+"name": "Blackford Street Park",
+"cat": "park",
+"lat": -31.915940000000003,
+"lng": 115.83211
+},
+{
+"name": "Albert James Park",
+"cat": "park",
+"lat": -31.9115966,
+"lng": 115.8381315
+},
+{
+"name": "Matlock St Reserve",
+"cat": "park",
+"lat": -31.9168689,
+"lng": 115.83676459999998
+},
+{
+"name": "Menzies Park",
+"cat": "park",
+"lat": -31.918872099999994,
+"lng": 115.8312634
+},
+{
+"name": "Joondanna Reserve",
+"cat": "park",
+"lat": -31.9074296,
+"lng": 115.83614550000001
+},
+{
+"name": "Braithwaite Park",
+"cat": "park",
+"lat": -31.9196782,
+"lng": 115.83478869999998
+},
+{
+"name": "Glendalough Station",
+"cat": "train",
+"lat": -31.914689599999996,
+"lng": 115.82312519999998
+},
+{
+"name": "Lynton Street Reserve",
+"cat": "park",
+"lat": -31.920981599999998,
+"lng": 115.8286097
+},
+{
+"name": "Hawaiian's Mezz",
+"cat": "shopping",
+"lat": -31.9208859,
+"lng": 115.8394079
+},
+{
+"name": "Grenville Reserve",
+"cat": "park",
+"lat": -31.9032247,
+"lng": 115.83578399999999
+},
+{
+"name": "St Kieran Catholic Primary School",
+"cat": "school",
+"lat": -31.9029425,
+"lng": 115.83104610000001
+},
+{
+"name": "Servite College",
+"cat": "school",
+"lat": -31.9025882,
+"lng": 115.8329301
+},
+{
+"name": "St Denis Catholic Primary School",
+"cat": "school",
+"lat": -31.909735599999994,
+"lng": 115.84456579999998
+},
+{
+"name": "Les Lilleyman Reserve",
+"cat": "park",
+"lat": -31.9179253,
+"lng": 115.8451522
+},
+{
+"name": "Dog Swamp Reserve",
+"cat": "park",
+"lat": -31.9095652,
+"lng": 115.84641719999999
+},
+{
+"name": "Dog Swamp Shopping Centre",
+"cat": "shopping",
+"lat": -31.9106486,
+"lng": 115.84713969999999
+},
+{
+"name": "Bold Park Community School, Wembley Campus",
+"cat": "school",
+"lat": -31.923516499999998,
+"lng": 115.823715
+},
+{
+"name": "Tuart Hill Primary School",
+"cat": "school",
+"lat": -31.9012438,
+"lng": 115.8399573
+},
+{
+"name": "Glendalough Open Space",
+"cat": "park",
+"lat": -31.9180237,
+"lng": 115.81538660000001
+},
+{
+"name": "Osborne Shopping Centre",
+"cat": "shopping",
+"lat": -31.8975711,
+"lng": 115.82860779999999
+},
+{
+"name": "Stirling Libraries - Osborne",
+"cat": "library",
+"lat": -31.896193399999994,
+"lng": 115.82936009999999
+},
+{
+"name": "Galup (Lake Monger)",
+"cat": "lake",
+"lat": -31.9294849,
+"lng": 115.8270364
+},
+{
+"name": "Aranmore Catholic College",
+"cat": "school",
+"lat": -31.927755899999994,
+"lng": 115.84326960000001
+},
+{
+"name": "Robinson Reserve",
+"cat": "park",
+"lat": -31.895581,
+"lng": 115.83077099999998
+},
+{
+"name": "North Metropolitan TAFE Leederville",
+"cat": "tafe",
+"lat": -31.934017099999995,
+"lng": 115.8415732
+},
+{
+"name": "The Western Australian Golf Club",
+"cat": "golf",
+"lat": -31.8959266,
+"lng": 115.852163
+},
+{
+"name": "Herdsman Lake Regional Park",
+"cat": "park",
+"lat": -31.910986999999995,
+"lng": 115.80450470000001
+},
+{
+"name": "Loftus Recreation Centre",
+"cat": "recreation",
+"lat": -31.935198,
+"lng": 115.84545509999998
+},
+{
+"name": "Leederville Station",
+"cat": "train",
+"lat": -31.938983300000004,
+"lng": 115.84030930000002
+},
+{
+"name": "Beatty Park Leisure Centre",
+"cat": "aquatic",
+"lat": -31.9356784,
+"lng": 115.8495864
+},
+{
+"name": "Yokine Regional Open Space",
+"cat": "park",
+"lat": -31.909566199999997,
+"lng": 115.86449520000001
+},
+{
+"name": "West Leederville Station",
+"cat": "train",
+"lat": -31.942591499999995,
+"lng": 115.8331857
+},
+{
+"name": "Stirling Station",
+"cat": "train",
+"lat": -31.8941455,
+"lng": 115.8045988
+},
+{
+"name": "Westfield Innaloo",
+"cat": "shopping",
+"lat": -31.901450599999997,
+"lng": 115.7992006
+},
+{
+"name": "Hyde Park",
+"cat": "park",
+"lat": -31.938073099999997,
+"lng": 115.86239689999998
+},
+{
+"name": "Perth Station",
+"cat": "train",
+"lat": -31.951109499999994,
+"lng": 115.85996139999999
+},
+{
+"name": "Kings Park and Botanic Garden",
+"cat": "park",
+"lat": -31.960910600000002,
+"lng": 115.8321929
+}
+]
+}

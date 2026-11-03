@@ -1,6 +1,182 @@
 {
  "days": [
   {
+   "id": "03-nov-2026",
+   "label": "Tue 3 Nov 2026",
+   "gallery": "03-nov-2026/",
+   "jobs": [
+    {
+     "slug": "9_flora_ave",
+     "addr": "9 Flora Ave, Bayswater WA 6053",
+     "who": "Nic Pulvirenti · Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261103_134902_0154_1793704059788_photo_r180.jpg",
+      "dji_fly_20261103_134846_0153_1793704060458_photo.jpg"
+     ],
+     "src": "03-nov-2026/9_flora_ave/src/",
+     "map": "9_flora_ave_bayswater_map.html",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261103_134902_0154_1793704059788_photo_r180.jpg",
+      "dji_fly_20261103_134846_0153_1793704060458_photo.jpg",
+      "dji_fly_20261103_134944_0155_1793704059138_photo.jpg",
+      "dji_fly_20261103_135010_0156_1793704058395_photo.jpg",
+      "dji_fly_20261103_135034_0157_1793704057626_photo.jpg",
+      "dji_fly_20261103_135056_0158_1793704056929_photo.jpg",
+      "dji_fly_20261103_135130_0159_1793704056232_photo.jpg",
+      "dji_fly_20261103_135156_0160_1793704055554_photo.jpg",
+      "dji_fly_20261103_135226_0161_1793704054720_photo.jpg",
+      "dji_fly_20261103_135250_0162_1793704053535_photo.jpg"
+     ],
+     "notes": "Entry Notes: lockbox access (shooter only). Amenities or features to highlight: -. Strata: -—. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: --. Client preferences: -.",
+     "portrait": false
+    },
+    {
+     "slug": "1_mills_ave",
+     "addr": "1 Mills Ave, Bayswater WA 6053",
+     "who": "Nic Pulvirenti · Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261103_172728_0163_1793704052722_photo_r270.jpg",
+      "dji_fly_20261103_172806_0164_1793704051892_photo_r180.jpg"
+     ],
+     "src": "03-nov-2026/1_mills_ave/src/",
+     "map": "1_mills_ave_bayswater_map.html",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261103_172728_0163_1793704052722_photo_r270.jpg",
+      "dji_fly_20261103_172806_0164_1793704051892_photo_r180.jpg",
+      "dji_fly_20261103_172846_0165_1793704051117_photo.jpg",
+      "dji_fly_20261103_172926_0166_1793704050054_photo.jpg",
+      "dji_fly_20261103_173000_0167_1793704048747_photo.jpg",
+      "dji_fly_20261103_173028_0168_1793704047325_photo.jpg",
+      "dji_fly_20261103_173056_0169_1793704045824_photo.jpg",
+      "dji_fly_20261103_173128_0170_1793704044668_photo.jpg",
+      "dji_fly_20261103_173156_0171_1793704043395_photo.jpg",
+      "dji_fly_20261103_173232_0172_1793704041907_photo.jpg"
+     ],
+     "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
+     "portrait": false,
+     "toEditor": true,
+     "editorReason": "sun-facing aerials 0165/0168/0171/0172 have a white haze band on the horizon and the CBD towers in 0168 are ghosted — please give every drone photo a clean, natural edit (sky, colour, horizon). Top-downs: keep as shot",
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/03-11-2026/1 Mills Ave, Bayswater WA 6053, Australia/Aerial - Drone Photography",
+     "lot": "strata/grouped dwelling (cadastre shows only the shared parent lot) — no boundary, pins only"
+    },
+    {
+     "slug": "17_titanium_blvd",
+     "addr": "17 Titanium Blvd, Cockburn Central WA 6164",
+     "who": "Amelié Blanco Bernabeu · Raspa",
+     "agency": "charcoal",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261103_114026_0971_1793704935082_photo_r90.jpg",
+      "dji_fly_20261103_113914_0966_1793704941294_photo.jpg"
+     ],
+     "src": "03-nov-2026/17_titanium_blvd/src/",
+     "map": "17_titanium_blvd_cockburn_central_map.html",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261103_114026_0971_1793704935082_photo_r90.jpg",
+      "dji_fly_20261103_113914_0966_1793704941294_photo.jpg",
+      "dji_fly_20261103_114050_0972_1793704933836_photo.jpg",
+      "dji_fly_20261103_114104_0973_1793704932587_photo.jpg",
+      "dji_fly_20261103_114132_0974_1793704931230_photo.jpg",
+      "dji_fly_20261103_114226_0975_1793704929941_photo.jpg",
+      "dji_fly_20261103_114250_0976_1793704928621_photo.jpg",
+      "dji_fly_20261103_114306_0977_1793704927328_photo.jpg",
+      "dji_fly_20261103_114318_0978_1793704926019_photo.jpg",
+      "dji_fly_20261103_114330_0979_1793704924754_photo.jpg"
+     ],
+     "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
+     "portrait": false,
+     "toEditor": true,
+     "editorReason": "no lot boundary — new estate, cadastre only has the large parent lot; top-downs look a touch saturated. Please give the drone photos a clean, natural edit; VA to add the lot boundary if a plan arrives",
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/03-11-2026/17 Titanium Boulevard, Cockburn Central, Western Australia 6164, AU/Floorplan or Drone",
+     "lot": "no boundary — vacant lot in new estate, not yet in cadastre (pins only)"
+    },
+    {
+     "slug": "19_joondanna_dr",
+     "addr": "19 Joondanna Dr, Joondanna WA 6060",
+     "who": "Dante Holdsworth · Holdsworth",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261103_171736_0982_1793704919527_photo.jpg",
+      "dji_fly_20261103_171724_0981_1793704921863_photo.jpg"
+     ],
+     "src": "03-nov-2026/19_joondanna_dr/src/",
+     "map": "19_joondanna_dr_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261103_171736_0982_1793704919527_photo.jpg",
+      "dji_fly_20261103_171724_0981_1793704921863_photo.jpg",
+      "dji_fly_20261103_171826_0983_1793704918083_photo.jpg",
+      "dji_fly_20261103_171840_0984_1793704916672_photo.jpg",
+      "dji_fly_20261103_171854_0985_1793704915183_photo.jpg",
+      "dji_fly_20261103_171906_0986_1793704913711_photo.jpg",
+      "dji_fly_20261103_171930_0987_1793704912295_photo.jpg",
+      "dji_fly_20261103_172004_0988_1793704910986_photo.jpg",
+      "dji_fly_20261103_172024_0989_1793704909586_photo.jpg",
+      "dji_fly_20261103_172042_0990_1793704908080_photo.jpg"
+     ],
+     "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
+     "portrait": false
+    },
+    {
+     "slug": "29_hermitage_dr",
+     "addr": "29 Hermitage Dr, The Vines WA 6069",
+     "who": "Annique Woodford · Granger Clark",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261103172537_0181_D.jpg",
+      "DJI_20261103172527_0180_D.jpg"
+     ],
+     "src": "03-nov-2026/29_hermitage_dr/src/",
+     "map": "29_hermitage_dr_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261103172537_0181_D.jpg",
+      "DJI_20261103172527_0180_D.jpg",
+      "DJI_20261103172602_0182_D.jpg",
+      "DJI_20261103172616_0183_D.jpg",
+      "DJI_20261103172647_0184_D.jpg",
+      "DJI_20261103172711_0185_D.jpg"
+     ],
+     "notes": "Entry Notes: meet agent at property (shooter only). Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
+     "portrait": false,
+     "toEditor": true,
+     "editorReason": "0185 has streaky tree 'columns' smeared into the sky, 0183 a blown white glow at the horizon, 0182/0184 hazy horizon — please give every day drone photo a clean, natural edit. Top-downs: keep as shot",
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/03-11-2026/29 Hermitage Dr, The Vines WA 6069, Australia/Aerial - Drone Photography",
+     "lot": "4321 m² — cadastre (no title in Dropbox), 6-sided lot"
+    },
+    {
+     "slug": "29_hermitage_dr_twilight",
+     "addr": "29 Hermitage Dr, The Vines WA 6069",
+     "who": "Annique Woodford · Granger Clark",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [],
+     "src": "03-nov-2026/29_hermitage_dr_twilight/src/",
+     "map": "29_hermitage_dr_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261103194003_0205_D.jpg",
+      "DJI_20261103194018_0206_D.jpg"
+     ],
+     "notes": "Entry Notes: meet agent at property (shooter only). Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
+     "portrait": false,
+     "toEditor": true,
+     "editorReason": "twilight — all twilight jobs go to the photo editor (frames 0205/0206, shot 7:40pm)",
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/03-11-2026/29 Hermitage Dr, The Vines WA 6069, Australia/Aerial - Drone Photography",
+     "lot": "4321 m² — cadastre; twilight frames carry pins only"
+    }
+   ]
+  },
+  {
    "id": "02-nov-2026",
    "label": "Mon 2 Nov 2026",
    "gallery": "02-nov-2026/",
