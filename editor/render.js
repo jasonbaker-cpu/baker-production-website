@@ -43,7 +43,8 @@ const AGENCIES = {
   "grey":        { name:"Default — plain grey pins (agency not recognised)", kind:"pin", color:"#8A8A8A", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   "rodway":      { name:"Rodway Group — black pins", kind:"pin", color:"#111111", line:"#2A2A2A", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
 "charcoal":    { name:"Raspa — charcoal pins (John O'Brien, Simon Raspa)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
-  "c21":         { name:"Century 21 — Obsessed Grey pins, Relentless Gold house (Josh Brockhurst)", kind:"pin", color:"#252526", house:{ type:"pin", w:240, h:340, mark:"house", ring:true, color:"#BEAF87" } },
+  "beshay":      { name:"Beshay Realty — light blue coastal pins + B logo pin (David Beshay)", kind:"pin", color:"#4FB3D9", house:{ type:"pin", w:240, h:340, mark:"beshay", markR:.82, ring:true } },   /* 3 Nov (Jason) */
+  "c21":         { name:"Century 21 — Obsessed Grey pins + square C21 seal board (Josh Brockhurst)", kind:"pin", color:"#252526", house:{ type:"board", w:178, h:178, stem:260, mark:"c21" } },   /* 3 Nov (Jason): square C21 seal board on a post */
   "grey-s":      { name:"Grey pins + S logo (Kasey Summers, Semple)",               kind:"pin",  color:"#9C9C9C", house:{ type:"pin", w:255, h:360, mark:"s", markR:.9, ring:true } },
   "black-photo": { name:"Black pins + agent photo (Jayden Cooke)",          kind:"pin",  color:"#060606", house:{ type:"pin", w:236, h:330, mark:"photo", markR:.69 } },
   "navy":        { name:"Navy pins + emblem (Biljana)",                     kind:"pin",  color:"#122068", scale:.88, house:{ type:"board", w:170, h:143, stem:300, mark:"emblem" } },
