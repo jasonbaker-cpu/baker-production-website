@@ -1,0 +1,82 @@
+{
+ "label": "Sat 31 Oct 2026",
+ "jobs": [
+  {
+   "slug": "8_challenger_rise",
+   "addr": "8 Challenger Rise, Coogee WA 6166",
+   "who": "Megan Topham \u00b7 Belle Property",
+   "agency": "green-belle",
+   "photos": "batch/8_challenger_rise/jpg",
+   "map": "batch/8_challenger_rise/8_challenger_rise_map.html",
+   "poly": [
+    [
+     -32.1243802,
+     115.76952776
+    ],
+    [
+     -32.12450135,
+     115.76957427
+    ],
+    [
+     -32.1244977,
+     115.7699384
+    ],
+    [
+     -32.1246786,
+     115.76994091
+    ],
+    [
+     -32.12473276,
+     115.76994137
+    ],
+    [
+     -32.12474642,
+     115.76962368
+    ],
+    [
+     -32.1244204,
+     115.76949857
+    ],
+    [
+     -32.12438034,
+     115.7694983
+    ]
+   ],
+   "area": 970,
+   "areaSource": "title (CT 1867/732, Lot 125 on P17328)",
+   "lens": [
+    14.14,
+    34.35,
+    26.08,
+    30,
+    38.06,
+    0,
+    0
+   ],
+   "notes": "Entry Notes: meet owner at property. No edit notes for the drone photos.",
+   "streetRot": {
+    "8_challenger_rise__nadir": 0,
+    "8_challenger_rise__nadir2": 0
+   },
+   "pick": [
+    "0383",
+    "0384",
+    "0385",
+    "0386",
+    "0388",
+    "0389",
+    "0390",
+    "0392"
+   ],
+   "edgeOffs": {
+    "8_challenger_rise__nadir2": {
+     "1": 1.45,
+     "3": 0.5
+    }
+   },
+   "edgeOff": {
+    "3": -0.5
+   }
+  }
+ ]
+}

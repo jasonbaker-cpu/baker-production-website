@@ -237,3 +237,11 @@ bakerproduction.com/lots/ — open a clean top-down (or the gallery's "Lots" but
 "These like closeups and Birds Eye view don't add pins."
 - t12.py now exports with NO pins (no house pin, no place pins) any photo where the drone is under 60 m and the gimbal is above -75° (close-up obliques), and any top-down that has no boundary (strata / pins-only jobs).
 - Top-downs WITH a boundary keep the lot outline, side lengths and lot size, but never a house or place pin.
+
+## 3 Nov 2026 (Jason)
+- NO mirror padding on top-downs ever. A 90/270 street turn now gives a real 3:2 crop of the turned photo (prep_day.py). If the boundary doesn't fit inside that crop, set streetRot to 0/180 for that frame instead (street at the side is better than fake blurred edges). Never publish a frame with blurred/mirrored sides.
+- Top-downs must not look more saturated than the obliques. If a top-down's colour is punchier than the rest of the set, take saturation down (adj sat about -20) before export.
+- Places priority (Jason: "the most important locations — beaches, big established parks, schools, shopping centres"): pin in this order: beach, shopping centre, school, train station, regional/big established park, golf, hospital, aquatic/leisure centre, library. Pocket reserves named after a street ("Rede Street Reserve", "Ivanhoe Place Reserve") are last resort only — use run30/repin.js logic. Build the places file with plenty of the important ones in every direction (beaches within ~8 km for coastal suburbs, every shopping centre and school within ~4 km).
+- Editor threshold (Jason: "the editors edit it if it's even a little bit bad"): if ANY photo in a job has a visible problem after our edit (over-saturated, patchy/hazy sky, ghosting, blown sky, odd colour), mark the whole job toEditor with a clear editorReason — don't publish our version as final. Sent 3 Nov: 9/95 Tyler St, 32B Hetherington Dr.
+- Century 21 (c21) house pin is now a CENTURY 21 board (gold wordmark on Obsessed Grey), same as the Peard board style.
+- A booking can cover two lots (e.g. 75 Roberts St was 75–77). If the agent/title says two numbers, draw the outer boundary of both lots and also publish a "_split_lots" copy of the top-down with each lot's area.
