@@ -54,7 +54,11 @@
       "dji_fly_20261102_120518_0126_1793624042763_photo.jpg"
      ],
      "notes": "Entry Notes: Please collect keys from our office. Amenities or features to highlight: no. Strata: Yes. Land size: -. Title/land plan: -. Yes — I'll email them to admin@bakerproduction.com with the property address in the subject line: Yes — I'll email them to admin@bakerproduction.com with the property address in the subject line. Specific boundaries or land features to mark: -.",
-     "portrait": false
+     "portrait": false,
+     "toEditor": true,
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/02-11-2026/32 Hetherington Dr, Bull Creek WA 6149, Australia 32B/Aerial - Drone Photography",
+     "lot": "built strata (SP 10171) — no boundary, pins only",
+     "editorReason": "our automatic edit isn't good enough (over-saturated, patchy sky/haze). Please give every drone photo a clean, natural edit — sky, colour and horizon, not over-saturated. Top-down shots: keep them full frame as shot, no rotation and no mirrored/blurred edges"
     },
     {
      "slug": "3_bundalla_ct",
@@ -191,7 +195,11 @@
       "dji_fly_20261102_173710_0147_1793624028372_photo.jpg"
      ],
      "notes": "Entry Notes: meet owner at the property. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
-     "portrait": false
+     "portrait": false,
+     "toEditor": true,
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/andrew seo/02-11-2026/9-95 tyler st, tuart hill wa 6060, australia/Drone",
+     "lot": "strata unit (SP 69263) — no boundary, pins only",
+     "editorReason": "our automatic edit isn't good enough (over-saturated, patchy sky/haze). Please give every drone photo a clean, natural edit — sky, colour and horizon, not over-saturated. Top-down shots: keep them full frame as shot, no rotation and no mirrored/blurred edges"
     }
    ]
   },
