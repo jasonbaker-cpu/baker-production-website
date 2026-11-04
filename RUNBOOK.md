@@ -249,3 +249,9 @@ bakerproduction.com/lots/ — open a clean top-down (or the gallery's "Lots" but
 ## Same-day jobs (Jason, 4 Nov 2026)
 Jason sometimes asks for a job the same day it's shot (4 Nov: 42/86 Caledonian Ave, Maylands — already published in 04-nov-2026).
 Before building days/<day>.json overnight, check aerials/index.json on the site: any job already in that day is DONE — keep it, don't re-run or overwrite it; add only the other jobs to the day file (mkday merges).
+
+## Century 21 top-downs (Jason / C21 marketing, 4 Nov 2026)
+C21 jobs (agency `c21`): boundary is a thin gold line (#BEAF87) with a black transparency (55%) filling the lot, white lot size on top, side lengths in white — and NO blur outside the lot. Built into the editor (AGENCIES.c21 lotFill/lotOutside/lotWidth); nothing to do per job.
+
+## Hazy / blown sea-facing skies (Jason 4 Nov 2026: "make it perfect" when Profocus can't)
+DNG skies are almost never clipped. Re-develop the bad frames with `python3 devsky.py <outdir> raw/<frame>.DNG ...` (graduated luminance-masked sky pull + light dehaze), lift contrast ~8%, then run those frames with noSky + noFinish (our sky swap ghosts towers and the finish re-blows the sky). Keep the good frames on the normal run and combine. Done first on 115 Mandurah Tce.

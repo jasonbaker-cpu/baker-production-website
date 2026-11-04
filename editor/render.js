@@ -44,7 +44,7 @@ const AGENCIES = {
   "rodway":      { name:"Rodway Group — black pins", kind:"pin", color:"#111111", line:"#2A2A2A", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
 "charcoal":    { name:"Raspa — charcoal pins (John O'Brien, Simon Raspa)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   "beshay":      { name:"Beshay Realty — light blue coastal pins + B logo pin (David Beshay)", kind:"pin", color:"#4FB3D9", house:{ type:"pin", w:240, h:340, mark:"beshay", markR:.82, ring:true } },   /* 3 Nov (Jason) */
-  "c21":         { name:"Century 21 — Obsessed Grey pins + square C21 seal board (Josh Brockhurst)", kind:"pin", color:"#252526", house:{ type:"board", w:178, h:178, stem:260, mark:"c21" } },   /* 3 Nov (Jason): square C21 seal board on a post */
+  "c21":         { name:"Century 21 — Obsessed Grey pins + square C21 seal board (Josh Brockhurst)", kind:"pin", color:"#252526", line:"#BEAF87", lotFill:"rgba(0,0,0,.55)", lotOutside:"none", lotWidth:9, house:{ type:"board", w:178, h:178, stem:260, mark:"c21" } },   /* 4 Nov (Jason, C21 marketing): top-down = thin gold outline + black transparency inside the lot, no blur outside */   /* 3 Nov (Jason): square C21 seal board on a post */
   "grey-s":      { name:"Grey pins + S logo (Kasey Summers, Semple)",               kind:"pin",  color:"#9C9C9C", house:{ type:"pin", w:255, h:360, mark:"s", markR:.9, ring:true } },
   "black-photo": { name:"Black pins + agent photo (Jayden Cooke)",          kind:"pin",  color:"#060606", house:{ type:"pin", w:236, h:330, mark:"photo", markR:.69 } },
   "navy":        { name:"Navy pins + emblem (Biljana)",                     kind:"pin",  color:"#122068", scale:.88, house:{ type:"board", w:170, h:143, stem:300, mark:"emblem" } },
@@ -350,7 +350,8 @@ function drawScene(c, p, opt){
   if (opt.hide) return;
   const s = p.w/3000;
   const polys = p.shapes.filter(x=>x.type==="poly" && x.pts.length>=3);
-  if (polys.length){   // a boundary photo is always blurred outside the lot
+  const AGL = AGENCIES[prefs.agency] || {};
+  if (polys.length && AGL.lotOutside!=="none"){   // a boundary photo is always blurred outside the lot (except overlay-look agencies, e.g. C21)
     c.save(); c.beginPath(); c.rect(0,0,p.w,p.h);
     polys.forEach(sh=>{ c.moveTo(sh.pts[0][0],sh.pts[0][1]); for(let i=1;i<sh.pts.length;i++) c.lineTo(sh.pts[i][0],sh.pts[i][1]); c.closePath(); });
     c.clip("evenodd");
@@ -361,6 +362,7 @@ function drawScene(c, p, opt){
     }
     c.restore();
   }
+  if (polys.length && AGL.lotFill){ c.save(); c.fillStyle = AGL.lotFill; c.beginPath(); polys.forEach(sh=>{ c.moveTo(sh.pts[0][0],sh.pts[0][1]); for(let i=1;i<sh.pts.length;i++) c.lineTo(sh.pts[i][0],sh.pts[i][1]); c.closePath(); }); c.fill(); c.restore(); }
   for (const sh of p.shapes){
     if (sh.pts.length<2) continue;
     const w = sh.width*s*3, edges = edgesOf(sh);   // width is per-1000 of 3000 px → ×3
