@@ -1,0 +1,25 @@
+{
+ "label": "Mon 2 Nov 2026",
+ "jobs": [
+  {
+   "slug": "115_mandurah_tce",
+   "addr": "115 Mandurah Terrace, Mandurah WA 6210",
+   "who": "David Beshay \u00b7 Beshay Realty",
+   "agency": "beshay",
+   "photos": "batch/115_mandurah_tce/jpg",
+   "map": "batch/115_mandurah_tce/115_mandurah_tce_places.json",
+   "poly": null,
+   "nadirSplit": 1,
+   "nadirPick": [
+    "0019",
+    "0020"
+   ],
+   "streetRot": {
+    "115_mandurah_tce__nadir": 180,
+    "115_mandurah_tce__nadir2": 180
+   },
+   "notes": "Shot by Jason 2 Nov (DNG, in 'Floorplan or Drone'); booking chose Floorplan but drone was flown. Processed 4 Nov at Jason's request. Commercial lot; no boundary (cadastre not reachable from the cloud session).",
+   "noSky": 1
+  }
+ ]
+}
