@@ -68,7 +68,7 @@ for j in D['jobs']:
         for f in nads[1:]:
             dy = abs((yaw(f) - yaw(pick[0]) + 180) % 360 - 180)
             if dy > 25 or abs(alt(f) - alt(pick[0])) > 8: pick.append(f); break
-        if j.get('nadirPick'): pick = [f for f in nads if any(p in os.path.basename(f) for p in j['nadirPick'])][:2] or pick
+        if j.get('nadirPick'): pick = [f for p in j['nadirPick'] for f in nads if p in os.path.basename(f)][:2] or pick   # 5 Nov: nadirPick order decides which frame is __nadir (road at bottom)
         # 4 Nov (Jason): EVERY job gets two top-downs — __nadir with the ROAD AT THE BOTTOM and __nadir2 with the ROAD ON THE SIDE
         # (as shot when the road already runs down a side). Only one top-down shot -> it is used for both (noDup:1 turns this off).
         if len(pick) == 1 and not j.get('noDup'): pick = [pick[0], pick[0]]

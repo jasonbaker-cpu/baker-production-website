@@ -130,7 +130,7 @@ async def main():
                 else:  # add places one at a time (landmarks first); keep each only if it doesn't clash; stop at 5
                     names = await pg.evaluate("""()=>[...document.querySelectorAll('.place:not(.off)')].map(b=>[b.querySelector('.t').textContent,b.querySelector('small').textContent+' · '+((b.querySelector('.d')||{}).textContent||'')])""")
                     if os.environ.get('DBG'): print('   NAMES', names)
-                    PRI=['train','shopping','regional shopping','school','library','aquatic','sport','golf','hospital','regional park','lake','beach','park','reserve','transport','community','childcare','playground']
+                    PRI=['beach','shopping','regional shopping','school','train','regional park','golf','hospital','aquatic','library','lake','sport','park','reserve','transport','community','childcare','playground']   # 3 Nov (Jason): beaches, shopping centres, schools, stations, big parks first
                     rank=lambda c: PRI.index(c) if c in PRI else 99
                     cands=sorted([(rank(cat.split('·')[0].strip()), i, nm, cat.split('·')[0].strip()) for i,(nm,cat) in enumerate(names)])
                     import re as _re   # never auto-pick childcare/kindy/driving/dance schools (Jason's amenity rules)
