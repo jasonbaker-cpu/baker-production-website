@@ -417,14 +417,14 @@
      "agency": "beshay",
      "full": false,
      "fullPhotos": [
-      "DJI_20261102163107_0020_D.jpg",
+      "DJI_20261102163107_0020_D_r180.jpg",
       "DJI_20261102163051_0019_D.jpg"
      ],
      "src": "02-nov-2026/115_mandurah_tce/src/",
      "map": "115_mandurah_tce_places.json",
      "project": "project.json",
      "photos": [
-      "DJI_20261102163107_0020_D.jpg",
+      "DJI_20261102163107_0020_D_r180.jpg",
       "DJI_20261102163051_0019_D.jpg",
       "DJI_20261102162959_0016_D.jpg",
       "DJI_20261102163011_0017_D.jpg",
@@ -433,8 +433,9 @@
       "DJI_20261102163312_0022_D.jpg",
       "DJI_20261102163326_0023_D.jpg"
      ],
-     "notes": "Shot by Jason 2 Nov (DNG, in 'Floorplan or Drone'); booking chose Floorplan but drone was flown. Processed 4 Nov at Jason's request. Commercial lot; no boundary (cadastre not reachable from the cloud session). Sky recovered from the DNGs in-house (4 Nov) - final, not with the editor.",
-     "portrait": false
+     "notes": "Shot by Jason 2 Nov (DNG, in 'Floorplan or Drone'); booking chose Floorplan but drone was flown. Processed 4 Nov at Jason's request. Lot 10 D15007, 1131 m² per title (agent's planning pack 4 Nov) — the restaurant (green roof) + rear car park. Sky recovered from the DNGs in-house (4 Nov) - final, not with the editor.",
+     "portrait": false,
+     "lot": "1131 m² — Lot 10 on Diagram 15007 (CT 1941/575)"
     }
    ]
   },
