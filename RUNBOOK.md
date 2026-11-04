@@ -245,3 +245,7 @@ bakerproduction.com/lots/ — open a clean top-down (or the gallery's "Lots" but
 - Editor threshold (Jason: "the editors edit it if it's even a little bit bad"): if ANY photo in a job has a visible problem after our edit (over-saturated, patchy/hazy sky, ghosting, blown sky, odd colour), mark the whole job toEditor with a clear editorReason — don't publish our version as final. Sent 3 Nov: 9/95 Tyler St, 32B Hetherington Dr.
 - Century 21 (c21) house pin is now a CENTURY 21 board (gold wordmark on Obsessed Grey), same as the Peard board style.
 - A booking can cover two lots (e.g. 75 Roberts St was 75–77). If the agent/title says two numbers, draw the outer boundary of both lots and also publish a "_split_lots" copy of the top-down with each lot's area.
+
+## Same-day jobs (Jason, 4 Nov 2026)
+Jason sometimes asks for a job the same day it's shot (4 Nov: 42/86 Caledonian Ave, Maylands — already published in 04-nov-2026).
+Before building days/<day>.json overnight, check aerials/index.json on the site: any job already in that day is DONE — keep it, don't re-run or overwrite it; add only the other jobs to the day file (mkday merges).

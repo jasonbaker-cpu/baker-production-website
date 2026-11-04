@@ -1,0 +1,19 @@
+{
+ "label": "Wed 4 Nov 2026",
+ "jobs": [
+  {
+   "slug": "42_86_caledonian_ave",
+   "addr": "42/86 Caledonian Ave, Maylands WA 6051",
+   "who": "Nic Pulvirenti · Professionals TWT",
+   "agency": "flags-p",
+   "photos": "batch/42_86_caledonian_ave/jpg",
+   "map": "batch/42_86_caledonian_ave/42_86_caledonian_ave_places.json",
+   "poly": null,
+   "notes": "Shot by Lee, 4 Nov (done same day at Jason's request). Strata unit in a complex: no boundary, pins only. No top-down shot. 0081 ground frame skipped; 0070 low hero has no GPS.",
+   "must": [
+    "Perth CBD",
+    "Optus Stadium"
+   ]
+  }
+ ]
+}
