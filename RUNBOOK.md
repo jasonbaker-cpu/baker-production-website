@@ -255,3 +255,9 @@ C21 jobs (agency `c21`): boundary is a thin gold line (#BEAF87) with a black tra
 
 ## Hazy / blown sea-facing skies (Jason 4 Nov 2026: "make it perfect" when Profocus can't)
 DNG skies are almost never clipped. Re-develop the bad frames with `python3 devsky.py <outdir> raw/<frame>.DNG ...` (graduated luminance-masked sky pull + light dehaze), lift contrast ~8%, then run those frames with noSky + noFinish (our sky swap ghosts towers and the finish re-blows the sky). Keep the good frames on the normal run and combine. Done first on 115 Mandurah Tce.
+
+## TWO TOP-DOWNS ON EVERY JOB: road at the bottom + road on the side (Jason, 4 Nov 2026 — overrides "street at the bottom" for the second one)
+- `__nadir`: road at the BOTTOM (streetRot as before).
+- `__nadir2`: road on the SIDE of the house (left or right). If the shooter's frame already has the road down a side, streetRot 0 for it.
+- Only one top-down shot: prep_day now uses it for both automatically (second = a quarter turn from the first unless streetRot says otherwise). Set streetRot for both so the road really is bottom / side. `noDup:1` turns this off.
+- Look at both before publishing: road bottom on one, road on a side on the other.

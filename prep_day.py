@@ -69,6 +69,13 @@ for j in D['jobs']:
             dy = abs((yaw(f) - yaw(pick[0]) + 180) % 360 - 180)
             if dy > 25 or abs(alt(f) - alt(pick[0])) > 8: pick.append(f); break
         if j.get('nadirPick'): pick = [f for f in nads if any(p in os.path.basename(f) for p in j['nadirPick'])][:2] or pick
+        # 4 Nov (Jason): EVERY job gets two top-downs — __nadir with the ROAD AT THE BOTTOM and __nadir2 with the ROAD ON THE SIDE
+        # (as shot when the road already runs down a side). Only one top-down shot -> it is used for both (noDup:1 turns this off).
+        if len(pick) == 1 and not j.get('noDup'): pick = [pick[0], pick[0]]
+        _sr = dict(j.get('streetRot') or {})
+        if len(pick) == 2 and pick[0] == pick[1] and int(_sr.get(j['slug'] + '__nadir', 0)) % 360 == int(_sr.get(j['slug'] + '__nadir2', 0)) % 360:
+            _sr[j['slug'] + '__nadir2'] = (int(_sr.get(j['slug'] + '__nadir', 0)) + 90) % 360   # same frame twice must differ: quarter turn puts the road on a side
+        j['streetRot'] = _sr
         for i, n0 in enumerate(pick):
             v = j['slug'] + ('__nadir' if i == 0 else f'__nadir{i+1}')
             # 29 Oct (Jason): every top-down goes out with the STREET AT THE BOTTOM. 'streetRot' {variant: 90|180|270}
