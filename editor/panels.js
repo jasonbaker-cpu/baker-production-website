@@ -5,7 +5,7 @@ function setTab(t){
   Object.keys(tabs).forEach(k=>{ tabs[k].hidden = k!==t; $("tabBtn"+k[0].toUpperCase()+k.slice(1)).setAttribute("aria-selected", k===t); });
   refreshPanel();
 }
-Object.keys(tabs).forEach(k=>$("tabBtn"+k[0].toUpperCase()+k.slice(1)).addEventListener("click",()=>setTab(k)));
+Object.keys(tabs).forEach(k=>$("tabBtn"+k[0].toUpperCase()+k.slice(1)).addEventListener("click",()=>{ if (k!=="boundary" && sel && sel.kind==="shape"){ sel=null; requestDraw(); } setTab(k); }));   /* 4 Nov: a selected boundary no longer bounces you off the Photo tab */
 function refreshAll(){ refreshStrip(); refreshPinsTab(); refreshBoundaryTab(); refreshPhotoTab(); refreshPanel(); updateUndo(); updateDrawbar(); setHint(); requestDraw(); }
 function slider(id, label, min, max, step, val, fmt, onInput, onStart){
   const r = el(`<div class="row"><label class="lbl" for="${id}">${label}</label><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"><span class="val">${fmt(val)}</span></div>`);
@@ -161,8 +161,8 @@ function refreshBoundaryTab(){
   s2.appendChild(slider("blurAmt","Blur",35,120,2,Math.max(35,p.blurAmt||45),v=>v,v=>{ p.blurAmt=v; prefs.blurAmt=v; savePrefs(); p._blur=null; requestDraw(); }, commit));
   box.appendChild(s2);
   const s3 = el(`<section class="sec"><h2><span>Disclaimer</span></h2></section>`);
-  const dc = el(`<label class="check"><input type="checkbox" ${p.disc.on?"checked":""}> Show on photos with a boundary</label>`);
-  dc.querySelector("input").onchange = ev=>{ commit(); p.disc.on = ev.target.checked; prefs.discOn = p.disc.on; savePrefs(); requestDraw(); };
+  const dc = el(`<label class="check"><input type="checkbox" ${!p.disc.off?"checked":""}> Show on photos with a boundary</label>`);
+  dc.querySelector("input").onchange = ev=>{ commit(); p.disc.off = !ev.target.checked; p.disc.on = ev.target.checked; requestDraw(); };
   const dt = el(`<textarea id="discText" aria-label="Disclaimer wording"></textarea>`); dt.value = p.disc.text;
   dt.onfocus=()=>commit(); dt.oninput=()=>{ p.disc.text=dt.value; prefs.discText=dt.value; savePrefs(); requestDraw(); };
   s3.appendChild(dc); s3.appendChild(dt);
@@ -298,6 +298,14 @@ function refreshPhotoTab(){
     rb.children[0].onclick=()=>{ commit(); p.adj=Object.assign({}, ADJ0); p._blur=null; refreshPhotoTab(); refreshStrip(); requestDraw(); };
     rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample && !q.editorPhoto && !q.extraEdited){ q.adj=Object.assign({}, p.adj); q._blur=null; } }); toast(`Copied to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
     sa.appendChild(rb); box.appendChild(sa);
+    { const sc = el(`<section class="sec"><h2><span>Crop</span></h2></section>`);   /* 4 Nov (Jason): a button for cropping */
+      sc.appendChild(el(`<p class="note">Choose a shape, then drag the box on the photo. Drag the corners to resize. Export uses this crop.</p>`));
+      const row = el(`<div class="row"><button class="btn" data-r="1.5">3:2</button><button class="btn" data-r="1.3333">4:3</button><button class="btn" data-r="1">1:1</button><button class="btn" data-r="0.6667">2:3 tall</button><button class="btn" data-r="0.8">4:5 tall</button></div>`);
+      row.querySelectorAll("button").forEach(b=>b.onclick=()=>{ commit(); p.crop = defaultCrop(p, +b.dataset.r); p._blur=null; setTool("crop"); refreshPhotoTab(); requestDraw(); });
+      const r2 = el(`<div class="row"><button class="btn">${tool==="crop"?"Done cropping":"Crop"}</button><button class="btn">Reset crop</button></div>`);
+      r2.children[0].onclick=()=>{ if (tool==="crop") setTool("select"); else startCrop(); refreshPhotoTab(); };
+      r2.children[1].onclick=()=>{ commit(); p.crop=null; p._blur=null; setTool("select"); refreshPhotoTab(); requestDraw(); };
+      sc.appendChild(row); sc.appendChild(r2); box.appendChild(sc); }
     const sp = el(`<section class="sec"><h2><span>Project</span></h2></section>`);
     sp.appendChild(el(`<p class="note">Save the whole job (pins, boundaries, text, adjustments) to reopen later. To reopen: add the same photos, then the project file.</p>`));
     const pb = el(`<div class="row"><button class="btn">Save project</button></div>`);
@@ -592,7 +600,7 @@ function renderFull(p){
     const x=c.getContext("2d"); x.imageSmoothingQuality="high";
     const keep = ctx.font, smk = window.__showMask; window.__showMask = false; drawScene(x, p, { hide:false }); window.__showMask = smk; ctx.font = keep;   /* never export the red mask preview */
     const cr = lotCrop(p);
-    if (cr){ const o=document.createElement("canvas"); o.width=3000; o.height=2000; const ox=o.getContext("2d"); ox.imageSmoothingQuality="high"; ox.drawImage(c, cr[0],cr[1],cr[2],cr[3], 0,0,3000,2000); o.toBlob(b=>res(b), "image/jpeg", 0.95); return; }
+    if (cr){ const OW = cr[2]>=cr[3] ? 3000 : Math.round(3000*cr[2]/cr[3]), OH = Math.round(OW*cr[3]/cr[2]); const o=document.createElement("canvas"); o.width=OW; o.height=OH; const ox=o.getContext("2d"); ox.imageSmoothingQuality="high"; ox.drawImage(c, cr[0],cr[1],cr[2],cr[3], 0,0,OW,OH); o.toBlob(b=>res(b), "image/jpeg", 0.95); return; }
     c.toBlob(b=>res(b), "image/jpeg", 0.95);
   });
 }

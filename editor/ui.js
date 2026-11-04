@@ -28,7 +28,7 @@ function newPhoto(name, base, meta, sample){
     disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0, (!sample && prefs.skyPlate !== "S") ? { con:10 } : {}), undo:[], redo:[] };
   return p;
 }
-const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj"];
+const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop"];
 function snapshotOf(p){ const o={}; SNAP_KEYS.forEach(k=>o[k]=p[k]); return JSON.stringify(o); }
 function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
 function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); ensureFinish(p); }
@@ -68,7 +68,7 @@ function draw(){
   ctx.imageSmoothingQuality="high";
   drawScene(ctx, p, { hide:hideGfx, before:showBefore });
   { const cr = !hideGfx && lotCrop(p); if (cr){ const k=1/view.s; ctx.save(); ctx.fillStyle="rgba(0,0,0,.45)"; ctx.beginPath(); ctx.rect(0,0,p.w,p.h); ctx.rect(cr[0],cr[1],cr[2],cr[3]); ctx.fill("evenodd");
-    ctx.strokeStyle="#f2b33d"; ctx.lineWidth=2*k; ctx.setLineDash([8*k,6*k]); ctx.strokeRect(cr[0],cr[1],cr[2],cr[3]); ctx.setLineDash([]); ctx.font=`600 ${14*k}px system-ui`; ctx.fillStyle="#f2b33d"; ctx.fillText("Export area · 3:2", cr[0]+8*k, cr[1]+20*k); ctx.restore(); } }
+    ctx.strokeStyle="#f2b33d"; ctx.lineWidth=2*k; ctx.setLineDash([8*k,6*k]); ctx.strokeRect(cr[0],cr[1],cr[2],cr[3]); ctx.setLineDash([]); ctx.font=`600 ${14*k}px system-ui`; ctx.fillStyle="#f2b33d"; ctx.fillText(tool==="crop" ? "Crop · drag to move, corners to resize" : (p.crop ? "Export area · cropped" : "Export area · 3:2"), cr[0]+8*k, cr[1]+20*k); if (tool==="crop"){ ctx.fillStyle="#f2b33d"; [[0,0],[1,0],[0,1],[1,1]].forEach(([a,b])=>ctx.fillRect(cr[0]+a*cr[2]-7*k, cr[1]+b*cr[3]-7*k, 14*k, 14*k)); } ctx.restore(); } }
   if (hideGfx || showBefore) return;
   const k = 1/view.s;
   if (sel && sel.kind==="pin"){ const pin = p.pins.find(x=>x.id===sel.id); if (pin){ const r = pinRect(p,pin), pad=6*k; ctx.save(); ctx.strokeStyle="#f2b33d"; ctx.lineWidth=1.6*k; ctx.setLineDash([5*k,4*k]); ctx.strokeRect(r[0]-pad,r[1]-pad,r[2]-r[0]+pad*2,r[3]-r[1]+pad*2); ctx.restore(); } }
@@ -198,6 +198,11 @@ cv.addEventListener("pointerdown", e=>{
     if (draft.type==="poly" && draft.pts.length>=3 && dist(pt,draft.pts[0])<12*k){ finishDraft(); return; }
     draft.pts.push(pt); hover=pt; updateDrawbar(); requestDraw(); return;
   }
+  if (tool==="crop"){ const k=1/view.s; if (!p.crop) p.crop = defaultCrop(p); const c=p.crop; const near=(x,y)=>Math.abs(pt[0]-x)<16*k && Math.abs(pt[1]-y)<16*k;
+    const corner=[[0,0],[1,0],[0,1],[1,1]].find(([a,b])=>near(c[0]+a*c[2], c[1]+b*c[3]));
+    if (corner){ drag={type:"cropsize", ax:c[0]+(1-corner[0])*c[2], ay:c[1]+(1-corner[1])*c[3], committed:false}; return; }
+    if (pt[0]>c[0]&&pt[0]<c[0]+c[2]&&pt[1]>c[1]&&pt[1]<c[1]+c[3]){ drag={type:"cropmove", last:pt, committed:false}; return; }
+    drag={type:"pan", last:toScr(e)}; return; }
   if (tool==="text"){
     commit(); const t = { id:nid(), x:pt[0], y:pt[1], text:"Label", size:56, style:"shadow", color:"#ffffff", bg:"#ffffff", bold:false };
     p.texts.push(t); sel={kind:"text", id:t.id}; setTool("select"); refreshAll();
@@ -224,6 +229,10 @@ cv.addEventListener("pointermove", e=>{
   if (drag.type==="pin"){ drag.pin.ex+=pt[0]-drag.last[0]; drag.pin.ey+=pt[1]-drag.last[1]; drag.pin.moved=true; drag.last=pt; }
   else if (drag.type==="vtx"){ drag.shape.pts[drag.i]=[pt[0],pt[1]]; }
   else if (drag.type==="move"){ const dx=pt[0]-drag.last[0], dy=pt[1]-drag.last[1]; drag.shape.pts.forEach(q=>{q[0]+=dx;q[1]+=dy;}); drag.last=pt; }
+  else if (drag.type==="cropmove"){ const c=P().crop, pp=P(); c[0]=Math.max(0,Math.min(pp.w-c[2], c[0]+pt[0]-drag.last[0])); c[1]=Math.max(0,Math.min(pp.h-c[3], c[1]+pt[1]-drag.last[1])); drag.last=pt; pp._blur=null; }
+  else if (drag.type==="cropsize"){ const pp=P(), c=pp.crop, r=c[2]/c[3]; let w=Math.abs(pt[0]-drag.ax), h=Math.abs(pt[1]-drag.ay); if (w/h>r) h=w/r; else w=h*r;
+    w=Math.max(pp.w*0.15,w); h=w/r; const x=pt[0]<drag.ax?drag.ax-w:drag.ax, y=pt[1]<drag.ay?drag.ay-h:drag.ay;
+    if (x>=0&&y>=0&&x+w<=pp.w+0.5&&y+h<=pp.h+0.5){ c[0]=x; c[1]=y; c[2]=w; c[3]=h; pp._blur=null; } }
   else if (drag.type==="text"){ drag.text.x+=pt[0]-drag.last[0]; drag.text.y+=pt[1]-drag.last[1]; drag.text.moved=true; drag.last=pt; }
   requestDraw();
 });
@@ -257,6 +266,14 @@ function finishDraft(){
 }
 function cancelDraft(){ draft=null; hover=null; updateDrawbar(); requestDraw(); }
 function updateDrawbar(){ $("drawbar").hidden = !draft; setHint(); }
+function defaultCrop(p, r){   /* biggest box of ratio r centred on the current export area (or the photo) */
+  const base = lotCrop(p) || [0,0,p.w,p.h]; r = r || (base[2]/base[3]);
+  let w = Math.min(p.w, p.h*r), h = w/r; if (!r || !isFinite(r)) return [0,0,p.w,p.h];
+  if (base !== null && p.crop){ w = Math.min(w, Math.max(base[2], base[3]*r)); h = w/r; }
+  const cx = base[0]+base[2]/2, cy = base[1]+base[3]/2;
+  return [Math.max(0,Math.min(p.w-w,cx-w/2)), Math.max(0,Math.min(p.h-h,cy-h/2)), w, h];
+}
+function startCrop(){ const p=P(); if(!p) return; if (!p.crop){ commit(); const lc=lotCrop(p); p.crop = lc ? lc.slice() : defaultCrop(p, 1.5); } setTool("crop"); requestDraw(); }
 function setTool(t){
   if (draft && t!==draft.type) cancelDraft();
   tool=t; document.querySelectorAll(".tool[data-tool]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.tool===t));
@@ -280,7 +297,7 @@ function setHint(){
     line: draft ? "Click to add points. Double-click or Finish to end." : "Click to start an open line.", text:"Click where the label should go." }[tool];
   h.textContent = msg;
 }
-document.querySelectorAll(".tool[data-tool]").forEach(b=>b.addEventListener("click",()=>setTool(b.dataset.tool)));
+document.querySelectorAll(".tool[data-tool]").forEach(b=>b.addEventListener("click",()=>{ if (b.dataset.tool==="crop") startCrop(); else setTool(b.dataset.tool); if (typeof refreshPhotoTab==="function" && P()) refreshPhotoTab(); }));
 function toggleHide(){ hideGfx=!hideGfx; $("hideBtn").setAttribute("aria-pressed",hideGfx); setHint(); requestDraw(); }
 $("hideBtn").addEventListener("click", toggleHide);
 $("finishBtn").addEventListener("click", finishDraft); $("cancelBtn").addEventListener("click", cancelDraft);
@@ -297,7 +314,7 @@ document.addEventListener("keydown", e=>{
   if (typing) return;
   if (e.code==="Space"){ spaceDown=true; cv.style.cursor="grab"; e.preventDefault(); return; }
   const k=e.key.toLowerCase();
-  if (k==="v") setTool("select"); else if (k==="p") setTool("pin"); else if (k==="b") setTool("poly"); else if (k==="l") setTool("line"); else if (k==="t") setTool("text"); else if (k==="h") toggleHide();
+  if (k==="v") setTool("select"); else if (k==="p") setTool("pin"); else if (k==="b") setTool("poly"); else if (k==="l") setTool("line"); else if (k==="t") setTool("text"); else if (k==="c") startCrop(); else if (k==="h") toggleHide();
   else if (k==="\\"){ beforeOn(); }
   else if (e.key==="Enter") finishDraft();
   else if (e.key==="Escape"){ if (armed){ armed=null; setHint(); refreshPinsTab(); } else if (draft) cancelDraft(); else { sel=null; refreshPanel(); requestDraw(); } }

@@ -11,7 +11,7 @@ const prefs = Object.assign({
   finish:true, sky:true,
   agency:"grey", pinColor:"", pinScale:100, labelOpacity:86, labelFont:"Source Sans 3", logo:"",
   lineColor:BAKER_RED, lineWidth:6.7, outside:"blur", blurAmt:45, darkAmt:35,
-  discOn:false, discText:DEFAULT_DISC
+  discOn:true, discText:DEFAULT_DISC
 }, LS.get("prefs", {}));
 if (prefs.pinStyle !== undefined || prefs.v !== 2){ delete prefs.pinStyle; prefs.pinColor = ""; prefs.labelOpacity = 86; prefs.agency = prefs.agency || "red"; prefs.v = 2; }  // old grey/red looks retired
 prefs.skyPlate = "C"; prefs.sky = true;   // 26 Oct: Baker skies are always pale-blue C; a plate picked in an old session never carries over

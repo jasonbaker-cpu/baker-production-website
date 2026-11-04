@@ -43,7 +43,7 @@ const AGENCIES = {
   "grey":        { name:"Default — plain grey pins (agency not recognised)", kind:"pin", color:"#8A8A8A", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
   "rodway":      { name:"Rodway Group — black pins", kind:"pin", color:"#111111", line:"#2A2A2A", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
 "charcoal":    { name:"Raspa — charcoal pins (John O'Brien, Simon Raspa)", kind:"pin", color:"#3A3C40", house:{ type:"pin", w:240, h:340, mark:"house", ring:true } },
-  "beshay":      { name:"Beshay Realty — light blue coastal pins + B logo pin (David Beshay)", kind:"pin", color:"#4FB3D9", house:{ type:"pin", w:240, h:340, mark:"beshay", markR:.86, color:"#1E1D1E" } },   /* 3 Nov (Jason); 4 Nov: Beshay's own black B. pin (white B, sage dot) */
+  "beshay":      { name:"Beshay Realty — cream flag labels + cream B. pin (David Beshay)", kind:"cream", color:"#F3EFE6", line:"#F3EFE6", scale:1.6, bigHouse:true, house:{ type:"pin", w:190, h:269, mark:"beshay", markR:.86, color:"#F3EFE6" } },   /* 4 Nov (Jason): Beshay's own look — cream B. pin, cream uppercase flags on thin lines */   /* 3 Nov (Jason); 4 Nov: Beshay's own black B. pin (white B, sage dot) */
   "c21":         { name:"Century 21 — Obsessed Grey pins + square C21 seal board (Josh Brockhurst)", kind:"pin", color:"#252526", line:"#BEAF87", lotFill:"rgba(0,0,0,.55)", lotOutside:"none", lotWidth:9, house:{ type:"board", w:178, h:178, stem:260, mark:"c21" } },   /* 4 Nov (Jason, C21 marketing): top-down = thin gold outline + black transparency inside the lot, no blur outside */   /* 3 Nov (Jason): square C21 seal board on a post */
   "grey-s":      { name:"Grey pins + S logo (Kasey Summers, Semple)",               kind:"pin",  color:"#9C9C9C", house:{ type:"pin", w:255, h:360, mark:"s", markR:.9, ring:true } },
   "black-photo": { name:"Black pins + agent photo (Jayden Cooke)",          kind:"pin",  color:"#060606", house:{ type:"pin", w:236, h:330, mark:"photo", markR:.69 } },
@@ -72,8 +72,8 @@ const HOUSE_STYLES = {
 // (measured from his Top Realty reference). One size for all agencies; house pins capped to the same small size.
 const PIN_K = .77, HOUSE_MAXW = 144;
 function agency(){ const A0 = AGENCIES[prefs.agency] || AGENCIES.grey, o = HOUSE_STYLES[prefs.houseStyle||""];
-  const A = Object.assign({}, A0, { scale:PIN_K }, o && o.house ? { house:o.house } : {});
-  const H = A.house; if (H && H.type === "pin" && H.w > HOUSE_MAXW && prefs.houseStyle !== "big") A.house = Object.assign({}, H, { w:HOUSE_MAXW, h:Math.round(HOUSE_MAXW*H.h/H.w) });
+  const A = Object.assign({}, A0, { scale:PIN_K * (A0.kind==="cream" ? (A0.scale||1) : 1) }, o && o.house ? { house:o.house } : {});   /* Beshay cream labels sized to their own reference */
+  const H = A.house; if (H && H.type === "pin" && H.w > HOUSE_MAXW && prefs.houseStyle !== "big" && !A0.bigHouse) A.house = Object.assign({}, H, { w:HOUSE_MAXW, h:Math.round(HOUSE_MAXW*H.h/H.w) });
   return A; }
 function pinColour(){ return prefs.pinColor || agency().color; }
 function houseColour(){ const h = agency().house; return h.color || pinColour(); }
@@ -105,14 +105,17 @@ function pinGeom(p, pin){
     return g;
   }
   const FS = { pin:72, flag:52, pill:64, ylab:52, simple:54 }[kind];
-  const text2 = kind === "simple" && !house ? (distText(pin) ? `${text} - ${distText(pin)}` : text) : text;
-  ctx.font = `${kind==="simple"?600:400} ${FS*s}px ${LABEL_FONT()}`;
+  const text2 = kind === "simple" && !house ? (distText(pin) ? `${text} - ${distText(pin)}` : text) : kind === "cream" ? text.toUpperCase() : text;
+  if ("letterSpacing" in ctx) ctx.letterSpacing = kind === "cream" ? `${2.2*s}px` : "0px";
+  ctx.font = kind === "cream" ? `600 ${44*s}px ${LABEL_FONT()}` : `${kind==="simple"?600:400} ${FS*s}px ${LABEL_FONT()}`;
   const tw = ctx.measureText(text2).width;
-  if (kind === "flag" || kind === "pill" || kind === "ylab" || kind === "simple"){
-    const fh = ({ flag:128, pill:108, ylab:114, simple:100 })[kind]*s, padL = ({ flag:18, pill:39, ylab:24, simple:30 })[kind]*s, padR = ({ flag:14, pill:39, ylab:24, simple:30 })[kind]*s, fw = padL + tw + padR;
-    g.lift = ({ flag:110, pill:150, ylab:120, simple:170 })[kind]*s + (pin.lift||0);
-    const off = pin.off == null ? .5 : pin.off, x = pin.ex - Math.max(fh/2, Math.min(fw - fh/2, fw*off)), y = pin.ey - g.lift - fh;
-    g.box = [x, y, fw, fh]; g.tipY = pin.ey - g.lift; g.flag = { x, y, w:fw, h:fh, fs:FS*s, tx:x+padL, text:text2 };
+  if (kind === "flag" || kind === "pill" || kind === "ylab" || kind === "simple" || kind === "cream"){
+    const fh = ({ flag:128, pill:108, ylab:114, simple:100, cream:84 })[kind]*s, padL = ({ flag:18, pill:39, ylab:24, simple:30, cream:34 })[kind]*s, padR = ({ flag:14, pill:39, ylab:24, simple:30, cream:34 })[kind]*s, fw = padL + tw + padR;
+    g.lift = ({ flag:110, pill:150, ylab:120, simple:170, cream:260 })[kind]*s + (pin.lift||0);
+    const off = pin.off == null ? .5 : pin.off; let y = pin.ey - g.lift - fh, x = pin.ex - Math.max(fh/2, Math.min(fw - fh/2, fw*off));
+    if (kind === "cream") x = Math.max(14*s, Math.min(p.w - fw - 14*s, x));   /* keep the whole label inside the photo */
+    if (kind === "cream" && y < 14*s){ const d = Math.min(14*s - y, g.lift - 70*s); if (d > 0){ g.lift -= d; y = pin.ey - g.lift - fh; } }
+    g.box = [x, y, fw, fh]; g.tipY = pin.ey - g.lift; g.flag = { x, y, w:fw, h:fh, fs:(kind==="cream"?44:FS)*s, tx:x+padL, text:text2 };
     return g;
   }
   const mw = 141*s, mh = 200*s, R = mw/2;
@@ -212,6 +215,12 @@ function drawBoxLabel(c, pin, g, A){
     c.save(); c.shadowColor = "rgba(0,0,0,.4)"; c.shadowBlur = 3*g.s; c.fillStyle = "rgba(255,255,255,.92)"; c.fillRect(pin.ex - 2.2*g.s, F.y + F.h, 4.4*g.s, pin.ey - F.y - F.h); c.restore();
     simpleBox(c, F.x, F.y, F.w, F.h, F.fs, F.tx, F.text, g.s); return;
   }
+  if (A.kind === "cream"){   // Beshay: thin cream line straight down, cream box, dark uppercase text
+    c.save(); c.shadowColor = "rgba(0,0,0,.25)"; c.shadowBlur = 3*g.s; c.fillStyle = "#F3EFE6"; c.fillRect(pin.ex - 2.4*g.s, F.y + F.h, 4.8*g.s, pin.ey - F.y - F.h); c.restore();
+    c.save(); c.shadowColor = "rgba(0,0,0,.18)"; c.shadowBlur = 8*g.s; c.shadowOffsetY = 2*g.s; c.fillStyle = "#F3EFE6"; c.fillRect(F.x, F.y, F.w, F.h); c.restore();
+    c.save(); if ("letterSpacing" in c) c.letterSpacing = `${2.2*g.s}px`; c.fillStyle = "#10191F"; c.textBaseline = "middle"; c.textAlign = "left"; c.font = `600 ${F.fs}px ${LABEL_FONT()}`;
+    c.fillText(F.text, F.tx, F.y + F.h/2 + F.fs*0.04); c.restore(); return;
+  }
   if (A.kind === "flag"){
     c.fillStyle = col; c.fillRect(pin.ex - 4.5*g.s, F.y + F.h, 9*g.s, pin.ey - F.y - F.h);
     c.save(); c.shadowColor = "rgba(0,0,0,.45)"; c.shadowBlur = 6*g.s; c.shadowOffsetX = 3*g.s; c.shadowOffsetY = 3*g.s;
@@ -276,11 +285,11 @@ function tidySides(p){
     let best = null;
     for (let k=0;k<K;k++) for (const flip of [false]) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : ["right","left","top","bottom"])){   /* 28 Oct: above/below only win when left/right overlap (2500 penalty) — lets 3 pins fit per photo */
       if (boxed){ pin.off = side; pin.side = "right"; } else pin.side = side;
-      pin.flip = flip; pin.lift = k*st;
+      pin.flip = flip; pin.lift = (A.kind==="cream" ? k-3 : k)*st;   /* cream labels can also drop below their default height */
       const parts = pinParts(p,pin), r = parts[0];
       const mg = 10*s, off = Math.max(0, mg-r[0]) + Math.max(0, r[2]-(p.w-mg)) + Math.max(0, mg-r[1]) + Math.max(0, r[3]-(p.h-mg));
       let o = 0; for (const q of others) for (const a of parts) for (const b of q) o += ov(a,b);
-      const score = off*20000 + o*8 + (k*(boxed?3000:9000) + (flip?5000:0))*s*s + (side==="top"||side==="bottom"?2500*s*s:0) + (!boxed && side!==(pin.ex > p.w*0.68 ? "left" : "right") ? 6000*s*s : 0) + (boxed && side!==.5 ? 4000*s*s : 0);
+      const score = off*20000 + o*8 + ((A.kind==="cream" ? Math.abs(k-3) : k)*(boxed?3000:9000) + (flip?5000:0))*s*s + (side==="top"||side==="bottom"?2500*s*s:0) + (!boxed && side!==(pin.ex > p.w*0.68 ? "left" : "right") ? 6000*s*s : 0) + (boxed && side!==.5 ? 4000*s*s : 0);
       if (!best || score < best.score) best = { side, flip, lift:pin.lift, score };
     }
     if (boxed){ pin.off = best.side; pin.side = "right"; } else pin.side = best.side;
@@ -372,7 +381,7 @@ function drawScene(c, p, opt){
     polys.forEach(sh=>{ c.moveTo(sh.pts[0][0],sh.pts[0][1]); for(let i=1;i<sh.pts.length;i++) c.lineTo(sh.pts[i][0],sh.pts[i][1]); c.closePath(); });
     c.clip("evenodd");
     { const key = (opt.before?"b":"a") + p.blurAmt + (p.finishOn?"f":"") + (p._adjKey||"");
-      const cr = lotCrop(p), fw = cr ? cr[2] : p.w, sig = fw * 0.0028 * Math.max(35, p.blurAmt||45) / 45;   // ~0.28% of the delivered frame width, smooth gaussian (matches Jason's reference)
+      const cr = lotCrop(p), fw = cr ? Math.max(cr[2], cr[3]*1.5) : p.w, sig = fw * 0.0028 * Math.max(35, p.blurAmt||45) / 45;   // ~0.28% of the delivered frame width, smooth gaussian (matches Jason's reference)
       if (!p._blur || p._blurKey !== key + "|" + Math.round(sig)){ p._blur = blurredCopy(img, p.w, p.h, Math.max(35, p.blurAmt||45)*s, sig); p._blurKey = key + "|" + Math.round(sig); }
       c.drawImage(p._blur, 0, 0, p.w, p.h);
     }
@@ -408,11 +417,11 @@ function drawScene(c, p, opt){
     c.restore();
   }
   drawPins(c, p);
-  if (p.disc.on && p.disc.text.trim() && p.shapes.length){
-    const fs = Math.max(10, 30*s);
+  if (!p.disc.off && (p.disc.text||DEFAULT_DISC).trim() && p.shapes.some(x=>x.type==="poly")){   /* 4 Nov (Jason): disclaimer ON by default, inside the export area */
+    const cr = lotCrop(p) || [0,0,p.w,p.h], ks = cr[2]/3000, fs = Math.max(10, 30*ks);
     c.save(); c.font=`400 ${fs}px "Source Sans 3", sans-serif`; c.textBaseline="bottom"; c.textAlign="left";
     c.shadowColor="rgba(0,0,0,.8)"; c.shadowBlur=fs*.4; c.fillStyle="rgba(255,255,255,.92)";
-    c.fillText(p.disc.text.trim(), 40*s, p.h-30*s); c.restore();
+    c.fillText((p.disc.text||DEFAULT_DISC).trim(), cr[0]+40*ks, cr[1]+cr[3]-30*ks); c.restore();
   }
 }
 function fitAreaText(c, p, t, sh){
@@ -453,6 +462,7 @@ function drawEdgeLengths(c, p, sh, s){
 
 // 3:2 export box for a boundary photo shot at 4:3: frames the lot (same rule as the auto edit)
 function lotCrop(p){
+  if (p.crop && p.crop.length===4) return p.crop;   /* 4 Nov (Jason): manual crop from the Crop tool */
   const polys = p.shapes.filter(x=>x.type==="poly" && x.pts.length>=3); if (!polys.length || Math.abs(p.w/p.h-1.5) < 0.01) return null;
   let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; polys.forEach(sh=>sh.pts.forEach(q=>{ x0=Math.min(x0,q[0]); y0=Math.min(y0,q[1]); x1=Math.max(x1,q[0]); y1=Math.max(y1,q[1]); }));
   const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3); const ch=cw/1.5;
