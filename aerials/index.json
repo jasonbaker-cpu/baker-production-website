@@ -433,11 +433,8 @@
       "DJI_20261102163312_0022_D.jpg",
       "DJI_20261102163326_0023_D.jpg"
      ],
-     "notes": "Shot by Jason 2 Nov (DNG, in 'Floorplan or Drone'); booking chose Floorplan but drone was flown. Processed 4 Nov at Jason's request. Commercial lot; no boundary (cadastre not reachable from the cloud session).",
-     "portrait": false,
-     "toEditor": true,
-     "editorReason": "Sea-facing shots (0021, 0022, 0023) have a blown-out white sky and haze toward the ocean. Please do a clean natural edit of all 8 (real sky, recover/replace the blown sky, natural colour - not over-saturated, no ghosting). Top-downs full frame as shot. Pins/labels are added by us after - upload clean photos on the pins page and click Send to Baker.",
-     "rawPath": "Raw Files/Jason Baker/02-11-2026/115 Mandurah Terrace, Mandurah WA 6210, Australia/Floorplan or Drone (8 DNG)"
+     "notes": "Shot by Jason 2 Nov (DNG, in 'Floorplan or Drone'); booking chose Floorplan but drone was flown. Processed 4 Nov at Jason's request. Commercial lot; no boundary (cadastre not reachable from the cloud session). Sky recovered from the DNGs in-house (4 Nov) - final, not with the editor.",
+     "portrait": false
     }
    ]
   },
