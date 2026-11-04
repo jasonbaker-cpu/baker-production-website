@@ -1,0 +1,145 @@
+{
+ "address": "115 Mandurah Terrace, Mandurah WA 6210",
+ "lat": -32.524589,
+ "lng": 115.724736,
+ "pins": [
+  {
+   "name": "Town Beach",
+   "cat": "beach",
+   "lat": -32.520735,
+   "lng": 115.723085
+  },
+  {
+   "name": "Silver Sands Beach",
+   "cat": "beach",
+   "lat": -32.519251,
+   "lng": 115.729279
+  },
+  {
+   "name": "Halls Head Beach",
+   "cat": "beach",
+   "lat": -32.5209,
+   "lng": 115.70346
+  },
+  {
+   "name": "Mandurah Ocean Marina",
+   "cat": "landmark",
+   "lat": -32.5228,
+   "lng": 115.7127
+  },
+  {
+   "name": "Mandurah Eastern Foreshore",
+   "cat": "park",
+   "lat": -32.532621,
+   "lng": 115.719164
+  },
+  {
+   "name": "Eastern Foreshore Park",
+   "cat": "park",
+   "lat": -32.52641,
+   "lng": 115.71976
+  },
+  {
+   "name": "Mandurah Performing Arts Centre",
+   "cat": "landmark",
+   "lat": -32.527728,
+   "lng": 115.718856
+  },
+  {
+   "name": "Mandurah Forum",
+   "cat": "shopping",
+   "lat": -32.53557,
+   "lng": 115.742304
+  },
+  {
+   "name": "Smart Street Mall",
+   "cat": "shopping",
+   "lat": -32.53363,
+   "lng": 115.719962
+  },
+  {
+   "name": "Halls Head Central",
+   "cat": "shopping",
+   "lat": -32.548838,
+   "lng": 115.701324
+  },
+  {
+   "name": "Mandurah Station",
+   "cat": "train",
+   "lat": -32.52694,
+   "lng": 115.7467
+  },
+  {
+   "name": "Peel Health Campus",
+   "cat": "hospital",
+   "lat": -32.532344,
+   "lng": 115.763275
+  },
+  {
+   "name": "Mandurah Primary School",
+   "cat": "school",
+   "lat": -32.528645,
+   "lng": 115.725525
+  },
+  {
+   "name": "John Tonkin College",
+   "cat": "school",
+   "lat": -32.51646,
+   "lng": 115.73849
+  },
+  {
+   "name": "North Mandurah Primary School",
+   "cat": "school",
+   "lat": -32.51528,
+   "lng": 115.7378
+  },
+  {
+   "name": "Mandurah Catholic College",
+   "cat": "school",
+   "lat": -32.548247,
+   "lng": 115.73953
+  },
+  {
+   "name": "Frederick Irwin Anglican School",
+   "cat": "school",
+   "lat": -32.508711,
+   "lng": 115.75309
+  },
+  {
+   "name": "Mandurah Senior College",
+   "cat": "school",
+   "lat": -32.517991,
+   "lng": 115.754462
+  },
+  {
+   "name": "Dudley Park Primary School",
+   "cat": "school",
+   "lat": -32.54121,
+   "lng": 115.73535
+  },
+  {
+   "name": "Coodanup College",
+   "cat": "school",
+   "lat": -32.547055,
+   "lng": 115.750725
+  },
+  {
+   "name": "Mandurah Aquatic & Recreation Centre",
+   "cat": "aquatic",
+   "lat": -32.53743,
+   "lng": 115.73734
+  },
+  {
+   "name": "Mandurah Estuary Bridge",
+   "cat": "landmark",
+   "lat": -32.549,
+   "lng": 115.7181
+  },
+  {
+   "name": "Peel Inlet",
+   "cat": "lake",
+   "lat": -32.5833,
+   "lng": 115.7333
+  }
+ ]
+}
