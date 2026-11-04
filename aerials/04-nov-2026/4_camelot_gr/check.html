@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 4 Camelot Grove, Carramar WA 6031</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary · 609 m²</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (13)</div></div></div>
+<script>const D={"lat": -31.7086421, "lng": 115.7784608, "poly": [[-31.70862375, 115.77825815], [-31.70852874, 115.77859893], [-31.70865247, 115.7786856], [-31.70878391, 115.77836403]], "places": [{"name": "Banksia Grove Village", "lat": -31.7055692, "lng": 115.8014054, "d": "2.2 km"}, {"name": "Joseph Banks Secondary College", "lat": -31.6992219, "lng": 115.7974473, "d": "2.1 km"}, {"name": "Carramar Golf Course", "lat": -31.7070744, "lng": 115.781324, "d": "320 m"}, {"name": "Carramar Village", "lat": -31.7119254, "lng": 115.7882736, "d": "1000 m"}, {"name": "St Stephen's School - Carramar Campus", "lat": -31.716907, "lng": 115.7884289, "d": "1.3 km"}, {"name": "The Ashby Village", "lat": -31.7311274, "lng": 115.80439, "d": "3.5 km"}, {"name": "Lake Joondalup", "lat": -31.741066, "lng": 115.7841452, "d": "3.6 km"}, {"name": "Glenfine Park", "lat": -31.7116138, "lng": 115.7808295, "d": "400 m"}, {"name": "Currambine Station", "lat": -31.7249643, "lng": 115.7505793, "d": "3.2 km"}, {"name": "Windermere Park", "lat": -31.722378, "lng": 115.7634149, "d": "2.1 km"}, {"name": "Menteith Park", "lat": -31.7133836, "lng": 115.74517, "d": "3.2 km"}, {"name": "Neerabup National Park", "lat": -31.6793874, "lng": 115.7408376, "d": "4.8 km"}, {"name": "Red Heart Park", "lat": -31.691032, "lng": 115.7914205, "d": "2.3 km"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[40,40],maxZoom:20});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[230,40]});
+</script></body></html>

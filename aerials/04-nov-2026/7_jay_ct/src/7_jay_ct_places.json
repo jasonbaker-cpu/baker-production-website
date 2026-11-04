@@ -1,0 +1,175 @@
+{
+ "address": "7 Jay Ct, Huntingdale WA 6110",
+ "lat": -32.0842241,
+ "lng": 115.96572469999998,
+ "pins": [
+  {
+   "name": "Limbee Glade Reserve",
+   "cat": "reserve",
+   "lat": -32.083639399999996,
+   "lng": 115.96374150000001
+  },
+  {
+   "name": "Redfox Park",
+   "cat": "park",
+   "lat": -32.0822395,
+   "lng": 115.9673093
+  },
+  {
+   "name": "Brushbox Park",
+   "cat": "park",
+   "lat": -32.0863095,
+   "lng": 115.9636525
+  },
+  {
+   "name": "Rosebud Park",
+   "cat": "park",
+   "lat": -32.08381240000001,
+   "lng": 115.9596139
+  },
+  {
+   "name": "Baxter Park",
+   "cat": "park",
+   "lat": -32.087176299999996,
+   "lng": 115.97101010000002
+  },
+  {
+   "name": "Kingsford Way Reserve",
+   "cat": "reserve",
+   "lat": -32.0788037,
+   "lng": 115.9679728
+  },
+  {
+   "name": "Leatherwood Way Reserve",
+   "cat": "reserve",
+   "lat": -32.0814999,
+   "lng": 115.9573333
+  },
+  {
+   "name": "Rusthall Way Reserve",
+   "cat": "reserve",
+   "lat": -32.082186899999996,
+   "lng": 115.9744868
+  },
+  {
+   "name": "Huntingdale Primary School",
+   "cat": "school",
+   "lat": -32.07694370000001,
+   "lng": 115.97246620000001
+  },
+  {
+   "name": "Sutherlands Park",
+   "cat": "park",
+   "lat": -32.093333099999995,
+   "lng": 115.96303970000001
+  },
+  {
+   "name": "Bodallin Crescent Reserve",
+   "cat": "reserve",
+   "lat": -32.0884295,
+   "lng": 115.95326010000001
+  },
+  {
+   "name": "Southern River College",
+   "cat": "school",
+   "lat": -32.0849516,
+   "lng": 115.9818903
+  },
+  {
+   "name": "Harpenden Street Bushland",
+   "cat": "park",
+   "lat": -32.088999699999995,
+   "lng": 115.95052330000001
+  },
+  {
+   "name": "Southern River Square Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.1008971,
+   "lng": 115.9655997
+  },
+  {
+   "name": "Bergen Park",
+   "cat": "park",
+   "lat": -32.1000662,
+   "lng": 115.95789979999998
+  },
+  {
+   "name": "St. Munchin's Catholic School",
+   "cat": "school",
+   "lat": -32.0821314,
+   "lng": 115.987191
+  },
+  {
+   "name": "The Vale Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.089383,
+   "lng": 115.94214149999999
+  },
+  {
+   "name": "Castlewood Parkway Reserve",
+   "cat": "reserve",
+   "lat": -32.1050089,
+   "lng": 115.9507913
+  },
+  {
+   "name": "John Okey Davis Park",
+   "cat": "park",
+   "lat": -32.062714899999996,
+   "lng": 115.98003310000001
+  },
+  {
+   "name": "Gosnells Golf Club",
+   "cat": "golf",
+   "lat": -32.093750899999996,
+   "lng": 115.93744290000001
+  },
+  {
+   "name": "Thornlie Square Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.056471099999996,
+   "lng": 115.9626977
+  },
+  {
+   "name": "Mary Carroll Park",
+   "cat": "park",
+   "lat": -32.0825318,
+   "lng": 116.000687
+  },
+  {
+   "name": "Gosnells Station",
+   "cat": "train",
+   "lat": -32.0714994,
+   "lng": 115.99985069999998
+  },
+  {
+   "name": "Centennial Pioneer Park",
+   "cat": "park",
+   "lat": -32.0700091,
+   "lng": 116.00200210000001
+  },
+  {
+   "name": "Nicholson Road Station",
+   "cat": "train",
+   "lat": -32.06138,
+   "lng": 115.93465
+  },
+  {
+   "name": "Champion Lakes Regatta Centre",
+   "cat": "lake",
+   "lat": -32.101374,
+   "lng": 116.00333359999999
+  },
+  {
+   "name": "Maddington Central",
+   "cat": "shopping",
+   "lat": -32.0534655,
+   "lng": 115.9788657
+  },
+  {
+   "name": "Southern River Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.106058,
+   "lng": 115.9382716
+  }
+ ]
+}

@@ -1,0 +1,175 @@
+{
+ "address": "23 Riding Way, Bull Creek WA 6149",
+ "lat": -32.0646674,
+ "lng": 115.8694542,
+ "pins": [
+  {
+   "name": "Woodlark Park",
+   "cat": "park",
+   "lat": -32.066058,
+   "lng": 115.871603
+  },
+  {
+   "name": "Elizabeth Manion Park",
+   "cat": "park",
+   "lat": -32.061461,
+   "lng": 115.868842
+  },
+  {
+   "name": "Barracuda Park",
+   "cat": "park",
+   "lat": -32.0622122,
+   "lng": 115.8738023
+  },
+  {
+   "name": "Kingsford Park",
+   "cat": "park",
+   "lat": -32.065029,
+   "lng": 115.874916
+  },
+  {
+   "name": "Oberthur Primary School",
+   "cat": "school",
+   "lat": -32.059425,
+   "lng": 115.8687476
+  },
+  {
+   "name": "Bill Brown Park",
+   "cat": "park",
+   "lat": -32.069484,
+   "lng": 115.8657852
+  },
+  {
+   "name": "William Hall Park",
+   "cat": "park",
+   "lat": -32.0671114,
+   "lng": 115.8629105
+  },
+  {
+   "name": "Ernest Wild Park",
+   "cat": "park",
+   "lat": -32.0676475,
+   "lng": 115.876493
+  },
+  {
+   "name": "Beasley Park",
+   "cat": "park",
+   "lat": -32.0717265,
+   "lng": 115.8692334
+  },
+  {
+   "name": "Noel Kroll Reserve",
+   "cat": "reserve",
+   "lat": -32.0643948,
+   "lng": 115.8611412
+  },
+  {
+   "name": "Sovereign Park",
+   "cat": "park",
+   "lat": -32.0596117,
+   "lng": 115.8761521
+  },
+  {
+   "name": "Jasmine Park",
+   "cat": "park",
+   "lat": -32.0650542,
+   "lng": 115.8789775
+  },
+  {
+   "name": "Harry Baker Park",
+   "cat": "park",
+   "lat": -32.07098,
+   "lng": 115.86334
+  },
+  {
+   "name": "Willetton Senior High School",
+   "cat": "school",
+   "lat": -32.0604147,
+   "lng": 115.8789346
+  },
+  {
+   "name": "Trevor Gribble Reserve",
+   "cat": "reserve",
+   "lat": -32.0556217,
+   "lng": 115.870903
+  },
+  {
+   "name": "John Connell Reserve",
+   "cat": "reserve",
+   "lat": -32.072699,
+   "lng": 115.8756589
+  },
+  {
+   "name": "Melville Glades Golf Club",
+   "cat": "golf",
+   "lat": -32.0743408,
+   "lng": 115.8752059
+  },
+  {
+   "name": "Southlands Boulevarde Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.0577016,
+   "lng": 115.8799206
+  },
+  {
+   "name": "Bob Gordon Reserve",
+   "cat": "reserve",
+   "lat": -32.0578038,
+   "lng": 115.8559376
+  },
+  {
+   "name": "All Saints' College",
+   "cat": "school",
+   "lat": -32.0512991,
+   "lng": 115.8667855
+  },
+  {
+   "name": "Leeming Senior High School",
+   "cat": "school",
+   "lat": -32.0744018,
+   "lng": 115.8562701
+  },
+  {
+   "name": "Murdoch Station",
+   "cat": "train",
+   "lat": -32.06612,
+   "lng": 115.85049
+  },
+  {
+   "name": "Bull Creek Station",
+   "cat": "train",
+   "lat": -32.0470374,
+   "lng": 115.8541449
+  },
+  {
+   "name": "Ranford Road Station",
+   "cat": "train",
+   "lat": -32.075622,
+   "lng": 115.896809
+  },
+  {
+   "name": "Piney Lakes Reserve",
+   "cat": "lake",
+   "lat": -32.0496183,
+   "lng": 115.8386885
+  },
+  {
+   "name": "Shelley Foreshore",
+   "cat": "park",
+   "lat": -32.0282884,
+   "lng": 115.8825416
+  },
+  {
+   "name": "Bull Creek Central",
+   "cat": "shopping",
+   "lat": -32.0644549,
+   "lng": 115.8570491
+  },
+  {
+   "name": "Leeming Forum",
+   "cat": "shopping",
+   "lat": -32.0785923,
+   "lng": 115.8571822
+  }
+ ]
+}

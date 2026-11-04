@@ -1,0 +1,163 @@
+{
+ "address": "4 Camelot Grove, Carramar WA 6031",
+ "lat": -31.7086421,
+ "lng": 115.7784608,
+ "pins": [
+  {
+   "name": "Carramar Golf Course",
+   "cat": "golf",
+   "lat": -31.7070744,
+   "lng": 115.781324
+  },
+  {
+   "name": "Glenfine Park",
+   "cat": "park",
+   "lat": -31.7116138,
+   "lng": 115.7808295
+  },
+  {
+   "name": "Staunton Park",
+   "cat": "park",
+   "lat": -31.7089799,
+   "lng": 115.7843301
+  },
+  {
+   "name": "Carramar Primary School",
+   "cat": "school",
+   "lat": -31.7114954,
+   "lng": 115.7855089
+  },
+  {
+   "name": "Houghton Park",
+   "cat": "park",
+   "lat": -31.7105859,
+   "lng": 115.7876581
+  },
+  {
+   "name": "Carramar Village",
+   "cat": "shopping",
+   "lat": -31.7119254,
+   "lng": 115.7882736
+  },
+  {
+   "name": "Brightlands Park",
+   "cat": "park",
+   "lat": -31.7073697,
+   "lng": 115.7902465
+  },
+  {
+   "name": "St Stephen's School - Carramar Campus",
+   "cat": "school",
+   "lat": -31.716907,
+   "lng": 115.7884289
+  },
+  {
+   "name": "Allanbi Park",
+   "cat": "park",
+   "lat": -31.7110163,
+   "lng": 115.7921903
+  },
+  {
+   "name": "Grandis Park",
+   "cat": "park",
+   "lat": -31.6970776,
+   "lng": 115.7956082
+  },
+  {
+   "name": "Joseph Banks Secondary College",
+   "cat": "school",
+   "lat": -31.6992219,
+   "lng": 115.7974473
+  },
+  {
+   "name": "Windermere Park",
+   "cat": "park",
+   "lat": -31.722378,
+   "lng": 115.7634149
+  },
+  {
+   "name": "Banksia Grove Village",
+   "cat": "shopping",
+   "lat": -31.7055692,
+   "lng": 115.8014054
+  },
+  {
+   "name": "Red Heart Park",
+   "cat": "park",
+   "lat": -31.691032,
+   "lng": 115.7914205
+  },
+  {
+   "name": "Jimbub Swamp Park",
+   "cat": "park",
+   "lat": -31.7238837,
+   "lng": 115.7959494
+  },
+  {
+   "name": "Discovery Park",
+   "cat": "park",
+   "lat": -31.6951348,
+   "lng": 115.8015243
+  },
+  {
+   "name": "St. John Paul II Catholic Primary School",
+   "cat": "school",
+   "lat": -31.6957111,
+   "lng": 115.8057327
+  },
+  {
+   "name": "Peridot Park",
+   "cat": "park",
+   "lat": -31.7031338,
+   "lng": 115.8098438
+  },
+  {
+   "name": "Menteith Park",
+   "cat": "park",
+   "lat": -31.7133836,
+   "lng": 115.74517
+  },
+  {
+   "name": "Currambine Station",
+   "cat": "train",
+   "lat": -31.7249643,
+   "lng": 115.7505793
+  },
+  {
+   "name": "The Ashby Village",
+   "cat": "shopping",
+   "lat": -31.7311274,
+   "lng": 115.80439
+  },
+  {
+   "name": "Lake Joondalup",
+   "cat": "lake",
+   "lat": -31.741066,
+   "lng": 115.7841452
+  },
+  {
+   "name": "Lakeside Joondalup",
+   "cat": "shopping",
+   "lat": -31.7435966,
+   "lng": 115.7673963
+  },
+  {
+   "name": "Lake Adams Conservation Reserve",
+   "cat": "lake",
+   "lat": -31.6966045,
+   "lng": 115.8205423
+  },
+  {
+   "name": "Joondalup Station",
+   "cat": "train",
+   "lat": -31.7451588,
+   "lng": 115.7674679
+  },
+  {
+   "name": "Neerabup National Park",
+   "cat": "park",
+   "lat": -31.6793874,
+   "lng": 115.7408376
+  }
+ ]
+}

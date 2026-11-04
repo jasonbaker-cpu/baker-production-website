@@ -1,0 +1,175 @@
+{
+ "address": "32 Ionesco St, Spearwood WA 6163",
+ "lat": -32.1136654,
+ "lng": 115.79358110000001,
+ "pins": [
+  {
+   "name": "Katich Park",
+   "cat": "park",
+   "lat": -32.1137527,
+   "lng": 115.79047759999999
+  },
+  {
+   "name": "Newton Primary School",
+   "cat": "school",
+   "lat": -32.1123282,
+   "lng": 115.7890022
+  },
+  {
+   "name": "Vela-Luka Park",
+   "cat": "park",
+   "lat": -32.1092009,
+   "lng": 115.7932407
+  },
+  {
+   "name": "Smart Park",
+   "cat": "park",
+   "lat": -32.115595,
+   "lng": 115.78627130000001
+  },
+  {
+   "name": "Greenslade Reserve",
+   "cat": "reserve",
+   "lat": -32.106151499999996,
+   "lng": 115.79061630000001
+  },
+  {
+   "name": "Edwardes Park",
+   "cat": "park",
+   "lat": -32.1083717,
+   "lng": 115.78591909999999
+  },
+  {
+   "name": "Stargate Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.1153166,
+   "lng": 115.78321170000001
+  },
+  {
+   "name": "Interim Reserve",
+   "cat": "reserve",
+   "lat": -32.1046319,
+   "lng": 115.7943015
+  },
+  {
+   "name": "Hagan Park",
+   "cat": "park",
+   "lat": -32.121131399999996,
+   "lng": 115.7862421
+  },
+  {
+   "name": "Ravello Reserve",
+   "cat": "reserve",
+   "lat": -32.1243626,
+   "lng": 115.79464089999998
+  },
+  {
+   "name": "Lopresti Park",
+   "cat": "park",
+   "lat": -32.1242762,
+   "lng": 115.7906879
+  },
+  {
+   "name": "Spearwood Skate Park",
+   "cat": "park",
+   "lat": -32.1190502,
+   "lng": 115.78154649999999
+  },
+  {
+   "name": "Santich Park",
+   "cat": "park",
+   "lat": -32.1245417,
+   "lng": 115.78747320000001
+  },
+  {
+   "name": "St Jerome's Primary School",
+   "cat": "school",
+   "lat": -32.1213204,
+   "lng": 115.7825187
+  },
+  {
+   "name": "Market Garden Swamp",
+   "cat": "lake",
+   "lat": -32.112688,
+   "lng": 115.7790978
+  },
+  {
+   "name": "Visko Park",
+   "cat": "park",
+   "lat": -32.1268922,
+   "lng": 115.8011959
+  },
+  {
+   "name": "Macfaull Park",
+   "cat": "park",
+   "lat": -32.0986123,
+   "lng": 115.79151139999999
+  },
+  {
+   "name": "Ronsard Park",
+   "cat": "park",
+   "lat": -32.1233451,
+   "lng": 115.81080349999998
+  },
+  {
+   "name": "Phoenix Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.0972575,
+   "lng": 115.78413049999999
+  },
+  {
+   "name": "Lakelands Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.1194487,
+   "lng": 115.81832229999999
+  },
+  {
+   "name": "Coogee Beach",
+   "cat": "beach",
+   "lat": -32.1184837,
+   "lng": 115.76168
+  },
+  {
+   "name": "Manning Park",
+   "cat": "park",
+   "lat": -32.094665899999995,
+   "lng": 115.76967880000001
+  },
+  {
+   "name": "Lake Coogee",
+   "cat": "lake",
+   "lat": -32.1382962,
+   "lng": 115.77748899999999
+  },
+  {
+   "name": "Yangebup Lake",
+   "cat": "lake",
+   "lat": -32.1195832,
+   "lng": 115.82999419999999
+  },
+  {
+   "name": "Bibra Lake Reserve",
+   "cat": "lake",
+   "lat": -32.0929962,
+   "lng": 115.82159739999999
+  },
+  {
+   "name": "Fremantle College",
+   "cat": "school",
+   "lat": -32.0676055,
+   "lng": 115.767573
+  },
+  {
+   "name": "Cockburn Central Station",
+   "cat": "train",
+   "lat": -32.12528,
+   "lng": 115.85834
+  },
+  {
+   "name": "Fremantle Public Golf Course",
+   "cat": "golf",
+   "lat": -32.05325,
+   "lng": 115.76589459999998
+  }
+ ]
+}
