@@ -290,6 +290,10 @@ function refreshPhotoTab(){
     const A = [["exp","Brightness"],["con","Contrast"],["hl","Highlights"],["sh","Shadows"],["warm","Warmth"],["tint","Tint"],["sat","Colour"]];
     let tm=null; const redraw=()=>{ clearTimeout(tm); tm=setTimeout(()=>{ p._blur=null; refreshStrip(); requestDraw(); }, 60); };
     A.forEach(([k,lab])=>sa.appendChild(slider("adj_"+k, lab, -100, 100, 1, p.adj[k]||0, v=>(v>0?"+":"")+v, v=>{ p.adj[k]=v; redraw(); }, commit)));
+    sa.appendChild(slider("adj_bright", "Bright sky mask", 0, 100, 1, p.adj.bright||0, v=>v?String(v):"off", v=>{ p.adj.bright=v; redraw(); }, commit));   /* 4 Nov: tames blown/hazy sky + sea glare only */
+    { const mb = el(`<div class="row"><button class="btn" aria-pressed="false">Show mask</button><span class="note" style="margin:0">Red = what the mask touches</span></div>`); const bt = mb.children[0];
+      bt.onclick=()=>{ window.__showMask=!window.__showMask; bt.setAttribute("aria-pressed", String(!!window.__showMask)); bt.textContent = window.__showMask ? "Hide mask" : "Show mask"; p._blur=null; requestDraw(); };
+      sa.appendChild(mb); }
     const rb = el(`<div class="row"><button class="btn">Reset</button><button class="btn">Copy to all photos</button></div>`);
     rb.children[0].onclick=()=>{ commit(); p.adj=Object.assign({}, ADJ0); p._blur=null; refreshPhotoTab(); refreshStrip(); requestDraw(); };
     rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample && !q.editorPhoto && !q.extraEdited){ q.adj=Object.assign({}, p.adj); q._blur=null; } }); toast(`Copied to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
@@ -586,7 +590,7 @@ function renderFull(p){
   return new Promise(res=>{
     const c=document.createElement("canvas"); c.width=p.w; c.height=p.h;
     const x=c.getContext("2d"); x.imageSmoothingQuality="high";
-    const keep = ctx.font; drawScene(x, p, { hide:false }); ctx.font = keep;
+    const keep = ctx.font, smk = window.__showMask; window.__showMask = false; drawScene(x, p, { hide:false }); window.__showMask = smk; ctx.font = keep;   /* never export the red mask preview */
     const cr = lotCrop(p);
     if (cr){ const o=document.createElement("canvas"); o.width=3000; o.height=2000; const ox=o.getContext("2d"); ox.imageSmoothingQuality="high"; ox.drawImage(c, cr[0],cr[1],cr[2],cr[3], 0,0,3000,2000); o.toBlob(b=>res(b), "image/jpeg", 0.95); return; }
     c.toBlob(b=>res(b), "image/jpeg", 0.95);
