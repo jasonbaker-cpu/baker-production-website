@@ -113,7 +113,7 @@ function pinGeom(p, pin){
     const fh = ({ flag:128, pill:108, ylab:114, simple:100, cream:84 })[kind]*s, padL = ({ flag:18, pill:39, ylab:24, simple:30, cream:34 })[kind]*s, padR = ({ flag:14, pill:39, ylab:24, simple:30, cream:34 })[kind]*s, fw = padL + tw + padR;
     g.lift = ({ flag:110, pill:150, ylab:120, simple:170, cream:260 })[kind]*s + (pin.lift||0);
     const off = pin.off == null ? .5 : pin.off; let y = pin.ey - g.lift - fh, x = pin.ex - Math.max(fh/2, Math.min(fw - fh/2, fw*off));
-    if (kind === "cream") x = Math.max(14*s, Math.min(p.w - fw - 14*s, x));   /* keep the whole label inside the photo */
+    if (kind === "cream"){ x = pin.ex - 2.4*s; if (off > .8 || x + fw > p.w - 14*s) x = pin.ex + 2.4*s - fw; x = Math.max(14*s, Math.min(p.w - fw - 14*s, x)); }   /* 5 Nov (Jason): Beshay line sits on the label's LEFT edge, like his reference (flips to the right edge only near the right side) */
     if (kind === "cream" && y < 14*s){ const d = Math.min(14*s - y, g.lift - 70*s); if (d > 0){ g.lift -= d; y = pin.ey - g.lift - fh; } }
     g.box = [x, y, fw, fh]; g.tipY = pin.ey - g.lift; g.flag = { x, y, w:fw, h:fh, fs:(kind==="cream"?44:FS)*s, tx:x+padL, text:text2 };
     return g;
