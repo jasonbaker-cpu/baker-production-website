@@ -1172,7 +1172,7 @@ function textMetrics(c, t, p){
   const bw = w+padX*2, bh = lines.length*lh + padY*2;
   return { size, weight, lines, lh, bw, bh, x:t.x-bw/2, y:t.y-bh/2, padX, padY };
 }
-const ADJ0 = { exp:0, con:0, hl:0, sh:0, warm:0, tint:0, sat:0 };
+const ADJ0 = { exp:0, con:0, hl:0, sh:0, warm:0, tint:0, sat:0, bright:0 };
 function adjActive(a){ return a && Object.keys(ADJ0).some(k=>a[k]); }
 // Photo-only adjustments: applied to the picture underneath; pins, boundaries and text are drawn on top afterwards, untouched.
 function adjustedCanvas(src, a){
@@ -1184,12 +1184,28 @@ function adjustedCanvas(src, a){
     const wh=t*t*(3-2*t); t = t + sh*(1-wh)*t*(1-t)*1.6 + hl*wh*t*(1-t)*1.6; T[v]=cl(t*255); }
   const wr=1+a.warm/400, wb=1-a.warm/400, tg=1-a.tint/400;
   for (let i=0;i<d.length;i+=4){ let r=T[d[i]]*wr, g=T[d[i+1]]*tg, b=T[d[i+2]]*wb; const Y=.299*r+.587*g+.114*b; d[i]=cl(Y+(r-Y)*sat); d[i+1]=cl(Y+(g-Y)*sat); d[i+2]=cl(Y+(b-Y)*sat); }
+  if (a.bright){   /* 4 Nov (Jason): "mask the really bright parts" — feathered mask of the bright sky/haze (bright + upper frame), pulled down with a bit more colour so clouds read */
+    const k=a.bright/100, mw=Math.max(8,Math.round(w/8)), mh=Math.max(8,Math.round(h/8));
+    const m1=document.createElement("canvas"); m1.width=mw; m1.height=mh; const m1x=m1.getContext("2d"); m1x.drawImage(src,0,0,mw,mh);
+    const md=m1x.getImageData(0,0,mw,mh), q=md.data, rowY=new Float32Array(mh);
+    for (let yy=0;yy<mh;yy++){ let s=0; for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4; s+=Math.log(1+(.299*q[j]+.587*q[j+1]+.114*q[j+2])); } rowY[yy]=s/mw; }
+    let hz=Math.round(mh*.35), best=1e9; for (let yy=Math.round(mh*.06); yy<Math.round(mh*.65); yy++){ const a0=rowY[Math.max(0,yy-3)]+rowY[Math.max(0,yy-2)]+rowY[Math.max(0,yy-1)], b0=rowY[Math.min(mh-1,yy+1)]+rowY[Math.min(mh-1,yy+2)]+rowY[Math.min(mh-1,yy+3)], dd=b0-a0; if (dd<best){ best=dd; hz=yy; } }   // horizon = sharpest bright-to-dark step
+    for (let yy=0;yy<mh;yy++){ const rel=(yy-hz)/mh, vert = rel<-.015?1 : rel<.0?1-(rel+.015)/.015*.5 : rel<.05?.5*(1-rel/.05) : 0;   // sky full, sea glare just under the horizon half, land none
+      for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4, Y=(.299*q[j]+.587*q[j+1]+.114*q[j+2])/255; let t=(Y-.42)/.3; t=t<0?0:t>1?1:t; t=t*t*(3-2*t)*vert; q[j]=q[j+1]=q[j+2]=255; q[j+3]=Math.round(t*255); } }
+    m1x.putImageData(md,0,0);
+    const m2=document.createElement("canvas"); m2.width=w; m2.height=h; const m2x=m2.getContext("2d"); m2x.imageSmoothingQuality="high";
+    if ("filter" in m2x) m2x.filter=`blur(${Math.max(2,w/400)}px)`; m2x.drawImage(m1,0,0,w,h); m2x.filter="none";
+    const M=m2x.getImageData(0,0,w,h).data, show=window.__showMask;
+    for (let i=0;i<d.length;i+=4){ const f=M[i+3]/255*k; if (f<=0.002) continue;
+      if (show){ d[i]=cl(d[i]*(1-.55*f)+255*.55*f); d[i+1]=cl(d[i+1]*(1-.55*f)); d[i+2]=cl(d[i+2]*(1-.55*f)); continue; }
+      let r=d[i]/255, g=d[i+1]/255, b=d[i+2]/255; const lift=1+.14*f; r=(r-f*(.30*r*r+.10))*lift; g=(g-f*(.30*g*g+.10))*lift; b=(b-f*(.30*b*b+.10))*lift;   // pull the haze down, keep clouds brighter than the blue
+      const Y=.299*r+.587*g+.114*b, s2=1+.45*f; d[i]=cl((Y+(r-Y)*s2)*255); d[i+1]=cl((Y+(g-Y)*s2)*255); d[i+2]=cl((Y+(b-Y)*s2)*255); } }
   x.putImageData(id,0,0); return c;
 }
 function photoImage(p, before){
   const src = (!before && p.finishOn && p.fin) ? p.fin : p.base;
   if (before || !adjActive(p.adj)) return src;
-  const key = JSON.stringify(p.adj) + (src===p.fin ? "f"+(p.finKey||"") : "b");
+  const key = JSON.stringify(p.adj) + (window.__showMask?"M":"") + (src===p.fin ? "f"+(p.finKey||"") : "b");
   if (!p._adj || p._adjKey !== key){ p._adj = adjustedCanvas(src, p.adj); p._adjKey = key; }
   return p._adj;
 }
@@ -1914,6 +1930,10 @@ function refreshPhotoTab(){
     const A = [["exp","Brightness"],["con","Contrast"],["hl","Highlights"],["sh","Shadows"],["warm","Warmth"],["tint","Tint"],["sat","Colour"]];
     let tm=null; const redraw=()=>{ clearTimeout(tm); tm=setTimeout(()=>{ p._blur=null; refreshStrip(); requestDraw(); }, 60); };
     A.forEach(([k,lab])=>sa.appendChild(slider("adj_"+k, lab, -100, 100, 1, p.adj[k]||0, v=>(v>0?"+":"")+v, v=>{ p.adj[k]=v; redraw(); }, commit)));
+    sa.appendChild(slider("adj_bright", "Bright sky mask", 0, 100, 1, p.adj.bright||0, v=>v?String(v):"off", v=>{ p.adj.bright=v; redraw(); }, commit));   /* 4 Nov: tames blown/hazy sky + sea glare only */
+    { const mb = el(`<div class="row"><button class="btn" aria-pressed="false">Show mask</button><span class="note" style="margin:0">Red = what the mask touches</span></div>`); const bt = mb.children[0];
+      bt.onclick=()=>{ window.__showMask=!window.__showMask; bt.setAttribute("aria-pressed", String(!!window.__showMask)); bt.textContent = window.__showMask ? "Hide mask" : "Show mask"; p._blur=null; requestDraw(); };
+      sa.appendChild(mb); }
     const rb = el(`<div class="row"><button class="btn">Reset</button><button class="btn">Copy to all photos</button></div>`);
     rb.children[0].onclick=()=>{ commit(); p.adj=Object.assign({}, ADJ0); p._blur=null; refreshPhotoTab(); refreshStrip(); requestDraw(); };
     rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample && !q.editorPhoto && !q.extraEdited){ q.adj=Object.assign({}, p.adj); q._blur=null; } }); toast(`Copied to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
@@ -2210,7 +2230,7 @@ function renderFull(p){
   return new Promise(res=>{
     const c=document.createElement("canvas"); c.width=p.w; c.height=p.h;
     const x=c.getContext("2d"); x.imageSmoothingQuality="high";
-    const keep = ctx.font; drawScene(x, p, { hide:false }); ctx.font = keep;
+    const keep = ctx.font, smk = window.__showMask; window.__showMask = false; drawScene(x, p, { hide:false }); window.__showMask = smk; ctx.font = keep;   /* never export the red mask preview */
     const cr = lotCrop(p);
     if (cr){ const o=document.createElement("canvas"); o.width=3000; o.height=2000; const ox=o.getContext("2d"); ox.imageSmoothingQuality="high"; ox.drawImage(c, cr[0],cr[1],cr[2],cr[3], 0,0,3000,2000); o.toBlob(b=>res(b), "image/jpeg", 0.95); return; }
     c.toBlob(b=>res(b), "image/jpeg", 0.95);
