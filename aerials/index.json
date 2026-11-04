@@ -1,6 +1,39 @@
 {
  "days": [
   {
+   "id": "04-nov-2026",
+   "label": "Wed 4 Nov 2026",
+   "gallery": "04-nov-2026/",
+   "jobs": [
+    {
+     "slug": "42_86_caledonian_ave",
+     "addr": "42/86 Caledonian Ave, Maylands WA 6051",
+     "who": "Nic Pulvirenti \u00b7 Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [],
+     "src": "04-nov-2026/42_86_caledonian_ave/src/",
+     "map": "42_86_caledonian_ave_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261104123333_0070_D.jpg",
+      "DJI_20261104123406_0071_D.jpg",
+      "DJI_20261104123418_0072_D.jpg",
+      "DJI_20261104123434_0073_D.jpg",
+      "DJI_20261104123453_0074_D.jpg",
+      "DJI_20261104123508_0075_D.jpg",
+      "DJI_20261104123529_0076_D.jpg",
+      "DJI_20261104123603_0077_D.jpg",
+      "DJI_20261104123732_0078_D.jpg",
+      "DJI_20261104123748_0079_D.jpg",
+      "DJI_20261104123809_0080_D.jpg"
+     ],
+     "notes": "Shot by Lee, 4 Nov (done same day at Jason's request). Strata unit in a complex: no boundary, pins only. No top-down shot. 0081 ground frame skipped; 0070 low hero has no GPS.",
+     "portrait": false
+    }
+   ]
+  },
+  {
    "id": "03-nov-2026",
    "label": "Tue 3 Nov 2026",
    "gallery": "03-nov-2026/",
@@ -8,7 +41,7 @@
     {
      "slug": "9_flora_ave",
      "addr": "9 Flora Ave, Bayswater WA 6053",
-     "who": "Nic Pulvirenti · Professionals TWT",
+     "who": "Nic Pulvirenti \u00b7 Professionals TWT",
      "agency": "flags-p",
      "full": false,
      "fullPhotos": [
@@ -30,13 +63,13 @@
       "dji_fly_20261103_135226_0161_1793704054720_photo.jpg",
       "dji_fly_20261103_135250_0162_1793704053535_photo.jpg"
      ],
-     "notes": "Entry Notes: lockbox access (shooter only). Amenities or features to highlight: -. Strata: -—. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: --. Client preferences: -.",
+     "notes": "Entry Notes: lockbox access (shooter only). Amenities or features to highlight: -. Strata: -\u2014. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: --. Client preferences: -.",
      "portrait": false
     },
     {
      "slug": "1_mills_ave",
      "addr": "1 Mills Ave, Bayswater WA 6053",
-     "who": "Nic Pulvirenti · Professionals TWT",
+     "who": "Nic Pulvirenti \u00b7 Professionals TWT",
      "agency": "flags-p",
      "full": false,
      "fullPhotos": [
@@ -61,14 +94,14 @@
      "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
      "portrait": false,
      "toEditor": true,
-     "editorReason": "sun-facing aerials 0165/0168/0171/0172 have a white haze band on the horizon and the CBD towers in 0168 are ghosted — please give every drone photo a clean, natural edit (sky, colour, horizon). Top-downs: keep as shot",
+     "editorReason": "sun-facing aerials 0165/0168/0171/0172 have a white haze band on the horizon and the CBD towers in 0168 are ghosted \u2014 please give every drone photo a clean, natural edit (sky, colour, horizon). Top-downs: keep as shot",
      "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/03-11-2026/1 Mills Ave, Bayswater WA 6053, Australia/Aerial - Drone Photography",
-     "lot": "strata/grouped dwelling (cadastre shows only the shared parent lot) — no boundary, pins only"
+     "lot": "strata/grouped dwelling (cadastre shows only the shared parent lot) \u2014 no boundary, pins only"
     },
     {
      "slug": "17_titanium_blvd",
      "addr": "17 Titanium Blvd, Cockburn Central WA 6164",
-     "who": "Amelié Blanco Bernabeu · Raspa",
+     "who": "Ameli\u00e9 Blanco Bernabeu \u00b7 Raspa",
      "agency": "charcoal",
      "full": false,
      "fullPhotos": [
@@ -93,14 +126,14 @@
      "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
      "portrait": false,
      "toEditor": true,
-     "editorReason": "no lot boundary — new estate, cadastre only has the large parent lot; top-downs look a touch saturated. Please give the drone photos a clean, natural edit; VA to add the lot boundary if a plan arrives",
+     "editorReason": "no lot boundary \u2014 new estate, cadastre only has the large parent lot; top-downs look a touch saturated. Please give the drone photos a clean, natural edit; VA to add the lot boundary if a plan arrives",
      "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/03-11-2026/17 Titanium Boulevard, Cockburn Central, Western Australia 6164, AU/Floorplan or Drone",
-     "lot": "no boundary — vacant lot in new estate, not yet in cadastre (pins only)"
+     "lot": "no boundary \u2014 vacant lot in new estate, not yet in cadastre (pins only)"
     },
     {
      "slug": "19_joondanna_dr",
      "addr": "19 Joondanna Dr, Joondanna WA 6060",
-     "who": "Dante Holdsworth · Holdsworth",
+     "who": "Dante Holdsworth \u00b7 Holdsworth",
      "agency": "grey",
      "full": false,
      "fullPhotos": [
@@ -128,7 +161,7 @@
     {
      "slug": "29_hermitage_dr",
      "addr": "29 Hermitage Dr, The Vines WA 6069",
-     "who": "Annique Woodford · Granger Clark",
+     "who": "Annique Woodford \u00b7 Granger Clark",
      "agency": "grey",
      "full": false,
      "fullPhotos": [
@@ -149,14 +182,14 @@
      "notes": "Entry Notes: meet agent at property (shooter only). Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
      "portrait": false,
      "toEditor": true,
-     "editorReason": "0185 has streaky tree 'columns' smeared into the sky, 0183 a blown white glow at the horizon, 0182/0184 hazy horizon — please give every day drone photo a clean, natural edit. Top-downs: keep as shot",
+     "editorReason": "0185 has streaky tree 'columns' smeared into the sky, 0183 a blown white glow at the horizon, 0182/0184 hazy horizon \u2014 please give every day drone photo a clean, natural edit. Top-downs: keep as shot",
      "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/03-11-2026/29 Hermitage Dr, The Vines WA 6069, Australia/Aerial - Drone Photography",
-     "lot": "4321 m² — cadastre (no title in Dropbox), 6-sided lot"
+     "lot": "4321 m\u00b2 \u2014 cadastre (no title in Dropbox), 6-sided lot"
     },
     {
      "slug": "29_hermitage_dr_twilight",
      "addr": "29 Hermitage Dr, The Vines WA 6069",
-     "who": "Annique Woodford · Granger Clark",
+     "who": "Annique Woodford \u00b7 Granger Clark",
      "agency": "grey",
      "full": false,
      "fullPhotos": [],
@@ -170,9 +203,9 @@
      "notes": "Entry Notes: meet agent at property (shooter only). Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
      "portrait": false,
      "toEditor": true,
-     "editorReason": "twilight — all twilight jobs go to the photo editor (frames 0205/0206, shot 7:40pm)",
+     "editorReason": "twilight \u2014 all twilight jobs go to the photo editor (frames 0205/0206, shot 7:40pm)",
      "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/03-11-2026/29 Hermitage Dr, The Vines WA 6069, Australia/Aerial - Drone Photography",
-     "lot": "4321 m² — cadastre; twilight frames carry pins only"
+     "lot": "4321 m\u00b2 \u2014 cadastre; twilight frames carry pins only"
     }
    ]
   },
@@ -184,7 +217,7 @@
     {
      "slug": "14_palomino_pl",
      "addr": "14 Palomino Pl, Greenfields WA 6210",
-     "who": "David Beshay · Beshay Realty",
+     "who": "David Beshay \u00b7 Beshay Realty",
      "agency": "beshay",
      "full": false,
      "fullPhotos": [
@@ -209,7 +242,7 @@
     {
      "slug": "32b_hetherington_dr",
      "addr": "32B Hetherington Dr, Bull Creek WA 6149",
-     "who": "Raymond Chen · Top Realty",
+     "who": "Raymond Chen \u00b7 Top Realty",
      "agency": "orange",
      "full": false,
      "fullPhotos": [
@@ -229,12 +262,12 @@
       "dji_fly_20261102_120458_0125_1793624043444_photo.jpg",
       "dji_fly_20261102_120518_0126_1793624042763_photo.jpg"
      ],
-     "notes": "Entry Notes: Please collect keys from our office. Amenities or features to highlight: no. Strata: Yes. Land size: -. Title/land plan: -. Yes — I'll email them to admin@bakerproduction.com with the property address in the subject line: Yes — I'll email them to admin@bakerproduction.com with the property address in the subject line. Specific boundaries or land features to mark: -.",
+     "notes": "Entry Notes: Please collect keys from our office. Amenities or features to highlight: no. Strata: Yes. Land size: -. Title/land plan: -. Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line: Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line. Specific boundaries or land features to mark: -.",
      "portrait": false,
      "toEditor": true,
      "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/02-11-2026/32 Hetherington Dr, Bull Creek WA 6149, Australia 32B/Aerial - Drone Photography",
-     "lot": "built strata (SP 10171) — no boundary, pins only",
-     "editorReason": "our automatic edit isn't good enough (over-saturated, patchy sky/haze). Please give every drone photo a clean, natural edit — sky, colour and horizon, not over-saturated. Top-down shots: keep them full frame as shot, no rotation and no mirrored/blurred edges"
+     "lot": "built strata (SP 10171) \u2014 no boundary, pins only",
+     "editorReason": "our automatic edit isn't good enough (over-saturated, patchy sky/haze). Please give every drone photo a clean, natural edit \u2014 sky, colour and horizon, not over-saturated. Top-down shots: keep them full frame as shot, no rotation and no mirrored/blurred edges"
     },
     {
      "slug": "3_bundalla_ct",
@@ -268,7 +301,7 @@
     {
      "slug": "14_graceful_st",
      "addr": "14 Graceful St, Byford WA 6122",
-     "who": "Lou Smith · Harcourts",
+     "who": "Lou Smith \u00b7 Harcourts",
      "agency": "navy-h",
      "full": false,
      "fullPhotos": [
@@ -289,13 +322,13 @@
       "DJI_20261102202206_0042_D.jpg",
       "DJI_20261102202224_0043_D.jpg"
      ],
-     "notes": "Entry Notes: Meet Lou, the sales rep at the property. Amenities or features to highlight: No. Can Jason please take the photos. Thank you. Strata: No. Land size: 375 sqm. Title/land plan: Yes. Yes — I'll email them to admin@bakerproduction.com with the property address in the subject line: Yes — I'll email them to admin@bakerproduction.com with the property address in the subject line. Specific boundaries or land features to mark: Nothing specific. Client Preferences: Can Jason please attend. Thank you.",
+     "notes": "Entry Notes: Meet Lou, the sales rep at the property. Amenities or features to highlight: No. Can Jason please take the photos. Thank you. Strata: No. Land size: 375 sqm. Title/land plan: Yes. Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line: Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line. Specific boundaries or land features to mark: Nothing specific. Client Preferences: Can Jason please attend. Thank you.",
      "portrait": false
     },
     {
      "slug": "22_sandridge_st",
      "addr": "22 Sandridge St, Gosnells WA 6110",
-     "who": "Danny Sharrett · Century 21 Team Brockhurst",
+     "who": "Danny Sharrett \u00b7 Century 21 Team Brockhurst",
      "agency": "c21",
      "full": false,
      "fullPhotos": [
@@ -323,7 +356,7 @@
     {
      "slug": "10_spotted_wy",
      "addr": "10 Spotted Wy, Alkimos WA 6038",
-     "who": "Brodie Morris · Northern Coast",
+     "who": "Brodie Morris \u00b7 Northern Coast",
      "agency": "grey",
      "full": false,
      "fullPhotos": [
@@ -349,7 +382,7 @@
     {
      "slug": "9_95_tyler_st",
      "addr": "9/95 Tyler St, Tuart Hill WA 6060",
-     "who": "Telaya · Holdsworth",
+     "who": "Telaya \u00b7 Holdsworth",
      "agency": "grey",
      "full": false,
      "fullPhotos": [
@@ -374,8 +407,8 @@
      "portrait": false,
      "toEditor": true,
      "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/andrew seo/02-11-2026/9-95 tyler st, tuart hill wa 6060, australia/Drone",
-     "lot": "strata unit (SP 69263) — no boundary, pins only",
-     "editorReason": "our automatic edit isn't good enough (over-saturated, patchy sky/haze). Please give every drone photo a clean, natural edit — sky, colour and horizon, not over-saturated. Top-down shots: keep them full frame as shot, no rotation and no mirrored/blurred edges"
+     "lot": "strata unit (SP 69263) \u2014 no boundary, pins only",
+     "editorReason": "our automatic edit isn't good enough (over-saturated, patchy sky/haze). Please give every drone photo a clean, natural edit \u2014 sky, colour and horizon, not over-saturated. Top-down shots: keep them full frame as shot, no rotation and no mirrored/blurred edges"
     }
    ]
   },
@@ -387,7 +420,7 @@
     {
      "slug": "3_hythe_way",
      "addr": "3 Hythe Way, Wembley Downs WA 6019",
-     "who": "Biljana Trifunoska · Gest Real Estate",
+     "who": "Biljana Trifunoska \u00b7 Gest Real Estate",
      "agency": "grey",
      "full": false,
      "fullPhotos": [
@@ -409,9 +442,9 @@
      "notes": "Entry Notes: meet biljana at the property. Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
      "portrait": false,
      "toEditor": true,
-     "editorReason": "twilight — all twilight jobs go to the photo editor; no boundary (lot subdivided, cadastre shows only the 1147 m² parent lot)",
+     "editorReason": "twilight \u2014 all twilight jobs go to the photo editor; no boundary (lot subdivided, cadastre shows only the 1147 m\u00b2 parent lot)",
      "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/01-11-2026/3 hythe way, wembley downs wa 6019, australia/Aerial - Drone Photography",
-     "lot": "no boundary — subdivided lot, no survey-strata plan in Dropbox (pins only)",
+     "lot": "no boundary \u2014 subdivided lot, no survey-strata plan in Dropbox (pins only)",
      "editorDone": "2026-11-02"
     }
    ]
@@ -424,7 +457,7 @@
     {
      "slug": "8_challenger_rise",
      "addr": "8 Challenger Rise, Coogee WA 6166",
-     "who": "Megan Topham · Belle Property",
+     "who": "Megan Topham \u00b7 Belle Property",
      "agency": "green-belle",
      "full": false,
      "fullPhotos": [
@@ -456,8 +489,8 @@
    "jobs": [
     {
      "slug": "75_roberts_st",
-     "addr": "75–77 Roberts St, Bayswater WA 6053",
-     "who": "Wesley Majeks · Peard",
+     "addr": "75\u201377 Roberts St, Bayswater WA 6053",
+     "who": "Wesley Majeks \u00b7 Peard",
      "agency": "peard",
      "full": false,
      "fullPhotos": [
@@ -479,12 +512,12 @@
      ],
      "notes": "Entry Notes: meet wesley at the property. Amenities or features to highlight: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
      "portrait": false,
-     "lot": "1308 m² — 75 + 77 Roberts St combined (cadastre: 601 + 705 m²)"
+     "lot": "1308 m\u00b2 \u2014 75 + 77 Roberts St combined (cadastre: 601 + 705 m\u00b2)"
     },
     {
      "slug": "1_finch_pl",
      "addr": "1 Finch Pl, Bull Creek WA 6149",
-     "who": "Raymond Chen · Top Realty",
+     "who": "Raymond Chen \u00b7 Top Realty",
      "agency": "orange",
      "full": false,
      "fullPhotos": [
@@ -500,13 +533,13 @@
       "DJI_20261030152016_0353_D.jpg",
       "DJI_20261030152105_0354_D.jpg"
      ],
-     "notes": "Entry Notes: Seller will meet you at the property. Amenities or features to highlight: No. Strata: -. Land size: -. Title/land plan: Yes — I'll email them to admin@bakerproduction.com with the property address in the subject line. Specific boundaries or land features to mark: -.",
+     "notes": "Entry Notes: Seller will meet you at the property. Amenities or features to highlight: No. Strata: -. Land size: -. Title/land plan: Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line. Specific boundaries or land features to mark: -.",
      "portrait": false
     },
     {
      "slug": "18_30_kathleen_st",
      "addr": "18/30 Kathleen St, Yokine WA 6060",
-     "who": "Tandin Das · Peard",
+     "who": "Tandin Das \u00b7 Peard",
      "agency": "peard",
      "full": false,
      "fullPhotos": [],
@@ -527,7 +560,7 @@
     {
      "slug": "1_monk_pl",
      "addr": "1 Monk Pl, Noranda WA 6062",
-     "who": "Manuel Sammut · Sammut Real Estate",
+     "who": "Manuel Sammut \u00b7 Sammut Real Estate",
      "agency": "grey",
      "full": false,
      "fullPhotos": [
@@ -552,9 +585,9 @@
      "notes": "Entry Notes: Selling rep will meet you onsite to open up. Amenities or features to highlight: Upper deck outlook / Outdoor entertaining areas / City skyline views. Land size: 700. Title/land plan: yes. Specific boundaries or land features to mark: Shops, schools, City and whatever you think. Client Preferences: We're not wanting the virtual tour on this one.  The clients just wanted the other items in the package.  Photos, floor plan, drone, listing video and twilight shots.  thanks",
      "portrait": false,
      "toEditor": true,
-     "editorReason": "Twilight/dusk drone job (twilight add-on, lights on) — dusk horizon band needs a hand edit",
+     "editorReason": "Twilight/dusk drone job (twilight add-on, lights on) \u2014 dusk horizon band needs a hand edit",
      "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/30-10-2026/1 Monk Pl, Noranda WA 6062, Australia/Aerial - Drone Photography",
-     "lot": "700 m² — 35 / 20 / 35 / 20 m (title)",
+     "lot": "700 m\u00b2 \u2014 35 / 20 / 35 / 20 m (title)",
      "editorDone": "2026-11-02",
      "extraPinned": "2026-11-03"
     }
@@ -568,7 +601,7 @@
     {
      "slug": "217_marmion_st",
      "addr": "217 Marmion St, Palmyra WA 6157",
-     "who": "Drew Dwyer · One Residential",
+     "who": "Drew Dwyer \u00b7 One Residential",
      "agency": "grey",
      "full": false,
      "fullPhotos": [],
@@ -586,14 +619,14 @@
       "dji_fly_20261029_133156_0950_1793251572525_photo.JPG",
       "dji_fly_20261029_133210_0951_1793251571044_photo.JPG"
      ],
-     "notes": "Amenities or features to highlight: SOME FRONT PHOTOS, overhead shots, and location shots.\nAgent (email 30 Oct): all images without any graphics or markings — they add their own in house.",
+     "notes": "Amenities or features to highlight: SOME FRONT PHOTOS, overhead shots, and location shots.\nAgent (email 30 Oct): all images without any graphics or markings \u2014 they add their own in house.",
      "portrait": false,
      "plain": true
     },
     {
      "slug": "12_keymer_st",
      "addr": "12 Keymer St, Ascot WA 6104",
-     "who": "Devon Kelly · Laurie Kelly",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
      "agency": "red",
      "full": false,
      "fullPhotos": [
@@ -617,7 +650,7 @@
     {
      "slug": "2993_albany_hwy",
      "addr": "2993 Albany Hwy, Kelmscott WA 6111",
-     "who": "Jayden Cooke · Rodway Group",
+     "who": "Jayden Cooke \u00b7 Rodway Group",
      "agency": "rodway",
      "full": false,
      "fullPhotos": [
@@ -643,16 +676,16 @@
      "notes": "",
      "portrait": false,
      "toEditor": true,
-     "editorReason": "twilight — all twilight jobs go to the photo editor",
+     "editorReason": "twilight \u2014 all twilight jobs go to the photo editor",
      "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/29-10-2026/2993 Albany Hwy, Kelmscott WA 6111, Australia/Aerial - Drone Photography",
-     "lot": "1500 m² — 48.22 / 30.32 / 51.21 / 30.17 m (title)",
+     "lot": "1500 m\u00b2 \u2014 48.22 / 30.32 / 51.21 / 30.17 m (title)",
      "editorDone": "2026-11-02",
      "extraPinned": "2026-11-03"
     },
     {
      "slug": "4_throttle_st",
      "addr": "4 Throttle St, Brabham WA 6055",
-     "who": "Nigel Ndlovu · Armadale Real Estate",
+     "who": "Nigel Ndlovu \u00b7 Armadale Real Estate",
      "agency": "flags-p",
      "full": false,
      "fullPhotos": [
@@ -682,7 +715,7 @@
     {
      "slug": "414a_belgravia_st",
      "addr": "414A Belgravia St, Cloverdale",
-     "who": "Devon Kelly · Laurie Kelly",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
      "agency": "red",
      "full": false,
      "src": "28-oct-2026/414a_belgravia_st/src/",
@@ -700,7 +733,7 @@
     {
      "slug": "90_tibradden_cir",
      "addr": "90 Tibradden Cir, Ascot",
-     "who": "Devon Kelly · Laurie Kelly",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
      "agency": "red",
      "full": false,
      "src": "28-oct-2026/90_tibradden_cir/src/",
@@ -722,7 +755,7 @@
     {
      "slug": "22_337_lord_st",
      "addr": "22/337 Lord St, Highgate",
-     "who": "Kylie Atkinson · Belle Property",
+     "who": "Kylie Atkinson \u00b7 Belle Property",
      "agency": "green-belle",
      "full": false,
      "src": "28-oct-2026/22_337_lord_st/src/",
@@ -746,7 +779,7 @@
     {
      "slug": "218_north_beach_dr",
      "addr": "218 North Beach Dr, Tuart Hill",
-     "who": "Stephanie Briers · Professionals",
+     "who": "Stephanie Briers \u00b7 Professionals",
      "agency": "flags-p",
      "full": false,
      "src": "27-oct-2026/218_north_beach_dr/src/",
@@ -775,7 +808,7 @@
     {
      "slug": "41_st_kilda_rd",
      "addr": "41 St Kilda Rd, Balga",
-     "who": "Emma Scharf · Professionals",
+     "who": "Emma Scharf \u00b7 Professionals",
      "agency": "flags-p",
      "full": false,
      "src": "27-oct-2026/41_st_kilda_rd/src/",
@@ -801,7 +834,7 @@
     {
      "slug": "4_17_forest_hill_dr",
      "addr": "4/17 Forest Hill Dr, Kingsley",
-     "who": "James Kennedy · Professionals Kingsley",
+     "who": "James Kennedy \u00b7 Professionals Kingsley",
      "agency": "flags-p",
      "full": false,
      "fullPhotos": [],
@@ -822,7 +855,7 @@
     {
      "slug": "209_barridale_dr",
      "addr": "209 Barridale Dr, Kingsley",
-     "who": "James Kennedy · Professionals Kingsley",
+     "who": "James Kennedy \u00b7 Professionals Kingsley",
      "agency": "flags-p",
      "full": false,
      "fullPhotos": [
@@ -843,7 +876,7 @@
     {
      "slug": "47_attra_st",
      "addr": "47 Attra St, Balcatta",
-     "who": "Jenny Fry · City to Surf",
+     "who": "Jenny Fry \u00b7 City to Surf",
      "agency": "simple",
      "full": false,
      "fullPhotos": [
@@ -868,7 +901,7 @@
     {
      "slug": "18_wonderboom_way",
      "addr": "18 Wonderboom Way, Forrestfield",
-     "who": "David Huynh · Harcourts",
+     "who": "David Huynh \u00b7 Harcourts",
      "agency": "navy-h",
      "full": false,
      "fullPhotos": [
@@ -900,7 +933,7 @@
     {
      "slug": "30_karangi_cir",
      "addr": "30 Karangi Cir, Byford",
-     "who": "Sally Bulpitt · Rodway Group",
+     "who": "Sally Bulpitt \u00b7 Rodway Group",
      "agency": "rodway",
      "full": false,
      "src": "26-oct-2026/30_karangi_cir/src/",
@@ -924,7 +957,7 @@
     {
      "slug": "41_coulthard_cres",
      "addr": "41 Coulthard Cres, Canning Vale",
-     "who": "Phil Lankowski · Rodway Group",
+     "who": "Phil Lankowski \u00b7 Rodway Group",
      "agency": "rodway",
      "full": false,
      "src": "26-oct-2026/41_coulthard_cres/src/",
@@ -948,7 +981,7 @@
     {
      "slug": "42_rutland_ave",
      "addr": "4/42 Rutland Ave, Lathlain",
-     "who": "Devon Kelly · Laurie Kelly",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
      "agency": "red",
      "full": false,
      "src": "26-oct-2026/42_rutland_ave/src/",
@@ -967,7 +1000,7 @@
     {
      "slug": "132a_arkana_rd",
      "addr": "132A Arkana Rd, Westminster",
-     "who": "Emma Scharf · Professionals TWT",
+     "who": "Emma Scharf \u00b7 Professionals TWT",
      "agency": "flags-p",
      "full": false,
      "fullPhotos": [
@@ -999,7 +1032,7 @@
     {
      "slug": "10_belches_lp",
      "addr": "10 Belches Lp, Seville Grove",
-     "who": "Lou Smith · Harcourts",
+     "who": "Lou Smith \u00b7 Harcourts",
      "agency": "navy-h",
      "full": false,
      "src": "24-oct-2026/10_belches_lp/src/",
@@ -1022,7 +1055,7 @@
     {
      "slug": "3_midi_terrace",
      "addr": "3 Midi Terrace, Hillarys",
-     "who": "Josh Brockhurst · Century 21",
+     "who": "Josh Brockhurst \u00b7 Century 21",
      "agency": "c21",
      "full": false,
      "src": "24-oct-2026/3_midi_terrace/src/",
@@ -1046,7 +1079,7 @@
     {
      "slug": "13_angelo_st_lot1",
      "addr": "Lot 1, 13 Angelo St, Armadale",
-     "who": "Grant Wilson · Armadale Real Estate",
+     "who": "Grant Wilson \u00b7 Armadale Real Estate",
      "agency": "flags-p",
      "full": false,
      "src": "24-oct-2026/13_angelo_st_lot1/src/",
@@ -1070,7 +1103,7 @@
     {
      "slug": "13_angelo_st_lot2",
      "addr": "Lot 2, 13 Angelo St, Armadale",
-     "who": "Grant Wilson · Armadale Real Estate",
+     "who": "Grant Wilson \u00b7 Armadale Real Estate",
      "agency": "flags-p",
      "full": false,
      "src": "24-oct-2026/13_angelo_st_lot2/src/",
@@ -1101,7 +1134,7 @@
     {
      "slug": "28_george_st",
      "addr": "28 George St, Belmont",
-     "who": "Devon Kelly · Laurie Kelly",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
      "agency": "red",
      "full": false,
      "src": "23-oct-2026/28_george_st/src/",
@@ -1123,7 +1156,7 @@
     {
      "slug": "13_riviera_vista",
      "addr": "13 Riviera Vista, Port Kennedy",
-     "who": "Leonie Adam · Realty Plus",
+     "who": "Leonie Adam \u00b7 Realty Plus",
      "agency": "realty-plus",
      "full": false,
      "src": "23-oct-2026/13_riviera_vista/src/",
@@ -1153,7 +1186,7 @@
     {
      "slug": "14_country_club_ave",
      "addr": "14 Country Club Ave, Roleystone",
-     "who": "Tim Fidock · Harcourts",
+     "who": "Tim Fidock \u00b7 Harcourts",
      "agency": "navy-h",
      "full": false,
      "src": "22-oct-2026/14_country_club_ave/src/",
@@ -1175,7 +1208,7 @@
     {
      "slug": "8a_coogan_close",
      "addr": "8A Coogan Close, Yangebup",
-     "who": "Simon Raspa · Raspa",
+     "who": "Simon Raspa \u00b7 Raspa",
      "agency": "charcoal",
      "full": false,
      "src": "22-oct-2026/8a_coogan_close/src/",
@@ -1193,7 +1226,7 @@
     {
      "slug": "14b_bohemia_st",
      "addr": "14B Bohemia St, Spearwood",
-     "who": "Leonie Adam · Realty Plus",
+     "who": "Leonie Adam \u00b7 Realty Plus",
      "agency": "realty-plus",
      "full": false,
      "src": "22-oct-2026/14b_bohemia_st/src/",
@@ -1215,7 +1248,7 @@
     {
      "slug": "unit_4_61_kennerly_st",
      "addr": "4/61 Kennerly St, Cloverdale",
-     "who": "Daniel Kelly · Laurie Kelly",
+     "who": "Daniel Kelly \u00b7 Laurie Kelly",
      "agency": "red",
      "full": false,
      "src": "22-oct-2026/unit_4_61_kennerly_st/src/",
@@ -1234,7 +1267,7 @@
     {
      "slug": "55_wright_st",
      "addr": "55 Wright St, Kewdale",
-     "who": "Devon Kelly · Laurie Kelly",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
      "agency": "red",
      "full": false,
      "src": "22-oct-2026/55_wright_st/src/",

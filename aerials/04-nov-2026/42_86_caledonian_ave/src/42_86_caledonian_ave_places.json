@@ -1,0 +1,181 @@
+{
+ "address": "42/86 Caledonian Ave, Maylands WA 6051",
+ "lat": -31.930665,
+ "lng": 115.900176,
+ "pins": [
+  {
+   "name": "Maylands Station",
+   "cat": "train",
+   "lat": -31.92806,
+   "lng": 115.8919
+  },
+  {
+   "name": "Bayswater Station",
+   "cat": "train",
+   "lat": -31.918401,
+   "lng": 115.91187
+  },
+  {
+   "name": "Optus Stadium",
+   "cat": "stadium",
+   "lat": -31.951201,
+   "lng": 115.889195
+  },
+  {
+   "name": "Perth CBD",
+   "cat": "city",
+   "lat": -31.9523,
+   "lng": 115.859
+  },
+  {
+   "name": "Perth Airport",
+   "cat": "airport",
+   "lat": -31.94125,
+   "lng": 115.9734
+  },
+  {
+   "name": "Maylands Peninsula Primary School",
+   "cat": "school",
+   "lat": -31.93248,
+   "lng": 115.9046
+  },
+  {
+   "name": "Maylands Primary School",
+   "cat": "school",
+   "lat": -31.93186,
+   "lng": 115.89115
+  },
+  {
+   "name": "Chisholm Catholic College",
+   "cat": "school",
+   "lat": -31.91151,
+   "lng": 115.90056
+  },
+  {
+   "name": "John Forrest Secondary College",
+   "cat": "school",
+   "lat": -31.9045,
+   "lng": 115.9007
+  },
+  {
+   "name": "Mount Lawley Senior High School",
+   "cat": "school",
+   "lat": -31.9212,
+   "lng": 115.8704
+  },
+  {
+   "name": "Edith Cowan University Mount Lawley",
+   "cat": "university",
+   "lat": -31.919085,
+   "lng": 115.869005
+  },
+  {
+   "name": "Bayswater Primary School",
+   "cat": "school",
+   "lat": -31.9209,
+   "lng": 115.9114
+  },
+  {
+   "name": "Inglewood Primary School",
+   "cat": "school",
+   "lat": -31.917227,
+   "lng": 115.886447
+  },
+  {
+   "name": "St Columba's School Bayswater",
+   "cat": "school",
+   "lat": -31.922882,
+   "lng": 115.910651
+  },
+  {
+   "name": "Galleria Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.897163,
+   "lng": 115.899231
+  },
+  {
+   "name": "Belmont Forum",
+   "cat": "shopping",
+   "lat": -31.96493,
+   "lng": 115.934953
+  },
+  {
+   "name": "DFO Perth",
+   "cat": "shopping",
+   "lat": -31.938441,
+   "lng": 115.948647
+  },
+  {
+   "name": "Eighth Avenue Café Strip",
+   "cat": "shopping",
+   "lat": -31.9316,
+   "lng": 115.8956
+  },
+  {
+   "name": "Maylands Peninsula Golf Course",
+   "cat": "golf",
+   "lat": -31.94611,
+   "lng": 115.90056
+  },
+  {
+   "name": "Embleton Golf Course",
+   "cat": "golf",
+   "lat": -31.905282,
+   "lng": 115.906813
+  },
+  {
+   "name": "Mount Lawley Golf Club",
+   "cat": "golf",
+   "lat": -31.914863,
+   "lng": 115.875764
+  },
+  {
+   "name": "Bardon Park",
+   "cat": "park",
+   "lat": -31.935224,
+   "lng": 115.888312
+  },
+  {
+   "name": "Peninsula Farm",
+   "cat": "landmark",
+   "lat": -31.9428,
+   "lng": 115.9103
+  },
+  {
+   "name": "Riverside Gardens",
+   "cat": "park",
+   "lat": -31.930086,
+   "lng": 115.923095
+  },
+  {
+   "name": "Hyde Park",
+   "cat": "park",
+   "lat": -31.93852,
+   "lng": 115.86471
+  },
+  {
+   "name": "Ascot Racecourse",
+   "cat": "racing",
+   "lat": -31.935,
+   "lng": 115.9244
+  },
+  {
+   "name": "Belmont Park Racecourse",
+   "cat": "racing",
+   "lat": -31.946758,
+   "lng": 115.890654
+  },
+  {
+   "name": "Bayswater Waves",
+   "cat": "aquatic",
+   "lat": -31.897846,
+   "lng": 115.910365
+  },
+  {
+   "name": "Inglewood Library",
+   "cat": "library",
+   "lat": -31.92103,
+   "lng": 115.88554
+  }
+ ]
+}
