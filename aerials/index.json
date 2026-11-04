@@ -520,7 +520,8 @@
      "agency": "peard",
      "full": false,
      "fullPhotos": [
-      "DJI_20261030124548_0340_D_r90.jpg"
+      "DJI_20261030124548_0340_D_r90.jpg",
+      "DJI_20261030124548_0340_D_r90_split_lots.jpg"
      ],
      "src": "30-oct-2026/75_roberts_st/src/",
      "map": "75_roberts_st_map.html",
@@ -538,7 +539,7 @@
      ],
      "notes": "Entry Notes: meet wesley at the property. Amenities or features to highlight: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -.",
      "portrait": false,
-     "lot": "1308 m² — 75 + 77 Roberts St combined (cadastre: 601 + 705 m²)"
+     "lot": "1302 m² — 75 + 77 Roberts St combined (records: 599 + 703 m², per Wesley 4 Nov)"
     },
     {
      "slug": "1_finch_pl",
