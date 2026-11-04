@@ -8,18 +8,42 @@
    "agency": "beshay",
    "photos": "batch/115_mandurah_tce/jpg",
    "map": "batch/115_mandurah_tce/115_mandurah_tce_places.json",
-   "poly": null,
-   "nadirSplit": 1,
+   "poly": [
+    [
+     -32.5246563,
+     115.7246052
+    ],
+    [
+     -32.5245689,
+     115.7247929
+    ],
+    [
+     -32.5250166,
+     115.7250771
+    ],
+    [
+     -32.5251025,
+     115.7248885
+    ]
+   ],
    "nadirPick": [
     "0019",
     "0020"
    ],
    "streetRot": {
     "115_mandurah_tce__nadir": 180,
-    "115_mandurah_tce__nadir2": 180
+    "115_mandurah_tce__nadir2": 0
    },
-   "notes": "Shot by Jason 2 Nov (DNG, in 'Floorplan or Drone'); booking chose Floorplan but drone was flown. Processed 4 Nov at Jason's request. Commercial lot; no boundary (cadastre not reachable from the cloud session).",
-   "noSky": 1
+   "notes": "Shot by Jason 2 Nov (DNG, in 'Floorplan or Drone'); booking chose Floorplan but drone was flown. Processed 4 Nov at Jason's request. Lot 10 D15007, 1131 m2 per title (agent sent planning pack 4 Nov). Restaurant building.",
+   "noSky": 1,
+   "area": 1131,
+   "areaSource": "Certificate of Title 1941/575, Lot 10 on Diagram 15007 (agent pack 4 Nov)",
+   "lens": [
+    20.12,
+    null,
+    20.12,
+    56.17
+   ]
   }
  ]
 }

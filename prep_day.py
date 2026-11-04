@@ -81,6 +81,9 @@ for j in D['jobs']:
             # 29 Oct (Jason): every top-down goes out with the STREET AT THE BOTTOM. 'streetRot' {variant: 90|180|270}
             # = clockwise turn needed (decide by looking at the frame); the photo is turned and the camera yaw follows.
             rot = int((j.get('streetRot') or {}).get(v, 0)) % 360
+            if rot and n0 not in cams:   # 4 Nov: no satellite line-up (cloud run / no Mac) -> turn using the drone's own gimbal yaw
+                _x = open(n0,'rb').read(400000).decode('latin1'); _f = re.search(r'FocalLength="35mm[^"]*"|FocalLengthIn35mmFormat="([\d.]+)"', _x)
+                cams[n0] = {'yaw': yaw(n0), 'f35': float(_f.group(1)) if _f and _f.group(1) else 24.0}
             if rot and n0 in cams:
                 from PIL import Image as _I
                 im_ = _I.open(n0); ex_ = im_.getexif(); ex_[274] = 1
