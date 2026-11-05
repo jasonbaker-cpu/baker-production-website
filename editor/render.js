@@ -321,7 +321,7 @@ function textMetrics(c, t, p){
   const bw = w+padX*2, bh = lines.length*lh + padY*2;
   return { size, weight, lines, lh, bw, bh, x:t.x-bw/2, y:t.y-bh/2, padX, padY };
 }
-const ADJ0 = { exp:0, con:0, hl:0, sh:0, warm:0, tint:0, sat:0, bright:0 };
+const ADJ0 = { exp:0, con:0, hl:0, sh:0, warm:0, tint:0, sat:0, bright:0, even:0, land:0, sea:0, sky:0 };
 function adjActive(a){ return a && Object.keys(ADJ0).some(k=>a[k]); }
 // Photo-only adjustments: applied to the picture underneath; pins, boundaries and text are drawn on top afterwards, untouched.
 function adjustedCanvas(src, a){
@@ -333,6 +333,33 @@ function adjustedCanvas(src, a){
     const wh=t*t*(3-2*t); t = t + sh*(1-wh)*t*(1-t)*1.6 + hl*wh*t*(1-t)*1.6; T[v]=cl(t*255); }
   const wr=1+a.warm/400, wb=1-a.warm/400, tg=1-a.tint/400;
   for (let i=0;i<d.length;i+=4){ let r=T[d[i]]*wr, g=T[d[i+1]]*tg, b=T[d[i+2]]*wb; const Y=.299*r+.587*g+.114*b; d[i]=cl(Y+(r-Y)*sat); d[i+1]=cl(Y+(g-Y)*sat); d[i+2]=cl(Y+(b-Y)*sat); }
+  if (a.even || a.land || a.sea || a.sky){   /* 5 Nov (Jason): automatic masks for LAND / SEA / SKY — land evened out (no bright or dark patches), each zone brightened or darkened on its own */
+    x.putImageData(id,0,0);
+    const mw=Math.max(24,Math.round(w/12)), mh=Math.max(16,Math.round(h/12)), N=mw*mh;
+    const z1=document.createElement("canvas"); z1.width=mw; z1.height=mh; const z1x=z1.getContext("2d"); z1x.drawImage(c,0,0,mw,mh);
+    const q=z1x.getImageData(0,0,mw,mh).data, LY=new Float32Array(N), rowY=new Float32Array(mh);
+    for (let i=0;i<N;i++){ const j=i*4; LY[i]=Math.log(1+(.299*q[j]+.587*q[j+1]+.114*q[j+2])); }
+    for (let yy=0;yy<mh;yy++){ let s=0; for (let xx=0;xx<mw;xx++) s+=LY[yy*mw+xx]; rowY[yy]=s/mw; }
+    let hz=Math.round(mh*.3), best=1e9; for (let yy=Math.round(mh*.04); yy<Math.round(mh*.6); yy++){ const a0=rowY[Math.max(0,yy-2)]+rowY[Math.max(0,yy-1)], b0=rowY[Math.min(mh-1,yy+1)]+rowY[Math.min(mh-1,yy+2)], dd=b0-a0; if (dd<best){ best=dd; hz=yy; } }
+    if (best > -0.15) hz = 0;   // no clear horizon (top-down / looking down): everything is land
+    const Ls=new Float32Array(N), Ws=new Float32Array(N), Ss=new Float32Array(N);
+    for (let yy=0;yy<mh;yy++) for (let xx=0;xx<mw;xx++){ const i=yy*mw+xx, j=i*4, r=q[j], g=q[j+1], b=q[j+2];
+      if (yy<hz){ Ss[i]=1; continue; } if (hz>0 && yy < hz + mh*.45 && ((b>r+22 && g>r+8 && b>90) || (b>r+8 && g>r+4 && b>150 && g>140))) Ws[i]=1; else Ls[i]=1; }
+    const blur=(A,R)=>{ const B=new Float32Array(N), C=new Float32Array(N); for (let pass=0;pass<3;pass++){ const S=pass?C:A;
+        for (let yy=0;yy<mh;yy++){ let acc=0,cnt=0; const row=yy*mw; for (let xx=-R;xx<mw;xx++){ if (xx+R<mw){ acc+=S[row+xx+R]; cnt++; } if (xx-R-1>=0){ acc-=S[row+xx-R-1]; cnt--; } if (xx>=0) B[row+xx]=acc/cnt; } }
+        for (let xx=0;xx<mw;xx++){ let acc=0,cnt=0; for (let yy=-R;yy<mh;yy++){ if (yy+R<mh){ acc+=B[(yy+R)*mw+xx]; cnt++; } if (yy-R-1>=0){ acc-=B[(yy-R-1)*mw+xx]; cnt--; } if (yy>=0) C[yy*mw+xx]=acc/cnt; } } } return C; };
+    const Lf=blur(Ls,1), Wf=blur(Ws,1), Sf=blur(Ss,1);
+    const R=Math.max(3,Math.round(mw/16)), num=new Float32Array(N); for (let i=0;i<N;i++) num[i]=LY[i]*Ls[i];
+    const bn=blur(num,R), bd=blur(Ls,R); let tg=0, tn=0; for (let i=0;i<N;i++) if (Ls[i]){ tg+=LY[i]; tn++; } tg = tn ? tg/tn : 0;
+    const ke=(a.even||0)/100, G=new Float32Array(N);
+    for (let i=0;i<N;i++){ const base = bd[i]>.02 ? bn[i]/bd[i] : tg; let ev = ke*0.85*(tg-base); ev = ev<-.6?-.6:ev>.6?.6:ev;
+      G[i] = Lf[i]*(ev + (a.land||0)/100*0.7) + Wf[i]*((a.sea||0)/100*0.7) + Sf[i]*((a.sky||0)/100*0.7); }
+    const sx=(mw-1)/Math.max(1,w-1), sy=(mh-1)/Math.max(1,h-1);
+    for (let yy=0;yy<h;yy++){ const fy=yy*sy, y0=fy|0, y1=Math.min(mh-1,y0+1), ty=fy-y0;
+      for (let xx=0;xx<w;xx++){ const fx=xx*sx, x0=fx|0, x1=Math.min(mw-1,x0+1), tx=fx-x0;
+        const gv=(G[y0*mw+x0]*(1-tx)+G[y0*mw+x1]*tx)*(1-ty)+(G[y1*mw+x0]*(1-tx)+G[y1*mw+x1]*tx)*ty; if (gv>-0.003 && gv<0.003) continue;
+        const k=Math.exp(gv), i=(yy*w+xx)*4; d[i]=cl(d[i]*k); d[i+1]=cl(d[i+1]*k); d[i+2]=cl(d[i+2]*k); } }
+  }
   if (a.bright){   /* 4–5 Nov (Jason): "mask the really bright parts" — feathered mask of every bright area (sky, ocean, glare), pulled down with a bit more colour so clouds read */
     const k=a.bright/100, mw=Math.max(8,Math.round(w/8)), mh=Math.max(8,Math.round(h/8));
     const m1=document.createElement("canvas"); m1.width=mw; m1.height=mh; const m1x=m1.getContext("2d"); m1x.drawImage(src,0,0,mw,mh);

@@ -295,6 +295,11 @@ function refreshPhotoTab(){
     let tm=null; const redraw=()=>{ clearTimeout(tm); tm=setTimeout(()=>{ p._blur=null; refreshStrip(); requestDraw(); }, 60); };
     A.forEach(([k,lab])=>sa.appendChild(slider("adj_"+k, lab, -100, 100, 1, p.adj[k]||0, v=>(v>0?"+":"")+v, v=>{ p.adj[k]=v; redraw(); }, commit)));
     sa.appendChild(slider("adj_bright", "Bright parts (pull down)", 0, 100, 1, p.adj.bright||0, v=>v?String(v):"off", v=>{ p.adj.bright=v; p.brightSet=true; redraw(); }, commit));   /* 5 Nov: pulls down every bright area — sky, ocean, glare */
+    sa.appendChild(el(`<p class="note" style="margin-top:8px"><b>Auto masks</b> — land, sea and sky are found automatically.</p>`));
+    sa.appendChild(slider("adj_even", "Even out land", 0, 100, 1, p.adj.even||0, v=>v?String(v):"off", v=>{ p.adj.even=v; p.brightSet=true; redraw(); }, commit));
+    sa.appendChild(slider("adj_land", "Land brightness", -50, 50, 1, p.adj.land||0, v=>v>0?"+"+v:String(v), v=>{ p.adj.land=v; p.brightSet=true; redraw(); }, commit));
+    sa.appendChild(slider("adj_sea", "Sea brightness", -50, 50, 1, p.adj.sea||0, v=>v>0?"+"+v:String(v), v=>{ p.adj.sea=v; p.brightSet=true; redraw(); }, commit));
+    sa.appendChild(slider("adj_sky", "Sky brightness", -50, 50, 1, p.adj.sky||0, v=>v>0?"+"+v:String(v), v=>{ p.adj.sky=v; p.brightSet=true; redraw(); }, commit));
     { const mb = el(`<div class="row"><button class="btn" aria-pressed="false">Show mask</button><span class="note" style="margin:0">Red = what the mask touches</span></div>`); const bt = mb.children[0];
       bt.onclick=()=>{ window.__showMask=!window.__showMask; bt.setAttribute("aria-pressed", String(!!window.__showMask)); bt.textContent = window.__showMask ? "Hide mask" : "Show mask"; p._blur=null; requestDraw(); };
       sa.appendChild(mb); }
