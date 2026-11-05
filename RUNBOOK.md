@@ -262,3 +262,8 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 - `__nadir2`: road on the SIDE of the house (left or right). If the shooter's frame already has the road down a side, streetRot 0 for it.
 - Only one top-down shot: prep_day now uses it for both automatically (second = a quarter turn from the first unless streetRot says otherwise). Set streetRot for both so the road really is bottom / side. `noDup:1` turns this off.
 - Look at both before publishing: road bottom on one, road on a side on the other.
+
+## Skies — Karabil look every time (Jason 5 Nov)
+- Every drone job gets the sky replaced with plate B (soft plain blue, like 23 Karabil Way Nollamara on REIWA) so all angles match. Finish on, Contrast +10. Do NOT add brightness/shadow lifts (tested: washes out).
+- Ocean / beach frames are detected automatically (water right under the horizon) and KEEP their real sky — the swap ghosts towers and cuts the sea there.
+- If an ocean frame's real sky is bad (blown or washed out), the editor marks it `needsEditor`; t12 prints `NEEDS EDITOR` and writes needs_editor_<slug>.json. Then mark the job `toEditor: true` with editorReason "ocean shot with a bad sky — sky can't be swapped, please replace" (the GitHub Action emails the editor). Still publish our version for reference.

@@ -210,6 +210,8 @@ async def main():
             if os.environ.get("DBG"): print("SKY", await pg.evaluate("JSON.stringify(window.__ltDbg||[])"))
             pj = await pg.evaluate("window.__bae.project()"); s_=JOBS[0]['slug'] if JOBS else 'x'; os.makedirs(OUT+s_,exist_ok=True); open(OUT+s_+'/'+s_+'.baker.json','w').write(pj)
         except Exception as e: print('project save failed', e)
+        ne = [os.path.basename(k) for k,v in report.items() if isinstance(v,dict) and v.get('needsEditor')]
+        if ne: print('NEEDS EDITOR (ocean shot with a bad sky, can not swap):', ne); json.dump(ne, open(OUT+'needs_editor_'+(JOBS[0]['slug'] if JOBS else 'x')+'.json','w'))   # 5 Nov (Jason)
         json.dump(report, open(OUT+'report.json','w')); json.dump(report, open(OUT+'report_'+(JOBS[0]['slug'] if JOBS else 'x')+'.json','w'))
         for k,v in report.items(): print(k, v['cam'] and {kk:round(vv,1) for kk,vv in v['cam'].items() if isinstance(vv,(int,float))}, [(q['name'],q['ex'],q['ey'],q['side']) for q in v['pins']])
         print('errors', errs)

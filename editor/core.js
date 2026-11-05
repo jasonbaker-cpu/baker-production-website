@@ -14,7 +14,7 @@ const prefs = Object.assign({
   discOn:true, discText:DEFAULT_DISC
 }, LS.get("prefs", {}));
 if (prefs.pinStyle !== undefined || prefs.v !== 2){ delete prefs.pinStyle; prefs.pinColor = ""; prefs.labelOpacity = 86; prefs.agency = prefs.agency || "red"; prefs.v = 2; }  // old grey/red looks retired
-prefs.skyPlate = "C"; prefs.sky = true;   // 26 Oct: Baker skies are always pale-blue C; a plate picked in an old session never carries over
+prefs.skyPlate = "B"; prefs.sky = true;   // 5 Nov: Baker skies are always plate B (Karabil look); was C; a plate picked in an old session never carries over
 const savePrefs = () => LS.set("prefs", prefs);
 let templates = LS.get("templates", {});
 
@@ -334,7 +334,7 @@ function finishImage(base, p){
     // a few degrees off as a horizon — the portal loads it before finishing, which clamped the sky ~130 px too high and left a grey band)
     const gP = (p.meta && p.meta.gimbal && isFinite(p.meta.gimbal.pitch)) ? p.meta.gimbal.pitch : p.cam.pitch, gF = (p.meta && p.meta.f35) || p.cam.f35;
     const fpx = gF*Math.hypot(p.ow,p.oh)/43.27, yO = p.oh/2 + fpx*Math.tan((gP+0.35)*DEG), geo = (yO - p.y0)*p.k + 0.004*h;
-    const xc = w/2, ydet = sky.m*xc + sky.b;
+    const xc = w/2, ydet = sky.m*xc + sky.b; p._geoH = geo;
     window.__skyDbg=(window.__skyDbg||[]);
     let bandTex = 0; { const ya=Math.max(0,(geo/sky.s)|0), yb=Math.min(sky.sh,(ydet/sky.s)|0); let t=0,n=0; for (let y=ya;y<yb;y++) for (let x=0;x<sky.sw;x+=2){ t+=sky.tex[y*sky.sw+x]; n++; } bandTex = n ? t/n : 0; }
     window.__skyDbg.push({ydet:Math.round(ydet),geo:Math.round(geo),bandTex:+bandTex.toFixed(2)});
@@ -351,6 +351,15 @@ function finishImage(base, p){
   if (sky){ let r=0,b=0,n=0; const hz = Math.max(4, Math.min(h-1, sky.b|0)), st = Math.max(1, Math.round(w/300));
     let g=0; for (let y=0; y<hz*0.8; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4; r+=px[i]; g+=px[i+1]; b+=px[i+2]; n++; }
     if (n && (r - b)/n > 6 && (r+g+b)/(3*n) < 236 && !(Object.assign({},TUNE,window.__TUNE||{}).forceSky || (typeof prefs!=='undefined' && prefs.skyPlate==='S'))) { p.skyWarm = true; sky = null; } }   // 30 Oct: twilight jobs (plate S) DO get the editors' sunset sky
+  // 5 Nov (Jason): ocean / beach shots keep their real sky — our swap can't find the horizon over water (ghost towers, cut-off sea).
+  // If that real sky is bad (blown / washed out), the photo is flagged for the photo editor instead.
+  p.skyWater = false; p.needsEditor = false;
+  if (sky && !(Object.assign({},TUNE,window.__TUNE||{}).forceSky)){ const hz = Math.max(4, Math.min(h-1, ((p._geoH!=null && p._geoH>0 ? Math.min(p._geoH, sky.b) : sky.b) + 0.03*h)|0)), y1 = Math.min(h, hz + (0.14*h|0)), st = Math.max(1, Math.round(w/300)); let n=0, wat=0;
+    for (let y=hz; y<y1; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2]; n++; if (b > r + 22 && g > r + 8 && b > 90) wat++; }
+    window.__waterDbg = n ? +(wat/n).toFixed(3) : 0; if (n && wat/n > 0.35){ p.skyWater = true;
+      let m=0, clip=0, blue=0; for (let y=0; y<hz*0.85; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2]; m++; if (r>240 && g>240 && b>240) clip++; if (b > r + 28 && b > 120) blue++; }
+      if (m && (clip/m > 0.25 || blue/m < 0.15)) p.needsEditor = true;
+      sky = null; } }
   // Keep a good real sky (blue with proper clouds): the editors only swap washed-out or blown skies.
   p.skyKept = false;
   if (sky && p.skyKeepReal === true){
