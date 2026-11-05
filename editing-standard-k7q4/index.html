@@ -49,6 +49,20 @@ nav a{font-size:13.5px;font-weight:600;text-decoration:none;color:var(--ink);bac
 .ba figure{margin:0;position:relative}
 .ba figcaption{position:absolute;left:8px;top:8px;font-size:11px;font-weight:700;color:#fff;background:rgba(0,0,0,.6);padding:2px 8px;border-radius:999px}
 .ba .grid{grid-template-columns:1fr}
+.revs{display:grid;gap:14px}
+.rev{background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:16px}
+.rev summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.rev summary::-webkit-details-marker{display:none}
+.rev .job{font-family:var(--display);font-weight:700;font-size:17px;flex:1 1 220px}
+.score{font-weight:700;font-size:14px;border-radius:999px;padding:4px 11px}
+.s-hi{background:var(--good-bg);color:var(--good)}.s-mid{background:#FFF4D6;color:#9A6700}.s-lo{background:var(--bad-bg);color:var(--bad)}
+@media (prefers-color-scheme:dark){.s-mid{background:#332700;color:#FFD60A}}
+.rev .vd{width:100%;color:var(--muted);font-size:14px}
+.rev .notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:12px;margin-top:14px}
+.rev .note img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:12px;cursor:zoom-in;display:block;background:var(--sunk)}
+.rev .note p{margin:6px 0 0;font-size:14px}
+.rev .drop{margin-top:12px;font-size:13.5px;color:var(--muted)}
+.rev .drop b{color:var(--ink)}
 #lb{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;padding:16px;z-index:9;cursor:zoom-out}
 #lb.on{display:flex}
 #lb img{max-width:100%;max-height:100%;border-radius:8px}
@@ -61,16 +75,20 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   <header>
     <div>
       <h1>Baker Production · Editing Standard</h1>
-      <p class="sub">For our photo editors. Match the good examples, avoid the bad ones. Private page.</p>
+      <p class="sub">For our photo editors. Check the job reviews first. Match the good examples, avoid the bad ones. Private page.</p>
     </div>
     <div class="upd">Updated <span id="upd"></span></div>
   </header>
 
   <nav>
-    <a href="#rules">Rules</a><a href="#links">Reference links</a><a href="#good">Good</a><a href="#bad">Bad</a><a href="#fixes">Before / after</a>
+    <a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#links">Reference links</a><a href="#good">Good</a><a href="#bad">Bad</a><a href="#fixes">Before / after</a>
   </nav>
 
   <div class="callout"><b>The target:</b> Crib Creative's Holdsworth listings. <b>Our standard:</b> 22 Thorburn Ave. Warm white walls, bright rooms, soft natural shadows, every photo in the job matching. Not grey, not cream, not washed out.</div>
+
+  <h2 id="reviews">Job reviews</h2>
+  <p class="sub" style="margin:-4px 0 12px">Latest QC on our jobs. Fix the red points; keep doing the green ones.</p>
+  <div id="revList" class="revs"></div>
 
   <h2 id="rules">Rules</h2>
   <div class="rules">
@@ -134,7 +152,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
 </div>
 <div id="lb"><img alt=""></div>
 
-<script src="data.js?v=1"></script>
+<script src="data.js?v=2"></script>
 <script>
 (function(){
   var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})};
@@ -146,8 +164,13 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   document.getElementById("badGrid").innerHTML=(window.BAD||[]).map(function(e){return card(e,"bad")}).join("");
   document.getElementById("baGrid").innerHTML=(window.BEFORE_AFTER||[]).map(function(e){
     return '<div class="ex"><div class="ba"><figure><img loading="lazy" src="'+esc(e.before)+'" alt="before"><figcaption>Before</figcaption></figure><figure><img loading="lazy" src="'+esc(e.after)+'" alt="after"><figcaption>After</figcaption></figure></div><div class="t"><div class="meta">'+esc(e.job)+' · '+esc(e.file)+'</div><p class="why">'+esc(e.why)+'</p></div></div>'}).join("");
+  var sc=function(n){return n>=8?"s-hi":n>=7.5?"s-mid":"s-lo"};
+  document.getElementById("revList").innerHTML=(window.REVIEWS||[]).map(function(r,i){
+    return '<details class="rev"'+(i<3?' open':'')+'><summary><span class="job">'+esc(r.job)+'</span><span class="score '+sc(r.score)+'">'+esc(r.score)+'/10</span><span class="meta">Shot '+esc(r.shoot)+' · reviewed '+esc(r.date)+'</span><span class="vd">'+esc(r.verdict)+'</span></summary>'+
+      '<div class="notes">'+(r.notes||[]).map(function(n){return '<div class="note"><img loading="lazy" src="'+esc(n.img)+'" alt="'+esc(n.file)+'"><p><span class="tag '+n.kind+'">'+(n.kind=="good"?"Good":"Fix")+'</span> <span class="meta">'+esc(n.file)+'</span><br>'+esc(n.text)+'</p></div>'}).join("")+'</div>'+
+      ((r.drop&&r.drop.length)?'<div class="drop"><b>Don\'t deliver (duplicates):</b> '+r.drop.map(esc).join(", ")+'</div>':'')+'</details>'}).join("");
   var lb=document.getElementById("lb"),li=lb.querySelector("img");
-  document.addEventListener("click",function(ev){var t=ev.target;if(t.tagName=="IMG"&&t.closest(".ex")){li.src=t.src;lb.classList.add("on")}});
+  document.addEventListener("click",function(ev){var t=ev.target;if(t.tagName=="IMG"&&t.closest(".ex,.note")){li.src=t.src;lb.classList.add("on")}});
   lb.addEventListener("click",function(){lb.classList.remove("on")});
   document.addEventListener("keydown",function(ev){if(ev.key=="Escape")lb.classList.remove("on")});
 })();
