@@ -271,3 +271,12 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 ## Job documents in the editor (Jason 5 Nov)
 - For EVERY job put `rawPath` (the job's Dropbox raw folder, display path) and `docs` in meta: `docs: [{"name": "Title.pdf", "path": "/Baker Production team folder/.../Title.pdf"}]` — every non-photo file in the job's folder (title, strata/survey plan, planning pack, site plan, notes). mkday copies them into aerials/index.json; the editor shows a "Documents" row (Dropbox links, need the team login) plus "Open job folder".
 - NEVER copy the documents themselves onto the website — the site is public and titles have owner names.
+
+## Public schools — ONLY the local intake (zone) school (Jason 5 Nov, "asap")
+- Private / Catholic / independent schools: pin as before (no zones).
+- PUBLIC schools: pin only if the house is inside that school's local intake area. Never pin an out-of-zone public school.
+- How to check (desktop Chrome — the cloud can't reach it): det.wa.edu.au/schoolsonline/local_intake_school.do → "Search by an address" (no postcode) → click each nearby public primary/secondary → the school page carries `geoJsonFeatures` (intake polygons, intakeType MAIN or OPTIONAL). House point inside = keep (MAIN or OPTIONAL). Use the site's own geocode (form updateKmSearchForm vMapAddressLat/Long).
+- Schools with "uses proximity to the school as a criterion" have no fixed zone: keep only if it is the nearest public school of its level.
+- If the zone can't be confirmed, don't pin the public school.
+- Scripted POSTs to the site are blocked — click the school links (chain from one school page to the next; the "Schools near" list is on every school page).
+- 5 Nov audit of 2–4 Nov jobs: removed Bayswater PS, Inglewood PS, Mount Lawley SHS (42/86 Caledonian), Wirrabirra PS (22 Sandridge), Dudley Park PS (115 Mandurah). All other pinned public schools were confirmed in zone.
