@@ -51,7 +51,7 @@ function autoBright(src){   /* 5 Nov (Jason): "auto make the highlights go down 
   const brL = p97>.80 ? Math.min(45, Math.round((p97-.80)*300)) : 0;   /* bright roofs on the land also raise Bright parts */
   return { bright:Math.max(br, brL), hl };
 }
-function autoAdj(p, src){ if (p.brightSet || p._autoDone===src || (p.adj && p.adj.bright) || p.editorPhoto || p.extraEdited) return; p._autoDone=src; const ab = autoBright(src); p.adj = Object.assign({}, ADJ0, p.adj||{}, { bright:Math.round(ab.bright*.6), even:60 }, (p.adj && p.adj.hl) ? {} : { hl:ab.hl });   /* 5 Nov: land evened by default */ p._adj = null; }
+function autoAdj(p, src){ if (p.brightSet || p._autoDone===src || (p.adj && p.adj.bright) || p.editorPhoto || p.extraEdited) return; p._autoDone=src; const ab = autoBright(src); p.adj = Object.assign({}, ADJ0, p.adj||{}, { bright:ab.bright }, (p.adj && p.adj.hl) ? {} : { hl:ab.hl });   /* 5 Nov: land evened by default */ p._adj = null; }
 function ensureFinish(p){ if (p && (p.editorPhoto || p.extraEdited)){ p.finishOn = false; p.fin = null; return; }   /* 31 Oct: editor photos are never re-finished */
   if (!p.finishOn && !p.sample && p.base) autoAdj(p, p.base);   /* auto highlights also on unfinished photos */
   if (!p.finishOn || p.sample) return;

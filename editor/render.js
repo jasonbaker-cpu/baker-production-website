@@ -352,7 +352,7 @@ function adjustedCanvas(src, a){
     const R=Math.max(3,Math.round(mw/16)), num=new Float32Array(N); for (let i=0;i<N;i++) num[i]=LY[i]*Ls[i];
     const bn=blur(num,R), bd=blur(Ls,R); let tg=0, tn=0; for (let i=0;i<N;i++) if (Ls[i]){ tg+=LY[i]; tn++; } tg = tn ? tg/tn : 0;
     const ke=(a.even||0)/100, G=new Float32Array(N);
-    for (let i=0;i<N;i++){ const base = bd[i]>.02 ? bn[i]/bd[i] : tg; let ev = ke*0.85*(tg-base); ev = ev<-.6?-.6:ev>.6?.6:ev;
+    for (let i=0;i<N;i++){ const base = bd[i]>.02 ? bn[i]/bd[i] : tg; let ev = ke*0.85*(tg+0.12-base); ev = ev<-.6?-.6:ev>0?0:ev;   /* 5 Nov: pull bright patches DOWN only — lifting dark trees made the land muddy */
       G[i] = Lf[i]*(ev + (a.land||0)/100*0.7) + Wf[i]*((a.sea||0)/100*0.7) + Sf[i]*((a.sky||0)/100*0.7); }
     const sx=(mw-1)/Math.max(1,w-1), sy=(mh-1)/Math.max(1,h-1);
     for (let yy=0;yy<h;yy++){ const fy=yy*sy, y0=fy|0, y1=Math.min(mh-1,y0+1), ty=fy-y0;
