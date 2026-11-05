@@ -2523,7 +2523,7 @@ function showCheckMap(entry){
   box = document.createElement("div"); box.id = "chkBox";
   const notes = (entry.notes||"").trim(); const esc = t => t.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
   const dbx = p => "https://www.dropbox.com/home" + encodeURI(p).replace(/#/g,"%23").replace(/\?/g,"%3F");   /* 5 Nov (Jason): job documents open from the editor (Dropbox, team login — never published on the site) */
-  const docs = (entry.docs||[]).map(d => `<a target="_blank" rel="noopener" href="${dbx(d.path.replace(/\/[^\/]*$/,""))}?preview=${encodeURIComponent(d.name)}">${esc(d.name)}</a>`);
+  const docs = (entry.docs||[]).map(d => `<a target="_blank" rel="noopener" href="${dbx(d.path.replace(/\/[^\/]*$/,""))}?preview=${encodeURIComponent(d.name)}" title="${esc(d.name)}">${esc(d.name.length>38 ? d.name.slice(0,35)+"…" : d.name)}</a>`);
   if (entry.rawPath) docs.push(`<a target="_blank" rel="noopener" href="${dbx(entry.rawPath)}">Open job folder</a>`);
   const docsHtml = docs.length ? `<div class="chkNotes chkDocs"><b>Documents:</b> ${docs.join(" · ")}</div>` : "";
   box.innerHTML = (notes ? `<div class="chkNotes"><b>Booking notes — follow these:</b> ${esc(notes)}</div>` : "") + docsHtml + `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost chkTab on" data-v="b" title="Show the lot boundary">Boundary</button><button class="btn ghost chkTab" data-v="a" title="Show every pinned place">Map</button><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary"></iframe>`;
