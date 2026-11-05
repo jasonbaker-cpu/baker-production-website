@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive,noimageindex">
+<title>Editing Standard · Baker Production</title>
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&display=swap">
+<style>
+:root{--bg:#F5F5F7;--panel:#fff;--sunk:#F2F2F7;--line:#E5E5EA;--ink:#1D1D1F;--muted:#6E6E73;--faint:#86868B;--accent:#0071E3;
+  --good:#1E8E3E;--good-bg:#E6F4EA;--bad:#D4001A;--bad-bg:#FDE8EA;--shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+  --display:"Inter Tight","Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;--sans:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--panel:#1C1C1E;--sunk:#2C2C2E;--line:#38383A;--ink:#F5F5F7;--muted:#A1A1A6;--faint:#8E8E93;--accent:#0A84FF;
+  --good:#30D158;--good-bg:#0F2A17;--bad:#FF453A;--bad-bg:#331311;--shadow:0 1px 2px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.35);color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 16px 64px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:22px}
+h1{font-family:var(--display);font-size:clamp(26px,5vw,38px);letter-spacing:-.025em;margin:0;line-height:1.1}
+h2{font-family:var(--display);font-size:22px;letter-spacing:-.02em;margin:40px 0 12px}
+.sub{color:var(--muted);margin:6px 0 0}
+.upd{font-size:12.5px;color:var(--faint)}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}
+nav a{font-size:13.5px;font-weight:600;text-decoration:none;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 13px}
+.card{background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:20px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.rules h3{font-family:var(--display);font-size:16px;margin:0 0 8px}
+.rules ul{margin:0;padding-left:18px}
+.rules li{margin:4px 0}
+.rules li b{font-weight:600}
+.callout{border-left:4px solid var(--accent);padding:14px 16px;background:var(--panel);border-radius:12px;box-shadow:var(--shadow);margin-top:14px}
+.links{display:grid;gap:10px}
+.links a{display:block;text-decoration:none;color:var(--ink);background:var(--panel);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px}
+.links a b{color:var(--accent);font-weight:600}
+.links a span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:14px}
+.ex{background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.ex img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;cursor:zoom-in;background:var(--sunk)}
+.ex .t{padding:12px 14px 14px}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:3px 9px;margin-bottom:6px}
+.tag.good{background:var(--good-bg);color:var(--good)}
+.tag.bad{background:var(--bad-bg);color:var(--bad)}
+.meta{font-size:12.5px;color:var(--faint)}
+.why{margin:4px 0 0}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--line)}
+.ba figure{margin:0;position:relative}
+.ba figcaption{position:absolute;left:8px;top:8px;font-size:11px;font-weight:700;color:#fff;background:rgba(0,0,0,.6);padding:2px 8px;border-radius:999px}
+.ba .grid{grid-template-columns:1fr}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;padding:16px;z-index:9;cursor:zoom-out}
+#lb.on{display:flex}
+#lb img{max-width:100%;max-height:100%;border-radius:8px}
+footer{margin-top:44px;font-size:13px;color:var(--faint)}
+@media (max-width:520px){.ba{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Baker Production · Editing Standard</h1>
+      <p class="sub">For our photo editors. Match the good examples, avoid the bad ones. Private page.</p>
+    </div>
+    <div class="upd">Updated <span id="upd"></span></div>
+  </header>
+
+  <nav>
+    <a href="#rules">Rules</a><a href="#links">Reference links</a><a href="#good">Good</a><a href="#bad">Bad</a><a href="#fixes">Before / after</a>
+  </nav>
+
+  <div class="callout"><b>The target:</b> Crib Creative's Holdsworth listings. <b>Our standard:</b> 22 Thorburn Ave. Warm white walls, bright rooms, soft natural shadows, every photo in the job matching. Not grey, not cream, not washed out.</div>
+
+  <h2 id="rules">Rules</h2>
+  <div class="rules">
+    <div class="card">
+      <h3>Interiors</h3>
+      <ul>
+        <li><b>Walls warm white.</b> Not grey/blue, not yellow/cream, not blown to pure white.</li>
+        <li><b>Bright, not washed out.</b> Rooms light and airy like Thorburn; ceilings must keep detail.</li>
+        <li><b>Ceilings read white.</b> No orange or peach cast.</li>
+        <li><b>Every photo in a job matches</b> in brightness and colour, including patios and alfrescos.</li>
+        <li><b>Windows pulled</b> with the view visible. No halos or glowing edges.</li>
+        <li><b>Verticals straight.</b></li>
+        <li><b>Timber floors natural.</b> Not orange or over-saturated.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Exteriors &amp; skies</h3>
+      <ul>
+        <li><b>Day skies soft pale blue.</b> Never deep/dark blue, never grey/white.</li>
+        <li><b>Twilight:</b> natural sunset look, lights on. Soft pink/purple OK; dark fake purple is not.</li>
+        <li><b>Lift shadows</b> under trees and patios. No harsh black shadows.</li>
+        <li><b>Grass natural green,</b> not lime.</li>
+        <li><b>Never remove</b> neighbouring houses or power lines.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Drone</h3>
+      <ul>
+        <li><b>Horizon level.</b> Always replace the sky with soft pale blue.</li>
+        <li><b>Location shots: 3 pins,</b> all the same small size. Labels never cover pins. Never write "zoned" on schools.</li>
+        <li><b>House-only close-ups: no pins.</b></li>
+        <li><b>Two top-downs per job:</b> one with the road at the bottom, one with the road on the side.</li>
+        <li><b>Top-down:</b> lot line follows the fence exactly, bold white lot size with a proper ² (e.g. 678m²), blur everything outside the lot, property centred, no logo.</li>
+        <li><b>Same file size</b> across the whole set.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Delivery</h3>
+      <ul>
+        <li><b>No duplicates.</b> Don't send two photos of the same room from the same angle.</li>
+        <li><b>All photos same resolution.</b></li>
+        <li><b>Redo the whole set's look</b> if one photo is off. Don't fix only one and leave the rest.</li>
+        <li><b>Follow the booking notes</b> for each job.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 id="links">Reference links</h2>
+  <div class="links" id="linkList"></div>
+
+  <h2 id="good">Good: do this</h2>
+  <div class="grid" id="goodGrid"></div>
+
+  <h2 id="bad">Bad: avoid this</h2>
+  <div class="grid" id="badGrid"></div>
+
+  <h2 id="fixes">Before / after: good fixes</h2>
+  <div class="grid" id="baGrid"></div>
+
+  <footer>Baker Production · internal reference for editors · not for public use.</footer>
+</div>
+<div id="lb"><img alt=""></div>
+
+<script src="data.js?v=1"></script>
+<script>
+(function(){
+  var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})};
+  document.getElementById("upd").textContent=window.UPDATED||"";
+  document.getElementById("linkList").innerHTML=(window.REFERENCE_LINKS||[]).map(function(l){
+    return '<a href="'+esc(l.url)+'" target="_blank" rel="noopener"><b>'+esc(l.title)+'</b><span>'+esc(l.note)+'</span></a>'}).join("");
+  var card=function(e,kind){return '<div class="ex"><img loading="lazy" src="'+esc(e.img)+'" alt="'+esc(e.job)+'"><div class="t"><span class="tag '+kind+'">'+(kind=="good"?"Good":"Bad")+'</span><div class="meta">'+esc(e.job)+' · '+esc(e.file)+'</div><p class="why">'+esc(e.why)+'</p></div></div>'};
+  document.getElementById("goodGrid").innerHTML=(window.GOOD||[]).map(function(e){return card(e,"good")}).join("");
+  document.getElementById("badGrid").innerHTML=(window.BAD||[]).map(function(e){return card(e,"bad")}).join("");
+  document.getElementById("baGrid").innerHTML=(window.BEFORE_AFTER||[]).map(function(e){
+    return '<div class="ex"><div class="ba"><figure><img loading="lazy" src="'+esc(e.before)+'" alt="before"><figcaption>Before</figcaption></figure><figure><img loading="lazy" src="'+esc(e.after)+'" alt="after"><figcaption>After</figcaption></figure></div><div class="t"><div class="meta">'+esc(e.job)+' · '+esc(e.file)+'</div><p class="why">'+esc(e.why)+'</p></div></div>'}).join("");
+  var lb=document.getElementById("lb"),li=lb.querySelector("img");
+  document.addEventListener("click",function(ev){var t=ev.target;if(t.tagName=="IMG"&&t.closest(".ex")){li.src=t.src;lb.classList.add("on")}});
+  lb.addEventListener("click",function(){lb.classList.remove("on")});
+  document.addEventListener("keydown",function(ev){if(ev.key=="Escape")lb.classList.remove("on")});
+})();
+</script>
+</body>
+</html>
