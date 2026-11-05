@@ -877,6 +877,13 @@ function fixApply(p, sh, op, a){
     const A2=[A[0]+nx*d*a, A[1]+ny*d*a], B2=[B[0]+nx*d*a, B[1]+ny*d*a];
     const P0=sh.pts[(i-1+n)%n], P3=sh.pts[(j+1)%n];
     const nA=lineX(P0,A,A2,B2), nB=lineX(B,P3,A2,B2); sh.pts[i]=nA||A2; sh.pts[j]=nB||B2; }
+  else if (op==="square" && n>=4){   /* 5 Nov (Jason): one-click right angles — every side snapped square to the boundary's main direction, size and position kept */
+    let sx=0, sy=0; for (let i=0;i<n;i++){ const A=sh.pts[i], B=sh.pts[(i+1)%n], dx=B[0]-A[0], dy=B[1]-A[1], L=Math.hypot(dx,dy), t=4*Math.atan2(dy,dx); sx+=L*Math.cos(t); sy+=L*Math.sin(t); }
+    const th=Math.atan2(sy,sx)/4, cs=Math.cos(th), sn=Math.sin(th);
+    const R=sh.pts.map(q=>{ const x=q[0]-c[0], y=q[1]-c[1]; return [x*cs+y*sn, -x*sn+y*cs]; });   // into the boundary's own axes
+    const E=[]; for (let i=0;i<n;i++){ const A=R[i], B=R[(i+1)%n]; const hor=Math.abs(B[0]-A[0])>=Math.abs(B[1]-A[1]); E.push({hor, v: hor ? (A[1]+B[1])/2 : (A[0]+B[0])/2}); }
+    const Q=R.map((q,i)=>{ const e0=E[(i-1+n)%n], e1=E[i]; if (e0.hor!==e1.hor) return e0.hor ? [e1.v, e0.v] : [e0.v, e1.v]; return e1.hor ? [q[0], e1.v] : [e1.v, q[1]]; });
+    sh.pts=Q.map(q=>[c[0]+q[0]*cs-q[1]*sn, c[1]+q[0]*sn+q[1]*cs]); }
   else if (op==="addpt" && edge!=null){ const i=edge, j=(i+1)%n, m=[(sh.pts[i][0]+sh.pts[j][0])/2,(sh.pts[i][1]+sh.pts[j][1])/2]; sh.pts.splice(i+1,0,m);
     if (sh.lens) sh.lens.splice(i+1,0,""); if (sh.dashed) sh.dashed.splice(i+1,0,!!sh.dashed[i]); sel={kind:"shape", id:sh.id, vtx:i+1}; }
   else if (op==="delpt" && vtx!=null && n>3){ sh.pts.splice(vtx,1); if (sh.lens) sh.lens.splice(vtx,1); if (sh.dashed) sh.dashed.splice(vtx,1); sel={kind:"shape", id:sh.id}; }
@@ -897,6 +904,7 @@ function fixSection(p, sh){
   const r1 = el(`<div class="row"><button class="btn" title="Rotate left">⟲ Rotate</button><button class="btn" title="Rotate right">Rotate ⟳</button><button class="btn" title="Smaller">− Smaller</button><button class="btn" title="Bigger">+ Bigger</button></div>`);
   const b1 = r1.querySelectorAll("button"); b1[0].onclick=()=>fixApply(p,sh,"rot",-0.25); b1[1].onclick=()=>fixApply(p,sh,"rot",0.25); b1[2].onclick=()=>fixApply(p,sh,"scale",-0.005); b1[3].onclick=()=>fixApply(p,sh,"scale",0.005);
   s.appendChild(r1);
+  if (sh.pts.length>=4){ const rq = el(`<div class="row"><button class="btn" title="Make every corner a right angle (90°)">∟ Square corners</button></div>`); rq.querySelector("button").onclick=()=>fixApply(p,sh,"square"); s.appendChild(rq); }
   if (edge!=null){ const r2 = el(`<div class="row"><button class="btn">Pull side ${edge+1} in</button><button class="btn">Push side ${edge+1} out</button><button class="btn ghost">Add corner here</button></div>`);
     const b2=r2.querySelectorAll("button"); b2[0].onclick=()=>fixApply(p,sh,"side",-1); b2[1].onclick=()=>fixApply(p,sh,"side",1); b2[2].onclick=()=>fixApply(p,sh,"addpt"); s.appendChild(r2); }
   if (vtx!=null && sh.pts.length>3){ const r3 = el(`<div class="row"><button class="btn ghost">Delete corner ${vtx+1}</button></div>`); r3.querySelector("button").onclick=()=>fixApply(p,sh,"delpt"); s.appendChild(r3); }
