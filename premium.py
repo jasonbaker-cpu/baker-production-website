@@ -14,15 +14,15 @@ def grade(src, dst):
     blue = np.clip(((rgb[...,2]-rgb[...,0])-0.04)/0.10,0,1)          # sky + water
     sea = cv2.GaussianBlur(blue*land,(0,0),W/400)
     # 1) exposure: land midtones to a bright-but-not-hot level
-    lm = np.median(Y[hz+int(H*.05):]); fe = float(np.clip(0.47/max(lm,1e-3),0.8,1.4)); ls = cv2.GaussianBlur(land,(0,0),W/200)[...,None]; rgb = rgb*(fe*ls + 1.0*(1-ls))   # land to target; sky never darkened
+    lm = np.median(Y[hz+int(H*.05):]); fe = float(np.clip(0.55/max(lm,1e-3),0.8,1.4)); ls = cv2.GaussianBlur(land,(0,0),W/200)[...,None]; rgb = rgb*(fe*ls + 1.0*(1-ls))   # land to target; sky never darkened
     # dehaze: subtract airlight, stronger toward the horizon (distance haze)
     far = np.clip(1-(rows-hz)/(H*0.45),0,1)*land; air = np.percentile(rgb[hz:hz+int(H*.08)].reshape(-1,3),3,axis=0)
-    kh = (0.55*far+0.15*land)[...,None]; rgb = (rgb-air*kh)/(1-kh*0.5)
+    kh = (0.7*far+0.25*land)[...,None]; rgb = (rgb-air*kh)/(1-kh*0.5)
     # 1b) EVEN LAND (Jason 5 Nov: "remove the dark and bright spots, same brightness on the land"):
     #     large-radius tone equalisation — pull bright patches down, lift dark patches, keep fine detail
     Yl = np.clip(0.2126*rgb[...,0]+0.7152*rgb[...,1]+0.0722*rgb[...,2],1e-4,None); lY = np.log(Yl)
-    base = cv2.GaussianBlur(lY,(0,0),W/45); tgt = np.log(0.42)
-    eq = (0.65*land*(1-sea))*(tgt-base); eq = np.clip(eq,-0.9,0.9)
+    base = cv2.GaussianBlur(lY,(0,0),W/45); tgt = np.log(0.48)
+    eq = (0.8*land*(1-sea))*(tgt-base); eq = np.clip(eq,-0.9,0.9)
     rgb = (rgb*np.exp(eq)[...,None]).astype(np.float32)
     # 2) local contrast (clarity) on lightness, land only, via Lab CLAHE blended
     lab = cv2.cvtColor(np.clip(rgb,0,1), cv2.COLOR_RGB2LAB); L = lab[...,0]/100
@@ -35,10 +35,10 @@ def grade(src, dst):
     L2 = np.where(L2<0.06, 0.06*np.power(np.clip(L2,0,None)/0.06,1.25), L2)
     lab[...,0] = np.clip(L2,0,1)*100
     # 4) colour: vibrance (more on dull colours), deeper sky/sea blue, touch of warmth on land
-    C = np.hypot(lab[...,1],lab[...,2]); vib = 1+0.32*np.clip(1-C/45,0,1)+0.18
+    C = np.hypot(lab[...,1],lab[...,2]); vib = 1+0.40*np.clip(1-C/45,0,1)+0.32
     vib = vib*(1+0.18*sea)+0.15*(1-land)*blue
     lab[...,1]*=vib; lab[...,2]*=vib
-    lab[...,2] += 2.0*land*(1-sea) - 3.0*sea - 2.0*(1-land)*blue   # warm land, bluer water/sky
+    lab[...,2] += 5.0*land*(1-sea) - 3.0*sea - 2.0*(1-land)*blue   # warm land, bluer water/sky
     out = cv2.cvtColor(lab, cv2.COLOR_LAB2RGB)
     # 5) sharpen (unsharp, land stronger)
     bl = cv2.GaussianBlur(out,(0,0),1.4); amt = (0.45*land+0.15)[...,None]
