@@ -28,7 +28,7 @@ function newPhoto(name, base, meta, sample){
     disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0, (!sample && prefs.skyPlate !== "S") ? { con:10 } : {}), undo:[], redo:[] };
   return p;
 }
-const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet"];
+const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet","skyForce","skyLineUser"];
 function snapshotOf(p){ const o={}; SNAP_KEYS.forEach(k=>o[k]=p[k]); return JSON.stringify(o); }
 function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
 function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); ensureFinish(p); }
@@ -85,6 +85,10 @@ function draw(){
     ctx.strokeStyle="#f2b33d"; ctx.lineWidth=2*k; ctx.setLineDash([8*k,6*k]); ctx.strokeRect(cr[0],cr[1],cr[2],cr[3]); ctx.setLineDash([]); ctx.font=`600 ${14*k}px system-ui`; ctx.fillStyle="#f2b33d"; ctx.fillText(tool==="crop" ? "Crop · drag to move, corners to resize" : (p.crop ? "Export area · cropped" : "Export area · 3:2"), cr[0]+8*k, cr[1]+20*k); if (tool==="crop"){ ctx.fillStyle="#f2b33d"; [[0,0],[1,0],[0,1],[1,1]].forEach(([a,b])=>ctx.fillRect(cr[0]+a*cr[2]-7*k, cr[1]+b*cr[3]-7*k, 14*k, 14*k)); } ctx.restore(); } }
   if (hideGfx || showBefore) return;
   const k = 1/view.s;
+  if (tool==="horizon"){ ctx.save(); ctx.strokeStyle="#f2b33d"; ctx.lineWidth=3*k; ctx.setLineDash([10*k,6*k]); const L = p.skyLineUser || (hzDraft && hover ? [hzDraft, hover] : null);
+    if (L){ const [[ax,ay],[bx,by]] = L, m=(by-ay)/((bx-ax)||1); ctx.beginPath(); ctx.moveTo(0, ay - m*ax); ctx.lineTo(p.w, ay + m*(p.w-ax)); ctx.stroke(); }
+    if (hzDraft){ ctx.fillStyle="#f2b33d"; ctx.fillRect(hzDraft[0]-6*k, hzDraft[1]-6*k, 12*k, 12*k); }
+    ctx.setLineDash([]); ctx.font=`600 ${15*k}px system-ui`; ctx.fillStyle="#f2b33d"; ctx.fillText(hzDraft ? "Horizon · click the other end" : (p.skyLineUser ? "Horizon set · sky above the line is replaced · click twice to redo" : "Horizon · click one end of the horizon, then the other"), 20*k, 30*k); ctx.restore(); }
   if (sel && sel.kind==="pin"){ const pin = p.pins.find(x=>x.id===sel.id); if (pin){ const r = pinRect(p,pin), pad=6*k; ctx.save(); ctx.strokeStyle="#f2b33d"; ctx.lineWidth=1.6*k; ctx.setLineDash([5*k,4*k]); ctx.strokeRect(r[0]-pad,r[1]-pad,r[2]-r[0]+pad*2,r[3]-r[1]+pad*2); ctx.restore(); } }
   if (sel && sel.kind==="shape"){
     const sh = p.shapes.find(x=>x.id===sel.id);
@@ -212,6 +216,7 @@ cv.addEventListener("pointerdown", e=>{
     if (draft.type==="poly" && draft.pts.length>=3 && dist(pt,draft.pts[0])<12*k){ finishDraft(); return; }
     draft.pts.push(pt); hover=pt; updateDrawbar(); requestDraw(); return;
   }
+  if (tool==="horizon"){ if (!hzDraft){ hzDraft = pt; requestDraw(); return; } commit(); p.skyLineUser = [hzDraft, pt].sort((a,b)=>a[0]-b[0]); hzDraft = null; p.skyOn = true; p.skyForce = true; p.finKey = null; p.fin = null; ensureFinish(p); if (typeof refreshPhotoTab==="function") refreshPhotoTab(); requestDraw(); return; }
   if (tool==="crop"){ const k=1/view.s; if (!p.crop) p.crop = defaultCrop(p); const c=p.crop; const near=(x,y)=>Math.abs(pt[0]-x)<16*k && Math.abs(pt[1]-y)<16*k;
     const corner=[[0,0],[1,0],[0,1],[1,1]].find(([a,b])=>near(c[0]+a*c[2], c[1]+b*c[3]));
     if (corner){ drag={type:"cropsize", ax:c[0]+(1-corner[0])*c[2], ay:c[1]+(1-corner[1])*c[3], committed:false}; return; }
@@ -288,7 +293,8 @@ function defaultCrop(p, r){   /* biggest box of ratio r centred on the current e
   return [Math.max(0,Math.min(p.w-w,cx-w/2)), Math.max(0,Math.min(p.h-h,cy-h/2)), w, h];
 }
 function startCrop(){ const p=P(); if(!p) return; if (!p.crop){ commit(); const lc=lotCrop(p); p.crop = lc ? lc.slice() : defaultCrop(p, 1.5); } setTool("crop"); requestDraw(); }
-function setTool(t){
+let hzDraft = null;
+function setTool(t){ if (t!=="horizon") hzDraft = null;
   if (draft && t!==draft.type) cancelDraft();
   tool=t; document.querySelectorAll(".tool[data-tool]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.tool===t));
   cv.style.cursor = t==="select" ? "default" : "crosshair"; setHint();

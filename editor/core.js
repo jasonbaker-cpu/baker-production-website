@@ -345,6 +345,12 @@ function finishImage(base, p){
           const k = 1 - 0.3*t; px[i]*=k*(1-0.03*t); px[i+1]*=k; px[i+2]*=k*(1+0.02*t); } } }
     }
   }
+  // 5 Nov (Jason): a horizon line drawn by hand wins — the sky is swapped only above it (fixes ocean shots: no swapped sea, no ghost towers)
+  if (p.skyLineUser && p.skyLineUser.length === 2 && p.skyOn !== false && !straightDown){
+    const [[ax,ay],[bx,by]] = p.skyLineUser, sx = w/p.w, sy = h/p.h, m = (by-ay)/((bx-ax)||1);
+    if (!sky) sky = analyseSky(px, w, h);
+    if (sky){ sky.m = m*sy/sx; sky.b = ay*sy - sky.m*ax*sx; p.skyForce = true; }
+  }
   // 2b. dehaze: distant ground just under the horizon goes milky grey into the sun — pull it back
   if (sky && p.dehaze !== false && !(Object.assign({},TUNE,window.__TUNE||{}).noDehaze)) dehazeBand(px, w, h, x => sky.m*x + sky.b);
   // Golden-hour / dawn sky: warm, not blue. Editors leave these alone — so do we.
@@ -354,12 +360,13 @@ function finishImage(base, p){
   // 5 Nov (Jason): ocean / beach shots keep their real sky — our swap can't find the horizon over water (ghost towers, cut-off sea).
   // If that real sky is bad (blown / washed out), the photo is flagged for the photo editor instead.
   p.skyWater = false; p.needsEditor = false;
-  if (sky && !(Object.assign({},TUNE,window.__TUNE||{}).forceSky)){ const hz = Math.max(4, Math.min(h-1, ((p._geoH!=null && p._geoH>0 ? Math.min(p._geoH, sky.b) : sky.b) + 0.03*h)|0)), y1 = Math.min(h, hz + (0.14*h|0)), st = Math.max(1, Math.round(w/300)); let n=0, wat=0;
+  if (sky && !p.skyForce && !(Object.assign({},TUNE,window.__TUNE||{}).forceSky)){ const hz = Math.max(4, Math.min(h-1, ((p._geoH!=null && p._geoH>0 ? Math.min(p._geoH, sky.b) : sky.b) + 0.03*h)|0)), y1 = Math.min(h, hz + (0.14*h|0)), st = Math.max(1, Math.round(w/300)); let n=0, wat=0;
     for (let y=hz; y<y1; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2]; n++; if (b > r + 22 && g > r + 8 && b > 90) wat++; }
     window.__waterDbg = n ? +(wat/n).toFixed(3) : 0; if (n && wat/n > 0.35){ p.skyWater = true;
       let m=0, clip=0, blue=0; for (let y=0; y<hz*0.85; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2]; m++; if (r>240 && g>240 && b>240) clip++; if (b > r + 28 && b > 120) blue++; }
       if (m && (clip/m > 0.25 || blue/m < 0.15)) p.needsEditor = true;
-      sky = null; } }
+      if (p._geoH != null && p._geoH > 0.05*h && p._geoH < 0.7*h){ sky.b = p._geoH - sky.m*(w/2); p.needsEditor = false; p.skyAutoLine = true; }   /* 5 Nov: ocean shot — swap only above the drone's true horizon (same as drawing the line by hand) */
+      else sky = null; } }
   // Keep a good real sky (blue with proper clouds): the editors only swap washed-out or blown skies.
   p.skyKept = false;
   if (sky && p.skyKeepReal === true){
