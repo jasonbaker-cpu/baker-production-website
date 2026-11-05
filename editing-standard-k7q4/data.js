@@ -2,7 +2,7 @@
    To add an example: copy one line in GOOD, BAD or BEFORE_AFTER and change it.
    Put new images in the img/ folder next to this file (webp or jpg, ~1600px wide). */
 
-window.UPDATED = "5 Nov 2026, 10:30am";
+window.UPDATED = "5 Nov 2026, 12pm";
 
 window.REFERENCE_LINKS = [
   { title: "OUR STANDARD: 22 Thorburn Ave, Beechboro (Profocus, 8.5/10)", url: "https://www.dropbox.com/scl/fo/8c0ebpas05y2lo4jkxvl1/AEr14Z7un1FXvkFu-Ve2EaY?rlkey=y81vsut2bd30kervze8vkjpg2&dl=0", note: "Match this on every interior job. May be removed from Dropbox after delivery." },
@@ -37,39 +37,43 @@ window.BEFORE_AFTER = [
   { before: "img/ba-hermitage-before.webp", after: "img/ba-hermitage-after.webp", job: "29 Hermitage Dr", file: "DSC08098", why: "Before: walls dull. After: lifted to Crib level without losing the warm tone." }
 ];
 
-/* JOB REVIEWS: newest first. Add a new block at the top of the list when Jason says to post a review.
+/* JOB REVIEWS: newest first. Add a new block at the top when Jason says to post a review.
    kind: "bad" = needs fixing, "good" = example of what was right. drop = duplicate files to remove. */
 window.REVIEWS = [
+  { date: "5 Nov 2026 (redelivery)", shoot: "4 Nov", job: "42/86 Caledonian Ave, Maylands", score: 7, verdict: "NOT REDONE. Every file is identical to the first delivery. Full redo needed.",
+    notes: [ { img: "img/reviews/caledonian-09760.webp", file: "DSC09760-1 (+ all exteriors)", kind: "bad", text: "Day sky deep blue on every exterior. Use soft pale blue." },
+             { img: "img/reviews/caledonian-09780.webp", file: "DSC09780", kind: "bad", text: "Harsh single exposure, black shadows under the tree. Blend and lift." },
+             { img: "img/reviews/caledonian-09730.webp", file: "DSC09730", kind: "bad", text: "Bathroom walls yellow/cream. Neutralise." },
+             { img: "img/reviews/caledonian-drone-0073.webp", file: "DJI_0073", kind: "bad", text: "Only 2 pins. Every location shot needs 3. Also: no top-downs delivered (need 2: road at bottom + road on side)." } ],
+    drop: ["DJI_0071"] },
+  { date: "5 Nov 2026 (redelivery)", shoot: "4 Nov", job: "7 Jay Ct, Huntingdale", score: 8, verdict: "Interiors fixed (walls 222 to 212). Alfresco not touched, still grey.",
+    notes: [ { img: "img/reviews/jay-04040-v2.webp", file: "DSC04040", kind: "good", text: "Redo: walls 231 to 211, ceiling detail back. This is right." },
+             { img: "img/reviews/jay-04123.webp", file: "DSC04123-04138", kind: "bad", text: "Alfresco still grey and darker than the warm interiors. Match the set." } ],
+    drop: ["DSC04051", "DSC04023", "DSC04079", "DSC04133", "DSC04183"] },
+  { date: "5 Nov 2026 (redelivery)", shoot: "4 Nov", job: "1 Numbat Ct, Brookdale", score: 8.5, verdict: "Fixed. Brightness back to Crib level, patio shots now match.",
+    notes: [ { img: "img/reviews/numbat-03804-v2.webp", file: "DSC03804", kind: "bad", text: "Still the brightest frame (walls 222). Pull back slightly (also 03833)." },
+             { img: "img/reviews/numbat-03902.webp", file: "DSC03892-03927", kind: "good", text: "Patio frames now one consistent grade." } ],
+    drop: ["DSC03762", "DSC03767"] },
+  { date: "5 Nov 2026 (redelivery)", shoot: "4 Nov", job: "32 Ionesco St, Spearwood", score: 8.5, verdict: "Fixed. Overexposure and blown floors sorted. One bedroom still hot.",
+    notes: [ { img: "img/reviews/ionesco-04185-v2.webp", file: "DSC04185", kind: "bad", text: "Still too bright (walls 229). Bring down to ~212 like the rest (also 04179 a touch)." },
+             { img: "img/reviews/ionesco-04337.webp", file: "DSC04337", kind: "good", text: "Redo: sunlit floor recovered (clipping 3% to 1%)." } ],
+    drop: ["DSC04216", "DSC04228", "DSC04267", "DSC04363"] },
+  { date: "5 Nov 2026 (redelivery)", shoot: "4 Nov", job: "11 Denton St, Aveley", score: 8.5, verdict: "3 of 4 hot walls fixed. Duplicates were re-edited instead of removed.",
+    notes: [ { img: "img/reviews/denton-09971.webp", file: "DSC09971", kind: "bad", text: "Not touched: walls still 228. Bring down to ~212." } ],
+    drop: ["DSC00089", "DSC00158"] },
+  { date: "5 Nov 2026 (redelivery)", shoot: "4 Nov", job: "51 Ashburton Dr, Gosnells", score: 8, verdict: "Walls fixed (221 to 208). Yard shot still a bit heavy.",
+    notes: [ { img: "img/reviews/ashburton-04208-v2.webp", file: "DSC04208", kind: "good", text: "Redo: walls 227 to 210. Right level." },
+             { img: "img/reviews/ashburton-04367.webp", file: "DSC04367", kind: "bad", text: "Ground under the tree still heavy. Lift shadows more." } ],
+    drop: ["DSC04299", "DSC04287", "DSC04412"] },
+  { date: "5 Nov 2026", shoot: "4 Nov", job: "23 Riding Way, Bull Creek", score: 8.5, verdict: "Pass. One of the best sets this week.",
+    notes: [ { img: "img/reviews/riding-08441.webp", file: "DSC08441", kind: "good", text: "Walls 210, warm, bright, natural timber beams. This is the level." },
+             { img: "img/reviews/riding-08491.webp", file: "DSC08491", kind: "good", text: "Consistent with the rest of the set, windows pulled." } ],
+    drop: [] },
   { date: "5 Nov 2026", shoot: "4 Nov", job: "4 Camelot Grove, Carramar", score: 8.5, verdict: "Pass. Closest to Crib this week.",
     notes: [ { img: "img/reviews/camelot-09785.webp", file: "DSC09785", kind: "good", text: "Warm white, bright, consistent. This is the level." },
              { img: "img/reviews/camelot-09961.webp", file: "DSC09961", kind: "good", text: "Soft pale sky, clean facade." } ],
     drop: [] },
   { date: "5 Nov 2026", shoot: "4 Nov", job: "51 Hepburn Way, Balga", score: 8, verdict: "Pass.",
     notes: [ { img: "img/reviews/hepburn-04432.webp", file: "DSC04432", kind: "good", text: "Bright and airy. Yellow lower glass is real textured glass, fine." } ],
-    drop: [] },
-  { date: "5 Nov 2026", shoot: "4 Nov", job: "11 Denton St, Aveley", score: 8, verdict: "Pass. Minor: a few walls slightly too white.",
-    notes: [ { img: "img/reviews/denton-09999.webp", file: "DSC09999", kind: "bad", text: "Walls a touch hot (also 00010, 09971, 00005). Pull back slightly." } ],
-    drop: ["DSC00089", "DSC00158"] },
-  { date: "5 Nov 2026", shoot: "4 Nov", job: "7 Jay Ct, Huntingdale", score: 7.5, verdict: "Too bright overall.",
-    notes: [ { img: "img/reviews/jay-04067.webp", file: "DSC04067", kind: "bad", text: "Walls washed out to pure white, ceiling nearly blown. Pull back to Thorburn level." },
-             { img: "img/reviews/jay-04123.webp", file: "DSC04123", kind: "bad", text: "Alfresco grey and darker than the warm interiors. Match the set." } ],
-    drop: ["DSC04051", "DSC04023", "DSC04079", "DSC04133", "DSC04183"] },
-  { date: "5 Nov 2026", shoot: "4 Nov", job: "1 Numbat Ct, Brookdale", score: 7.5, verdict: "Too bright and flat.",
-    notes: [ { img: "img/reviews/numbat-03804.webp", file: "DSC03804", kind: "bad", text: "Over-bright, whites look flat. Bring walls back to ~Thorburn." },
-             { img: "img/reviews/numbat-03902.webp", file: "DSC03902", kind: "bad", text: "Patio cream/warm while DSC03892 is grey. Patio shots must match each other." } ],
-    drop: ["DSC03762", "DSC03767"] },
-  { date: "5 Nov 2026", shoot: "4 Nov", job: "51 Ashburton Dr, Gosnells", score: 7.5, verdict: "Walls too white, yard too dark.",
-    notes: [ { img: "img/reviews/ashburton-04214.webp", file: "DSC04214", kind: "bad", text: "Walls too white/clinical (also 04232, 04208)." },
-             { img: "img/reviews/ashburton-04367.webp", file: "DSC04367", kind: "bad", text: "Back yard under tree heavy and dark (also 04377). Lift shadows." } ],
-    drop: ["DSC04299", "DSC04287", "DSC04412"] },
-  { date: "5 Nov 2026", shoot: "4 Nov", job: "32 Ionesco St, Spearwood", score: 7.5, verdict: "Overexposed, slightly cream.",
-    notes: [ { img: "img/reviews/ionesco-04174.webp", file: "DSC04174", kind: "bad", text: "Overexposed (also 04185, 04212). Pull back and neutralise the cream." },
-             { img: "img/reviews/ionesco-04337.webp", file: "DSC04337", kind: "bad", text: "Sunlit floor patches blown out (also 04343). Recover highlights." } ],
-    drop: ["DSC04228", "DSC04267", "DSC04216", "DSC04363"] },
-  { date: "5 Nov 2026", shoot: "4 Nov", job: "42/86 Caledonian Ave, Maylands", score: 7, verdict: "Send back: skies, garden shot, bathroom, drone pins.",
-    notes: [ { img: "img/reviews/caledonian-09760.webp", file: "DSC09760-1", kind: "bad", text: "Day sky deep blue on every exterior. Use soft pale blue." },
-             { img: "img/reviews/caledonian-09780.webp", file: "DSC09780", kind: "bad", text: "Harsh single exposure, black shadows under the tree. Blend and lift." },
-             { img: "img/reviews/caledonian-09730.webp", file: "DSC09730", kind: "bad", text: "Bathroom walls yellow/cream. Neutralise." },
-             { img: "img/reviews/caledonian-drone-0073.webp", file: "DJI_0073", kind: "bad", text: "Only 2 pins. Every location shot needs 3." } ],
-    drop: ["DJI_0071"] }
+    drop: [] }
 ];

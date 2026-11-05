@@ -63,6 +63,32 @@ nav a{font-size:13.5px;font-weight:600;text-decoration:none;color:var(--ink);bac
 .rev .note p{margin:6px 0 0;font-size:14px}
 .rev .drop{margin-top:12px;font-size:13.5px;color:var(--muted)}
 .rev .drop b{color:var(--ink)}
+.sc input[type=text]{font:inherit;font-size:16px;width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:var(--sunk);color:var(--ink);margin:4px 0 12px}
+.scdrop{border:2px dashed var(--line);border-radius:16px;padding:28px 16px;text-align:center;cursor:pointer;display:flex;flex-direction:column;gap:4px;background:var(--sunk)}
+.scdrop span{color:var(--muted);font-size:13.5px}
+.scdrop.over{border-color:var(--accent);background:transparent}
+#scOut{margin-top:14px}
+.scr-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.scr .job{font-family:var(--display);font-weight:700;font-size:18px}
+.scr .vd{margin:8px 0 12px}
+.scr h4{margin:18px 0 6px;font-size:14.5px}
+.scr ul{margin:0;padding-left:18px}
+.scr-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.scr-stats div{background:var(--sunk);border-radius:12px;padding:10px 12px}
+.scr-stats b{display:block;font-family:var(--display);font-size:20px}
+.scr-stats span{font-size:12px;color:var(--muted)}
+.scr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.scr-grid img{width:100%;border-radius:10px;display:block}
+.scr-grid p{margin:6px 0 2px}
+.scr-grid li{font-size:13.5px}
+.scr-all{margin-top:14px}
+.scr-all summary{cursor:pointer;font-weight:600;font-size:14px}
+.scr-all table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;display:block;overflow-x:auto}
+.scr-all th,.scr-all td{text-align:left;padding:4px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.scr-all tr.flag td{color:var(--bad)}
+.scr-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.scr-btns button{font:inherit;font-weight:600;font-size:14px;padding:9px 16px;border-radius:999px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+@media print{body.printing .wrap>*:not(#selfcheck):not(.sc){display:none!important}body.printing .sc>*:not(#scOut){display:none!important}body.printing{background:#fff;color:#000}body.printing .scr-btns{display:none}body.printing .scr-all{display:none}}
 #lb{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;padding:16px;z-index:9;cursor:zoom-out}
 #lb.on{display:flex}
 #lb img{max-width:100%;max-height:100%;border-radius:8px}
@@ -75,16 +101,26 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   <header>
     <div>
       <h1>Baker Production · Editing Standard</h1>
-      <p class="sub">For our photo editors. Check the job reviews first. Match the good examples, avoid the bad ones. Private page.</p>
+      <p class="sub">For our photo editors. Self-check your job before delivery, then check the job reviews. Match the good examples, avoid the bad ones. Private page.</p>
     </div>
     <div class="upd">Updated <span id="upd"></span></div>
   </header>
 
   <nav>
-    <a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#links">Reference links</a><a href="#good">Good</a><a href="#bad">Bad</a><a href="#fixes">Before / after</a>
+    <a href="#selfcheck">Self-check my job</a><a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#links">Reference links</a><a href="#good">Good</a><a href="#bad">Bad</a><a href="#fixes">Before / after</a>
   </nav>
 
   <div class="callout"><b>The target:</b> Crib Creative's Holdsworth listings. <b>Our standard:</b> 22 Thorburn Ave. Warm white walls, bright rooms, soft natural shadows, every photo in the job matching. Not grey, not cream, not washed out.</div>
+
+  <h2 id="selfcheck">Self-check my job</h2>
+  <p class="sub" style="margin:-4px 0 12px">Before you deliver, drop your finished photos here. You get a report straight away: score, which photos to fix and why, and duplicates. <b>Photos stay on your computer and are not uploaded.</b></p>
+  <div class="card sc">
+    <label class="meta" for="scJob">Job address</label>
+    <input id="scJob" type="text" placeholder="e.g. 23 Riding Way, Bull Creek">
+    <div id="scDrop" class="scdrop" role="button" tabindex="0"><b>Drop photos here</b><span>or tap to choose (JPG, a whole job at once)</span></div>
+    <input id="scInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+    <div id="scOut"></div>
+  </div>
 
   <h2 id="reviews">Job reviews</h2>
   <p class="sub" style="margin:-4px 0 12px">Latest QC on our jobs. Fix the red points; keep doing the green ones.</p>
@@ -152,7 +188,8 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
 </div>
 <div id="lb"><img alt=""></div>
 
-<script src="data.js?v=2"></script>
+<script src="data.js?v=3"></script>
+<script src="selfcheck.js?v=1" defer></script>
 <script>
 (function(){
   var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})};
@@ -170,7 +207,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
       '<div class="notes">'+(r.notes||[]).map(function(n){return '<div class="note"><img loading="lazy" src="'+esc(n.img)+'" alt="'+esc(n.file)+'"><p><span class="tag '+n.kind+'">'+(n.kind=="good"?"Good":"Fix")+'</span> <span class="meta">'+esc(n.file)+'</span><br>'+esc(n.text)+'</p></div>'}).join("")+'</div>'+
       ((r.drop&&r.drop.length)?'<div class="drop"><b>Don\'t deliver (duplicates):</b> '+r.drop.map(esc).join(", ")+'</div>':'')+'</details>'}).join("");
   var lb=document.getElementById("lb"),li=lb.querySelector("img");
-  document.addEventListener("click",function(ev){var t=ev.target;if(t.tagName=="IMG"&&t.closest(".ex,.note")){li.src=t.src;lb.classList.add("on")}});
+  document.addEventListener("click",function(ev){var t=ev.target;if(t.tagName=="IMG"&&t.closest(".ex,.rev .note")){li.src=t.src;lb.classList.add("on")}});
   lb.addEventListener("click",function(){lb.classList.remove("on")});
   document.addEventListener("keydown",function(ev){if(ev.key=="Escape")lb.classList.remove("on")});
 })();
