@@ -48,7 +48,8 @@ function autoBright(src){   /* 5 Nov (Jason): "auto make the highlights go down 
   let acc=0, p97=1; for (let k=63;k>=0;k--){ acc+=H[k]; if (acc>nl*.03){ p97=(k+.5)/64; break; } }   // brightest 3% of the land (white roofs, sand)
   const hl = p97>.9 ? -Math.min(20, Math.round((p97-.9)*250)) : 0;   /* gentle — only real blow-outs */
   const br = sw < mw*mh*.04 ? 0 : Math.max(0, Math.min(40, Math.round((sy/sw-.62)*200)));
-  return { bright:br, hl };
+  const brL = p97>.80 ? Math.min(45, Math.round((p97-.80)*300)) : 0;   /* bright roofs on the land also raise Bright parts */
+  return { bright:Math.max(br, brL), hl };
 }
 function autoAdj(p, src){ if (p.brightSet || p._autoDone===src || (p.adj && p.adj.bright) || p.editorPhoto || p.extraEdited) return; p._autoDone=src; const ab = autoBright(src); p.adj = Object.assign({}, ADJ0, p.adj||{}, { bright:ab.bright }, (p.adj && p.adj.hl) ? {} : { hl:ab.hl }); p._adj = null; }
 function ensureFinish(p){ if (p && (p.editorPhoto || p.extraEdited)){ p.finishOn = false; p.fin = null; return; }   /* 31 Oct: editor photos are never re-finished */

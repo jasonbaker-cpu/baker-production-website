@@ -340,14 +340,14 @@ function adjustedCanvas(src, a){
     for (let yy=0;yy<mh;yy++){ let s=0; for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4; s+=Math.log(1+(.299*q[j]+.587*q[j+1]+.114*q[j+2])); } rowY[yy]=s/mw; }
     let hz=Math.round(mh*.35), best=1e9; for (let yy=Math.round(mh*.06); yy<Math.round(mh*.65); yy++){ const a0=rowY[Math.max(0,yy-3)]+rowY[Math.max(0,yy-2)]+rowY[Math.max(0,yy-1)], b0=rowY[Math.min(mh-1,yy+1)]+rowY[Math.min(mh-1,yy+2)]+rowY[Math.min(mh-1,yy+3)], dd=b0-a0; if (dd<best){ best=dd; hz=yy; } }   // horizon = sharpest bright-to-dark step
     for (let yy=0;yy<mh;yy++){ const rel=(yy-hz)/mh, vert = rel<0 ? 1 : 1-.2*Math.min(1,rel/.08);   /* 5 Nov (Jason): every bright part — sky, ocean, glare — not just the sky; slightly gentler below the horizon */
-      for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4, Y=(.299*q[j]+.587*q[j+1]+.114*q[j+2])/255; let t=(Y-.42)/.3; t=t<0?0:t>1?1:t; t=t*t*(3-2*t); if (vert<1){ let bl=(q[j+2]-q[j])/40; bl=bl<0?0:bl>1?1:bl; let vb=(Y-.78)/.12; vb=vb<0?0:vb>1?1:vb; t=Math.max(t*bl, vb*.6)*vert; }   /* below the horizon: bright WATER (blue) + only the very brightest glare — land, roofs and sand untouched */ q[j]=q[j+1]=q[j+2]=255; q[j+3]=Math.round(t*255); } }
+      for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4, Y=(.299*q[j]+.587*q[j+1]+.114*q[j+2])/255; let t=(Y-.42)/.3; t=t<0?0:t>1?1:t; t=t*t*(3-2*t); if (vert<1){ let bl=(q[j+2]-q[j])/40; bl=bl<0?0:bl>1?1:bl; let vb=(Y-.78)/.12; vb=vb<0?0:vb>1?1:vb; let rf=(Y-.62)/.26; rf=rf<0?0:rf>1?1:rf; rf=rf*rf*(3-2*rf); t=Math.max(t*bl, vb*.6, rf*.9);   /* 5 Nov (Jason): white roofs / bright buildings on the land too */ }   /* below the horizon: bright WATER (blue) + only the very brightest glare — land, roofs and sand untouched */ q[j]=q[j+1]=q[j+2]=255; q[j+3]=Math.round(t*255); } }
     m1x.putImageData(md,0,0);
     const m2=document.createElement("canvas"); m2.width=w; m2.height=h; const m2x=m2.getContext("2d"); m2x.imageSmoothingQuality="high";
     if ("filter" in m2x) m2x.filter=`blur(${Math.max(2,w/400)}px)`; m2x.drawImage(m1,0,0,w,h); m2x.filter="none";
     const M=m2x.getImageData(0,0,w,h).data, show=window.__showMask;
     for (let i=0;i<d.length;i+=4){ const f=M[i+3]/255*k; if (f<=0.002) continue;
       if (show){ d[i]=cl(d[i]*(1-.55*f)+255*.55*f); d[i+1]=cl(d[i+1]*(1-.55*f)); d[i+2]=cl(d[i+2]*(1-.55*f)); continue; }
-      let r=d[i]/255, g=d[i+1]/255, b=d[i+2]/255; const lift=1+.14*f; r=(r-f*(.30*r*r+.10))*lift; g=(g-f*(.30*g*g+.10))*lift; b=(b-f*(.30*b*b+.10))*lift;   // pull the haze down, keep clouds brighter than the blue
+      let r=d[i]/255, g=d[i+1]/255, b=d[i+2]/255; const lift=1+.10*f; r=(r-f*(.38*r*r+.06))*lift; g=(g-f*(.38*g*g+.06))*lift; b=(b-f*(.38*b*b+.06))*lift;   /* pulls the brightest values hardest — roofs get detail back */   // pull the haze down, keep clouds brighter than the blue
       const Y=.299*r+.587*g+.114*b, s2=1+.45*f; d[i]=cl((Y+(r-Y)*s2)*255); d[i+1]=cl((Y+(g-Y)*s2)*255); d[i+2]=cl((Y+(b-Y)*s2)*255); } }
   x.putImageData(id,0,0); return c;
 }
