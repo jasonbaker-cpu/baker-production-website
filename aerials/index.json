@@ -1,6 +1,55 @@
 {
  "days": [
   {
+   "id": "05-nov-2026",
+   "label": "Thu 5 Nov 2026",
+   "gallery": "05-nov-2026/",
+   "jobs": [
+    {
+     "slug": "113_homestead_rd_gosnells",
+     "addr": "113 Homestead Rd, Gosnells WA 6110",
+     "who": "Karar Hussain \u00b7 Ray White",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261105185332_0208_D.JPG",
+      "DJI_20261105185323_0207_D.JPG"
+     ],
+     "src": "05-nov-2026/113_homestead_rd_gosnells/src/",
+     "map": "113_homestead_rd_gosnells_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261105185332_0208_D.JPG",
+      "DJI_20261105185323_0207_D.JPG",
+      "DJI_20261105185356_0209_D.JPG",
+      "DJI_20261105185418_0210_D.JPG",
+      "DJI_20261105185454_0211_D.JPG",
+      "DJI_20261105185537_0212_D.JPG",
+      "DJI_20261105185555_0213_D.JPG",
+      "DJI_20261105185613_0214_D.JPG",
+      "DJI_20261105185630_0215_D.JPG",
+      "DJI_20261105185654_0216_D.JPG"
+     ],
+     "notes": "Entry Notes: meet agent at the property",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "IMG_0157.jpeg (building plan A102 \u2014 site area 517 m\u00b2)",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/05-11-2026/113 homestead rd, gosnells wa 6110, australia/Aerial - Drone Photography/IMG_0157.jpeg"
+      },
+      {
+       "name": "113_homestead_rd_gosnells_map.html (amenity map)",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/05-11-2026/113 homestead rd, gosnells wa 6110, australia/Aerial - Drone Photography/113_homestead_rd_gosnells_map.html"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/05-11-2026/113 homestead rd, gosnells wa 6110, australia/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "twilight drone shoot \u2014 editor does sky/colour (pins, boundary and 517 m\u00b2 lot already on)",
+     "lot": "517 m\u00b2 \u2014 14.78 / 35.00 / 14.78 / 35.00 m (building plan A102; cadastre 517 m\u00b2)"
+    }
+   ]
+  },
+  {
    "id": "04-nov-2026",
    "label": "Wed 4 Nov 2026",
    "gallery": "04-nov-2026/",

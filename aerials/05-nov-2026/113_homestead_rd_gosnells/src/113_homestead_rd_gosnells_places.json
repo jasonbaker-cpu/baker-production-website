@@ -1,0 +1,264 @@
+{
+ "address": "113 Homestead Rd, Gosnells WA 6110",
+ "lat": -32.0638553,
+ "lng": 115.9901641,
+ "pins": [
+  {
+   "name": "Brigham Park",
+   "cat": "park",
+   "lat": -32.065732,
+   "lng": 115.98760089999999,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Foreshore Place Reserve",
+   "cat": "reserve",
+   "lat": -32.0617513,
+   "lng": 115.9876992,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Dowitcher Loop Reserve",
+   "cat": "reserve",
+   "lat": -32.0652306,
+   "lng": 115.99338619999999,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Lauterbach Reserve",
+   "cat": "reserve",
+   "lat": -32.0688712,
+   "lng": 115.99341129999998,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Buggles Childcare Maddington",
+   "cat": "childcare",
+   "lat": -32.0586768,
+   "lng": 115.99440220000001,
+   "desc": "Childcare (closest centre)"
+  },
+  {
+   "name": "City of Gosnells Museum at Wilkinson Homestead",
+   "cat": "other",
+   "lat": -32.063873,
+   "lng": 115.98194,
+   "desc": "State-heritage homestead museum"
+  },
+  {
+   "name": "Auric Place Reserve",
+   "cat": "reserve",
+   "lat": -32.0587577,
+   "lng": 115.99627410000001,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Longie's Park",
+   "cat": "park",
+   "lat": -32.0564523,
+   "lng": 115.9919097,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Eynesford Street Reserve",
+   "cat": "reserve",
+   "lat": -32.0683277,
+   "lng": 115.98298199999999,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Gosnells Railway Markets",
+   "cat": "other",
+   "lat": -32.0677063,
+   "lng": 115.99789349999999,
+   "desc": "Weekend markets"
+  },
+  {
+   "name": "John Okey Davis Park",
+   "cat": "park",
+   "lat": -32.062714899999996,
+   "lng": 115.98003310000001,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Gosnells Oval",
+   "cat": "park",
+   "lat": -32.07175,
+   "lng": 115.99617,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Centuria Gosnells Central",
+   "cat": "shopping",
+   "lat": -32.0689868,
+   "lng": 116.000402,
+   "desc": "Shopping centre"
+  },
+  {
+   "name": "Gosnells Station",
+   "cat": "train",
+   "lat": -32.0714994,
+   "lng": 115.99985069999998,
+   "desc": "Train station \u2014 Armadale line, bus interchange"
+  },
+  {
+   "name": "Centennial Pioneer Park",
+   "cat": "park",
+   "lat": -32.0700091,
+   "lng": 116.00200210000001,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Gosnells Library",
+   "cat": "library",
+   "lat": -32.070717699999996,
+   "lng": 116.0019672,
+   "desc": "Public library"
+  },
+  {
+   "name": "South Metropolitan TAFE Thornlie campus",
+   "cat": "tafe",
+   "lat": -32.06005,
+   "lng": 115.97479,
+   "desc": "TAFE campus"
+  },
+  {
+   "name": "Maddington Central",
+   "cat": "shopping",
+   "lat": -32.0534655,
+   "lng": 115.97886570000001,
+   "desc": "Shopping centre"
+  },
+  {
+   "name": "Maddington Station",
+   "cat": "train",
+   "lat": -32.049659999999996,
+   "lng": 115.98339999999999,
+   "desc": "Train station \u2014 Armadale line"
+  },
+  {
+   "name": "St Francis School",
+   "cat": "school",
+   "lat": -32.046096,
+   "lng": 115.98432899999997,
+   "desc": "Non-government school",
+   "school": "private"
+  },
+  {
+   "name": "St. Munchin\u2019s Catholic School Gosnells",
+   "cat": "school",
+   "lat": -32.0821314,
+   "lng": 115.987191,
+   "desc": "Non-government school",
+   "school": "private"
+  },
+  {
+   "name": "Harmony Fields",
+   "cat": "park",
+   "lat": -32.0549321,
+   "lng": 116.0116145,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Lumen Christi College",
+   "cat": "school",
+   "lat": -32.068917899999995,
+   "lng": 116.01363040000001,
+   "desc": "Non-government school",
+   "school": "private"
+  },
+  {
+   "name": "Mary Carroll Park",
+   "cat": "park",
+   "lat": -32.0825318,
+   "lng": 116.000687,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Southern River College",
+   "cat": "school",
+   "lat": -32.0849516,
+   "lng": 115.9818903,
+   "desc": "Government school",
+   "school": "zoned"
+  },
+  {
+   "name": "Astley Street River Foreshore",
+   "cat": "park",
+   "lat": -32.0764648,
+   "lng": 116.0123095,
+   "desc": "Canning River foreshore"
+  },
+  {
+   "name": "Leisure World",
+   "cat": "aquatic",
+   "lat": -32.054503,
+   "lng": 115.964545,
+   "desc": "Aquatic & recreation centre"
+  },
+  {
+   "name": "Thornlie Square Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.056471099999996,
+   "lng": 115.9626977,
+   "desc": "Shopping centre"
+  },
+  {
+   "name": "Australian Islamic College Thornlie",
+   "cat": "school",
+   "lat": -32.0536094,
+   "lng": 115.9608446,
+   "desc": "Non-government school",
+   "school": "private"
+  },
+  {
+   "name": "Gosnells Skate Park",
+   "cat": "park",
+   "lat": -32.0914656,
+   "lng": 115.99034189999999,
+   "desc": "Skate park"
+  },
+  {
+   "name": "Ellis Brook Valley Reserve",
+   "cat": "regional park",
+   "lat": -32.0569006,
+   "lng": 116.02698749999999,
+   "desc": "Regional park / reserve"
+  },
+  {
+   "name": "Thornlie Station",
+   "cat": "train",
+   "lat": -32.0472457,
+   "lng": 115.95232929999997,
+   "desc": "Train station \u2014 Thornlie\u2013Cockburn line"
+  },
+  {
+   "name": "Sutherlands Park",
+   "cat": "park",
+   "lat": -32.093333099999995,
+   "lng": 115.96303970000001,
+   "desc": "Park / reserve"
+  },
+  {
+   "name": "Mills Park",
+   "cat": "regional park",
+   "lat": -32.0233847,
+   "lng": 115.9674751,
+   "desc": "Regional park / reserve"
+  },
+  {
+   "name": "Nicholson Road Station",
+   "cat": "train",
+   "lat": -32.06138,
+   "lng": 115.93465,
+   "desc": "Train station \u2014 Thornlie\u2013Cockburn line"
+  },
+  {
+   "name": "Gosnells Golf Club",
+   "cat": "golf",
+   "lat": -32.093750899999996,
+   "lng": 115.93744290000001,
+   "desc": "Golf course"
+  }
+ ]
+}
