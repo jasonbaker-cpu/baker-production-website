@@ -2,7 +2,16 @@
    To add an example: copy one line in GOOD, BAD or BEFORE_AFTER and change it.
    Put new images in the img/ folder next to this file (webp or jpg, ~1600px wide). */
 
-window.UPDATED = "5 Nov 2026, 1pm";
+window.UPDATED = "6 Nov 2026, 8am";
+
+
+/* EDITOR TOOLS: links the editors use every day. */
+window.EDITOR_TOOLS = [
+  { title: "Baker Aerial Editor (drone pins, boundaries, top-downs)", url: "https://www.bakerproduction.com/pins/", note: "Upload your finished drone photos here and press Send to Baker. Pins and lot lines go on automatically. Keep the original DJI file names." },
+  { title: "Drone hand-back guide (step by step)", url: "https://www.bakerproduction.com/pins/guide/", note: "How to hand back drone jobs: sky, colour and horizon only. No pins, text, logos or crops from you." },
+  { title: "Twilight skies: Perth dusk picks", url: "https://www.dropbox.com/scl/fo/kgzj8n98zt88pgv72t5re/AP6keDaxyRoggOF3DMujKJc?rlkey=rdeglkgv259msx2f3rxq3i4ka&dl=0", note: "Use these on twilight fronts. Natural sunset look, soft pink/purple OK, no dark fake purple. Use a different sky per job." },
+  { title: "Full written editing standard", url: "https://www.bakerproduction.com/pins/edit-standard-7k3q/", note: "Longer version of these rules, with scores against Crib Creative." }
+];
 
 window.REFERENCE_LINKS = [
   { title: "OUR STANDARD: 22 Thorburn Ave, Beechboro (Profocus, 8.5/10)", url: "https://www.dropbox.com/scl/fo/8c0ebpas05y2lo4jkxvl1/AEr14Z7un1FXvkFu-Ve2EaY?rlkey=y81vsut2bd30kervze8vkjpg2&dl=0", note: "Match this on every interior job. May be removed from Dropbox after delivery." },

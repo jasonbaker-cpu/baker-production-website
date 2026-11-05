@@ -107,10 +107,13 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   </header>
 
   <nav>
-    <a href="#selfcheck">Self-check my job</a><a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#links">Reference links</a><a href="#good">Good</a><a href="#bad">Bad</a><a href="#fixes">Before / after</a><a href="#premium">Premium day</a>
+    <a href="#tools">Editor tools</a><a href="#selfcheck">Self-check my job</a><a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#links">Reference links</a><a href="#good">Good</a><a href="#bad">Bad</a><a href="#fixes">Before / after</a><a href="#premium">Premium day</a>
   </nav>
 
   <div class="callout"><b>The target:</b> Crib Creative's Holdsworth listings. <b>Our standard:</b> 22 Thorburn Ave. Warm white walls, bright rooms, soft natural shadows, every photo in the job matching. Not grey, not cream, not washed out.</div>
+
+  <h2 id="tools">Editor tools</h2>
+  <div class="links" id="toolList"></div>
 
   <h2 id="selfcheck">Self-check my job</h2>
   <p class="sub" style="margin:-4px 0 12px">Before you deliver, drop your finished photos here. You get a report straight away: score, which photos to fix and why, and duplicates. <b>Photos stay on your computer and are not uploaded.</b></p>
@@ -216,12 +219,14 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
 </div>
 <div id="lb"><img alt=""></div>
 
-<script src="data.js?v=4"></script>
+<script src="data.js?v=5"></script>
 <script src="selfcheck.js?v=1" defer></script>
 <script>
 (function(){
   var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})};
   document.getElementById("upd").textContent=window.UPDATED||"";
+  document.getElementById("toolList").innerHTML=(window.EDITOR_TOOLS||[]).map(function(l){
+    return '<a href="'+esc(l.url)+'" target="_blank" rel="noopener"><b>'+esc(l.title)+'</b><span>'+esc(l.note)+'</span></a>'}).join("");
   document.getElementById("linkList").innerHTML=(window.REFERENCE_LINKS||[]).map(function(l){
     return '<a href="'+esc(l.url)+'" target="_blank" rel="noopener"><b>'+esc(l.title)+'</b><span>'+esc(l.note)+'</span></a>'}).join("");
   var card=function(e,kind){return '<div class="ex"><img loading="lazy" src="'+esc(e.img)+'" alt="'+esc(e.job)+'"><div class="t"><span class="tag '+kind+'">'+(kind=="good"?"Good":"Bad")+'</span><div class="meta">'+esc(e.job)+' · '+esc(e.file)+'</div><p class="why">'+esc(e.why)+'</p></div></div>'};
