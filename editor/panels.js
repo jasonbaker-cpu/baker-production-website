@@ -271,7 +271,7 @@ function refreshPhotoTab(){
   else {
     const f = el(`<label class="check"><input type="checkbox" ${p.finishOn?"checked":""}> Colour, contrast and sharpening</label>`);
     f.querySelector("input").onchange = ev=>{ commit(); p.finishOn = ev.target.checked; prefs.finish = p.finishOn; savePrefs(); ensureFinish(p); refreshStrip(); requestDraw(); };
-    const sk = el(`<label class="check"><input type="checkbox" ${(p.skyOn && (!p.skyWater || p.skyForce))?"checked":""} ${p.finishOn?"":"disabled"}> Replace the sky${p.skyWater && !p.skyForce ? ' <span class="note">(ocean shot — real sky kept; tick to swap anyway)</span>' : ''}</label>`);
+    const sk = el(`<label class="check"><input type="checkbox" ${(p.skyOn && (!p.skyWater || p.skyForce || p.skyAutoLine))?"checked":""} ${p.finishOn?"":"disabled"}> Replace the sky${p.skyWater && !p.skyForce && !p.skyAutoLine ? ' <span class="note">(ocean shot — real sky kept; tick to swap anyway)</span>' : ''}</label>`);
     sk.querySelector("input").onchange = ev=>{ commit(); p.skyOn = ev.target.checked; p.skyForce = ev.target.checked;   /* 5 Nov: a manual tick always swaps, even over water */ p.finKey = null; prefs.sky = p.skyOn; savePrefs(); ensureFinish(p); requestDraw(); };
 
     s1.appendChild(f); s1.appendChild(sk);
