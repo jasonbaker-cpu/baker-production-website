@@ -96,6 +96,8 @@ for slug, m in META.items():
             if full: full_names.append(n)
         if proj is None: proj = pj
         else: proj['photos'] += [q for q in pj['photos'] if q['name'] not in {x['name'] for x in proj['photos']}]
+        # 6 Nov: top-down projects carry no places and address "Property" — take the job (places list, address) from the aerials project
+        if variant == slug and (pj.get('job') or {}).get('places'): proj['job'] = pj['job']
     order = {n: i for i, n in enumerate(names)}; proj['photos'].sort(key=lambda q: order.get(q['name'], 999))
     open(src_dir + 'project.json', 'w').write(json.dumps(proj))
     base = oj or nj

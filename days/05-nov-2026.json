@@ -1,0 +1,49 @@
+{
+ "label": "Thu 5 Nov 2026",
+ "jobs": [
+  {
+   "slug": "113_homestead_rd_gosnells",
+   "addr": "113 Homestead Rd, Gosnells WA 6110",
+   "who": "Karar Hussain \u00b7 Ray White",
+   "agency": "grey",
+   "photos": "batch/113_homestead_rd_gosnells/jpg",
+   "map": "batch/113_homestead_rd_gosnells/113_homestead_rd_gosnells_places.json",
+   "poly": [
+    [
+     -32.06372224487445,
+     115.9900447629661
+    ],
+    [
+     -32.06369631574607,
+     115.99019831901929
+    ],
+    [
+     -32.06400576047934,
+     115.9902703770333
+    ],
+    [
+     -32.0640316875953,
+     115.99011681997584
+    ]
+   ],
+   "twilight": true,
+   "area": 517,
+   "areaSource": "building plan (A102, site area 517 m\u00b2)",
+   "lens": [
+    14.78,
+    35.0,
+    14.78,
+    35.0
+   ],
+   "nadirPick": [
+    "0208",
+    "0207"
+   ],
+   "streetRot": {
+    "113_homestead_rd_gosnells__nadir": 0,
+    "113_homestead_rd_gosnells__nadir2": 0
+   },
+   "notes": "Entry Notes: meet agent at the property"
+  }
+ ]
+}
