@@ -345,7 +345,9 @@ function pinPanel(p, pin){
     fr.querySelectorAll("button").forEach(b=>{ b.setAttribute("aria-pressed", (!!pin.flip)===(b.dataset.v==="up")); b.onclick=()=>{ commit(); pin.flip = b.dataset.v==="up"; pin.layoutLocked=true; refreshPanel(); requestDraw(); }; });
     selSec.appendChild(fr);
     const sr = el(`<div class="row"><label class="lbl">Label side</label><div class="seg"><button data-v="left">Left</button><button data-v="top">Above</button><button data-v="bottom">Below</button><button data-v="right">Right</button></div></div>`);
-    sr.querySelectorAll("button").forEach(b=>{ b.setAttribute("aria-pressed", pin.side===b.dataset.v); b.onclick=()=>{ commit(); pin.side=b.dataset.v; pin.sideLocked=true; refreshPanel(); requestDraw(); }; });
+    const boxedK = agency().kind !== "pin";   /* 5 Nov (Jason): Label side did nothing on box labels — now Left/Right move the box, Above/Below put it over or under the place */
+    sr.querySelectorAll("button").forEach(b=>{ const v=b.dataset.v; b.setAttribute("aria-pressed", boxedK ? (v==="left" ? (pin.off||.5)>.8 : v==="right" ? (pin.off||.5)<=.8 : v==="bottom" ? !!pin.flip : !pin.flip) : pin.side===v);
+      b.onclick=()=>{ commit(); if (boxedK){ if (v==="left") pin.off=.92; else if (v==="right") pin.off=.08; else if (v==="top"){ pin.flip=false; pin.lift=Math.max(pin.lift||0, 0); } else { pin.flip=true; pin.lift=Math.max(0, Math.min(pin.lift||0, 200)); } pin.layoutLocked=true; } else { pin.side=v; pin.sideLocked=true; } refreshPanel(); requestDraw(); }; });
     selSec.appendChild(sr);
   }
   const q = pin.key ? placeForKey(pin.key) : null;

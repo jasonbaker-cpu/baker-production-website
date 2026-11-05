@@ -114,8 +114,9 @@ function pinGeom(p, pin){
     g.lift = ({ flag:110, pill:150, ylab:120, simple:170, cream:260 })[kind]*s + (pin.lift||0);
     const off = pin.off == null ? .5 : pin.off; let y = pin.ey - g.lift - fh, x = pin.ex - Math.max(fh/2, Math.min(fw - fh/2, fw*off));
     if (kind === "cream"){ x = pin.ex - 2.4*s; if (off > .8 || x + fw > p.w - 14*s) x = pin.ex + 2.4*s - fw; x = Math.max(14*s, Math.min(p.w - fw - 14*s, x)); }   /* 5 Nov (Jason): Beshay line sits on the label's LEFT edge, like his reference (flips to the right edge only near the right side) */
-    if (kind === "cream" && y < 14*s){ const d = Math.min(14*s - y, g.lift - 70*s); if (d > 0){ g.lift -= d; y = pin.ey - g.lift - fh; } }
-    g.box = [x, y, fw, fh]; g.tipY = pin.ey - g.lift; g.flag = { x, y, w:fw, h:fh, fs:(kind==="cream"?44:FS)*s, tx:x+padL, text:text2 };
+    if (kind === "cream" && pin.flip){ y = pin.ey + g.lift; if (y + fh > p.h - 14*s){ y = p.h - 14*s - fh; g.lift = y - pin.ey; } }   /* 5 Nov: label BELOW the place (line goes up to it) — lets crowded far pins fit */
+    else if (kind === "cream" && y < 14*s){ const d = Math.min(14*s - y, g.lift - 70*s); if (d > 0){ g.lift -= d; y = pin.ey - g.lift - fh; } }
+    g.box = [x, y, fw, fh]; g.tipY = (kind === "cream" && pin.flip) ? pin.ey + g.lift : pin.ey - g.lift; g.flag = { x, y, w:fw, h:fh, fs:(kind==="cream"?44:FS)*s, tx:x+padL, text:text2 };
     return g;
   }
   const mw = 141*s, mh = 200*s, R = mw/2;
@@ -283,9 +284,9 @@ function tidySides(p){
   const K = boxed ? 16 : 1, st = boxed ? (A.kind==="simple" ? 62*s : 70*s) : step;
   const place = (pin, others) => {
     let best = null;
-    for (let k=0;k<K;k++) for (const flip of [false]) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : ["right","left","top","bottom"])){   /* 28 Oct: above/below only win when left/right overlap (2500 penalty) — lets 3 pins fit per photo */
+    for (let k=0;k<K;k++) for (const flip of (A.kind==="cream" ? [false,true] : [false])) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : ["right","left","top","bottom"])){   /* 28 Oct: above/below only win when left/right overlap (2500 penalty) — lets 3 pins fit per photo */
       if (boxed){ pin.off = side; pin.side = "right"; } else pin.side = side;
-      pin.flip = flip; pin.lift = (A.kind==="cream" ? k-3 : k)*st;   /* cream labels can also drop below their default height */
+      pin.flip = flip; pin.lift = (A.kind==="cream" ? (flip ? 70*s/st + k : k-3) : k)*st;   /* cream labels can also drop below their default height */
       const parts = pinParts(p,pin), r = parts[0];
       const mg = 10*s, off = Math.max(0, mg-r[0]) + Math.max(0, r[2]-(p.w-mg)) + Math.max(0, mg-r[1]) + Math.max(0, r[3]-(p.h-mg));
       let o = 0; for (const q of others) for (const a of parts) for (const b of q) o += ov(a,b);
