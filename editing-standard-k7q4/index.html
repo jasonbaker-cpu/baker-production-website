@@ -107,7 +107,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   </header>
 
   <nav>
-    <a href="#selfcheck">Self-check my job</a><a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#links">Reference links</a><a href="#good">Good</a><a href="#bad">Bad</a><a href="#fixes">Before / after</a>
+    <a href="#selfcheck">Self-check my job</a><a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#links">Reference links</a><a href="#good">Good</a><a href="#bad">Bad</a><a href="#fixes">Before / after</a><a href="#premium">Premium day</a>
   </nav>
 
   <div class="callout"><b>The target:</b> Crib Creative's Holdsworth listings. <b>Our standard:</b> 22 Thorburn Ave. Warm white walls, bright rooms, soft natural shadows, every photo in the job matching. Not grey, not cream, not washed out.</div>
@@ -184,11 +184,39 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   <h2 id="fixes">Before / after: good fixes</h2>
   <div class="grid" id="baGrid"></div>
 
+  <h2 id="premium">Premium day photos</h2>
+  <p class="sub" style="margin:-4px 0 12px">Premium tier only. Standard jobs keep the normal rules above.</p>
+  <div class="rules">
+    <div class="card">
+      <h3>Premium look</h3>
+      <ul>
+        <li><b>Natural light only.</b> Ambient HDR brackets, no flash, property lights off. It should look like the room on a nice day.</li>
+        <li><b>Bright overall.</b> No super-dark corners. Lift the far side of the room so it still reads clearly.</li>
+        <li><b>Keep soft shadows.</b> Light falls off gently from the windows. Don't flatten every shadow like a standard job.</li>
+        <li><b>Warm-neutral whites.</b> Cream white, never grey/blue, never yellow.</li>
+        <li><b>True blacks.</b> Black tiles, splashbacks and frames stay black, not grey.</li>
+        <li><b>Window pull on every frame.</b> View visible, no halos.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Premium vs standard</h3>
+      <ul>
+        <li><b>Standard:</b> bright, even, walls ~210, very few shadows.</li>
+        <li><b>Premium:</b> just as bright in the main area, but with natural depth and direction of light.</li>
+        <li><b>Same set rule:</b> every photo in the job matches.</li>
+        <li><b>Exteriors and drone:</b> same rules as standard (soft pale blue sky, lifted shadows).</li>
+        <li><b>Benchmark:</b> 4 McGlew Rd, Glen Forrest.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="links" id="premLinks" style="margin-top:14px"></div>
+  <div class="grid" id="premGrid" style="margin-top:14px"></div>
+
   <footer>Baker Production · internal reference for editors · not for public use.</footer>
 </div>
 <div id="lb"><img alt=""></div>
 
-<script src="data.js?v=3"></script>
+<script src="data.js?v=4"></script>
 <script src="selfcheck.js?v=1" defer></script>
 <script>
 (function(){
@@ -201,6 +229,9 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   document.getElementById("badGrid").innerHTML=(window.BAD||[]).map(function(e){return card(e,"bad")}).join("");
   document.getElementById("baGrid").innerHTML=(window.BEFORE_AFTER||[]).map(function(e){
     return '<div class="ex"><div class="ba"><figure><img loading="lazy" src="'+esc(e.before)+'" alt="before"><figcaption>Before</figcaption></figure><figure><img loading="lazy" src="'+esc(e.after)+'" alt="after"><figcaption>After</figcaption></figure></div><div class="t"><div class="meta">'+esc(e.job)+' · '+esc(e.file)+'</div><p class="why">'+esc(e.why)+'</p></div></div>'}).join("");
+  document.getElementById("premLinks").innerHTML=(window.PREMIUM_LINKS||[]).map(function(l){
+    return '<a href="'+esc(l.url)+'" target="_blank" rel="noopener"><b>'+esc(l.title)+'</b><span>'+esc(l.note)+'</span></a>'}).join("");
+  document.getElementById("premGrid").innerHTML=(window.PREMIUM||[]).map(function(e){return card(e,"good")}).join("");
   var sc=function(n){return n>=8?"s-hi":n>=7.5?"s-mid":"s-lo"};
   document.getElementById("revList").innerHTML=(window.REVIEWS||[]).map(function(r,i){
     return '<details class="rev"'+(i<3?' open':'')+'><summary><span class="job">'+esc(r.job)+'</span><span class="score '+sc(r.score)+'">'+esc(r.score)+'/10</span><span class="meta">Shot '+esc(r.shoot)+' · reviewed '+esc(r.date)+'</span><span class="vd">'+esc(r.verdict)+'</span></summary>'+

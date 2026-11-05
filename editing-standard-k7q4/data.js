@@ -2,7 +2,7 @@
    To add an example: copy one line in GOOD, BAD or BEFORE_AFTER and change it.
    Put new images in the img/ folder next to this file (webp or jpg, ~1600px wide). */
 
-window.UPDATED = "5 Nov 2026, 12pm";
+window.UPDATED = "5 Nov 2026, 1pm";
 
 window.REFERENCE_LINKS = [
   { title: "OUR STANDARD: 22 Thorburn Ave, Beechboro (Profocus, 8.5/10)", url: "https://www.dropbox.com/scl/fo/8c0ebpas05y2lo4jkxvl1/AEr14Z7un1FXvkFu-Ve2EaY?rlkey=y81vsut2bd30kervze8vkjpg2&dl=0", note: "Match this on every interior job. May be removed from Dropbox after delivery." },
@@ -76,4 +76,23 @@ window.REVIEWS = [
   { date: "5 Nov 2026", shoot: "4 Nov", job: "51 Hepburn Way, Balga", score: 8, verdict: "Pass.",
     notes: [ { img: "img/reviews/hepburn-04432.webp", file: "DSC04432", kind: "good", text: "Bright and airy. Yellow lower glass is real textured glass, fine." } ],
     drop: [] }
+];
+
+/* PREMIUM DAY PHOTOGRAPHY: premium tier only. Standard jobs follow the normal rules above. */
+window.PREMIUM_LINKS = [
+  { title: "OUR PREMIUM STANDARD: 4 McGlew Rd, Glen Forrest (full set)", url: "https://www.dropbox.com/scl/fo/yoef1ay7o09n9zn1dvjz2/AOCl-GQjWYJP7Ie6ujobAwQ?rlkey=mrk99kwbx9jfk87en1qwqzk6x&dl=0", note: "Match this on every premium job. May be removed from Dropbox after delivery." },
+  { title: "Brightness target: 91 St Leonards Ave, West Leederville", url: "https://www.domain.com.au/91-st-leonards-avenue-west-leederville-wa-6007-2021224490", note: "Natural light, bright overall, soft falloff. Aim for this brightness." }
+];
+window.PREMIUM = [
+  { img: "img/premium/westperth-living.webp", job: "West Perth", file: "Living", why: "Window view held, soft natural light, bright with real shadows. No flash look." },
+  { img: "img/premium/westperth-kitchen.webp", job: "West Perth", file: "Kitchen", why: "Cream whites, true black splashback, light falls off naturally from the window." },
+  { img: "img/premium/westperth-bathroom.webp", job: "West Perth", file: "Bathroom", why: "Clean warm-neutral whites, black tiles stay black, not grey." },
+  { img: "img/premium/wandi-openplan.webp", job: "Wandi", file: "Open plan", why: "Sunlight on the floor kept, room bright end to end, no dark corners." },
+  { img: "img/premium/wandi-kitchen.webp", job: "Wandi", file: "Kitchen", why: "Bright white joinery, natural timber, gentle shadow depth." },
+  { img: "img/premium/highgate-living.webp", job: "Highgate", file: "Living", why: "Soft window light, warm tone, nothing blown." },
+  { img: "img/premium/highgate-bedroom.webp", job: "Highgate", file: "Bedroom", why: "Sheer curtains glowing softly, warm white walls, calm and even." },
+  { img: "img/premium/beeliar-dining.webp", job: "Beeliar", file: "Dining / fireplace", why: "Fire kept warm, brick true colour, windows pulled." },
+  { img: "img/premium/glenforrest-kitchen.webp", job: "4 McGlew Rd, Glen Forrest", file: "Kitchen / dining", why: "Benchmark job. Natural daylight mood, timber and brick true to life." },
+  { img: "img/premium/glenforrest-veranda.webp", job: "4 McGlew Rd, Glen Forrest", file: "Veranda / facade", why: "Soft pale sky, garden colour natural, shadows lifted under the veranda." },
+  { img: "img/premium/madeley-facade.webp", job: "Madeley", file: "Facade", why: "Pale blue sky, natural grass, bright clean facade." }
 ];
