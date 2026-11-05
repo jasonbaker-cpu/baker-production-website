@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive,noimageindex">
+<title>Shooting Standard · Baker Production</title>
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&display=swap">
+<style>
+:root{--bg:#F5F5F7;--panel:#fff;--sunk:#F2F2F7;--line:#E5E5EA;--ink:#1D1D1F;--muted:#6E6E73;--faint:#86868B;--accent:#0071E3;
+  --good:#1E8E3E;--good-bg:#E6F4EA;--bad:#D4001A;--bad-bg:#FDE8EA;--shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+  --display:"Inter Tight","Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;--sans:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--panel:#1C1C1E;--sunk:#2C2C2E;--line:#38383A;--ink:#F5F5F7;--muted:#A1A1A6;--faint:#8E8E93;--accent:#0A84FF;
+  --good:#30D158;--good-bg:#0F2A17;--bad:#FF453A;--bad-bg:#331311;--shadow:0 1px 2px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.35);color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 16px 64px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:22px}
+h1{font-family:var(--display);font-size:clamp(26px,5vw,38px);letter-spacing:-.025em;margin:0;line-height:1.1}
+h2{font-family:var(--display);font-size:22px;letter-spacing:-.02em;margin:40px 0 12px}
+.sub{color:var(--muted);margin:6px 0 0}
+.upd{font-size:12.5px;color:var(--faint)}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}
+nav a{font-size:13.5px;font-weight:600;text-decoration:none;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 13px}
+.card{background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:20px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.rules h3{font-family:var(--display);font-size:16px;margin:0 0 8px}
+.rules ul{margin:0;padding-left:18px}
+.rules li{margin:4px 0}
+.rules li b{font-weight:600}
+.callout{border-left:4px solid var(--accent);padding:14px 16px;background:var(--panel);border-radius:12px;box-shadow:var(--shadow);margin-top:14px}
+.links{display:grid;gap:10px}
+.links a{display:block;text-decoration:none;color:var(--ink);background:var(--panel);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px}
+.links a b{color:var(--accent);font-weight:600}
+.links a span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:14px}
+.ex{background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.ex img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;cursor:zoom-in;background:var(--sunk)}
+.ex .t{padding:12px 14px 14px}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:3px 9px;margin-bottom:6px}
+.tag.good{background:var(--good-bg);color:var(--good)}
+.tag.bad{background:var(--bad-bg);color:var(--bad)}
+.meta{font-size:12.5px;color:var(--faint)}
+.why{margin:4px 0 0}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--line)}
+.ba figure{margin:0;position:relative}
+.ba figcaption{position:absolute;left:8px;top:8px;font-size:11px;font-weight:700;color:#fff;background:rgba(0,0,0,.6);padding:2px 8px;border-radius:999px}
+.ba .grid{grid-template-columns:1fr}
+.revs{display:grid;gap:14px}
+.rev{background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:16px}
+.rev summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.rev summary::-webkit-details-marker{display:none}
+.rev .job{font-family:var(--display);font-weight:700;font-size:17px;flex:1 1 220px}
+.score{font-weight:700;font-size:14px;border-radius:999px;padding:4px 11px}
+.s-hi{background:var(--good-bg);color:var(--good)}.s-mid{background:#FFF4D6;color:#9A6700}.s-lo{background:var(--bad-bg);color:var(--bad)}
+@media (prefers-color-scheme:dark){.s-mid{background:#332700;color:#FFD60A}}
+.rev .vd{width:100%;color:var(--muted);font-size:14px}
+.rev .notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:12px;margin-top:14px}
+.rev .note img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:12px;cursor:zoom-in;display:block;background:var(--sunk)}
+.rev .note p{margin:6px 0 0;font-size:14px}
+.rev .drop{margin-top:12px;font-size:13.5px;color:var(--muted)}
+.rev .drop b{color:var(--ink)}
+.sc input[type=text]{font:inherit;font-size:16px;width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:var(--sunk);color:var(--ink);margin:4px 0 12px}
+.scdrop{border:2px dashed var(--line);border-radius:16px;padding:28px 16px;text-align:center;cursor:pointer;display:flex;flex-direction:column;gap:4px;background:var(--sunk)}
+.scdrop span{color:var(--muted);font-size:13.5px}
+.scdrop.over{border-color:var(--accent);background:transparent}
+#scOut{margin-top:14px}
+.scr-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.scr .job{font-family:var(--display);font-weight:700;font-size:18px}
+.scr .vd{margin:8px 0 12px}
+.scr h4{margin:18px 0 6px;font-size:14.5px}
+.scr ul{margin:0;padding-left:18px}
+.scr-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.scr-stats div{background:var(--sunk);border-radius:12px;padding:10px 12px}
+.scr-stats b{display:block;font-family:var(--display);font-size:20px}
+.scr-stats span{font-size:12px;color:var(--muted)}
+.scr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.scr-grid img{width:100%;border-radius:10px;display:block}
+.scr-grid p{margin:6px 0 2px}
+.scr-grid li{font-size:13.5px}
+.scr-all{margin-top:14px}
+.scr-all summary{cursor:pointer;font-weight:600;font-size:14px}
+.scr-all table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;display:block;overflow-x:auto}
+.scr-all th,.scr-all td{text-align:left;padding:4px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.scr-all tr.flag td{color:var(--bad)}
+.scr-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.scr-btns button{font:inherit;font-weight:600;font-size:14px;padding:9px 16px;border-radius:999px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+@media print{body.printing .wrap>*:not(#selfcheck):not(.sc){display:none!important}body.printing .sc>*:not(#scOut){display:none!important}body.printing{background:#fff;color:#000}body.printing .scr-btns{display:none}body.printing .scr-all{display:none}}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;padding:16px;z-index:9;cursor:zoom-out}
+#lb.on{display:flex}
+#lb img{max-width:100%;max-height:100%;border-radius:8px}
+footer{margin-top:44px;font-size:13px;color:var(--faint)}
+@media (max-width:520px){.ba{grid-template-columns:1fr}}
+
+.sc select{font:inherit;font-size:16px;width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:var(--sunk);color:var(--ink);margin:4px 0 12px;-webkit-appearance:none}
+.sc .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:0 12px}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:10px}
+.board div{background:var(--panel);border-radius:14px;box-shadow:var(--shadow);padding:12px 14px}
+.board b{display:block;font-family:var(--display);font-size:22px}
+.board span{font-size:12.5px;color:var(--muted)}
+.chk label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;font-size:14px;cursor:pointer}
+.chk input{margin-top:3px;width:18px;height:18px;flex:none}
+.prog{height:6px;background:var(--sunk);border-radius:99px;overflow:hidden;margin:10px 0 2px}
+.prog i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+.empty{color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Baker Production · Shooting Standard</h1>
+      <p class="sub">For our photographers. Check your raws before you upload, then check your job reviews. Private page.</p>
+    </div>
+    <div class="upd">Updated <span id="upd"></span></div>
+  </header>
+
+  <nav>
+    <a href="#selfcheck">Self-check my shoot</a><a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#good">Good framing</a>
+  </nav>
+
+  <div class="callout"><b>The goal:</b> give the editor nothing to fix that should have been fixed on site. Level camera, straight verticals, full brackets, every room covered with a wide hero shot.</div>
+
+  <h2 id="selfcheck">Self-check my shoot</h2>
+  <p class="sub" style="margin:-4px 0 12px">Drop the whole job's raws (Sony .ARW) or camera JPGs here before you upload. You get a score, the shots to fix next time and why. <b>Files stay on your computer and are not uploaded.</b></p>
+  <div class="card sc">
+    <div class="row">
+      <div><label class="meta" for="scShooter">Your name</label><select id="scShooter"></select></div>
+      <div><label class="meta" for="scPkg">Package</label><select id="scPkg"></select></div>
+    </div>
+    <label class="meta" for="scJob">Job address</label>
+    <input id="scJob" type="text" placeholder="e.g. 23 Riding Way, Bull Creek">
+    <div id="scDrop" class="scdrop" role="button" tabindex="0"><b>Drop raws here</b><span>or tap to choose (.ARW or .JPG, all brackets, drone files are skipped)</span></div>
+    <input id="scInput" type="file" accept=".arw,.ARW,image/jpeg,.jpg,.JPG" multiple hidden>
+    <div id="scOut"></div>
+  </div>
+
+  <h2 id="reviews">Job reviews</h2>
+  <p class="sub" style="margin:-4px 0 12px">Jason's QC on your shoots. Fix the red points; keep doing the green ones.</p>
+  <div id="board" class="board" style="margin-bottom:14px"></div>
+  <div id="revList" class="revs"></div>
+
+  <h2 id="rules">Rules</h2>
+  <div class="rules">
+    <div class="card">
+      <h3>Camera setup</h3>
+      <ul>
+        <li><b>Tripod for every interior.</b> No handheld brackets.</li>
+        <li><b>Level gauge on.</b> Camera level left-right and front-back on every shot. The editor can't fix a tilted camera without cropping.</li>
+        <li><b>Verticals straight in camera.</b> Door frames and wall corners should stand straight on the screen.</li>
+        <li><b>Height:</b> about benchtop to chest height (1.1-1.4m). Lower in small rooms. Never eye height looking down.</li>
+        <li><b>Lens:</b> 16-24mm on full frame (10-16mm on APS-C). Not wider: rooms stretch and look fake.</li>
+        <li><b>Settings:</b> f/8, ISO 100-200, 2s timer, same bracket set on every shot.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Brackets</h3>
+      <ul>
+        <li><b>Same number of frames every scene</b> (5 at 2 stops is our default).</li>
+        <li><b>Darkest frame must show the window view</b> with no white blowout. If it's still white, add a darker frame.</li>
+        <li><b>Brightest frame must show detail in the dark corners.</b></li>
+        <li><b>Don't touch the tripod</b> until the last frame is done.</li>
+        <li><b>Every scene bracketed,</b> exteriors included.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Framing &amp; coverage</h3>
+      <ul>
+        <li><b>One wide hero shot of every main room</b>, from the corner into the room. Never just from the doorway.</li>
+        <li><b>Second angle</b> for living, kitchen, meals and master.</li>
+        <li><b>Don't shoot the same angle twice.</b> Move the tripod, don't just turn it.</li>
+        <li><b>Exterior:</b> front straight-on plus a 3/4 angle, rear yard, alfresco, pool.</li>
+        <li><b>Minimum scenes:</b> <span id="covText"></span>.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Before you press the shutter</h3>
+      <ul>
+        <li><b>Lights on</b> and all globes working (premium day: lights off).</li>
+        <li><b>Blinds open evenly,</b> TVs and screens off, toilet lids down.</li>
+        <li><b>Check mirrors and glass</b> for you or the tripod.</li>
+        <li><b>Cars, bins and hoses</b> out of the front shots.</li>
+        <li><b>Follow the booking notes.</b></li>
+        <li><b>Same day:</b> upload to Raw Files/your name/date/address and check the file count before wiping the card.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 id="good">Good framing: do this</h2>
+  <div class="grid" id="goodGrid"></div>
+
+  <footer>Baker Production · internal reference for photographers · not for public use.</footer>
+</div>
+<div id="lb"><img alt=""></div>
+
+<script src="data.js?v=1"></script>
+<script src="selfcheck.js?v=1" defer></script>
+<script>
+(function(){
+  var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})};
+  document.getElementById("upd").textContent=window.UPDATED||"";
+  var cov=window.COVERAGE||{};
+  document.getElementById("covText").textContent=Object.keys(cov).map(function(k){return k.toLowerCase()+" "+cov[k]}).join(", ");
+  document.getElementById("goodGrid").innerHTML=(window.GOOD||[]).map(function(e){return '<div class="ex"><img loading="lazy" src="'+esc(e.img)+'" alt="'+esc(e.job)+'"><div class="t"><span class="tag good">Good</span><div class="meta">'+esc(e.job)+' · '+esc(e.file)+'</div><p class="why">'+esc(e.why)+'</p></div></div>'}).join("");
+  var R=window.REVIEWS||[],sc=function(n){return n>=8?"s-hi":n>=7.5?"s-mid":"s-lo"};
+  var by={};R.forEach(function(r){(by[r.shooter]=by[r.shooter]||[]).push(r.score)});
+  document.getElementById("board").innerHTML=(window.SHOOTERS||[]).map(function(s){var a=by[s]||[];var m=a.length?(a.reduce(function(x,y){return x+y},0)/a.length).toFixed(1):"–";
+    return '<div><b>'+m+(a.length?'<small style="font-size:13px;color:var(--faint)">/10</small>':'')+'</b><span>'+esc(s)+' · '+a.length+' review'+(a.length==1?'':'s')+'</span></div>'}).join("");
+  document.getElementById("revList").innerHTML=R.length?R.map(function(r,i){
+    return '<details class="rev"'+(i<3?' open':'')+'><summary><span class="job">'+esc(r.job)+'</span><span class="score '+sc(r.score)+'">'+esc(r.score)+'/10</span><span class="meta">'+esc(r.shooter)+' · shot '+esc(r.shoot)+' · reviewed '+esc(r.date)+'</span><span class="vd">'+esc(r.verdict)+'</span></summary>'+
+      '<div class="notes">'+(r.notes||[]).map(function(n){return '<div class="note">'+(n.img?'<img loading="lazy" src="'+esc(n.img)+'" alt="'+esc(n.file)+'">':'')+'<p><span class="tag '+n.kind+'">'+(n.kind=="good"?"Good":"Fix")+'</span> <span class="meta">'+esc(n.file)+'</span><br>'+esc(n.text)+'</p></div>'}).join("")+'</div></details>'}).join("")
+    :'<p class="empty">No shooter reviews posted yet.</p>';
+  var lb=document.getElementById("lb"),li=lb.querySelector("img");
+  document.addEventListener("click",function(ev){var t=ev.target;if(t.tagName=="IMG"&&t.closest(".ex,.rev .note,.scr-grid")){li.src=t.src;lb.classList.add("on")}});
+  lb.addEventListener("click",function(){lb.classList.remove("on")});
+  document.addEventListener("keydown",function(ev){if(ev.key=="Escape")lb.classList.remove("on")});
+})();
+</script>
+</body>
+</html>
