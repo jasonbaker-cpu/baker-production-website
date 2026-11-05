@@ -1361,7 +1361,7 @@ function newPhoto(name, base, meta, sample){
     disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0, (!sample && prefs.skyPlate !== "S") ? { con:10 } : {}), undo:[], redo:[] };
   return p;
 }
-const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop"];
+const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet"];
 function snapshotOf(p){ const o={}; SNAP_KEYS.forEach(k=>o[k]=p[k]); return JSON.stringify(o); }
 function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
 function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); ensureFinish(p); }
@@ -1371,7 +1371,21 @@ function updateUndo(){ const p=P(); $("undoBtn").disabled=!p||!p.undo.length; $(
 
 // ================= finish (async so the page stays responsive) =================
 let finishing = 0;
+function autoBright(src){   /* 5 Nov (Jason): "auto make the highlights go down if needed" — measures the bright sky + water and picks the Bright parts amount */
+  const mw=240, mh=Math.max(8,Math.round(src.height/src.width*mw)); const c=document.createElement("canvas"); c.width=mw; c.height=mh; const x=c.getContext("2d"); x.drawImage(src,0,0,mw,mh);
+  const q=x.getImageData(0,0,mw,mh).data, rowY=new Float32Array(mh);
+  for (let yy=0;yy<mh;yy++){ let s=0; for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4; s+=Math.log(1+(.299*q[j]+.587*q[j+1]+.114*q[j+2])); } rowY[yy]=s/mw; }
+  let hz=Math.round(mh*.35), best=1e9; for (let yy=Math.round(mh*.06); yy<Math.round(mh*.65); yy++){ const a0=rowY[Math.max(0,yy-3)]+rowY[Math.max(0,yy-2)]+rowY[Math.max(0,yy-1)], b0=rowY[Math.min(mh-1,yy+1)]+rowY[Math.min(mh-1,yy+2)]+rowY[Math.min(mh-1,yy+3)], dd=b0-a0; if (dd<best){ best=dd; hz=yy; } }
+  let sw=0, sy=0; for (let yy=0;yy<mh;yy++) for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4, Y=(.299*q[j]+.587*q[j+1]+.114*q[j+2])/255; let w = yy<hz ? 1 : Math.min(1, Math.max(0,(q[j+2]-q[j])/40)); if (yy>=hz && Y>.85) w=Math.max(w,.6); if (w<=0 || Y<.42) continue; sw+=w; sy+=w*Y; }
+  const H=new Uint32Array(64); let nl=0; for (let yy=hz+1;yy<mh;yy++) for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4; H[Math.min(63,Math.floor((.299*q[j]+.587*q[j+1]+.114*q[j+2])/4))]++; nl++; }
+  let acc=0, p97=1; for (let k=63;k>=0;k--){ acc+=H[k]; if (acc>nl*.03){ p97=(k+.5)/64; break; } }   // brightest 3% of the land (white roofs, sand)
+  const hl = p97>.9 ? -Math.min(20, Math.round((p97-.9)*250)) : 0;   /* gentle — only real blow-outs */
+  const br = sw < mw*mh*.04 ? 0 : Math.max(0, Math.min(40, Math.round((sy/sw-.62)*200)));
+  return { bright:br, hl };
+}
+function autoAdj(p, src){ if (p.brightSet || p._autoDone===src || (p.adj && p.adj.bright) || p.editorPhoto || p.extraEdited) return; p._autoDone=src; const ab = autoBright(src); p.adj = Object.assign({}, ADJ0, p.adj||{}, { bright:ab.bright }, (p.adj && p.adj.hl) ? {} : { hl:ab.hl }); p._adj = null; }
 function ensureFinish(p){ if (p && (p.editorPhoto || p.extraEdited)){ p.finishOn = false; p.fin = null; return; }   /* 31 Oct: editor photos are never re-finished */
+  if (!p.finishOn && !p.sample && p.base) autoAdj(p, p.base);   /* auto highlights also on unfinished photos */
   if (!p.finishOn || p.sample) return;
   const key = p.skyOn ? "skyP"+(prefs.skyPlate||"C") : "nosky";
   if (p.fin && p.finKey === key) return;
@@ -1380,7 +1394,7 @@ function ensureFinish(p){ if (p && (p.editorPhoto || p.extraEdited)){ p.finishOn
   if (p.skyOn && typeof SKYP_CACHE !== "undefined" && !SKYP_CACHE[prefs.skyPlate||"C"]){ $("busy").hidden = false; if (!p._waitSky){ p._waitSky = true; loadSkyPlate(prefs.skyPlate||"C", ()=>{ p._waitSky = false; ensureFinish(p); requestDraw(); }); } return; }
   p._finPending = key; finishing++; $("busy").hidden = false;
   setTimeout(()=>{
-    try{ const r = finishImage(p.base, p); p.fin = r.canvas; p.finKey = key; p._blur = null; p.skyLine = r.sky ? { m:r.sky.m, b:r.sky.b, h:p.base.height } : null; clampPinsToLand(p); makeThumb(p); }
+    try{ const r = finishImage(p.base, p); p.fin = r.canvas; p.finKey = key; p._blur = null; autoAdj(p, p.fin); p.skyLine = r.sky ? { m:r.sky.m, b:r.sky.b, h:p.base.height } : null; clampPinsToLand(p); makeThumb(p); }
     catch(err){ console.error(err); p.finishOn = false; toast("The finish couldn't run on this photo. It's shown unfinished."); }
     p._finPending = null; finishing--; if (!finishing) $("busy").hidden = true;
     refreshStrip(); requestDraw();
@@ -1958,13 +1972,13 @@ function refreshPhotoTab(){
     const A = [["exp","Brightness"],["con","Contrast"],["hl","Highlights"],["sh","Shadows"],["warm","Warmth"],["tint","Tint"],["sat","Colour"]];
     let tm=null; const redraw=()=>{ clearTimeout(tm); tm=setTimeout(()=>{ p._blur=null; refreshStrip(); requestDraw(); }, 60); };
     A.forEach(([k,lab])=>sa.appendChild(slider("adj_"+k, lab, -100, 100, 1, p.adj[k]||0, v=>(v>0?"+":"")+v, v=>{ p.adj[k]=v; redraw(); }, commit)));
-    sa.appendChild(slider("adj_bright", "Bright parts (pull down)", 0, 100, 1, p.adj.bright||0, v=>v?String(v):"off", v=>{ p.adj.bright=v; redraw(); }, commit));   /* 5 Nov: pulls down every bright area — sky, ocean, glare */
+    sa.appendChild(slider("adj_bright", "Bright parts (pull down)", 0, 100, 1, p.adj.bright||0, v=>v?String(v):"off", v=>{ p.adj.bright=v; p.brightSet=true; redraw(); }, commit));   /* 5 Nov: pulls down every bright area — sky, ocean, glare */
     { const mb = el(`<div class="row"><button class="btn" aria-pressed="false">Show mask</button><span class="note" style="margin:0">Red = what the mask touches</span></div>`); const bt = mb.children[0];
       bt.onclick=()=>{ window.__showMask=!window.__showMask; bt.setAttribute("aria-pressed", String(!!window.__showMask)); bt.textContent = window.__showMask ? "Hide mask" : "Show mask"; p._blur=null; requestDraw(); };
       sa.appendChild(mb); }
     const rb = el(`<div class="row"><button class="btn">Reset</button><button class="btn">Copy to all photos</button></div>`);
-    rb.children[0].onclick=()=>{ commit(); p.adj=Object.assign({}, ADJ0); p._blur=null; refreshPhotoTab(); refreshStrip(); requestDraw(); };
-    rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample && !q.editorPhoto && !q.extraEdited){ q.adj=Object.assign({}, p.adj); q.finishOn=p.finishOn; q._blur=null; if (q.finishOn) ensureFinish(q); } }); toast(`Copied colour + finish to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
+    rb.children[0].onclick=()=>{ commit(); p.adj=Object.assign({}, ADJ0); p.brightSet=true; p._blur=null; refreshPhotoTab(); refreshStrip(); requestDraw(); };
+    rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample && !q.editorPhoto && !q.extraEdited){ q.adj=Object.assign({}, p.adj); q.brightSet=true; q.finishOn=p.finishOn; q._blur=null; if (q.finishOn) ensureFinish(q); } }); toast(`Copied colour + finish to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
     sa.appendChild(rb); box.appendChild(sa);
     { const sc = el(`<section class="sec"><h2><span>Crop</span></h2></section>`);   /* 4 Nov (Jason): a button for cropping */
       sc.appendChild(el(`<p class="note">Choose a shape, then drag the box on the photo. Drag the corners to resize. Export uses this crop.</p>`));
@@ -2545,6 +2559,13 @@ function fixApply(p, sh, op, a){
     const A2=[A[0]+nx*d*a, A[1]+ny*d*a], B2=[B[0]+nx*d*a, B[1]+ny*d*a];
     const P0=sh.pts[(i-1+n)%n], P3=sh.pts[(j+1)%n];
     const nA=lineX(P0,A,A2,B2), nB=lineX(B,P3,A2,B2); sh.pts[i]=nA||A2; sh.pts[j]=nB||B2; }
+  else if (op==="square" && n>=4){   /* 5 Nov (Jason): one-click right angles — every side snapped square to the boundary's main direction, size and position kept */
+    let sx=0, sy=0; for (let i=0;i<n;i++){ const A=sh.pts[i], B=sh.pts[(i+1)%n], dx=B[0]-A[0], dy=B[1]-A[1], L=Math.hypot(dx,dy), t=4*Math.atan2(dy,dx); sx+=L*Math.cos(t); sy+=L*Math.sin(t); }
+    const th=Math.atan2(sy,sx)/4, cs=Math.cos(th), sn=Math.sin(th);
+    const R=sh.pts.map(q=>{ const x=q[0]-c[0], y=q[1]-c[1]; return [x*cs+y*sn, -x*sn+y*cs]; });   // into the boundary's own axes
+    const E=[]; for (let i=0;i<n;i++){ const A=R[i], B=R[(i+1)%n]; const hor=Math.abs(B[0]-A[0])>=Math.abs(B[1]-A[1]); E.push({hor, v: hor ? (A[1]+B[1])/2 : (A[0]+B[0])/2}); }
+    const Q=R.map((q,i)=>{ const e0=E[(i-1+n)%n], e1=E[i]; if (e0.hor!==e1.hor) return e0.hor ? [e1.v, e0.v] : [e0.v, e1.v]; return e1.hor ? [q[0], e1.v] : [e1.v, q[1]]; });
+    sh.pts=Q.map(q=>[c[0]+q[0]*cs-q[1]*sn, c[1]+q[0]*sn+q[1]*cs]); }
   else if (op==="addpt" && edge!=null){ const i=edge, j=(i+1)%n, m=[(sh.pts[i][0]+sh.pts[j][0])/2,(sh.pts[i][1]+sh.pts[j][1])/2]; sh.pts.splice(i+1,0,m);
     if (sh.lens) sh.lens.splice(i+1,0,""); if (sh.dashed) sh.dashed.splice(i+1,0,!!sh.dashed[i]); sel={kind:"shape", id:sh.id, vtx:i+1}; }
   else if (op==="delpt" && vtx!=null && n>3){ sh.pts.splice(vtx,1); if (sh.lens) sh.lens.splice(vtx,1); if (sh.dashed) sh.dashed.splice(vtx,1); sel={kind:"shape", id:sh.id}; }
@@ -2565,6 +2586,7 @@ function fixSection(p, sh){
   const r1 = el(`<div class="row"><button class="btn" title="Rotate left">⟲ Rotate</button><button class="btn" title="Rotate right">Rotate ⟳</button><button class="btn" title="Smaller">− Smaller</button><button class="btn" title="Bigger">+ Bigger</button></div>`);
   const b1 = r1.querySelectorAll("button"); b1[0].onclick=()=>fixApply(p,sh,"rot",-0.25); b1[1].onclick=()=>fixApply(p,sh,"rot",0.25); b1[2].onclick=()=>fixApply(p,sh,"scale",-0.005); b1[3].onclick=()=>fixApply(p,sh,"scale",0.005);
   s.appendChild(r1);
+  if (sh.pts.length>=4){ const rq = el(`<div class="row"><button class="btn" title="Make every corner a right angle (90°)">∟ Square corners</button></div>`); rq.querySelector("button").onclick=()=>fixApply(p,sh,"square"); s.appendChild(rq); }
   if (edge!=null){ const r2 = el(`<div class="row"><button class="btn">Pull side ${edge+1} in</button><button class="btn">Push side ${edge+1} out</button><button class="btn ghost">Add corner here</button></div>`);
     const b2=r2.querySelectorAll("button"); b2[0].onclick=()=>fixApply(p,sh,"side",-1); b2[1].onclick=()=>fixApply(p,sh,"side",1); b2[2].onclick=()=>fixApply(p,sh,"addpt"); s.appendChild(r2); }
   if (vtx!=null && sh.pts.length>3){ const r3 = el(`<div class="row"><button class="btn ghost">Delete corner ${vtx+1}</button></div>`); r3.querySelector("button").onclick=()=>fixApply(p,sh,"delpt"); s.appendChild(r3); }
