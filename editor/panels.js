@@ -290,13 +290,13 @@ function refreshPhotoTab(){
     const A = [["exp","Brightness"],["con","Contrast"],["hl","Highlights"],["sh","Shadows"],["warm","Warmth"],["tint","Tint"],["sat","Colour"]];
     let tm=null; const redraw=()=>{ clearTimeout(tm); tm=setTimeout(()=>{ p._blur=null; refreshStrip(); requestDraw(); }, 60); };
     A.forEach(([k,lab])=>sa.appendChild(slider("adj_"+k, lab, -100, 100, 1, p.adj[k]||0, v=>(v>0?"+":"")+v, v=>{ p.adj[k]=v; redraw(); }, commit)));
-    sa.appendChild(slider("adj_bright", "Bright parts (pull down)", 0, 100, 1, p.adj.bright||0, v=>v?String(v):"off", v=>{ p.adj.bright=v; redraw(); }, commit));   /* 5 Nov: pulls down every bright area — sky, ocean, glare */
+    sa.appendChild(slider("adj_bright", "Bright parts (pull down)", 0, 100, 1, p.adj.bright||0, v=>v?String(v):"off", v=>{ p.adj.bright=v; p.brightSet=true; redraw(); }, commit));   /* 5 Nov: pulls down every bright area — sky, ocean, glare */
     { const mb = el(`<div class="row"><button class="btn" aria-pressed="false">Show mask</button><span class="note" style="margin:0">Red = what the mask touches</span></div>`); const bt = mb.children[0];
       bt.onclick=()=>{ window.__showMask=!window.__showMask; bt.setAttribute("aria-pressed", String(!!window.__showMask)); bt.textContent = window.__showMask ? "Hide mask" : "Show mask"; p._blur=null; requestDraw(); };
       sa.appendChild(mb); }
     const rb = el(`<div class="row"><button class="btn">Reset</button><button class="btn">Copy to all photos</button></div>`);
-    rb.children[0].onclick=()=>{ commit(); p.adj=Object.assign({}, ADJ0); p._blur=null; refreshPhotoTab(); refreshStrip(); requestDraw(); };
-    rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample && !q.editorPhoto && !q.extraEdited){ q.adj=Object.assign({}, p.adj); q.finishOn=p.finishOn; q._blur=null; if (q.finishOn) ensureFinish(q); } }); toast(`Copied colour + finish to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
+    rb.children[0].onclick=()=>{ commit(); p.adj=Object.assign({}, ADJ0); p.brightSet=true; p._blur=null; refreshPhotoTab(); refreshStrip(); requestDraw(); };
+    rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample && !q.editorPhoto && !q.extraEdited){ q.adj=Object.assign({}, p.adj); q.brightSet=true; q.finishOn=p.finishOn; q._blur=null; if (q.finishOn) ensureFinish(q); } }); toast(`Copied colour + finish to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
     sa.appendChild(rb); box.appendChild(sa);
     { const sc = el(`<section class="sec"><h2><span>Crop</span></h2></section>`);   /* 4 Nov (Jason): a button for cropping */
       sc.appendChild(el(`<p class="note">Choose a shape, then drag the box on the photo. Drag the corners to resize. Export uses this crop.</p>`));

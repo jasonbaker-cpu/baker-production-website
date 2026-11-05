@@ -28,7 +28,7 @@ function newPhoto(name, base, meta, sample){
     disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0, (!sample && prefs.skyPlate !== "S") ? { con:10 } : {}), undo:[], redo:[] };
   return p;
 }
-const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop"];
+const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet"];
 function snapshotOf(p){ const o={}; SNAP_KEYS.forEach(k=>o[k]=p[k]); return JSON.stringify(o); }
 function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
 function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); ensureFinish(p); }
@@ -38,7 +38,21 @@ function updateUndo(){ const p=P(); $("undoBtn").disabled=!p||!p.undo.length; $(
 
 // ================= finish (async so the page stays responsive) =================
 let finishing = 0;
+function autoBright(src){   /* 5 Nov (Jason): "auto make the highlights go down if needed" — measures the bright sky + water and picks the Bright parts amount */
+  const mw=240, mh=Math.max(8,Math.round(src.height/src.width*mw)); const c=document.createElement("canvas"); c.width=mw; c.height=mh; const x=c.getContext("2d"); x.drawImage(src,0,0,mw,mh);
+  const q=x.getImageData(0,0,mw,mh).data, rowY=new Float32Array(mh);
+  for (let yy=0;yy<mh;yy++){ let s=0; for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4; s+=Math.log(1+(.299*q[j]+.587*q[j+1]+.114*q[j+2])); } rowY[yy]=s/mw; }
+  let hz=Math.round(mh*.35), best=1e9; for (let yy=Math.round(mh*.06); yy<Math.round(mh*.65); yy++){ const a0=rowY[Math.max(0,yy-3)]+rowY[Math.max(0,yy-2)]+rowY[Math.max(0,yy-1)], b0=rowY[Math.min(mh-1,yy+1)]+rowY[Math.min(mh-1,yy+2)]+rowY[Math.min(mh-1,yy+3)], dd=b0-a0; if (dd<best){ best=dd; hz=yy; } }
+  let sw=0, sy=0; for (let yy=0;yy<mh;yy++) for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4, Y=(.299*q[j]+.587*q[j+1]+.114*q[j+2])/255; let w = yy<hz ? 1 : Math.min(1, Math.max(0,(q[j+2]-q[j])/40)); if (yy>=hz && Y>.85) w=Math.max(w,.6); if (w<=0 || Y<.42) continue; sw+=w; sy+=w*Y; }
+  const H=new Uint32Array(64); let nl=0; for (let yy=hz+1;yy<mh;yy++) for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4; H[Math.min(63,Math.floor((.299*q[j]+.587*q[j+1]+.114*q[j+2])/4))]++; nl++; }
+  let acc=0, p97=1; for (let k=63;k>=0;k--){ acc+=H[k]; if (acc>nl*.03){ p97=(k+.5)/64; break; } }   // brightest 3% of the land (white roofs, sand)
+  const hl = p97>.9 ? -Math.min(20, Math.round((p97-.9)*250)) : 0;   /* gentle — only real blow-outs */
+  const br = sw < mw*mh*.04 ? 0 : Math.max(0, Math.min(40, Math.round((sy/sw-.62)*200)));
+  return { bright:br, hl };
+}
+function autoAdj(p, src){ if (p.brightSet || p._autoDone===src || (p.adj && p.adj.bright) || p.editorPhoto || p.extraEdited) return; p._autoDone=src; const ab = autoBright(src); p.adj = Object.assign({}, ADJ0, p.adj||{}, { bright:ab.bright }, (p.adj && p.adj.hl) ? {} : { hl:ab.hl }); p._adj = null; }
 function ensureFinish(p){ if (p && (p.editorPhoto || p.extraEdited)){ p.finishOn = false; p.fin = null; return; }   /* 31 Oct: editor photos are never re-finished */
+  if (!p.finishOn && !p.sample && p.base) autoAdj(p, p.base);   /* auto highlights also on unfinished photos */
   if (!p.finishOn || p.sample) return;
   const key = p.skyOn ? "skyP"+(prefs.skyPlate||"C") : "nosky";
   if (p.fin && p.finKey === key) return;
@@ -47,7 +61,7 @@ function ensureFinish(p){ if (p && (p.editorPhoto || p.extraEdited)){ p.finishOn
   if (p.skyOn && typeof SKYP_CACHE !== "undefined" && !SKYP_CACHE[prefs.skyPlate||"C"]){ $("busy").hidden = false; if (!p._waitSky){ p._waitSky = true; loadSkyPlate(prefs.skyPlate||"C", ()=>{ p._waitSky = false; ensureFinish(p); requestDraw(); }); } return; }
   p._finPending = key; finishing++; $("busy").hidden = false;
   setTimeout(()=>{
-    try{ const r = finishImage(p.base, p); p.fin = r.canvas; p.finKey = key; p._blur = null; p.skyLine = r.sky ? { m:r.sky.m, b:r.sky.b, h:p.base.height } : null; clampPinsToLand(p); makeThumb(p); }
+    try{ const r = finishImage(p.base, p); p.fin = r.canvas; p.finKey = key; p._blur = null; autoAdj(p, p.fin); p.skyLine = r.sky ? { m:r.sky.m, b:r.sky.b, h:p.base.height } : null; clampPinsToLand(p); makeThumb(p); }
     catch(err){ console.error(err); p.finishOn = false; toast("The finish couldn't run on this photo. It's shown unfinished."); }
     p._finPending = null; finishing--; if (!finishing) $("busy").hidden = true;
     refreshStrip(); requestDraw();
