@@ -385,10 +385,9 @@
      ],
      "notes": "Entry Notes: meet agent at property (shooter only). Amenities or features to highlight: -. Strata: -. Land size: -. Title/land plan: -. Specific boundaries or land features to mark: -. Client preferences: -.",
      "portrait": false,
-     "toEditor": true,
-     "editorReason": "0185 has streaky tree 'columns' smeared into the sky, 0183 a blown white glow at the horizon, 0182/0184 hazy horizon \u2014 please give every day drone photo a clean, natural edit. Top-downs: keep as shot",
      "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/03-11-2026/29 Hermitage Dr, The Vines WA 6069, Australia/Aerial - Drone Photography",
-     "lot": "4321 m\u00b2 \u2014 cadastre (no title in Dropbox), 6-sided lot"
+     "lot": "4321 m\u00b2 \u2014 cadastre (no title in Dropbox), 6-sided lot",
+     "editorReasonOld": "0185 has streaky tree 'columns' smeared into the sky, 0183 a blown white glow at the horizon, 0182/0184 hazy horizon \u2014 please give every day drone photo a clean, natural edit. Top-downs: keep as shot"
     },
     {
      "slug": "29_hermitage_dr_twilight",
