@@ -3,7 +3,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="/favicon.png">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}#chkBox .chkDocs a{color:#f2b33d;text-decoration:underline;word-break:break-all}
+</style>
 <title>Baker Aerial Editor</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1230,7 +1231,7 @@ function adjustedCanvas(src, a){
     const R=Math.max(3,Math.round(mw/16)), num=new Float32Array(N); for (let i=0;i<N;i++) num[i]=LY[i]*Ls[i];
     const bn=blur(num,R), bd=blur(Ls,R); let tg=0, tn=0; for (let i=0;i<N;i++) if (Ls[i]){ tg+=LY[i]; tn++; } tg = tn ? tg/tn : 0;
     const ke=(a.even||0)/100, G=new Float32Array(N);
-    for (let i=0;i<N;i++){ const base = bd[i]>.02 ? bn[i]/bd[i] : tg; let ev = ke*0.85*(tg-base); ev = ev<-.6?-.6:ev>.6?.6:ev;
+    for (let i=0;i<N;i++){ const base = bd[i]>.02 ? bn[i]/bd[i] : tg; let ev = ke*0.85*(tg+0.12-base); ev = ev<-.6?-.6:ev>0?0:ev;   /* 5 Nov: pull bright patches DOWN only — lifting dark trees made the land muddy */
       G[i] = Lf[i]*(ev + (a.land||0)/100*0.7) + Wf[i]*((a.sea||0)/100*0.7) + Sf[i]*((a.sky||0)/100*0.7); }
     const sx=(mw-1)/Math.max(1,w-1), sy=(mh-1)/Math.max(1,h-1);
     for (let yy=0;yy<h;yy++){ const fy=yy*sy, y0=fy|0, y1=Math.min(mh-1,y0+1), ty=fy-y0;
@@ -1428,7 +1429,7 @@ function autoBright(src){   /* 5 Nov (Jason): "auto make the highlights go down 
   const brL = p97>.80 ? Math.min(45, Math.round((p97-.80)*300)) : 0;   /* bright roofs on the land also raise Bright parts */
   return { bright:Math.max(br, brL), hl };
 }
-function autoAdj(p, src){ if (p.brightSet || p._autoDone===src || (p.adj && p.adj.bright) || p.editorPhoto || p.extraEdited) return; p._autoDone=src; const ab = autoBright(src); p.adj = Object.assign({}, ADJ0, p.adj||{}, { bright:Math.round(ab.bright*.6), even:60 }, (p.adj && p.adj.hl) ? {} : { hl:ab.hl });   /* 5 Nov: land evened by default */ p._adj = null; }
+function autoAdj(p, src){ if (p.brightSet || p._autoDone===src || (p.adj && p.adj.bright) || p.editorPhoto || p.extraEdited) return; p._autoDone=src; const ab = autoBright(src); p.adj = Object.assign({}, ADJ0, p.adj||{}, { bright:ab.bright }, (p.adj && p.adj.hl) ? {} : { hl:ab.hl });   /* 5 Nov: land evened by default */ p._adj = null; }
 function ensureFinish(p){ if (p && (p.editorPhoto || p.extraEdited)){ p.finishOn = false; p.fin = null; return; }   /* 31 Oct: editor photos are never re-finished */
   if (!p.finishOn && !p.sample && p.base) autoAdj(p, p.base);   /* auto highlights also on unfinished photos */
   if (!p.finishOn || p.sample) return;
@@ -2521,7 +2522,11 @@ function showCheckMap(entry){
   const url = DAYS_ROOT + entry.src.replace(/src\/?$/, "") + "check.html?v=" + Date.now();
   box = document.createElement("div"); box.id = "chkBox";
   const notes = (entry.notes||"").trim(); const esc = t => t.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-  box.innerHTML = (notes ? `<div class="chkNotes"><b>Booking notes — follow these:</b> ${esc(notes)}</div>` : "") + `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost chkTab on" data-v="b" title="Show the lot boundary">Boundary</button><button class="btn ghost chkTab" data-v="a" title="Show every pinned place">Map</button><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary"></iframe>`;
+  const dbx = p => "https://www.dropbox.com/home" + encodeURI(p).replace(/#/g,"%23").replace(/\?/g,"%3F");   /* 5 Nov (Jason): job documents open from the editor (Dropbox, team login — never published on the site) */
+  const docs = (entry.docs||[]).map(d => `<a target="_blank" rel="noopener" href="${dbx(d.path.replace(/\/[^\/]*$/,""))}?preview=${encodeURIComponent(d.name)}">${esc(d.name)}</a>`);
+  if (entry.rawPath) docs.push(`<a target="_blank" rel="noopener" href="${dbx(entry.rawPath)}">Open job folder</a>`);
+  const docsHtml = docs.length ? `<div class="chkNotes chkDocs"><b>Documents:</b> ${docs.join(" · ")}</div>` : "";
+  box.innerHTML = (notes ? `<div class="chkNotes"><b>Booking notes — follow these:</b> ${esc(notes)}</div>` : "") + docsHtml + `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost chkTab on" data-v="b" title="Show the lot boundary">Boundary</button><button class="btn ghost chkTab" data-v="a" title="Show every pinned place">Map</button><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary"></iframe>`;
   ($("stage") || document.body).appendChild(box);
   let small = false; try { small = localStorage.getItem("chkMin") === "1"; } catch(e){}
   const set = () => { box.classList.toggle("min", small); try { localStorage.setItem("chkMin", small ? "1" : "0"); } catch(e){} };
