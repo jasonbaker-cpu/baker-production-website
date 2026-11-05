@@ -1964,7 +1964,7 @@ function refreshPhotoTab(){
       sa.appendChild(mb); }
     const rb = el(`<div class="row"><button class="btn">Reset</button><button class="btn">Copy to all photos</button></div>`);
     rb.children[0].onclick=()=>{ commit(); p.adj=Object.assign({}, ADJ0); p._blur=null; refreshPhotoTab(); refreshStrip(); requestDraw(); };
-    rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample && !q.editorPhoto && !q.extraEdited){ q.adj=Object.assign({}, p.adj); q._blur=null; } }); toast(`Copied to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
+    rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample && !q.editorPhoto && !q.extraEdited){ q.adj=Object.assign({}, p.adj); q.finishOn=p.finishOn; q._blur=null; if (q.finishOn) ensureFinish(q); } }); toast(`Copied colour + finish to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
     sa.appendChild(rb); box.appendChild(sa);
     { const sc = el(`<section class="sec"><h2><span>Crop</span></h2></section>`);   /* 4 Nov (Jason): a button for cropping */
       sc.appendChild(el(`<p class="note">Choose a shape, then drag the box on the photo. Drag the corners to resize. Export uses this crop.</p>`));
