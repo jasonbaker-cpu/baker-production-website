@@ -36,7 +36,11 @@ job folder (all subfolders, e.g. `Aerial - Drone Photography` and `Floorplan or 
   Shooters sometimes use another subfolder name (e.g. `Drone`, 9/95 Tyler St 2 Nov). List the whole job folder and take every `dji_*`/`DJI_*` still (DNG/JPG) from any subfolder except video folders (Listing Video, Social Media Walkthrough). A booking with "(a la cart) Aerial / Drone Photography" is a drone job even when "Floorplan or Drone" = Floorplan.
 - Get `download_link` for the DJI files plus the `*_map.html` and any title or strata PDFs, then `curl` them into `batch/<slug>/raw/`.
 - Slug: the street part of the address, lowercase, with underscores (e.g. `28_george_st`).
-- DNG only (no JPG): run `python3 dng2jpg.py batch/<slug>/raw/*.DNG` and move the jpgs into `batch/<slug>/jpg/`. Drone XMP is kept.
+- **RAW FIRST, every job (Jason 5 Nov: "can't you edit in raw first… make it look premium every time").** If the drone folder has DNGs, download them too and build every photo from the DNG, not the camera JPG:
+  1. `python3 devsky.py batch/<slug>/jpg batch/<slug>/raw/*.DNG` — unclipped development with the sky/sea pulled back. Use sky_ev -0.4 / dehaze 0.1 for a normal sky (call `devsky.dev(src,dst,sky_ev=-0.4,dehaze=0.1)`), the default -1.3 only for a hazy/blown sky.
+  2. `python3 premium.py batch/<slug>/jpg batch/<slug>/jpg/*.jpg` — the premium grade (land to a set brightness, distance dehaze, clarity, soft white roll-off so roofs keep detail, vibrance, deeper blue sea/sky, sharpen). Keeps EXIF + drone XMP.
+  3. Run those frames with noFinish + noSky (the in-editor finish would re-brighten them) and Bright parts 0. Top-downs too.
+  First done on 115 Mandurah Tce (5 Nov). Camera JPG only when there is no DNG.
 - No `*_map.html`: build `batch/<slug>/<slug>_places.json` WITHOUT TomTom (Jason 28 Oct: TomTom refuses the key — make no TomTom calls). Sources in order: Project doc claude/amenity-known-changes*.md, `amenity_ref.py <lat> <lng> <dir>` (claude/amenity_ref.py + claude/amenity-perth-reference.json), then `amenity_arcgis.py` (claude/amenity_arcgis.py, rules in claude/amenity-brief-fallback.md: named verify for every ArcGIS pin, stations never from ArcGIS alone), WebSearch to settle names. Use the format below. Pick 8–14 real amenities: schools, shopping centres, stations, beaches, parks, golf. Skip childcare businesses, driving schools and dance studios.
   ```
   {"address":..., "lat":..., "lng":..., "pins":[{"name","cat","lat","lng"}]}
