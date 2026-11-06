@@ -1,6 +1,169 @@
 {
  "days": [
   {
+   "id": "06-nov-2026",
+   "label": "Fri 6 Nov 2026",
+   "gallery": "06-nov-2026/",
+   "jobs": [
+    {
+     "slug": "4_jobson_loop",
+     "addr": "4 Jobson Loop, Brookdale WA 6112",
+     "who": "Jayden Cooke \u00b7 Rodway Group",
+     "agency": "rodway",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261106162510_0091_D.jpg",
+      "DJI_20261106162459_0090_D.jpg"
+     ],
+     "src": "06-nov-2026/4_jobson_loop/src/",
+     "map": "4_jobson_loop_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261106162510_0091_D.jpg",
+      "DJI_20261106162459_0090_D.jpg",
+      "DJI_20261106162528_0092_D.jpg",
+      "DJI_20261106162543_0093_D.jpg",
+      "DJI_20261106162557_0094_D.jpg",
+      "DJI_20261106162609_0095_D.jpg",
+      "DJI_20261106162629_0096_D.jpg",
+      "DJI_20261106162646_0097_D.jpg",
+      "DJI_20261106162657_0098_D.jpg",
+      "DJI_20261106162712_0099_D.jpg"
+     ],
+     "notes": "",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "4_jobson_loop_brookdale_map.html",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/06-11-2026/4 Jobson Loop, Brookdale WA 6112, Australia/Aerial - Drone Photography/4_jobson_loop_brookdale_map.html"
+      },
+      {
+       "name": "4_jobson_loop_brookdale_qa.txt",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/06-11-2026/4 Jobson Loop, Brookdale WA 6112, Australia/Aerial - Drone Photography/4_jobson_loop_brookdale_qa.txt"
+      },
+      {
+       "name": "4_jobson_loop_brookdale_directions.txt",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/06-11-2026/4 Jobson Loop, Brookdale WA 6112, Australia/Aerial - Drone Photography/4_jobson_loop_brookdale_directions.txt"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/06-11-2026/4 Jobson Loop, Brookdale WA 6112, Australia (1)/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "frame 0094 (and faintly 0093) shows a dark band of old sky above the scarp ridge \u2014 please fix sky; pins, boundary and lot size already on",
+     "lot": "557 m\u00b2 \u2014 cadastre (Landgate) 6-sided lot, fence-checked"
+    },
+    {
+     "slug": "16_windarra_way",
+     "addr": "16 Windarra Way, Armadale WA 6112",
+     "who": "Jayden Cooke \u00b7 Rodway Group",
+     "agency": "rodway",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261106180450_0101_D.jpg",
+      "DJI_20261106180443_0100_D.jpg"
+     ],
+     "src": "06-nov-2026/16_windarra_way/src/",
+     "map": "16_windarra_way_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261106180450_0101_D.jpg",
+      "DJI_20261106180443_0100_D.jpg",
+      "DJI_20261106180509_0102_D.jpg",
+      "DJI_20261106180521_0103_D.jpg",
+      "DJI_20261106180538_0104_D.jpg",
+      "DJI_20261106180600_0105_D.jpg",
+      "DJI_20261106180615_0106_D.jpg",
+      "DJI_20261106180629_0107_D.jpg"
+     ],
+     "notes": "",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "certificate-of-title-with-sketch-1448-738-certificate-of-title-1448-738.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/06-11-2026/16 Windarra Way, Armadale WA 6112, Australia/Aerial - Drone Photography/certificate-of-title-with-sketch-1448-738-certificate-of-title-1448-738.pdf"
+      },
+      {
+       "name": "certificate-of-title-with-sketch-1448-738-sketch-for-1448-738.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/06-11-2026/16 Windarra Way, Armadale WA 6112, Australia/Aerial - Drone Photography/certificate-of-title-with-sketch-1448-738-sketch-for-1448-738.pdf"
+      },
+      {
+       "name": "16_windarra_way_armadale_map.html",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/06-11-2026/16 Windarra Way, Armadale WA 6112, Australia/Aerial - Drone Photography/16_windarra_way_armadale_map.html"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/06-11-2026/16 Windarra Way, Armadale WA 6112, Australia/Aerial - Drone Photography"
+    },
+    {
+     "slug": "44_turmeric_pkwy",
+     "addr": "44 Turmeric Parkway, Henley Brook WA 6069",
+     "who": "360 Real Estate",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261106_140032_0187_photo_r180.jpg",
+      "dji_fly_20261106_140012_0186_photo.jpg"
+     ],
+     "src": "06-nov-2026/44_turmeric_pkwy/src/",
+     "map": "44_turmeric_pkwy_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261106_140032_0187_photo_r180.jpg",
+      "dji_fly_20261106_140012_0186_photo.jpg",
+      "dji_fly_20261106_140132_0190_photo.jpg",
+      "dji_fly_20261106_140154_0191_photo.jpg",
+      "dji_fly_20261106_140222_0192_photo.jpg",
+      "dji_fly_20261106_140252_0193_photo.jpg",
+      "dji_fly_20261106_140314_0194_photo.jpg",
+      "dji_fly_20261106_140344_0195_photo.jpg",
+      "dji_fly_20261106_140422_0196_photo.jpg",
+      "dji_fly_20261106_140444_0197_photo.jpg"
+     ],
+     "notes": "44 Turmeric Parkway, Henley Brook \u2014 VACANT BLOCK. New estate, not on Google Maps yet. Lot number TBC from agent.",
+     "portrait": false,
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/06-11-2026/44 Turmeric Parkway, Henley Brook, Western Australia 6069, AU/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "frame 0195 has a grey fog band above the ridge; top-downs look flat \u2014 please fix sky/colour. Vacant block, lot number TBC so no boundary",
+     "lot": "vacant block \u2014 lot number TBC from agent, no boundary drawn"
+    },
+    {
+     "slug": "45_153_burswood_rd",
+     "addr": "45/153 Burswood Rd, Burswood WA 6100",
+     "who": "Eva Harris \u00b7 Treasure Realty Group",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [],
+     "src": "06-nov-2026/45_153_burswood_rd/src/",
+     "map": "45_153_burswood_rd_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261106220053_0114_D.jpg",
+      "DJI_20261106220133_0115_D.jpg",
+      "DJI_20261106220214_0116_D.jpg",
+      "DJI_20261106220225_0117_D.jpg",
+      "DJI_20261106220257_0118_D.jpg",
+      "DJI_20261106220312_0119_D.jpg",
+      "DJI_20261106220323_0120_D.jpg",
+      "DJI_20261106220334_0121_D.jpg",
+      "DJI_20261106220347_0122_D.jpg",
+      "DJI_20261106220403_0123_D.jpg",
+      "DJI_20261106220611_0124_D.jpg",
+      "DJI_20261106220637_0125_D.jpg"
+     ],
+     "notes": "",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "45_153_burswood_rd_burswood_map.html",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/06-11-2026/45-153 burswood rd, burswood wa 6100, australia/Aerial - Drone Photography/45_153_burswood_rd_burswood_map.html"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/06-11-2026/45-153 burswood rd, burswood wa 6100, australia/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "twilight drone shoot \u2014 editor does sky/colour (pins on; strata apartment, no boundary)",
+     "lot": "strata apartment \u2014 no lot boundary (pins only)"
+    }
+   ]
+  },
+  {
    "id": "05-nov-2026",
    "label": "Thu 5 Nov 2026",
    "gallery": "05-nov-2026/",

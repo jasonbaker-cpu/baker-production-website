@@ -1,0 +1,109 @@
+{
+ "address": "4 Jobson Loop, Brookdale WA 6112",
+ "lat": -32.170095169996,
+ "lng": 116.003813695164,
+ "pins": [
+  {
+   "name": "Kingfisher View Reserve",
+   "lat": -32.1671,
+   "lng": 116.0027,
+   "cat": "park"
+  },
+  {
+   "name": "Don Simmons Reserve",
+   "lat": -32.1636014,
+   "lng": 116.0019157,
+   "cat": "park"
+  },
+  {
+   "name": "Dale Christian School",
+   "lat": -32.159329998381,
+   "lng": 115.998740045353,
+   "cat": "school"
+  },
+  {
+   "name": "Gwynne Park",
+   "lat": -32.157164,
+   "lng": 116.0059368,
+   "cat": "park"
+  },
+  {
+   "name": "John Calvin Christian College",
+   "lat": -32.14882,
+   "lng": 116.00733,
+   "cat": "school"
+  },
+  {
+   "name": "Horrie Hill Reserve",
+   "lat": -32.1644779,
+   "lng": 116.0074688,
+   "cat": "park"
+  },
+  {
+   "name": "Armadale Station",
+   "lat": -32.153689,
+   "lng": 116.012962,
+   "cat": "train"
+  },
+  {
+   "name": "Armadale Shopping City",
+   "lat": -32.1525933,
+   "lng": 116.0146789,
+   "cat": "shopping"
+  },
+  {
+   "name": "Armadale Library",
+   "lat": -32.1511,
+   "lng": 116.0143,
+   "cat": "library"
+  },
+  {
+   "name": "Armadale Settlers Common",
+   "lat": -32.1526872,
+   "lng": 116.0375871,
+   "cat": "park"
+  },
+  {
+   "name": "Bungendore Park",
+   "lat": -32.1747793,
+   "lng": 116.0356745,
+   "cat": "park"
+  },
+  {
+   "name": "Australian Christian College \u2013 Darling Downs",
+   "lat": -32.174680699676,
+   "lng": 116.004294564949,
+   "cat": "school"
+  },
+  {
+   "name": "The Springs Club",
+   "lat": -32.158407,
+   "lng": 115.959237,
+   "cat": "golf"
+  },
+  {
+   "name": "Xavier Catholic School",
+   "lat": -32.161224434227,
+   "lng": 115.991946261372,
+   "cat": "school"
+  },
+  {
+   "name": "Gwynne Park Primary School",
+   "lat": -32.16167,
+   "lng": 115.9994,
+   "cat": "school"
+  },
+  {
+   "name": "Armadale Senior High School",
+   "lat": -32.16194,
+   "lng": 116.0142,
+   "cat": "school"
+  },
+  {
+   "name": "Armadale Health Service",
+   "lat": -32.1331543,
+   "lng": 116.0197193,
+   "cat": "hospital"
+  }
+ ]
+}

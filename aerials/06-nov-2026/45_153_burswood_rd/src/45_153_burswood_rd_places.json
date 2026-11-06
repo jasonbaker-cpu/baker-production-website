@@ -1,0 +1,229 @@
+{
+ "address": "45/153 Burswood Rd, Burswood WA 6100",
+ "lat": -31.9649237,
+ "lng": 115.8974842,
+ "pins": [
+  {
+   "name": "Perth Montessori School",
+   "lat": -31.965528,
+   "lng": 115.897829,
+   "cat": "school"
+  },
+  {
+   "name": "G.O. Edwards Park",
+   "lat": -31.964850000000002,
+   "lng": 115.89566,
+   "cat": "park"
+  },
+  {
+   "name": "Burswood Station",
+   "lat": -31.960185799999998,
+   "lng": 115.8999583,
+   "cat": "train"
+  },
+  {
+   "name": "Burswood Park",
+   "lat": -31.9636392,
+   "lng": 115.89152,
+   "cat": "park"
+  },
+  {
+   "name": "Charles Paterson Park",
+   "lat": -31.965466499999994,
+   "lng": 115.89002169999998,
+   "cat": "park"
+  },
+  {
+   "name": "Victoria Park Station",
+   "lat": -31.971655000000002,
+   "lng": 115.90222019999999,
+   "cat": "train"
+  },
+  {
+   "name": "J A Lee Reserve",
+   "lat": -31.964661,
+   "lng": 115.90714100000001,
+   "cat": "reserve"
+  },
+  {
+   "name": "Ursula Frayne Catholic College",
+   "lat": -31.9730389,
+   "lng": 115.8996268,
+   "cat": "school"
+  },
+  {
+   "name": "The Promenade Park",
+   "lat": -31.9563609,
+   "lng": 115.89578749999998,
+   "cat": "park"
+  },
+  {
+   "name": "Victoria Park Central",
+   "lat": -31.973921899999997,
+   "lng": 115.89726509999998,
+   "cat": "shopping"
+  },
+  {
+   "name": "St Augustine's Primary School",
+   "lat": -31.960131,
+   "lng": 115.90658089999998,
+   "cat": "school"
+  },
+  {
+   "name": "Regent College",
+   "lat": -31.9713961,
+   "lng": 115.88967710000001,
+   "cat": "school"
+  },
+  {
+   "name": "Balbuk Reserve",
+   "lat": -31.9539059,
+   "lng": 115.8987647,
+   "cat": "reserve"
+  },
+  {
+   "name": "Cracknell Park",
+   "lat": -31.9549294,
+   "lng": 115.9033884,
+   "cat": "park"
+  },
+  {
+   "name": "McCallum Park",
+   "lat": -31.9694377,
+   "lng": 115.8851879,
+   "cat": "park"
+  },
+  {
+   "name": "St Clare's School",
+   "lat": -31.971218300000004,
+   "lng": 115.90871109999998,
+   "cat": "school"
+  },
+  {
+   "name": "Rayment Park",
+   "lat": -31.970417100000002,
+   "lng": 115.9094303,
+   "cat": "park"
+  },
+  {
+   "name": "Mineral Resources Park",
+   "lat": -31.972723799999994,
+   "lng": 115.90800420000001,
+   "cat": "park"
+  },
+  {
+   "name": "Raphael Park",
+   "lat": -31.973033100000002,
+   "lng": 115.88706839999999,
+   "cat": "park"
+  },
+  {
+   "name": "Heirisson Island",
+   "lat": -31.965792299999997,
+   "lng": 115.88248910000002,
+   "cat": "park"
+  },
+  {
+   "name": "Trinity College",
+   "lat": -31.959921799999996,
+   "lng": 115.88325569999999,
+   "cat": "school"
+  },
+  {
+   "name": "Matagarup Bridge",
+   "lat": -31.9538039,
+   "lng": 115.887029,
+   "cat": "park"
+  },
+  {
+   "name": "Wilson Park",
+   "lat": -31.9636699,
+   "lng": 115.91559459999999,
+   "cat": "park"
+  },
+  {
+   "name": "Gloucester Park",
+   "lat": -31.958014399999996,
+   "lng": 115.88108620000001,
+   "cat": "park"
+  },
+  {
+   "name": "WACA Ground",
+   "lat": -31.959691900000003,
+   "lng": 115.8797656,
+   "cat": "park"
+  },
+  {
+   "name": "Optus Stadium",
+   "lat": -31.950749199999997,
+   "lng": 115.88879879999998,
+   "cat": "park"
+  },
+  {
+   "name": "East Victoria Park Primary School",
+   "lat": -31.9793065,
+   "lng": 115.9079406,
+   "cat": "school"
+  },
+  {
+   "name": "Chevron Parkland",
+   "lat": -31.950064299999998,
+   "lng": 115.88570969999998,
+   "cat": "park"
+  },
+  {
+   "name": "Queens Gardens",
+   "lat": -31.9593877,
+   "lng": 115.87684759999998,
+   "cat": "park"
+  },
+  {
+   "name": "Victoria Park Leisurelife Centre",
+   "lat": -31.984105999999997,
+   "lng": 115.8993606,
+   "cat": "aquatic"
+  },
+  {
+   "name": "Victoria Park Library",
+   "lat": -31.984311999999996,
+   "lng": 115.90001099999998,
+   "cat": "library"
+  },
+  {
+   "name": "Kent Street Senior High School",
+   "lat": -31.9845573,
+   "lng": 115.8924126,
+   "cat": "school"
+  },
+  {
+   "name": "Maylands Peninsula Public Golf Course",
+   "lat": -31.9419503,
+   "lng": 115.9024031,
+   "cat": "golf"
+  },
+  {
+   "name": "Lake Bungana Reserve",
+   "lat": -31.9412715,
+   "lng": 115.9048763,
+   "cat": "lake"
+  },
+  {
+   "name": "Claisebrook Station",
+   "lat": -31.949400100000002,
+   "lng": 115.87252679999999,
+   "cat": "train"
+  },
+  {
+   "name": "Aqualife Centre",
+   "lat": -31.9878082,
+   "lng": 115.9129504,
+   "cat": "aquatic"
+  },
+  {
+   "name": "Belmont Forum Shopping Centre",
+   "lat": -31.964777699999996,
+   "lng": 115.93571279999999,
+   "cat": "shopping"
+  }
+ ]
+}

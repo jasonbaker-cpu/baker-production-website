@@ -1,0 +1,97 @@
+{
+ "address": "44 Turmeric Parkway, Henley Brook WA 6069",
+ "lat": -31.80063,
+ "lng": 115.96891,
+ "pins": [
+  {
+   "name": "Ellenbrook Station",
+   "lat": -31.78132,
+   "lng": 115.9633,
+   "cat": "train"
+  },
+  {
+   "name": "Ellenbrook Central",
+   "lat": -31.7826824,
+   "lng": 115.9694296,
+   "cat": "shopping"
+  },
+  {
+   "name": "Woodlake Village Shopping Centre",
+   "lat": -31.7921556,
+   "lng": 115.9731482,
+   "cat": "shopping"
+  },
+  {
+   "name": "Aveley Shopping Centre",
+   "lat": -31.7775426,
+   "lng": 115.9877093,
+   "cat": "shopping"
+  },
+  {
+   "name": "Ellenbrook Community Library",
+   "lat": -31.7838667,
+   "lng": 115.964718,
+   "cat": "library"
+  },
+  {
+   "name": "Ellenbrook Primary School",
+   "lat": -31.7916002,
+   "lng": 115.9747625,
+   "cat": "school"
+  },
+  {
+   "name": "Ellenbrook Secondary College",
+   "lat": -31.7851,
+   "lng": 115.9651,
+   "cat": "school"
+  },
+  {
+   "name": "Ellenbrook Christian College",
+   "lat": -31.7862974,
+   "lng": 115.9600752,
+   "cat": "school"
+  },
+  {
+   "name": "Swan Valley Anglican Community School",
+   "lat": -31.7936171,
+   "lng": 115.985344,
+   "cat": "school"
+  },
+  {
+   "name": "Holy Cross College",
+   "lat": -31.7733338,
+   "lng": 115.9738748,
+   "cat": "school"
+  },
+  {
+   "name": "Whiteman Park",
+   "lat": -31.820938,
+   "lng": 115.9632307,
+   "cat": "park"
+  },
+  {
+   "name": "Caversham Wildlife Park",
+   "lat": -31.833744,
+   "lng": 115.95063,
+   "cat": "park"
+  },
+  {
+   "name": "Woodlake Park",
+   "lat": -31.7894686,
+   "lng": 115.9743531,
+   "cat": "park"
+  },
+  {
+   "name": "Aviary Creek Park",
+   "lat": -31.7824952,
+   "lng": 115.9913131,
+   "cat": "park"
+  },
+  {
+   "name": "The Vines Resort - Golf Course",
+   "lat": -31.7643373,
+   "lng": 116.007825,
+   "cat": "golf"
+  }
+ ]
+}

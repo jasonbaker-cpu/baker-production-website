@@ -1,0 +1,169 @@
+{
+ "address": "16 Windarra Way, Armadale WA 6112",
+ "lat": -32.1447564,
+ "lng": 116.0013945,
+ "pins": [
+  {
+   "name": "Morgan Park",
+   "lat": -32.1447117,
+   "lng": 115.99914369999999,
+   "cat": "park"
+  },
+  {
+   "name": "Toongabbie Reserve",
+   "lat": -32.140394,
+   "lng": 116.0027001,
+   "cat": "reserve"
+  },
+  {
+   "name": "Challis Community Primary School",
+   "lat": -32.13930980000001,
+   "lng": 116.0006138,
+   "cat": "school"
+  },
+  {
+   "name": "John Calvin Christian College",
+   "lat": -32.1488162,
+   "lng": 116.00733500000001,
+   "cat": "school"
+  },
+  {
+   "name": "Akira Park",
+   "lat": -32.1396011,
+   "lng": 115.99557649999998,
+   "cat": "park"
+  },
+  {
+   "name": "George Foster Reserve",
+   "lat": -32.138189,
+   "lng": 116.00749220000002,
+   "cat": "reserve"
+  },
+  {
+   "name": "Reg Williams Reserve",
+   "lat": -32.1507174,
+   "lng": 115.99446809999999,
+   "cat": "reserve"
+  },
+  {
+   "name": "Rotary Park",
+   "lat": -32.1532548,
+   "lng": 116.0052078,
+   "cat": "park"
+  },
+  {
+   "name": "Sherwood Station",
+   "lat": -32.137609999999995,
+   "lng": 116.01046,
+   "cat": "train"
+  },
+  {
+   "name": "Armadale Fitness and Aquatic Centre",
+   "lat": -32.1332459,
+   "lng": 116.0029443,
+   "cat": "aquatic"
+  },
+  {
+   "name": "Seville Grove Public Library",
+   "lat": -32.1318303,
+   "lng": 116.00185979999999,
+   "cat": "library"
+  },
+  {
+   "name": "Armadale Station",
+   "lat": -32.1539387,
+   "lng": 116.01289969999998,
+   "cat": "train"
+  },
+  {
+   "name": "Armadale Recreation Centre (Armadale Arena)",
+   "lat": -32.1580808,
+   "lng": 116.00311249999999,
+   "cat": "aquatic"
+  },
+  {
+   "name": "Memorial Park",
+   "lat": -32.1511467,
+   "lng": 116.01560250000001,
+   "cat": "park"
+  },
+  {
+   "name": "Minnawarra Park",
+   "lat": -32.1490457,
+   "lng": 116.0171968,
+   "cat": "park"
+  },
+  {
+   "name": "Gwynne Park",
+   "lat": -32.158789899999995,
+   "lng": 116.00547250000001,
+   "cat": "park"
+  },
+  {
+   "name": "Dale Christian School",
+   "lat": -32.159329998381,
+   "lng": 115.998740045353,
+   "cat": "school"
+  },
+  {
+   "name": "Armadale Shopping City",
+   "lat": -32.1536111,
+   "lng": 116.0155556,
+   "cat": "shopping"
+  },
+  {
+   "name": "Sowilo Community High School",
+   "lat": -32.131091999999995,
+   "lng": 116.0103225,
+   "cat": "school"
+  },
+  {
+   "name": "Explorer Park - Sienna Wood",
+   "lat": -32.156509299999996,
+   "lng": 115.987442,
+   "cat": "park"
+  },
+  {
+   "name": "Xavier Catholic School",
+   "lat": -32.1606178,
+   "lng": 115.9919662,
+   "cat": "school"
+  },
+  {
+   "name": "Armadale Health Service",
+   "lat": -32.1331888,
+   "lng": 116.01953929999999,
+   "cat": "hospital"
+  },
+  {
+   "name": "Wungong Park",
+   "lat": -32.153777999999996,
+   "lng": 115.974489,
+   "cat": "park"
+  },
+  {
+   "name": "Armadale Golf Club",
+   "lat": -32.1582395,
+   "lng": 115.958889,
+   "cat": "golf"
+  },
+  {
+   "name": "Armadale Settlers Common",
+   "lat": -32.1457793,
+   "lng": 116.0509806,
+   "cat": "reserve"
+  },
+  {
+   "name": "Champion Lakes Regatta Centre",
+   "lat": -32.101374,
+   "lng": 116.00333359999999,
+   "cat": "lake"
+  },
+  {
+   "name": "Bungendore Park",
+   "lat": -32.1814588,
+   "lng": 116.03832469999998,
+   "cat": "park"
+  }
+ ]
+}
