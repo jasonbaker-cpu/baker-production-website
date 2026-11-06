@@ -2,9 +2,10 @@
    Same measurements as Baker's internal QC: wall white, warm cast (R-B on walls),
    brightness, shadows, clipped highlights, sky saturation, near-duplicates, sizes. */
 (function () {
-  /* 9.5 standard (6 Nov 2026): Crib / Thorburn level on every photo. */
-  var B = { wallLo: 205, wallHi: 219, castLo: 2.5, castHi: 9, lLo: 162, lHi: 198, clip: 1.5, skySat: 0.32, extDark: 110, extShadow: 16,
-    setWallLo: 207, setWallHi: 216, setCastLo: 3, setCastHi: 8, setLLo: 166, setLHi: 188, setSd: 6 };
+  /* STRICT 9.5 standard (6 Nov 2026): every photo must be inside the targets. One miss = not ready. */
+  var B = { wallLo: 207, wallHi: 216, castLo: 3, castHi: 8, lLo: 164, lHi: 198, clip: 0.8, skySat: 0.32, skyPale: 0.18, extDark: 125, extShadow: 18,
+    extCast: 13, flatP5: 62, flatRng: 160,
+    setWallLo: 209, setWallHi: 215, setCastLo: 3.5, setCastHi: 7.5, setLLo: 168, setLHi: 188, setSd: 5 };
   var $ = function (id) { return document.getElementById(id); };
   var drop = $("scDrop"), input = $("scInput"), out = $("scOut"), jobEl = $("scJob");
   if (!drop) return;
@@ -32,10 +33,12 @@
       var c = document.createElement("canvas"); c.width = w; c.height = h;
       var x = c.getContext("2d", { willReadFrequently: true }); x.drawImage(im, 0, 0, w, h);
       var d = x.getImageData(0, 0, w, h).data, n = w * h;
-      var hist = new Uint32Array(256), sumL = 0, clip = 0;
-      for (var i = 0; i < d.length; i += 4) { var L = (d[i] + d[i + 1] + d[i + 2]) / 3; hist[L | 0]++; sumL += L; if (L >= 252) clip++; }
+      var hist = new Uint32Array(256), sumL = 0, clip = 0, ch = [new Float32Array(512), new Float32Array(512)];
+      for (var i = 0; i < d.length; i += 4) { var L = (d[i] + d[i + 1] + d[i + 2]) / 3; hist[L | 0]++; sumL += L; if (L >= 252) clip++;
+        ch[(i / 4 / w) < h / 2 ? 0 : 1][(d[i] >> 5) * 64 + (d[i + 1] >> 5) * 8 + (d[i + 2] >> 5)]++; }
+      var half = n / 2; for (var cb = 0; cb < 512; cb++) { ch[0][cb] /= half; ch[1][cb] /= half; }
       var pct = function (p) { var t = n * p, a = 0; for (var k = 0; k < 256; k++) { a += hist[k]; if (a >= t) return k; } return 255; };
-      var p55 = pct(0.55), p5 = pct(0.05);
+      var p55 = pct(0.55), p5 = pct(0.05), p95 = pct(0.95);
       var wr = 0, wg = 0, wb = 0, wc = 0, topBlue = 0, skyS = 0, topN = 0, topRows = Math.floor(h / 3), top5 = Math.floor(h / 5), warmSky = 0, top5N = 0, green = 0, ceil = 0;
       for (var y = 0; y < h; y++) for (var xx = 0; xx < w; xx++) {
         var j = (y * w + xx) * 4, r = d[j], g = d[j + 1], b = d[j + 2], LL = (r + g + b) / 3, mx = Math.max(r, g, b), mn = Math.min(r, g, b), sat = (mx - mn) / (mx + 1);
@@ -53,26 +56,40 @@
       var sd = sx.getImageData(0, 0, 9, 8).data, gray = [];
       for (var q = 0; q < sd.length; q += 4) gray.push(0.299 * sd[q] + 0.587 * sd[q + 1] + 0.114 * sd[q + 2]);
       var hash = []; for (var ry = 0; ry < 8; ry++) for (var rx = 0; rx < 8; rx++) hash.push(gray[ry * 9 + rx + 1] > gray[ry * 9 + rx] ? 1 : 0);
+      var lg = document.createElement("canvas"); lg.width = 24; lg.height = 16; var lgx = lg.getContext("2d"); lgx.drawImage(im, 0, 0, 24, 16);
+      var ld = lgx.getImageData(0, 0, 24, 16).data, lay = []; for (var z = 0; z < ld.length; z += 4) lay.push(0.299 * ld[z] + 0.587 * ld[z + 1] + 0.114 * ld[z + 2]);
       var t = document.createElement("canvas"); t.width = 320; t.height = Math.round(320 * H / W); t.getContext("2d").drawImage(im, 0, 0, t.width, t.height);
       var thumb = t.toDataURL("image/jpeg", 0.7); URL.revokeObjectURL(o.url);
       return { name: file.name, W: W, H: H, kind: isExt ? "EXT" : "INT", dusk: dusk, L: sumL / n, wallW: (wall[0] + wall[1] + wall[2]) / 3,
-               cast: wall[0] - wall[2], p5: p5, clip: clip / n * 100, skySat: topBlue ? skyS / topBlue : 0, hash: hash, thumb: thumb };
+               cast: wall[0] - wall[2], p5: p5, rng: p95 - p5, clip: clip / n * 100, skySat: topBlue ? skyS / topBlue : 0, blueFrac: blueFrac, hash: hash, ch: ch, lay: lay, thumb: thumb };
     });
   }
 
+  var EYE = ["No halos or bright edges around trees, roofs or poles against the sky (sky replacement / over-sharpening).",
+    "No pink/green/purple colour fringing in window views or on roofs and gutters.",
+    "Window views clean and natural: no grey or glowing pulls, no ghosting.",
+    "Verticals dead straight on every photo (walls, door frames, cabinets).",
+    "Sky on every exterior: soft natural blue, edges masked cleanly, no cut-off hills or trees.",
+    "Grass green and even, no burnt or patchy lawn left in.",
+    "No AI artefacts: warped lines, smeared textures, melted objects.",
+    "Only one photo per angle: drop near-duplicates and older versions of redone files.",
+    "Every photo same size and crop, sharp, no noise in shadows."];
   function flags(r) {
     var f = [];
     if (r.kind === "INT") {
-      if (r.wallW < B.wallLo) f.push({ k: "dim", t: "Walls grey/dim (" + r.wallW.toFixed(0) + ", target ~212). Brighten." });
+      if (r.wallW < 200 || (r.wallW < B.wallLo && r.L < 182)) f.push({ k: "dim", t: "Walls grey/dim (" + r.wallW.toFixed(0) + ", target ~212). Brighten." });
       if (r.wallW > B.wallHi) f.push({ k: "hot", t: "Walls too white (" + r.wallW.toFixed(0) + ", target ~212). Pull back." });
       if (r.cast < B.castLo) f.push({ k: "cold", t: "Walls cold/grey (warmth " + r.cast.toFixed(1) + ", target +3 to +7). Warm slightly." });
       if (r.cast > B.castHi) f.push({ k: "cream", t: "Walls too cream/yellow (warmth +" + r.cast.toFixed(1) + ", target +3 to +7). Neutralise." });
       if (r.L < B.lLo && r.wallW < 212) f.push({ k: "dark", t: "Room too dark (brightness " + r.L.toFixed(0) + ", target 168-186)." }); /* dark floors/joinery with good walls are fine */
       if (r.L > B.lHi) f.push({ k: "bright", t: "Room too bright/washed out (brightness " + r.L.toFixed(0) + ", target 168-186)." });
     } else {
-      if (r.skySat > B.skySat) f.push({ k: "sky", t: "Sky too deep blue (" + r.skySat.toFixed(2) + ", target ~0.27). Use soft pale blue." });
-      if (r.L < (r.dusk ? 95 : B.extDark)) f.push({ k: "dark", t: "Exterior too dark (brightness " + r.L.toFixed(0) + "). Lift the whole frame." });
-      if (r.p5 < (r.dusk ? 10 : B.extShadow)) f.push({ k: "shadow", t: "Heavy black shadows (darkest areas " + r.p5 + "). Lift shadows under trees/patios." });
+      if (r.skySat > B.skySat) f.push({ k: "sky", t: "Sky too deep blue (" + r.skySat.toFixed(2) + ", target ~0.25). Use soft natural blue." });
+      if (r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky washed out/hazy (" + r.skySat.toFixed(2) + ", target ~0.25). Replace with a clean blue sky, or a proper blue-to-pink sky on dusk shots." });
+      if (r.L < (r.dusk ? 100 : B.extDark)) f.push({ k: "dark", t: "Exterior too dark (brightness " + r.L.toFixed(0) + ", min " + B.extDark + "). Lift the whole frame." });
+      if (r.p5 < (r.dusk ? 12 : B.extShadow)) f.push({ k: "shadow", t: "Heavy black shadows (darkest areas " + r.p5 + "). Lift shadows under trees/patios." });
+      if (r.p5 > B.flatP5 && r.rng < B.flatRng) f.push({ k: "flat", t: "Flat/hazy, no contrast (blacks lifted to " + r.p5 + ", tonal range " + r.rng + "). Add contrast and set a true black point." });
+      if (!r.dusk && r.cast > B.extCast) f.push({ k: "orange", t: "Orange/yellow cast on the exterior (warmth +" + r.cast.toFixed(1) + "). Neutralise the white balance." });
     }
     if (r.clip > B.clip) f.push({ k: "clip", t: "Blown highlights (" + r.clip.toFixed(1) + "% clipped). Recover windows/whites." });
     return f;
@@ -98,15 +115,20 @@
     var aw = avg(ints, "wallW"), ac = avg(ints, "cast"), al = avg(ints, "L");
     var sd = ints.length ? Math.sqrt(avg(ints.map(function (r) { return { v: Math.pow(r.wallW - aw, 2) }; }), "v")) : 0;
     var dupes = [];
+    var corr = function (x, y) { var mx = 0, my = 0, m = x.length; for (var q = 0; q < m; q++) { mx += x[q]; my += y[q]; } mx /= m; my /= m;
+      var sxy = 0, sxx = 0, syy = 0; for (q = 0; q < m; q++) { var u = x[q] - mx, v = y[q] - my; sxy += u * v; sxx += u * u; syy += v * v; } return sxy / Math.sqrt(sxx * syy + 1e-9); };
     for (var a = 0; a < rs.length; a++) for (var b = a + 1; b < rs.length; b++) {
       var dd = 0; for (var k = 0; k < 64; k++) if (rs[a].hash[k] !== rs[b].hash[k]) dd++;
-      if (dd <= 6) dupes.push([rs[a].name, rs[b].name, dd]);
+      var hi = 0; for (var hb = 0; hb < 512; hb++) hi += Math.min(rs[a].ch[0][hb], rs[b].ch[0][hb]) + Math.min(rs[a].ch[1][hb], rs[b].ch[1][hb]); hi /= 2;
+      var co = corr(rs[a].lay, rs[b].lay), bothExt = rs[a].kind === "EXT" && rs[b].kind === "EXT";
+      if (dd <= 6 || (hi >= 0.88 && co >= 0.7) || (hi >= 0.84 && co >= 0.85) || (bothExt && hi >= 0.8 && co >= 0.75)) dupes.push([rs[a].name, rs[b].name, dd]);
     }
     var sizes = {}; rs.forEach(function (r) { var key = r.W + "x" + r.H; sizes[key] = (sizes[key] || 0) + 1; });
+    var ars = rs.map(function (r) { return r.H / r.W; }), arSpread = rs.length ? Math.max.apply(null, ars) - Math.min.apply(null, ars) : 0;
     var widths = {}; rs.forEach(function (r) { widths[r.W] = 1; });
     var setIssues = [];
     if (ints.length) {
-      if (aw < B.setWallLo) setIssues.push("Whole set too grey/dim: average walls " + aw.toFixed(0) + " (target ~212).");
+      if (aw < B.setWallLo && al < 178) setIssues.push("Whole set too grey/dim: average walls " + aw.toFixed(0) + " (target ~212).");
       if (aw > B.setWallHi) setIssues.push("Whole set too white/bright: average walls " + aw.toFixed(0) + " (target ~212).");
       if (ac < B.setCastLo) setIssues.push("Whole set too cold/grey: average warmth " + ac.toFixed(1) + " (target +3 to +7).");
       if (ac > B.setCastHi) setIssues.push("Whole set too cream: average warmth +" + ac.toFixed(1) + " (target +3 to +7).");
@@ -114,11 +136,14 @@
       if (al > B.setLHi) setIssues.push("Whole set too bright: average brightness " + al.toFixed(0) + " (target 168-186).");
       if (sd > B.setSd) setIssues.push("Photos don't match each other (wall brightness varies ±" + sd.toFixed(0) + "). Even out the set.");
     }
-    if (Object.keys(widths).length > 1) setIssues.push("Mixed resolutions: " + Object.keys(sizes).join(", ") + ". Export all at the same size.");
+    if (Object.keys(widths).length > 1 || arSpread > 0.0015) setIssues.push("Inconsistent sizes/crops: " + Object.keys(sizes).join(", ") + ". Export every photo at the same size and 3:2 crop.");
     var flagged = rs.filter(function (r) { return r.f.length; });
-    var score = 10 - setIssues.length * 0.6 - Math.min(2, flagged.length / Math.max(1, rs.length) * 4) - Math.min(1.5, dupes.length * 0.3);
-    score = Math.max(4, Math.round(score * 2) / 2);
-    var verdict = score >= 9.5 ? "Ready to deliver (Baker 9.5 standard)" : score >= 8.5 ? "Not ready yet: fix the flagged photos first" : score >= 7 ? "Needs work before delivery" : "Redo the set";
+    /* Strict: 9.5+ only with zero issues. Any flagged photo, duplicate or set issue caps the score at 9. */
+    var nIssues = setIssues.length + flagged.length + dupes.length;
+    var score = 10 - setIssues.length * 0.4 - Math.min(2.5, flagged.length * 0.15) - Math.min(1.5, dupes.length * 0.4);
+    if (nIssues) score = Math.min(9, score);
+    score = Math.max(4, Math.floor(score * 2) / 2);
+    var verdict = !nIssues ? "Numbers pass. Do the eye checks below before delivering" : score >= 8.5 ? "NOT READY: fix every item below, then re-check" : score >= 7 ? "NOT READY: needs real work before delivery" : "Redo the set";
     var cls = score >= 9.5 ? "s-hi" : score >= 8.5 ? "s-mid" : "s-lo";
     var job = (jobEl.value || "").trim() || "Untitled job";
     var when = new Date().toLocaleString("en-AU", { dateStyle: "medium", timeStyle: "short" });
@@ -131,9 +156,10 @@
     html += '<h4>Photos to fix</h4>' + (flagged.length ? '<div class="scr-grid">' + flagged.map(function (r) {
       return '<div class="note"><img src="' + r.thumb + '" alt=""><p><span class="tag bad">Fix</span> <span class="meta">' + esc(r.name) + ' · ' + r.kind + '</span></p><ul>' + r.f.map(function (x) { return "<li>" + esc(x.t) + "</li>"; }).join("") + '</ul></div>';
     }).join("") + "</div>" : '<p>None. Every photo is inside the targets.</p>');
+    html += '<h4>Eye checks (zoom to 100% on every photo; tools can\'t catch these)</h4><ul class="scr-eye">' + EYE.map(function (e) { return "<li>☐ " + esc(e) + "</li>"; }).join("") + "</ul>";
     html += '<details class="scr-all"><summary>All photo numbers</summary><table><thead><tr><th>File</th><th>Type</th><th>Walls</th><th>Warmth</th><th>Brightness</th><th>Clipped</th><th>Size</th></tr></thead><tbody>' +
       rs.map(function (r) { return "<tr" + (r.f.length ? ' class="flag"' : "") + "><td>" + esc(r.name) + "</td><td>" + r.kind + "</td><td>" + r.wallW.toFixed(0) + "</td><td>" + r.cast.toFixed(1) + "</td><td>" + r.L.toFixed(0) + "</td><td>" + r.clip.toFixed(1) + "%</td><td>" + r.W + "×" + r.H + "</td></tr>"; }).join("") + "</tbody></table></details>" +
-      '<p class="meta" style="margin-top:12px">Estimate only. Covered patios can read as "interior", and painted feature walls (cream, grey) can trip the colour checks. Baker does a final check by eye.</p>' +
+      '<p class="meta" style="margin-top:12px">Strict check: one flagged photo means not ready. Covered patios can read as "interior" and painted feature walls can trip the colour checks; if a flag is genuinely wrong, say so in your hand-back note. Baker checks every job by eye.</p>' +
       '<div class="scr-btns"><button type="button" id="scCopy">Copy report text</button><button type="button" id="scPrint">Print / save PDF</button></div></div>';
     out.innerHTML = html;
 
@@ -141,7 +167,8 @@
       "\nWalls " + aw.toFixed(0) + " (target ~212) · Warmth " + ac.toFixed(1) + " (+3 to +7) · Brightness " + al.toFixed(0) + " (168-186)\n" +
       (setIssues.length ? "\nWHOLE SET:\n- " + setIssues.join("\n- ") + "\n" : "") +
       (dupes.length ? "\nPOSSIBLE DUPLICATES:\n- " + dupes.map(function (p) { return p[0] + " ≈ " + p[1]; }).join("\n- ") + "\n" : "") +
-      "\nPHOTOS TO FIX:\n" + (flagged.length ? flagged.map(function (r) { return "- " + r.name + ": " + r.f.map(function (x) { return x.t; }).join(" "); }).join("\n") : "- None");
+      "\nPHOTOS TO FIX:\n" + (flagged.length ? flagged.map(function (r) { return "- " + r.name + ": " + r.f.map(function (x) { return x.t; }).join(" "); }).join("\n") : "- None") +
+      "\n\nEYE CHECKS (confirm each):\n- " + EYE.join("\n- ");
     $("scCopy").onclick = function () {
       var btn = this;
       (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { btn.textContent = "Copied ✓"; }, function () {
