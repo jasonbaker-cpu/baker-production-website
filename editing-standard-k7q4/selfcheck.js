@@ -67,7 +67,7 @@
       if (r.wallW > B.wallHi) f.push({ k: "hot", t: "Walls too white (" + r.wallW.toFixed(0) + ", target ~212). Pull back." });
       if (r.cast < B.castLo) f.push({ k: "cold", t: "Walls cold/grey (warmth " + r.cast.toFixed(1) + ", target +3 to +7). Warm slightly." });
       if (r.cast > B.castHi) f.push({ k: "cream", t: "Walls too cream/yellow (warmth +" + r.cast.toFixed(1) + ", target +3 to +7). Neutralise." });
-      if (r.L < B.lLo) f.push({ k: "dark", t: "Room too dark (brightness " + r.L.toFixed(0) + ", target 168-186)." });
+      if (r.L < B.lLo && r.wallW < 212) f.push({ k: "dark", t: "Room too dark (brightness " + r.L.toFixed(0) + ", target 168-186)." }); /* dark floors/joinery with good walls are fine */
       if (r.L > B.lHi) f.push({ k: "bright", t: "Room too bright/washed out (brightness " + r.L.toFixed(0) + ", target 168-186)." });
     } else {
       if (r.skySat > B.skySat) f.push({ k: "sky", t: "Sky too deep blue (" + r.skySat.toFixed(2) + ", target ~0.27). Use soft pale blue." });
@@ -110,7 +110,7 @@
       if (aw > B.setWallHi) setIssues.push("Whole set too white/bright: average walls " + aw.toFixed(0) + " (target ~212).");
       if (ac < B.setCastLo) setIssues.push("Whole set too cold/grey: average warmth " + ac.toFixed(1) + " (target +3 to +7).");
       if (ac > B.setCastHi) setIssues.push("Whole set too cream: average warmth +" + ac.toFixed(1) + " (target +3 to +7).");
-      if (al < B.setLLo) setIssues.push("Whole set too dark: average brightness " + al.toFixed(0) + " (target 168-186).");
+      if (al < B.setLLo && aw < 210) setIssues.push("Whole set too dark: average brightness " + al.toFixed(0) + " (target 168-186).");
       if (al > B.setLHi) setIssues.push("Whole set too bright: average brightness " + al.toFixed(0) + " (target 168-186).");
       if (sd > B.setSd) setIssues.push("Photos don't match each other (wall brightness varies ±" + sd.toFixed(0) + "). Even out the set.");
     }
