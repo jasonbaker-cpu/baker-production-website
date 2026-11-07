@@ -3,10 +3,10 @@
    brightness, shadows, clipped highlights, sky saturation, near-duplicates, sizes. */
 (function () {
   /* STRICT 9.5 standard (6 Nov 2026): every photo must be inside the targets. One miss = not ready. */
-  /* 7 Nov 2026: calibrated to The Mathews Group blue-sky listings (Jason's base look). */
-  var B = { wallLo: 208, wallHi: 224, castLo: 1, castHi: 9, lLo: 155, lHi: 194, clip: 0.8, skySat: 0.48, skyPale: 0.25, extDark: 118, extShadow: 34, greenSat: 0.48, extHot: 238,
+  /* 7 Nov 2026 "best in Perth": Mathews Group brightness + blue skies, Crib Creative contrast + held highlights, greens at both. */
+  var B = { wallLo: 208, wallHi: 224, castLo: 1, castHi: 9, lLo: 155, lHi: 194, clip: 0.8, skySat: 0.48, skyPale: 0.25, extDark: 118, extShadow: 34, greenSat: 0.50, extHot: 230,
     extCast: 13, flatP5: 75, flatRng: 150,
-    setWallLo: 211, setWallHi: 219, setCastLo: 2, setCastHi: 7, setLLo: 165, setLHi: 186, setSd: 5 };
+    setWallLo: 211, setWallHi: 219, setCastLo: 2, setCastHi: 7, setLLo: 165, setLHi: 186, setSd: 5, setFlat: 70 };
   var $ = function (id) { return document.getElementById(id); };
   var drop = $("scDrop"), input = $("scInput"), out = $("scOut"), jobEl = $("scJob");
   if (!drop) return;
@@ -90,9 +90,10 @@
     } else {
       if (!r.dusk && r.skySat > B.skySat) f.push({ k: "sky", t: "Sky oversaturated/cartoon (" + r.skySat.toFixed(2) + ", target 0.28-0.40). Natural clear blue." });
       if (!r.dusk && r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky pale/hazy (" + r.skySat.toFixed(2) + ", target 0.28-0.40). Clear blue sky with white clouds, like the Mathews Group examples." });
+      if (!r.dusk && r.L > 160) f.push({ k: "washed", t: "Exterior washed out (brightness " + r.L.toFixed(0) + ", target 125-150). Bring midtones down slightly so the sky, greens and house have colour and depth." });
       if (r.L < (r.dusk ? 100 : B.extDark)) f.push({ k: "dark", t: "Exterior too dark (brightness " + r.L.toFixed(0) + ", min " + B.extDark + "). Lift the whole frame." });
-      if (!r.dusk && r.greenF > 0.04 && r.greenSat < B.greenSat) f.push({ k: "greens", t: "Greens dull (" + r.greenSat.toFixed(2) + ", target 0.52+). Add vibrance to lawn, trees and hedges." });
-      if (!r.dusk && r.p95 > B.extHot) f.push({ k: "hot", t: "Bright areas too hot (" + r.p95 + ", target 230 or less). Pull highlights back on ground, paths and walls." });
+      if (!r.dusk && r.greenF > 0.04 && r.greenSat < B.greenSat) f.push({ k: "greens", t: "Greens dull (" + r.greenSat.toFixed(2) + ", target 0.55+). Add vibrance to lawn, trees and hedges." });
+      if (!r.dusk && r.p95 > B.extHot) f.push({ k: "hot", t: "Bright areas too hot (" + r.p95 + ", target 225 or less). Pull highlights back on ground, paths and walls." });
       if (!r.dusk && r.p5 < B.extShadow) f.push({ k: "shadow", t: "Shadows too dark (darkest areas " + r.p5 + ", target 40+). Lift shadows under carports, patios and trees." });
       if (r.p5 > B.flatP5 && r.rng < B.flatRng) f.push({ k: "flat", t: "Flat/hazy, no contrast (blacks lifted to " + r.p5 + ", tonal range " + r.rng + "). Add contrast and set a true black point." });
       /* beige paving/brick reads warm in Perth sun; only flag orange when the sky is pushed off-blue too */
