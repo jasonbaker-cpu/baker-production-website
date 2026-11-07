@@ -1,6 +1,89 @@
 {
  "days": [
   {
+   "id": "07-nov-2026",
+   "label": "Sat 7 Nov 2026",
+   "gallery": "07-nov-2026/",
+   "jobs": [
+    {
+     "slug": "195_jull_st",
+     "addr": "195 Jull St, Armadale WA 6112",
+     "who": "Cameron Wilson \u00b7 Armadale Real Estate",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261107153516_0045_D.jpg",
+      "DJI_20261107153507_0044_D.jpg"
+     ],
+     "src": "07-nov-2026/195_jull_st/src/",
+     "map": "195_jull_st_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261107153516_0045_D.jpg",
+      "DJI_20261107153507_0044_D.jpg",
+      "DJI_20261107153535_0046_D.jpg",
+      "DJI_20261107153551_0047_D.jpg",
+      "DJI_20261107153604_0048_D.jpg",
+      "DJI_20261107153618_0049_D.jpg",
+      "DJI_20261107153630_0050_D.jpg",
+      "DJI_20261107153644_0051_D.jpg",
+      "DJI_20261107153656_0052_D.jpg",
+      "DJI_20261107153710_0053_D.jpg"
+     ],
+     "notes": "Entry Notes: meet Cameron\nAgent (Dropbox note): \"The survey is very old, so I've used the one attached, and also an aerial shot. Left boundary 45.77m, right boundary 45.42m. Front - 18.36m rear 19.12m\"",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "DOC061126-06112026100557.pdf (survey plan, C/T 718/142)",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/07-11-2026/195 Jull St, Armadale WA 6112, Australia/Aerial - Drone Photography/DOC061126-06112026100557.pdf"
+      },
+      {
+       "name": "Screenshot 2026-11-06 135253.png (agent boundary lengths)",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/07-11-2026/195 Jull St, Armadale WA 6112, Australia/Aerial - Drone Photography/Screenshot 2026-11-06 135253.png"
+      },
+      {
+       "name": "Screenshot 2026-11-06 at 10.08.36 am.png (Pricefinder aerial)",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/07-11-2026/195 Jull St, Armadale WA 6112, Australia/Aerial - Drone Photography/Screenshot 2026-11-06 at 10.08.36\u202fam.png"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/07-11-2026/195 Jull St, Armadale WA 6112, Australia/Aerial - Drone Photography"
+    },
+    {
+     "slug": "75_innamincka_rd",
+     "addr": "75 Innamincka Rd, Greenmount WA 6056",
+     "who": "David Beshay \u00b7 Beshay Realty",
+     "agency": "beshay",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261107215953_0072_D.jpg",
+      "DJI_20261107215943_0071_D.jpg"
+     ],
+     "src": "07-nov-2026/75_innamincka_rd/src/",
+     "map": "75_innamincka_rd_greenmount_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261107215953_0072_D.jpg",
+      "DJI_20261107215943_0071_D.jpg",
+      "DJI_20261107220009_0073_D.jpg",
+      "DJI_20261107220023_0074_D.jpg",
+      "DJI_20261107220041_0075_D.jpg",
+      "DJI_20261107220112_0076_D.jpg",
+      "DJI_20261107220127_0077_D.jpg",
+      "DJI_20261107220133_0078_D.jpg",
+      "DJI_20261107220148_0079_D.jpg",
+      "DJI_20261107220202_0080_D.jpg",
+      "DJI_20261107220215_0081_D.jpg"
+     ],
+     "notes": "Entry Notes: meet david",
+     "portrait": false,
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/07-11-2026/75 Innamincka Rd, Greenmount WA 6056, Australia/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "sun-facing frames 0073\u20130075 have a blown/foggy horizon (glow halo, distant suburbs washed out) and haze along the skyline on 0076\u20130081; colour runs warm/saturated \u2014 please give every drone photo a clean natural edit (sky, colour, horizon). Pins, boundary and 1012 m\u00b2 lot already on",
+     "lot": "1012 m\u00b2 \u2014 20.12 / 50.29 / 20.12 / 50.29 m (cadastre, fence-checked)"
+    }
+   ]
+  },
+  {
    "id": "06-nov-2026",
    "label": "Fri 6 Nov 2026",
    "gallery": "06-nov-2026/",

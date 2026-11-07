@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>75 Innamincka Rd Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{--bar:#14161a;--ink:#f3f1ee;--muted:#a9adb4;--pink:#D4537E}
+html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#14161a}
+#hdr{position:absolute;top:0;left:0;right:0;z-index:1000;background:var(--bar);color:var(--ink);padding:10px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+#hdr h1{margin:0;font-size:17px;font-weight:650} #hdr .m{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+#hdr .b{text-align:right;font-size:12px;color:var(--muted);white-space:nowrap} #hdr .b strong{color:var(--ink);font-size:13px;display:block}
+#map{position:absolute;top:64px;bottom:0;left:0;right:0}
+.pin{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.home{font-size:30px;line-height:30px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+.dirb{display:inline-block;background:#222;color:#fff;font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:6px}
+.zb{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;color:#fff}
+.popn{font-weight:650;font-size:14px} .popd{font-size:12px;color:#444;margin-top:4px}
+.leaflet-tooltip.near{background:rgba(20,22,26,.92);color:#fff;border:0;font-size:11px;font-weight:600;padding:3px 7px;box-shadow:none}
+.leaflet-tooltip.near:before{display:none}
+#leg{background:rgba(255,255,255,.95);padding:8px 10px;border-radius:6px;font-size:12px;line-height:1.7;box-shadow:0 1px 5px rgba(0,0,0,.3)}
+#leg i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px;border:1px solid #fff}
+@media (max-width:600px){#hdr .b{display:none} #hdr .m{font-size:11px} #map{top:84px}}
+</style></head><body>
+<div id="hdr"><div><h1>🏠 75 Innamincka Rd, Greenmount WA 6056</h1><div class="m">3 bed · 1 bath · 1,012 m² land · Built 1967 · Pool · Solar · Shire of Mundaring · Zoned: Greenmount PS (primary) · Swan View SHS (secondary) — via Domain catchment data</div></div>
+<div class="b"><strong>Baker Production Pty Ltd</strong>Real Estate Photography</div></div>
+<div id="map"></div>
+<script>
+const P=[-31.897567,116.04553829999999];
+const A=[{"n": "Blackboy Hill Commemorative Site", "la": -31.896976799999997, "lo": 116.0456751, "dir": "N", "d": 67, "notes": "67 m N — WWI memorial park & rose garden", "badge": "", "c": "#185FA5"}, {"n": "Swan View Senior High School", "la": -31.8885547, "lo": 116.04363359999998, "dir": "N", "d": 1018, "notes": "1.0 km N — Government secondary 7-12", "badge": "✓ ZONED", "c": "#0F6E56"}, {"n": "Swan View Central", "la": -31.8884298, "lo": 116.04742999999999, "dir": "N", "d": 1032, "notes": "1.0 km N — Nearest shopping centre (Coles)", "badge": "", "c": "#185FA5"}, {"n": "Nido Early School Swan View", "la": -31.8882963, "lo": 116.0477287, "dir": "N", "d": 1051, "notes": "1.1 km N — Childcare & kindy", "badge": "", "c": "#185FA5"}, {"n": "Darling Ridge Shopping Centre", "la": -31.8853455, "lo": 116.04217750000001, "dir": "N", "d": 1396, "notes": "1.4 km N — Shopping centre (IGA)", "badge": "", "c": "#185FA5"}, {"n": "Talbot Road Nature Reserve", "la": -31.8805059, "lo": 116.0469301, "dir": "N", "d": 1902, "notes": "1.9 km N — Bushland nature reserve", "badge": "", "c": "#185FA5"}, {"n": "Brown Park", "la": -31.890218599999997, "lo": 116.05247130000001, "dir": "NE", "d": 1047, "notes": "1.0 km NE — Ovals, playground, courts", "badge": "", "c": "#185FA5"}, {"n": "Swan View Railway Heritage Trail Hub", "la": -31.8857593, "lo": 116.0607689, "dir": "NE", "d": 1947, "notes": "1.9 km NE — Trailhead to Swan View Tunnel", "badge": "", "c": "#185FA5"}, {"n": "Swan View Tunnel", "la": -31.884082699999993, "lo": 116.06809030000001, "dir": "NE", "d": 2604, "notes": "2.6 km NE — Historic railway tunnel walk", "badge": "", "c": "#185FA5"}, {"n": "Greenmount Primary School", "la": -31.897581799999998, "lo": 116.0475793, "dir": "E", "d": 193, "notes": "193 m E — Government primary K-6", "badge": "✓ ZONED", "c": "#0F6E56"}, {"n": "Katharine Susannah Prichard Writers' Centre", "la": -31.900016500000003, "lo": 116.0544855, "dir": "E", "d": 887, "notes": "887 m E — Historic writers' centre", "badge": "", "c": "#185FA5"}, {"n": "John Forrest National Park", "la": -31.883354699999998, "lo": 116.0922544, "dir": "E", "d": 4685, "notes": "4.7 km E — WA's oldest national park", "badge": "", "c": "#185FA5"}, {"n": "Fraser Park", "la": -31.8994832, "lo": 116.0468378, "dir": "SE", "d": 246, "notes": "246 m SE — Local park, Hamilton Tce", "badge": "", "c": "#185FA5"}, {"n": "Welbourne Park", "la": -31.902823299999998, "lo": 116.0485925, "dir": "SE", "d": 652, "notes": "652 m SE — Local park", "badge": "", "c": "#185FA5"}, {"n": "Greenmount National Park", "la": -31.902077000000002, "lo": 116.05222099999999, "dir": "SE", "d": 806, "notes": "806 m SE — National park, walk trails & views", "badge": "", "c": "#185FA5"}, {"n": "The Goat Farm Mountain Bike Park", "la": -31.902479399999997, "lo": 116.0548251, "dir": "SE", "d": 1033, "notes": "1.0 km SE — Mountain bike park", "badge": "", "c": "#185FA5"}, {"n": "Greenmount Lookout", "la": -31.906904700000002, "lo": 116.0589571, "dir": "SE", "d": 1638, "notes": "1.6 km SE — Scenic lookout over Perth", "badge": "", "c": "#185FA5"}, {"n": "Lloyd Penn Park", "la": -31.907827799999996, "lo": 116.0438784, "dir": "S", "d": 1152, "notes": "1.2 km S — Playgrounds, ninja course, pump track", "badge": "", "c": "#185FA5"}, {"n": "Boya Library", "la": -31.9181781, "lo": 116.0482078, "dir": "S", "d": 2306, "notes": "2.3 km S — Shire of Mundaring library + community centre", "badge": "", "c": "#185FA5"}, {"n": "Helena River", "la": -31.9187884, "lo": 116.0373004, "dir": "S", "d": 2485, "notes": "2.5 km S — River & walk trails", "badge": "", "c": "#185FA5"}, {"n": "Stuart Park", "la": -31.9007129, "lo": 116.04009590000001, "dir": "SW", "d": 622, "notes": "622 m SW — Park on Great Eastern Hwy", "badge": "", "c": "#185FA5"}, {"n": "Koongamia Oval", "la": -31.9042265, "lo": 116.03970179999997, "dir": "SW", "d": 923, "notes": "923 m SW — Sports oval", "badge": "", "c": "#185FA5"}, {"n": "Clayton View Primary School", "la": -31.905304200000003, "lo": 116.0405808, "dir": "SW", "d": 979, "notes": "979 m SW — Government primary K-6", "badge": "(zoning unverified)", "c": "#B8860B"}, {"n": "Broz Park", "la": -31.910969299999994, "lo": 116.0294182, "dir": "SW", "d": 2130, "notes": "2.1 km SW — Lake, playground, BBQs", "badge": "", "c": "#185FA5"}, {"n": "Helena Valley Shopping Centre", "la": -31.9156613, "lo": 116.0289206, "dir": "SW", "d": 2551, "notes": "2.6 km SW — Shopping centre", "badge": "", "c": "#185FA5"}, {"n": "Hillview Public Golf Course", "la": -31.9393928, "lo": 116.0188106, "dir": "SW", "d": 5291, "notes": "5.3 km SW — Nearest golf course, 27 holes", "badge": "", "c": "#185FA5"}, {"n": "Old Bellevue Station Park", "la": -31.899263, "lo": 116.0273094, "dir": "W", "d": 1731, "notes": "1.7 km W — Park, Helen St Bellevue", "badge": "", "c": "#185FA5"}, {"n": "Midland Gate", "la": -31.8899894, "lo": 116.01112959999999, "dir": "W", "d": 3356, "notes": "3.4 km W — Regional shopping centre", "badge": "", "c": "#185FA5"}, {"n": "Midland Junction Arts Centre", "la": -31.8902004, "lo": 116.0068785, "dir": "W", "d": 3741, "notes": "3.7 km W — Arts centre & gallery", "badge": "", "c": "#185FA5"}, {"n": "Midland Station", "la": -31.891398199999998, "lo": 116.0017733, "dir": "W", "d": 4188, "notes": "4.2 km W — Train station & bus interchange", "badge": "", "c": "#185FA5"}, {"n": "Woodbridge Riverside Park", "la": -31.888161800000002, "lo": 115.99160459999997, "dir": "W", "d": 5198, "notes": "5.2 km W — Swan River foreshore park", "badge": "", "c": "#185FA5"}, {"n": "St Anthony's School", "la": -31.8962541, "lo": 116.0435596, "dir": "NW", "d": 237, "notes": "237 m NW — Catholic primary PP-6", "badge": "", "c": "#185FA5"}, {"n": "On The Rail Trail - Greenmount", "la": -31.8943033, "lo": 116.04075759999999, "dir": "NW", "d": 579, "notes": "579 m NW — Railway Reserve Heritage Trail access", "badge": "", "c": "#185FA5"}, {"n": "Swan View Park", "la": -31.8846244, "lo": 116.03849749999998, "dir": "NW", "d": 1585, "notes": "1.6 km NW — Park & playground", "badge": "", "c": "#185FA5"}, {"n": "Midvale Central", "la": -31.8851348, "lo": 116.0309063, "dir": "NW", "d": 1954, "notes": "2.0 km NW — Shopping centre (Woolworths)", "badge": "", "c": "#185FA5"}, {"n": "Midvale Skate Park", "la": -31.885111199999997, "lo": 116.02482459999999, "dir": "NW", "d": 2396, "notes": "2.4 km NW — Skate park & pump track", "badge": "", "c": "#185FA5"}, {"n": "Swan Active Midland", "la": -31.8834608, "lo": 116.0247096, "dir": "NW", "d": 2515, "notes": "2.5 km NW — Aquatic & recreation centre", "badge": "", "c": "#185FA5"}];
+const sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Imagery © Esri'});
+const lbl=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:19});
+const satL=L.layerGroup([sat,lbl]);
+const satC=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Imagery © Esri'});
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'});
+const map=L.map('map',{layers:[satL]});
+L.control.layers({'Satellite with labels':satL,'Satellite clean':satC,'Street (OSM)':osm},null,{position:'topright'}).addTo(map);
+L.marker(P,{icon:L.divIcon({className:'',html:'<div class="home">🏠</div>',iconSize:[30,30],iconAnchor:[15,28]}),zIndexOffset:1000})
+ .bindPopup('<div class="popn">🏠 75 Innamincka Rd, Greenmount WA 6056</div><div class="popd">3 bed · 1 bath · 1,012 m² land · Built 1967 · Pool · Solar · Shire of Mundaring · Zoned: Greenmount PS (primary) · Swan View SHS (secondary) — via Domain catchment data</div>').addTo(map);
+const near=[], within=[P];
+const sides={N:'right',NE:'right',E:'right',SE:'right',S:'left',SW:'left',W:'left',NW:'left'};
+A.forEach((a,i)=>{
+  const close=a.d<300;
+  const m=L.marker([a.la,a.lo],{icon:L.divIcon({className:'',html:'<div class="pin" style="background:'+a.c+'"></div>',iconSize:[26,26],iconAnchor:[13,26],popupAnchor:[0,-24]}),zIndexOffset:close?2000:500});
+  const zb=a.badge?'<span class="zb" style="background:'+a.c+'">'+a.badge+'</span>':'';
+  m.bindPopup('<span class="dirb">'+a.dir+'</span><span class="popn">'+a.n+'</span>'+zb+'<div class="popd">'+a.notes+'</div>');
+  if(close){
+    L.polyline([P,[a.la,a.lo]],{color:'#fff',weight:2,dashArray:'4 4',opacity:.95}).addTo(map);
+    const off={right:[16,-14],left:[-16,-14]}[sides[a.dir]];
+    m.bindTooltip('['+a.dir+'] '+a.n+' · '+a.d+' m',{permanent:true,direction:sides[a.dir],offset:off,className:'near'});
+  }
+  else if(A.some((b,j)=>j<i && map.distance([a.la,a.lo],[b.la,b.lo])<40)){
+    A.forEach((b,j)=>{ if(j<i && map.distance([a.la,a.lo],[b.la,b.lo])<40) b._pair=true; });
+    m.setIcon(L.divIcon({className:'',html:'<div class="pin" style="background:'+a.c+'"></div>',iconSize:[26,26],iconAnchor:[-2,26],popupAnchor:[15,-24]}));
+    m.bindTooltip('['+a.dir+'] '+a.n,{permanent:true,direction:'bottom',offset:[16,2],className:'near'});
+    a._lab=true;
+  }
+  m.addTo(map); a._m=m;
+  if(a.d<=1500) within.push([a.la,a.lo]);
+});
+A.forEach(b=>{ if(b._pair && b.d>=300) b._m.bindTooltip('['+b.dir+'] '+b.n,{permanent:true,direction:'top',offset:[-6,-28],className:'near'}); });
+map.fitBounds(L.latLngBounds(within),{padding:[40,40],maxZoom:15});
+const leg=L.control({position:'bottomleft'});
+leg.onAdd=()=>{const d=L.DomUtil.create('div');d.id='leg';d.innerHTML='<i style="background:#D4537E"></i>Property<br><i style="background:#185FA5"></i>Amenity<br><i style="background:#0F6E56"></i>Zoned school<br><i style="background:#B8860B"></i>School, zoning unverified';return d};
+leg.addTo(map);
+window.__pins=A.length;
+</script></body></html>

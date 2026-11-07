@@ -1,0 +1,157 @@
+{
+ "address": "195 Jull St, Armadale WA 6112",
+ "lat": -32.152175457288,
+ "lng": 116.014548817656,
+ "pins": [
+  {
+   "name": "Armadale Shopping City",
+   "cat": "shopping",
+   "lat": -32.1536111,
+   "lng": 116.0155556
+  },
+  {
+   "name": "Armadale Station",
+   "cat": "train",
+   "lat": -32.1539387,
+   "lng": 116.01289969999998
+  },
+  {
+   "name": "Sherwood Station",
+   "cat": "train",
+   "lat": -32.137609999999995,
+   "lng": 116.01046
+  },
+  {
+   "name": "Challis Station",
+   "cat": "train",
+   "lat": -32.12650730000001,
+   "lng": 116.01267730000001
+  },
+  {
+   "name": "Armadale Senior High School",
+   "cat": "school",
+   "lat": -32.1615707,
+   "lng": 116.0169509
+  },
+  {
+   "name": "Armadale Primary School",
+   "cat": "school",
+   "lat": -32.1474294,
+   "lng": 116.02633449999998
+  },
+  {
+   "name": "John Calvin Christian College",
+   "cat": "school",
+   "lat": -32.1488162,
+   "lng": 116.00733500000001
+  },
+  {
+   "name": "Dale Christian School",
+   "cat": "school",
+   "lat": -32.1593071,
+   "lng": 115.9992782
+  },
+  {
+   "name": "Xavier Catholic School",
+   "cat": "school",
+   "lat": -32.1606178,
+   "lng": 115.9919662
+  },
+  {
+   "name": "Australian Christian College - Darling Downs",
+   "cat": "school",
+   "lat": -32.1743927,
+   "lng": 116.00495139999998
+  },
+  {
+   "name": "Armadale Health Service",
+   "cat": "hospital",
+   "lat": -32.1331888,
+   "lng": 116.01953929999999
+  },
+  {
+   "name": "Armadale Library",
+   "cat": "library",
+   "lat": -32.1510888,
+   "lng": 116.0142621
+  },
+  {
+   "name": "Armadale Fitness and Aquatic Centre",
+   "cat": "aquatic",
+   "lat": -32.1332459,
+   "lng": 116.0029443
+  },
+  {
+   "name": "Memorial Park",
+   "cat": "park",
+   "lat": -32.1511467,
+   "lng": 116.01560250000001
+  },
+  {
+   "name": "Minnawarra Park",
+   "cat": "park",
+   "lat": -32.1490457,
+   "lng": 116.0171968
+  },
+  {
+   "name": "Rotary Park",
+   "cat": "park",
+   "lat": -32.1532548,
+   "lng": 116.0052078
+  },
+  {
+   "name": "Gwynne Park",
+   "cat": "park",
+   "lat": -32.158789899999995,
+   "lng": 116.00547250000001
+  },
+  {
+   "name": "Errol Green Park",
+   "cat": "park",
+   "lat": -32.154820799999996,
+   "lng": 116.0201463
+  },
+  {
+   "name": "Morgan Park",
+   "cat": "park",
+   "lat": -32.1447117,
+   "lng": 115.99914369999999
+  },
+  {
+   "name": "Armadale Settlers Common",
+   "cat": "reserve",
+   "lat": -32.1457793,
+   "lng": 116.0509806
+  },
+  {
+   "name": "Bungendore Park",
+   "cat": "reserve",
+   "lat": -32.1814588,
+   "lng": 116.03832469999998
+  },
+  {
+   "name": "Armadale Golf Club",
+   "cat": "golf",
+   "lat": -32.1582395,
+   "lng": 115.958889
+  },
+  {
+   "name": "Champion Lakes",
+   "cat": "lake",
+   "lat": -32.101374,
+   "lng": 116.00333359999999
+  },
+  {
+   "name": "Wungong Regional Park",
+   "cat": "reserve",
+   "lat": -32.1999869,
+   "lng": 116.06378739999998
+  },
+  {
+   "name": "Sowilo Community High School",
+   "cat": "school",
+   "lat": -32.131048032144,
+   "lng": 116.009814467286
+  }
+ ]
+}
