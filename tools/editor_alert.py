@@ -28,7 +28,8 @@ with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=ctx) as s:
         if j.get('rawPath'): lines += [f"Raw files (Dropbox): {j['rawPath']}"]
         if j.get('lot'): lines += [f"Lot: {j['lot']}"]
         if j.get('notes'): lines += ["", "Agent's booking notes:", j['notes']]
-        lines += ["", "Please edit sky, colour and horizon only — no graphics. Natural colour, not over-saturated. Top-down shots full frame as shot — no turning, no mirrored or blurred edges.",
+        lines += ["", "Please edit sky, colour and horizon — no graphics. Natural colour, not over-saturated. Top-down shots full frame as shot — no turning, no mirrored or blurred edges.",
+                  "Please also REMOVE any cars, washing lines and people on the property (house, driveway, yard). Leave the street and neighbours as they are.",
                   f"When done, drop your finished photos onto https://bakerproduction.com/pins/?open={d['id']}/{j['slug']} — our pins, boundary and labels go on automatically. Then click Send to Baker. That's it — no need to check pins (our team does that) and please don't put drone photos straight into Dropbox Finals.", ""]
         if has_map: lines += [f"Map of every place: {base}{j['slug']}/editor_map.jpg"]
         lines += [f"Our reference version: {base}", "Step-by-step guide: https://bakerproduction.com/pins/guide/", "", "Thanks,", "Baker Production"]
