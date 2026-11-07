@@ -39,6 +39,36 @@ for j in D['jobs']:
             lv[nf] = f
             if f in cams: c = dict(cams.pop(f)); c['roll'] = c.get('roll', 0) + ang; c['f35'] = c.get('f35', 24) * zm; cams[nf] = c
     ph = [next((n for n, o in lv.items() if o == f), f) for f in ph]
+    # 7 Nov 2026 (Jason): "delete cars, washing lines and people on the property from now on".
+    # clean_lot.py: auto-removes cars/people/utes/motorbikes inside the cadastre lot (LaMa); every photo gets a review sheet
+    # in e2e/clean_<day>/ (yellow = lot, blue = search area, red = removed, green = left). LOOK at every sheet: washing
+    # lines and anything missed go in the day file  "remove": {"<photo file name>": ["c2", [x0,y0,x1,y1]]},
+    # wrong removals in  "keep": {"<photo file name>": ["c1"]}  — then run prep_day again. "noClean": true skips a job.
+    if not j.get('noClean') and not os.environ.get('NOCLEAN'):
+        from clean_lot import clean as _clean, xmp_cam as _xcam
+        _lot = {'poly': j['poly']} if j.get('poly') else None
+        if _lot is None and str(j.get('map', '')).endswith('.json'):
+            try: _m = json.load(open(j['map'])); _lot = {'lat': _m['lat'], 'lng': _m['lng']}
+            except Exception: _lot = None
+        if _lot:
+            _cd = os.path.join(os.path.dirname(os.path.dirname(ph[0])), 'clean'); _rd = f'e2e/clean_{day}'
+            os.makedirs(_cd, exist_ok=True); os.makedirs(_rd, exist_ok=True)
+            _log = json.load(open(f'{_rd}/log.json')) if os.path.exists(f'{_rd}/log.json') else {}
+            _new = []
+            for f in ph:
+                bn = os.path.basename(f); _cam = cams.get(f) or _xcam(f)
+                if not _cam: _new.append(f); continue
+                out = os.path.join(_cd, bn)
+                cs = _clean(f, out, _cam, _lot, (j.get('remove') or {}).get(bn, []), (j.get('keep') or {}).get(bn, []),
+                            review=f'{_rd}/{j["slug"]}__{os.path.splitext(bn)[0]}.jpg')
+                _log[f'{j["slug"]}/{bn}'] = cs
+                if any(c['remove'] for c in cs):
+                    if f in cams: cams[out] = cams.pop(f)
+                    _new.append(out); print('cleaned', j['slug'], bn, [c['id'] + ':' + c['cls'] for c in cs if c['remove']])
+                else:
+                    if os.path.exists(out): os.remove(out)
+                    _new.append(f)
+            ph = _new; json.dump(_log, open(f'{_rd}/log.json', 'w'))
     nad = [f for f in ph if pitch(f) < -75]
     base = {'map': j['map'], 'agency': j.get('agency', 'grey')}
     if j.get('must'): base['must'] = j['must']
