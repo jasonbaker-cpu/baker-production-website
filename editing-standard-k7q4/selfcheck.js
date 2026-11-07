@@ -51,7 +51,9 @@
       var blueFrac = topBlue / topN, ceilF = ceil / topN, warmF = warmSky / Math.max(1, top5N), greenF = green / n;
       /* Exterior = blue sky, or sunset/dusk sky + garden, or lots of garden. Interiors have a white ceiling in the top third. */
       var isExt = (blueFrac > 0.15 && ceilF < 0.5) || greenF > 0.15 || (greenF > 0.03 && (ceilF < 0.12 || (ceilF < 0.45 && warmF > 0.08)));
-      var dusk = isExt && warmF > 0.08 && blueFrac < 0.3;
+      var skySat0 = topBlue ? skyS / topBlue : 0;
+      /* Dusk/twilight: warm clouds in the sky, or soft blue-violet sky with pink/orange clouds (premium dusk). */
+      var dusk = isExt && ((warmF > 0.08 && blueFrac < 0.3) || (warmF > 0.06 && skySat0 < 0.2));
       var s = document.createElement("canvas"); s.width = 9; s.height = 8; var sx = s.getContext("2d"); sx.drawImage(im, 0, 0, 9, 8);
       var sd = sx.getImageData(0, 0, 9, 8).data, gray = [];
       for (var q = 0; q < sd.length; q += 4) gray.push(0.299 * sd[q] + 0.587 * sd[q + 1] + 0.114 * sd[q + 2]);
@@ -73,7 +75,8 @@
     "Grass green and even, no burnt or patchy lawn left in.",
     "No AI artefacts: warped lines, smeared textures, melted objects.",
     "Only one photo per angle: drop near-duplicates and older versions of redone files.",
-    "Every photo same size and crop, sharp, no noise in shadows."];
+    "Every photo same size and crop, sharp, no noise in shadows.",
+    "Dusk/twilight shots: rich blue-to-pink sky (not pale or hazy), every window and light glowing, lawn green, tight framing."];
   function flags(r) {
     var f = [];
     if (r.kind === "INT") {
@@ -85,11 +88,12 @@
       if (r.L > B.lHi) f.push({ k: "bright", t: "Room too bright/washed out (brightness " + r.L.toFixed(0) + ", target 168-186)." });
     } else {
       if (r.skySat > B.skySat) f.push({ k: "sky", t: "Sky too deep blue (" + r.skySat.toFixed(2) + ", target ~0.25). Use soft natural blue." });
-      if (r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky washed out/hazy (" + r.skySat.toFixed(2) + ", target ~0.25). Replace with a clean blue sky, or a proper blue-to-pink sky on dusk shots." });
+      if (!r.dusk && r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky washed out/hazy (" + r.skySat.toFixed(2) + ", target ~0.25). Replace with a clean blue sky, or a proper blue-to-pink sky on dusk shots." });
       if (r.L < (r.dusk ? 100 : B.extDark)) f.push({ k: "dark", t: "Exterior too dark (brightness " + r.L.toFixed(0) + ", min " + B.extDark + "). Lift the whole frame." });
-      if (r.p5 < (r.dusk ? 12 : B.extShadow)) f.push({ k: "shadow", t: "Heavy black shadows (darkest areas " + r.p5 + "). Lift shadows under trees/patios." });
+      if (!r.dusk && r.p5 < B.extShadow) f.push({ k: "shadow", t: "Heavy black shadows (darkest areas " + r.p5 + "). Lift shadows under trees/patios." });
       if (r.p5 > B.flatP5 && r.rng < B.flatRng) f.push({ k: "flat", t: "Flat/hazy, no contrast (blacks lifted to " + r.p5 + ", tonal range " + r.rng + "). Add contrast and set a true black point." });
-      if (!r.dusk && r.cast > B.extCast) f.push({ k: "orange", t: "Orange/yellow cast on the exterior (warmth +" + r.cast.toFixed(1) + "). Neutralise the white balance." });
+      /* beige paving/brick reads warm in Perth sun; only flag orange when the sky is pushed off-blue too */
+      if (!r.dusk && r.cast > B.extCast && r.skySat < 0.2) f.push({ k: "orange", t: "Orange/yellow cast on the exterior (warmth +" + r.cast.toFixed(1) + "). Neutralise the white balance." });
     }
     if (r.clip > B.clip) f.push({ k: "clip", t: "Blown highlights (" + r.clip.toFixed(1) + "% clipped). Recover windows/whites." });
     return f;
@@ -124,8 +128,9 @@
       if (dd <= 6 || (hi >= 0.88 && co >= 0.7) || (hi >= 0.84 && co >= 0.85) || (bothExt && hi >= 0.8 && co >= 0.75)) dupes.push([rs[a].name, rs[b].name, dd]);
     }
     var sizes = {}; rs.forEach(function (r) { var key = r.W + "x" + r.H; sizes[key] = (sizes[key] || 0) + 1; });
-    var ars = rs.map(function (r) { return r.H / r.W; }), arSpread = rs.length ? Math.max.apply(null, ars) - Math.min.apply(null, ars) : 0;
-    var widths = {}; rs.forEach(function (r) { widths[r.W] = 1; });
+    /* Portrait and landscape are both fine: compare long side and crop ratio regardless of orientation. */
+    var ars = rs.map(function (r) { return Math.min(r.W, r.H) / Math.max(r.W, r.H); }), arSpread = rs.length ? Math.max.apply(null, ars) - Math.min.apply(null, ars) : 0;
+    var widths = {}; rs.forEach(function (r) { widths[Math.max(r.W, r.H)] = 1; });
     var setIssues = [];
     if (ints.length) {
       if (aw < B.setWallLo && al < 178) setIssues.push("Whole set too grey/dim: average walls " + aw.toFixed(0) + " (target ~212).");
@@ -136,7 +141,7 @@
       if (al > B.setLHi) setIssues.push("Whole set too bright: average brightness " + al.toFixed(0) + " (target 168-186).");
       if (sd > B.setSd) setIssues.push("Photos don't match each other (wall brightness varies ±" + sd.toFixed(0) + "). Even out the set.");
     }
-    if (Object.keys(widths).length > 1 || arSpread > 0.0015) setIssues.push("Inconsistent sizes/crops: " + Object.keys(sizes).join(", ") + ". Export every photo at the same size and 3:2 crop.");
+    if (Object.keys(widths).length > 1 || arSpread > 0.0015) setIssues.push((Object.keys(widths).length > 1 ? "Mixed resolutions (long side " + Object.keys(widths).join(" / ") + "px): " : "Inconsistent crops: ") + Object.keys(sizes).join(", ") + ". Export every photo full size at the same 3:2 crop.");
     var flagged = rs.filter(function (r) { return r.f.length; });
     /* Strict: 9.5+ only with zero issues. Any flagged photo, duplicate or set issue caps the score at 9. */
     var nIssues = setIssues.length + flagged.length + dupes.length;
