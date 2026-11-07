@@ -72,7 +72,7 @@ for j in D['jobs']:
     nad = [f for f in ph if pitch(f) < -75]
     base = {'map': j['map'], 'agency': j.get('agency', 'grey')}
     if j.get('must'): base['must'] = j['must']
-    for k in ('skip', 'perPhoto'):
+    for k in ('skip', 'perPhoto', 'tune'):   # 8 Nov: tune = editor TUNE overrides per job (e.g. noSolid)
         if j.get(k): base[k] = j[k]
     if base['agency'] == 'green-belle':   # 29 Oct (Jason): every Belle Property office matches their listing look
         base.setdefault('skyPlate', 'B')   # 5 Nov (Jason): soft plain sky like 23 Karabil Way, every job; base.setdefault('perPhoto', 2)
@@ -133,7 +133,7 @@ for j in D['jobs']:
             if j.get('pxpoly') and i == 0: run[-1].update(pxpoly=j['pxpoly'], nosnap=1); run[-1].pop('snap', None)   # boundary hand-traced on the fences
     else:
         run.append(dict(base, slug=j['slug'], photos=ph, cams={f: cams[f] for f in ph if f in cams}))
-    meta[j['slug']] = {'addr': j['addr'], 'who': j.get('who', ''), 'notes': j.get('notes', ''), 'portrait': bool(j.get('portrait'))}   # 29 Oct: booking notes travel to the editor
+    meta[j['slug']] = {'addr': j['addr'], 'who': j.get('who', ''), 'notes': j.get('notes', ''), 'portrait': bool(j.get('portrait')), **{k: j[k] for k in ('rawPath', 'docs') if j.get(k)}}   # 29 Oct: booking notes travel to the editor
 os.makedirs('e2e', exist_ok=True)
 json.dump(run, open(f'e2e/run_{day}.json', 'w')); json.dump(meta, open(f'e2e/meta_{day}.json', 'w'))
 print(f'e2e/run_{day}.json', len(run), 'jobs;', sum(len(r['photos']) for r in run), 'photos')

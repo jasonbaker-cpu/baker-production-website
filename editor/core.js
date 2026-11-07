@@ -422,7 +422,7 @@ function finishImage(base, p){
   const solidK = (i,j) => { const o0=px[i], o2=px[i+2], Yo=(px[i]+px[i+1]+px[i+2])/3;
     const kb = Math.min(1, Math.max(0, (o0-o2-14)/16)) * Math.min(1, Math.max(0, (205-Yo)/30)) * Math.min(1, Math.max(0, (refWide[j%w]-10-g1[j])/15));
     return Math.max(kb, Math.min(1, Math.max(0, (refWide[j%w]-40-g1[j])/15))); };
-  if (sky && SKYP && SKYP.direct){ solidTop = new Float32Array(w);
+  if (sky && SKYP && SKYP.direct && !Object.assign({},TUNE,window.__TUNE||{}).noSolid){ solidTop = new Float32Array(w);   // 8 Nov: TUNE noSolid = no tower keep (hazy hills read as ghost towers, 75 Innamincka)
     for (let x=0;x<w;x++){ const hz=line(x); let top=hz, gap=0; const gMax = Math.max(2, (0.004*h)|0);
       for (let y=Math.floor(hz); y>Math.max(0,hz-0.28*h); y--){ const j=y*w+x; if (solidK(j*4,j) > 0.5){ top=y; gap=0; } else if (++gap > gMax) break; }
       solidTop[x]=top; }

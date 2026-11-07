@@ -291,3 +291,9 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 - Every patch must look natural. If a removal leaves a smear (big car close up, car half under a carport roof), keep it and flag the job toEditor with editorReason "remove car/people on property".
 - Twilight / editor jobs: the editor email + guide now tell Profocus to remove cars, people and clothes hanging on washing lines on the property (keep the line itself) (their photos replace ours).
 - `"noClean": true` on a job (or NOCLEAN=1) skips it — only if the agent asks to keep them.
+
+## 8 Nov 2026 (Sat 7 Nov run)
+- Amenity maps in the newer `{label, note, kind}` format (e.g. 195_jull_st_armadale_map.html) gave every pin the label "undefined": editor now reads `label` (strips "✓ ZONED") and infers cat from `note`. Safer still: build a places .json from it.
+- Day file `tune` (e.g. `{"noSolid":1}`) now reaches t12 via prep_day. `noSolid` turns off the tower keep — hazy hills on 75 Innamincka were read as towers and pasted up as ghost columns. Portal parity fails on such jobs (project.json doesn't carry tune) — only use it on toEditor jobs.
+- prep_day meta now carries `rawPath` and `docs` from the day file into index.json.
+- Commercial lots (195 Jull St, bank + car park): kept the cars (noClean — a public car park, partial detection would leave a patchy lot) and removed the potential-lots image by hand.

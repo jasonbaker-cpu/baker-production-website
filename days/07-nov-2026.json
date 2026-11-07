@@ -1,0 +1,110 @@
+{
+ "label": "Sat 7 Nov 2026",
+ "jobs": [
+  {
+   "slug": "195_jull_st",
+   "addr": "195 Jull St, Armadale WA 6112",
+   "who": "Cameron Wilson \u00b7 Armadale Real Estate",
+   "agency": "flags-p",
+   "photos": "batch/195_jull_st/jpg",
+   "map": "batch/195_jull_st/195_jull_st_places.json",
+   "poly": [
+    [
+     -32.1523838,
+     116.01464263
+    ],
+    [
+     -32.15209157,
+     116.01429991
+    ],
+    [
+     -32.15196341,
+     116.01445089
+    ],
+    [
+     -32.15225344,
+     116.01479099
+    ],
+    [
+     -32.15227568,
+     116.01479002
+    ]
+   ],
+   "lens": [
+    45.77,
+    20.12,
+    45.42,
+    0,
+    18.36
+   ],
+   "nadirPick": [
+    "0045",
+    "0044"
+   ],
+   "streetRot": {
+    "195_jull_st__nadir": 0,
+    "195_jull_st__nadir2": 0
+   },
+   "notes": "Entry Notes: meet Cameron\nAgent (Dropbox note): \"The survey is very old, so I've used the one attached, and also an aerial shot. Left boundary 45.77m, right boundary 45.42m. Front - 18.36m rear 19.12m\"",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/07-11-2026/195 Jull St, Armadale WA 6112, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "DOC061126-06112026100557.pdf (survey plan, C/T 718/142)",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/07-11-2026/195 Jull St, Armadale WA 6112, Australia/Aerial - Drone Photography/DOC061126-06112026100557.pdf"
+    },
+    {
+     "name": "Screenshot 2026-11-06 135253.png (agent boundary lengths)",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/07-11-2026/195 Jull St, Armadale WA 6112, Australia/Aerial - Drone Photography/Screenshot 2026-11-06 135253.png"
+    },
+    {
+     "name": "Screenshot 2026-11-06 at 10.08.36 am.png (Pricefinder aerial)",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/07-11-2026/195 Jull St, Armadale WA 6112, Australia/Aerial - Drone Photography/Screenshot 2026-11-06 at 10.08.36\u202fam.png"
+    }
+   ],
+   "noClean": true
+  },
+  {
+   "slug": "75_innamincka_rd",
+   "addr": "75 Innamincka Rd, Greenmount WA 6056",
+   "who": "David Beshay \u00b7 Beshay Realty",
+   "agency": "beshay",
+   "photos": "batch/75_innamincka_rd/jpg",
+   "map": "batch/75_innamincka_rd/raw/75_innamincka_rd_greenmount_map.html",
+   "poly": [
+    [
+     -31.89741355,
+     116.04551558
+    ],
+    [
+     -31.89747489,
+     116.04571576
+    ],
+    [
+     -31.89790167,
+     116.04553597
+    ],
+    [
+     -31.89784033,
+     116.04533581
+    ]
+   ],
+   "skip": [
+    "Clayton View Primary School"
+   ],
+   "nadirPick": [
+    "0072",
+    "0071"
+   ],
+   "streetRot": {
+    "75_innamincka_rd__nadir": 0,
+    "75_innamincka_rd__nadir2": 0
+   },
+   "notes": "Entry Notes: meet david",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/07-11-2026/75 Innamincka Rd, Greenmount WA 6056, Australia/Aerial - Drone Photography",
+   "docs": [],
+   "tune": {
+    "noSolid": 1
+   }
+  }
+ ]
+}
