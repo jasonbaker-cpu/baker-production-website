@@ -3,9 +3,10 @@
    brightness, shadows, clipped highlights, sky saturation, near-duplicates, sizes. */
 (function () {
   /* STRICT 9.5 standard (6 Nov 2026): every photo must be inside the targets. One miss = not ready. */
-  var B = { wallLo: 207, wallHi: 216, castLo: 3, castHi: 8, lLo: 164, lHi: 198, clip: 0.8, skySat: 0.52, skyPale: 0.28, extDark: 125, extShadow: 28, greenSat: 0.62, extHot: 223,
-    extCast: 13, flatP5: 62, flatRng: 160,
-    setWallLo: 209, setWallHi: 215, setCastLo: 3.5, setCastHi: 7.5, setLLo: 168, setLHi: 188, setSd: 5 };
+  /* 7 Nov 2026: calibrated to The Mathews Group blue-sky listings (Jason's base look). */
+  var B = { wallLo: 208, wallHi: 224, castLo: 1, castHi: 9, lLo: 155, lHi: 194, clip: 0.8, skySat: 0.48, skyPale: 0.25, extDark: 118, extShadow: 34, greenSat: 0.48, extHot: 238,
+    extCast: 13, flatP5: 75, flatRng: 150,
+    setWallLo: 211, setWallHi: 219, setCastLo: 2, setCastHi: 7, setLLo: 165, setLHi: 186, setSd: 5 };
   var $ = function (id) { return document.getElementById(id); };
   var drop = $("scDrop"), input = $("scInput"), out = $("scOut"), jobEl = $("scJob");
   if (!drop) return;
@@ -71,7 +72,7 @@
     "No pink/green/purple colour fringing in window views or on roofs and gutters.",
     "Window views clean and natural: no grey or glowing pulls, no ghosting.",
     "Verticals dead straight on every photo (walls, door frames, cabinets).",
-    "Sky on every exterior: soft natural blue, edges masked cleanly, no cut-off hills or trees.",
+    "Sky on every exterior: clear blue with white clouds (Mathews Group look), edges masked cleanly, no cut-off hills or trees.",
     "Grass green and even, no burnt or patchy lawn left in.",
     "No AI artefacts: warped lines, smeared textures, melted objects.",
     "Only one photo per angle: drop near-duplicates and older versions of redone files.",
@@ -80,19 +81,19 @@
   function flags(r) {
     var f = [];
     if (r.kind === "INT") {
-      if (r.wallW < 200 || (r.wallW < B.wallLo && r.L < 182)) f.push({ k: "dim", t: "Walls grey/dim (" + r.wallW.toFixed(0) + ", target ~212). Brighten." });
-      if (r.wallW > B.wallHi) f.push({ k: "hot", t: "Walls too white (" + r.wallW.toFixed(0) + ", target ~212). Pull back." });
-      if (r.cast < B.castLo) f.push({ k: "cold", t: "Walls cold/grey (warmth " + r.cast.toFixed(1) + ", target +3 to +7). Warm slightly." });
-      if (r.cast > B.castHi) f.push({ k: "cream", t: "Walls too cream/yellow (warmth +" + r.cast.toFixed(1) + ", target +3 to +7). Neutralise." });
-      if (r.L < B.lLo && r.wallW < 212) f.push({ k: "dark", t: "Room too dark (brightness " + r.L.toFixed(0) + ", target 168-186)." }); /* dark floors/joinery with good walls are fine */
-      if (r.L > B.lHi) f.push({ k: "bright", t: "Room too bright/washed out (brightness " + r.L.toFixed(0) + ", target 168-186)." });
+      if (r.wallW < 205 || (r.wallW < B.wallLo && r.L < 168)) f.push({ k: "dim", t: "Walls grey/dim (" + r.wallW.toFixed(0) + ", target ~215). Brighten." });
+      if (r.wallW > B.wallHi) f.push({ k: "hot", t: "Walls too white (" + r.wallW.toFixed(0) + ", target ~215). Pull back." });
+      if (r.cast < B.castLo) f.push({ k: "cold", t: "Walls cold/grey (warmth " + r.cast.toFixed(1) + ", target +2 to +7). Warm slightly." });
+      if (r.cast > B.castHi) f.push({ k: "cream", t: "Walls too cream/yellow (warmth +" + r.cast.toFixed(1) + ", target +2 to +7). Neutralise: clean white like Mathews Group." });
+      if (r.L < B.lLo && r.wallW < 214) f.push({ k: "dark", t: "Room too dark (brightness " + r.L.toFixed(0) + ", target 165-185)." }); /* dark floors/joinery with good walls are fine */
+      if (r.L > B.lHi) f.push({ k: "bright", t: "Room too bright/washed out (brightness " + r.L.toFixed(0) + ", target 165-185)." });
     } else {
-      if (!r.dusk && r.skySat > B.skySat) f.push({ k: "sky", t: "Sky oversaturated/cartoon (" + r.skySat.toFixed(2) + ", target 0.32-0.45). Natural clear blue." });
-      if (!r.dusk && r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky pale/hazy (" + r.skySat.toFixed(2) + ", target 0.32-0.45). Clear blue sky with white clouds, like the Windarra example." });
+      if (!r.dusk && r.skySat > B.skySat) f.push({ k: "sky", t: "Sky oversaturated/cartoon (" + r.skySat.toFixed(2) + ", target 0.28-0.40). Natural clear blue." });
+      if (!r.dusk && r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky pale/hazy (" + r.skySat.toFixed(2) + ", target 0.28-0.40). Clear blue sky with white clouds, like the Mathews Group examples." });
       if (r.L < (r.dusk ? 100 : B.extDark)) f.push({ k: "dark", t: "Exterior too dark (brightness " + r.L.toFixed(0) + ", min " + B.extDark + "). Lift the whole frame." });
-      if (!r.dusk && r.greenF > 0.04 && r.greenSat < B.greenSat) f.push({ k: "greens", t: "Greens dull (" + r.greenSat.toFixed(2) + ", target 0.65+). Add vibrance to lawn, trees and hedges." });
-      if (!r.dusk && r.p95 > B.extHot) f.push({ k: "hot", t: "Bright areas too hot (" + r.p95 + ", target 218 or less). Pull highlights back on ground, paths and walls." });
-      if (!r.dusk && r.p5 < B.extShadow) f.push({ k: "shadow", t: "Shadows too dark (darkest areas " + r.p5 + ", target 30+). Lift shadows under carports, patios and trees." });
+      if (!r.dusk && r.greenF > 0.04 && r.greenSat < B.greenSat) f.push({ k: "greens", t: "Greens dull (" + r.greenSat.toFixed(2) + ", target 0.52+). Add vibrance to lawn, trees and hedges." });
+      if (!r.dusk && r.p95 > B.extHot) f.push({ k: "hot", t: "Bright areas too hot (" + r.p95 + ", target 230 or less). Pull highlights back on ground, paths and walls." });
+      if (!r.dusk && r.p5 < B.extShadow) f.push({ k: "shadow", t: "Shadows too dark (darkest areas " + r.p5 + ", target 40+). Lift shadows under carports, patios and trees." });
       if (r.p5 > B.flatP5 && r.rng < B.flatRng) f.push({ k: "flat", t: "Flat/hazy, no contrast (blacks lifted to " + r.p5 + ", tonal range " + r.rng + "). Add contrast and set a true black point." });
       /* beige paving/brick reads warm in Perth sun; only flag orange when the sky is pushed off-blue too */
       if (!r.dusk && r.cast > B.extCast && r.skySat < 0.2) f.push({ k: "orange", t: "Orange/yellow cast on the exterior (warmth +" + r.cast.toFixed(1) + "). Neutralise the white balance." });
@@ -135,12 +136,12 @@
     var widths = {}; rs.forEach(function (r) { widths[Math.max(r.W, r.H)] = 1; });
     var setIssues = [];
     if (ints.length) {
-      if (aw < B.setWallLo && al < 178) setIssues.push("Whole set too grey/dim: average walls " + aw.toFixed(0) + " (target ~212).");
-      if (aw > B.setWallHi) setIssues.push("Whole set too white/bright: average walls " + aw.toFixed(0) + " (target ~212).");
-      if (ac < B.setCastLo) setIssues.push("Whole set too cold/grey: average warmth " + ac.toFixed(1) + " (target +3 to +7).");
-      if (ac > B.setCastHi) setIssues.push("Whole set too cream: average warmth +" + ac.toFixed(1) + " (target +3 to +7).");
-      if (al < B.setLLo && aw < 210) setIssues.push("Whole set too dark: average brightness " + al.toFixed(0) + " (target 168-186).");
-      if (al > B.setLHi) setIssues.push("Whole set too bright: average brightness " + al.toFixed(0) + " (target 168-186).");
+      if (aw < B.setWallLo && al < 175) setIssues.push("Whole set too grey/dim: average walls " + aw.toFixed(0) + " (target ~215).");
+      if (aw > B.setWallHi) setIssues.push("Whole set too white/bright: average walls " + aw.toFixed(0) + " (target ~215).");
+      if (ac < B.setCastLo) setIssues.push("Whole set too cold/grey: average warmth " + ac.toFixed(1) + " (target +2 to +7).");
+      if (ac > B.setCastHi) setIssues.push("Whole set too cream: average warmth +" + ac.toFixed(1) + " (target +2 to +7).");
+      if (al < B.setLLo && aw < 213) setIssues.push("Whole set too dark: average brightness " + al.toFixed(0) + " (target 165-185).");
+      if (al > B.setLHi) setIssues.push("Whole set too bright: average brightness " + al.toFixed(0) + " (target 165-185).");
       if (sd > B.setSd) setIssues.push("Photos don't match each other (wall brightness varies ±" + sd.toFixed(0) + "). Even out the set.");
     }
     if (Object.keys(widths).length > 1 || arSpread > 0.0015) setIssues.push((Object.keys(widths).length > 1 ? "Mixed resolutions (long side " + Object.keys(widths).join(" / ") + "px): " : "Inconsistent crops: ") + Object.keys(sizes).join(", ") + ". Export every photo full size at the same 3:2 crop.");
@@ -157,7 +158,7 @@
 
     var html = '<div class="scr" id="scReport"><div class="scr-head"><div><div class="job">' + esc(job) + '</div><div class="meta">Self-check · ' + esc(when) + ' · ' + rs.length + ' photos (' + ints.length + ' interior, ' + (rs.length - ints.length) + ' exterior)</div></div><span class="score ' + cls + '">' + score + '/10 est.</span></div>' +
       '<p class="vd"><b>' + verdict + '.</b></p>' +
-      '<div class="scr-stats"><div><b>' + aw.toFixed(0) + '</b><span>Walls (target ~212)</span></div><div><b>' + (ac >= 0 ? "+" : "") + ac.toFixed(1) + '</b><span>Warmth (+3 to +7)</span></div><div><b>' + al.toFixed(0) + '</b><span>Brightness (168-186)</span></div><div><b>' + flagged.length + '</b><span>Photos flagged</span></div><div><b>' + dupes.length + '</b><span>Possible duplicates</span></div></div>';
+      '<div class="scr-stats"><div><b>' + aw.toFixed(0) + '</b><span>Walls (target ~215)</span></div><div><b>' + (ac >= 0 ? "+" : "") + ac.toFixed(1) + '</b><span>Warmth (+2 to +7)</span></div><div><b>' + al.toFixed(0) + '</b><span>Brightness (165-185)</span></div><div><b>' + flagged.length + '</b><span>Photos flagged</span></div><div><b>' + dupes.length + '</b><span>Possible duplicates</span></div></div>';
     if (setIssues.length) html += '<h4>Whole-set issues</h4><ul>' + setIssues.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ul>";
     if (dupes.length) html += '<h4>Possible duplicates (check, then remove one)</h4><ul>' + dupes.map(function (p) { return "<li>" + esc(p[0]) + " ≈ " + esc(p[1]) + "</li>"; }).join("") + "</ul>";
     html += '<h4>Photos to fix</h4>' + (flagged.length ? '<div class="scr-grid">' + flagged.map(function (r) {
@@ -171,7 +172,7 @@
     out.innerHTML = html;
 
     var txt = "BAKER SELF-CHECK: " + job + "\n" + when + " · " + rs.length + " photos\nScore (est.): " + score + "/10, " + verdict +
-      "\nWalls " + aw.toFixed(0) + " (target ~212) · Warmth " + ac.toFixed(1) + " (+3 to +7) · Brightness " + al.toFixed(0) + " (168-186)\n" +
+      "\nWalls " + aw.toFixed(0) + " (target ~215) · Warmth " + ac.toFixed(1) + " (+2 to +7) · Brightness " + al.toFixed(0) + " (165-185)\n" +
       (setIssues.length ? "\nWHOLE SET:\n- " + setIssues.join("\n- ") + "\n" : "") +
       (dupes.length ? "\nPOSSIBLE DUPLICATES:\n- " + dupes.map(function (p) { return p[0] + " ≈ " + p[1]; }).join("\n- ") + "\n" : "") +
       "\nPHOTOS TO FIX:\n" + (flagged.length ? flagged.map(function (r) { return "- " + r.name + ": " + r.f.map(function (x) { return x.t; }).join(" "); }).join("\n") : "- None") +

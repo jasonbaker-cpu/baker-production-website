@@ -2,7 +2,7 @@
    To add an example: copy one line in GOOD, BAD or BEFORE_AFTER and change it.
    Put new images in the img/ folder next to this file (webp or jpg, ~1600px wide). */
 
-window.UPDATED = "7 Nov 2026, 6pm";
+window.UPDATED = "7 Nov 2026, 7pm";
 
 
 /* EDITOR TOOLS: links the editors use every day. */
