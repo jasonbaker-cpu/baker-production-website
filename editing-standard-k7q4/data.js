@@ -2,7 +2,7 @@
    To add an example: copy one line in GOOD, BAD or BEFORE_AFTER and change it.
    Put new images in the img/ folder next to this file (webp or jpg, ~1600px wide). */
 
-window.UPDATED = "7 Nov 2026, 2pm";
+window.UPDATED = "7 Nov 2026, 6pm";
 
 
 /* EDITOR TOOLS: links the editors use every day. */
@@ -22,7 +22,7 @@ window.GOOD = [
   { img: "img/good-thorburn-living.webp", job: "22 Thorburn Ave", file: "DSC09089", why: "Warm white walls, bright but not blown, windows pulled clean." },
   { img: "img/good-thorburn-kitchen.webp", job: "22 Thorburn Ave", file: "DSC09105", why: "Clean whites, true cabinet colour, straight verticals." },
   { img: "img/good-thorburn-bedroom.webp", job: "22 Thorburn Ave", file: "DSC09125", why: "Even light across the room, no grey cast." },
-  { img: "img/good-thorburn-front.webp", job: "22 Thorburn Ave", file: "DSC09185", why: "Soft pale blue sky, natural grass, bright facade." },
+  { img: "img/good-thorburn-front.webp", job: "22 Thorburn Ave", file: "DSC09185", why: "Clear blue sky, natural grass, bright facade." },
   { img: "img/good-wattle-living.webp", job: "1/32 Wattle St", file: "DSC09241", why: "Bright, airy, consistent with the rest of the set." },
   { img: "img/good-wattle-kitchen.webp", job: "1/32 Wattle St", file: "DSC09264", why: "Crisp whites, window view kept." },
   { img: "img/good-hermitage-dusk-rear.webp", job: "29 Hermitage Dr", file: "DSC08256", why: "Natural sunset twilight: soft pink clouds, lights on, not fake purple." },
@@ -36,7 +36,6 @@ window.BAD = [
   { img: "img/bad-dover-grey-dark.webp", job: "2/10 Dover Rd", file: "DSC03513", why: "Cold grey walls with no warmth. Walls should be warm white like Thorburn." },
   { img: "img/bad-jay-too-bright.webp", job: "7 Jay Ct", file: "DSC04067", why: "Too bright. Walls washed out to pure white, ceiling nearly blown. Pull back to Thorburn level." },
   { img: "img/bad-mills-orange-floor.webp", job: "1 Mills Ave", file: "DSC03787", why: "Floorboards too orange/saturated. Keep timber natural." },
-  { img: "img/bad-caledonian-deep-sky.webp", job: "42/86 Caledonian Ave", file: "DSC09760-1", why: "Day sky too deep/dark blue. Use soft pale blue." },
   { img: "img/bad-caledonian-harsh-garden.webp", job: "42/86 Caledonian Ave", file: "DSC09780", why: "Harsh single exposure, heavy black shadows under the tree. Blend and lift shadows." },
   { img: "img/bad-titanium-unedited-topdown.webp", job: "17 Titanium Blvd", file: "drone 0966", why: "Top-down not edited: no lot boundary, no lot size, no blur outside the lot." }
 ];
@@ -50,7 +49,7 @@ window.BEFORE_AFTER = [
    kind: "bad" = needs fixing, "good" = example of what was right. drop = duplicate files to remove. */
 window.REVIEWS = [
   { date: "5 Nov 2026 (redelivery)", shoot: "4 Nov", job: "42/86 Caledonian Ave, Maylands", score: 7, verdict: "NOT REDONE. Every file is identical to the first delivery. Full redo needed.",
-    notes: [ { img: "img/reviews/caledonian-09760.webp", file: "DSC09760-1 (+ all exteriors)", kind: "bad", text: "Day sky deep blue on every exterior. Use soft pale blue." },
+    notes: [ { img: "img/reviews/caledonian-09760.webp", file: "DSC09760-1 (+ all exteriors)", kind: "bad", text: "(Superseded 7 Nov: clear mid-blue skies are now the standard; see Exterior look.)" },
              { img: "img/reviews/caledonian-09780.webp", file: "DSC09780", kind: "bad", text: "Harsh single exposure, black shadows under the tree. Blend and lift." },
              { img: "img/reviews/caledonian-09730.webp", file: "DSC09730", kind: "bad", text: "Bathroom walls yellow/cream. Neutralise." },
              { img: "img/reviews/caledonian-drone-0073.webp", file: "DJI_0073", kind: "bad", text: "Only 2 pins. Every location shot needs 3. Also: no top-downs delivered (need 2: road at bottom + road on side)." } ],
@@ -80,7 +79,7 @@ window.REVIEWS = [
     drop: [] },
   { date: "5 Nov 2026", shoot: "4 Nov", job: "4 Camelot Grove, Carramar", score: 8.5, verdict: "Pass. Closest to Crib this week.",
     notes: [ { img: "img/reviews/camelot-09785.webp", file: "DSC09785", kind: "good", text: "Warm white, bright, consistent. This is the level." },
-             { img: "img/reviews/camelot-09961.webp", file: "DSC09961", kind: "good", text: "Soft pale sky, clean facade." } ],
+             { img: "img/reviews/camelot-09961.webp", file: "DSC09961", kind: "good", text: "Clean sky, clean facade." } ],
     drop: [] },
   { date: "5 Nov 2026", shoot: "4 Nov", job: "51 Hepburn Way, Balga", score: 8, verdict: "Pass.",
     notes: [ { img: "img/reviews/hepburn-04432.webp", file: "DSC04432", kind: "good", text: "Bright and airy. Yellow lower glass is real textured glass, fine." } ],
@@ -102,6 +101,6 @@ window.PREMIUM = [
   { img: "img/premium/highgate-bedroom.webp", job: "Highgate", file: "Bedroom", why: "Sheer curtains glowing softly, warm white walls, calm and even." },
   { img: "img/premium/beeliar-dining.webp", job: "Beeliar", file: "Dining / fireplace", why: "Fire kept warm, brick true colour, windows pulled." },
   { img: "img/premium/glenforrest-kitchen.webp", job: "4 McGlew Rd, Glen Forrest", file: "Kitchen / dining", why: "Benchmark job. Natural daylight mood, timber and brick true to life." },
-  { img: "img/premium/glenforrest-veranda.webp", job: "4 McGlew Rd, Glen Forrest", file: "Veranda / facade", why: "Soft pale sky, garden colour natural, shadows lifted under the veranda." },
-  { img: "img/premium/madeley-facade.webp", job: "Madeley", file: "Facade", why: "Pale blue sky, natural grass, bright clean facade." }
+  { img: "img/premium/glenforrest-veranda.webp", job: "4 McGlew Rd, Glen Forrest", file: "Veranda / facade", why: "Clear sky, garden colour natural, shadows lifted under the veranda." },
+  { img: "img/premium/madeley-facade.webp", job: "Madeley", file: "Facade", why: "Clear blue sky, natural grass, bright clean facade." }
 ];

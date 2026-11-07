@@ -107,7 +107,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   </header>
 
   <nav>
-    <a href="#tools">Editor tools</a><a href="#selfcheck">Self-check my job</a><a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#links">Reference links</a><a href="#good">Good</a><a href="#bad">Bad</a><a href="#fixes">Before / after</a><a href="#premium">Premium day</a>
+    <a href="#tools">Editor tools</a><a href="#selfcheck">Self-check my job</a><a href="#reviews">Job reviews</a><a href="#exterior-look">Exterior look</a><a href="#rules">Rules</a><a href="#links">Reference links</a><a href="#good">Good</a><a href="#bad">Bad</a><a href="#fixes">Before / after</a><a href="#premium">Premium day</a>
   </nav>
 
   <div class="callout"><b>Standard from 6 Nov: 9.5/10 on every job.</b> Every photo walls ~212 (205-219), warm white, every room matching, shadows lifted. <b>The target:</b> Crib Creative's Holdsworth listings. <b>Our standard:</b> 22 Thorburn Ave. Warm white walls, bright rooms, soft natural shadows, every photo in the job matching. Not grey, not cream, not washed out.</div>
@@ -129,6 +129,13 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   <p class="sub" style="margin:-4px 0 12px">Latest QC on our jobs. Fix the red points; keep doing the green ones.</p>
   <div id="revList" class="revs"></div>
 
+  <h2 id="exterior-look">Exterior look: from 7 Nov 2026</h2>
+  <p class="sub" style="margin:-4px 0 12px"><b>Do this on every exterior.</b> Same photo (16 Windarra Way). Left is what we delivered. Right is what we want: clear blue sky with white clouds, vibrant greens, shadows lifted under the carport, ground and walls pulled back so nothing glares.</p>
+  <div class="pair" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px">
+    <figure style="margin:0"><img src="img/windarra-current.webp" alt="Current edit" style="width:100%;border-radius:8px;border:3px solid #d33"><figcaption><b>Current:</b> pale hazy sky, dull greens, dark carport, hot ground.</figcaption></figure>
+    <figure style="margin:0"><img src="img/windarra-wanted.webp" alt="Wanted edit" style="width:100%;border-radius:8px;border:3px solid #2a8"><figcaption><b>What we want:</b> clear blue + clouds, vibrant greens, lifted shadows, controlled highlights.</figcaption></figure>
+  </div>
+
   <h2 id="rules">Rules</h2>
   <div class="rules">
     <div class="card">
@@ -146,7 +153,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
     <div class="card">
       <h3>Exteriors &amp; skies</h3>
       <ul>
-        <li><b>Day skies soft pale blue.</b> Never deep/dark blue, never grey/white.</li>
+        <li><b>Day skies clear blue with white clouds</b> (see the Windarra example above). Never pale, hazy, grey or white. Never cartoon blue.</li><li><b>Exteriors punchy:</b> greens vibrant, shadows lifted under carports and trees, bright ground and walls pulled back so nothing glares.</li>
         <li><b>Twilight:</b> natural sunset look, lights on. Soft pink/purple OK; dark fake purple is not.</li>
         <li><b>Lift shadows</b> under trees and patios. No harsh black shadows.</li>
         <li><b>Grass natural green,</b> not lime.</li>
@@ -156,7 +163,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
     <div class="card">
       <h3>Drone</h3>
       <ul>
-        <li><b>Horizon level.</b> Always replace the sky with soft pale blue.</li>
+        <li><b>Horizon level.</b> Always replace the sky with a clear blue sky with white clouds.</li>
         <li><b>Location shots: 3 pins,</b> all the same small size. Labels never cover pins. Never write "zoned" on schools.</li>
         <li><b>House-only close-ups: no pins.</b></li>
         <li><b>Two top-downs per job:</b> one with the road at the bottom, one with the road on the side.</li>
@@ -207,7 +214,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
         <li><b>Standard:</b> bright, even, walls ~210, very few shadows.</li>
         <li><b>Premium:</b> just as bright in the main area, but with natural depth and direction of light.</li>
         <li><b>Same set rule:</b> every photo in the job matches.</li>
-        <li><b>Exteriors and drone:</b> same rules as standard (soft pale blue sky, lifted shadows).</li>
+        <li><b>Exteriors and drone:</b> same rules as standard (clear blue sky with clouds, vibrant greens, lifted shadows).</li>
         <li><b>Benchmark:</b> 4 McGlew Rd, Glen Forrest.</li>
       </ul>
     </div>
@@ -220,7 +227,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
 <div id="lb"><img alt=""></div>
 
 <script src="data.js?v=6"></script>
-<script src="selfcheck.js?v=6" defer></script>
+<script src="selfcheck.js?v=7" defer></script>
 <script>
 (function(){
   var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})};

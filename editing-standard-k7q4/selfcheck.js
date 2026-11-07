@@ -3,7 +3,7 @@
    brightness, shadows, clipped highlights, sky saturation, near-duplicates, sizes. */
 (function () {
   /* STRICT 9.5 standard (6 Nov 2026): every photo must be inside the targets. One miss = not ready. */
-  var B = { wallLo: 207, wallHi: 216, castLo: 3, castHi: 8, lLo: 164, lHi: 198, clip: 0.8, skySat: 0.32, skyPale: 0.18, extDark: 125, extShadow: 18,
+  var B = { wallLo: 207, wallHi: 216, castLo: 3, castHi: 8, lLo: 164, lHi: 198, clip: 0.8, skySat: 0.52, skyPale: 0.28, extDark: 125, extShadow: 28, greenSat: 0.62, extHot: 223,
     extCast: 13, flatP5: 62, flatRng: 160,
     setWallLo: 209, setWallHi: 215, setCastLo: 3.5, setCastHi: 7.5, setLLo: 168, setLHi: 188, setSd: 5 };
   var $ = function (id) { return document.getElementById(id); };
@@ -39,13 +39,13 @@
       var half = n / 2; for (var cb = 0; cb < 512; cb++) { ch[0][cb] /= half; ch[1][cb] /= half; }
       var pct = function (p) { var t = n * p, a = 0; for (var k = 0; k < 256; k++) { a += hist[k]; if (a >= t) return k; } return 255; };
       var p55 = pct(0.55), p5 = pct(0.05), p95 = pct(0.95);
-      var wr = 0, wg = 0, wb = 0, wc = 0, topBlue = 0, skyS = 0, topN = 0, topRows = Math.floor(h / 3), top5 = Math.floor(h / 5), warmSky = 0, top5N = 0, green = 0, ceil = 0;
+      var wr = 0, wg = 0, wb = 0, wc = 0, topBlue = 0, skyS = 0, topN = 0, topRows = Math.floor(h / 3), top5 = Math.floor(h / 5), warmSky = 0, top5N = 0, green = 0, greenS = 0, ceil = 0, skyL = 0;
       for (var y = 0; y < h; y++) for (var xx = 0; xx < w; xx++) {
         var j = (y * w + xx) * 4, r = d[j], g = d[j + 1], b = d[j + 2], LL = (r + g + b) / 3, mx = Math.max(r, g, b), mn = Math.min(r, g, b), sat = (mx - mn) / (mx + 1);
         if (LL > p55 && LL < 250 && sat < 0.1) { wr += r; wg += g; wb += b; wc++; }
-        if (y < topRows) { topN++; if (b > r + 15 && b > 120) { topBlue++; skyS += sat; } if (LL > 175 && sat < 0.07) ceil++; }
+        if (y < topRows) { topN++; if (b > r + 15 && b > 120) { topBlue++; skyS += sat; skyL += LL; } if (LL > 175 && sat < 0.07) ceil++; }
         if (y < top5) { top5N++; if (LL > 140 && r > b + 12 && sat > 0.08 && sat < 0.55) warmSky++; }
-        if (g > r + 8 && g > b + 8 && sat > 0.18) green++;
+        if (g > r + 8 && g > b + 8 && sat > 0.18) { green++; greenS += sat; }
       }
       var wall = wc ? [wr / wc, wg / wc, wb / wc] : [0, 0, 0];
       var blueFrac = topBlue / topN, ceilF = ceil / topN, warmF = warmSky / Math.max(1, top5N), greenF = green / n;
@@ -53,7 +53,7 @@
       var isExt = (blueFrac > 0.15 && ceilF < 0.5) || greenF > 0.15 || (greenF > 0.03 && (ceilF < 0.12 || (ceilF < 0.45 && warmF > 0.08)));
       var skySat0 = topBlue ? skyS / topBlue : 0;
       /* Dusk/twilight: warm clouds in the sky, or soft blue-violet sky with pink/orange clouds (premium dusk). */
-      var dusk = isExt && ((warmF > 0.08 && blueFrac < 0.3) || (warmF > 0.06 && skySat0 < 0.2));
+      var dusk = isExt && ((warmF > 0.08 && blueFrac < 0.3) || (warmF > 0.06 && skySat0 < 0.2 && topBlue && skyL / topBlue < 200));
       var s = document.createElement("canvas"); s.width = 9; s.height = 8; var sx = s.getContext("2d"); sx.drawImage(im, 0, 0, 9, 8);
       var sd = sx.getImageData(0, 0, 9, 8).data, gray = [];
       for (var q = 0; q < sd.length; q += 4) gray.push(0.299 * sd[q] + 0.587 * sd[q + 1] + 0.114 * sd[q + 2]);
@@ -63,7 +63,7 @@
       var t = document.createElement("canvas"); t.width = 320; t.height = Math.round(320 * H / W); t.getContext("2d").drawImage(im, 0, 0, t.width, t.height);
       var thumb = t.toDataURL("image/jpeg", 0.7); URL.revokeObjectURL(o.url);
       return { name: file.name, W: W, H: H, kind: isExt ? "EXT" : "INT", dusk: dusk, L: sumL / n, wallW: (wall[0] + wall[1] + wall[2]) / 3,
-               cast: wall[0] - wall[2], p5: p5, rng: p95 - p5, clip: clip / n * 100, skySat: topBlue ? skyS / topBlue : 0, blueFrac: blueFrac, hash: hash, ch: ch, lay: lay, thumb: thumb };
+               cast: wall[0] - wall[2], p5: p5, rng: p95 - p5, p95: p95, greenF: greenF, greenSat: green ? greenS / green : 0, clip: clip / n * 100, skySat: topBlue ? skyS / topBlue : 0, blueFrac: blueFrac, hash: hash, ch: ch, lay: lay, thumb: thumb };
     });
   }
 
@@ -87,10 +87,12 @@
       if (r.L < B.lLo && r.wallW < 212) f.push({ k: "dark", t: "Room too dark (brightness " + r.L.toFixed(0) + ", target 168-186)." }); /* dark floors/joinery with good walls are fine */
       if (r.L > B.lHi) f.push({ k: "bright", t: "Room too bright/washed out (brightness " + r.L.toFixed(0) + ", target 168-186)." });
     } else {
-      if (r.skySat > B.skySat) f.push({ k: "sky", t: "Sky too deep blue (" + r.skySat.toFixed(2) + ", target ~0.25). Use soft natural blue." });
-      if (!r.dusk && r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky washed out/hazy (" + r.skySat.toFixed(2) + ", target ~0.25). Replace with a clean blue sky, or a proper blue-to-pink sky on dusk shots." });
+      if (!r.dusk && r.skySat > B.skySat) f.push({ k: "sky", t: "Sky oversaturated/cartoon (" + r.skySat.toFixed(2) + ", target 0.32-0.45). Natural clear blue." });
+      if (!r.dusk && r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky pale/hazy (" + r.skySat.toFixed(2) + ", target 0.32-0.45). Clear blue sky with white clouds, like the Windarra example." });
       if (r.L < (r.dusk ? 100 : B.extDark)) f.push({ k: "dark", t: "Exterior too dark (brightness " + r.L.toFixed(0) + ", min " + B.extDark + "). Lift the whole frame." });
-      if (!r.dusk && r.p5 < B.extShadow) f.push({ k: "shadow", t: "Heavy black shadows (darkest areas " + r.p5 + "). Lift shadows under trees/patios." });
+      if (!r.dusk && r.greenF > 0.04 && r.greenSat < B.greenSat) f.push({ k: "greens", t: "Greens dull (" + r.greenSat.toFixed(2) + ", target 0.65+). Add vibrance to lawn, trees and hedges." });
+      if (!r.dusk && r.p95 > B.extHot) f.push({ k: "hot", t: "Bright areas too hot (" + r.p95 + ", target 218 or less). Pull highlights back on ground, paths and walls." });
+      if (!r.dusk && r.p5 < B.extShadow) f.push({ k: "shadow", t: "Shadows too dark (darkest areas " + r.p5 + ", target 30+). Lift shadows under carports, patios and trees." });
       if (r.p5 > B.flatP5 && r.rng < B.flatRng) f.push({ k: "flat", t: "Flat/hazy, no contrast (blacks lifted to " + r.p5 + ", tonal range " + r.rng + "). Add contrast and set a true black point." });
       /* beige paving/brick reads warm in Perth sun; only flag orange when the sky is pushed off-blue too */
       if (!r.dusk && r.cast > B.extCast && r.skySat < 0.2) f.push({ k: "orange", t: "Orange/yellow cast on the exterior (warmth +" + r.cast.toFixed(1) + "). Neutralise the white balance." });
