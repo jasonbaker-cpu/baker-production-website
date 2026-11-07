@@ -1,4 +1,4 @@
-"""Remove cars, people and washing lines ON THE PROPERTY (Jason, 7 Nov 2026: "delete cars, washing lines and people on the property").
+"""Remove cars, people and washing lines ON THE PROPERTY (Jason, 7 Nov 2026: cars, people and the CLOTHES hanging on washing lines — the line itself stays).
 usage (CLI):  python3 clean_lot.py in.jpg out.jpg cam.json lot.json [fix.json]
   cam.json  = editor camera {lat,lng,h,yaw,pitch,roll,f35} for in.jpg (original pixels)
   lot.json  = {"poly": [[lat,lng],...]}  or  {"lat":..,"lng":..,"r": 10}  (no cadastre: circle round the house)
@@ -14,7 +14,7 @@ How it works
   3. A detection counts only if at least 60% of its box is inside the grown lot — cars on the street/neighbours stay.
   4. Each object is erased with LaMa (models/lama.onnx), one object at a time so every patch keeps full detail.
   5. review= writes a contact image of the lot (boxes drawn) so the run can LOOK for what COCO can't see —
-     washing lines / rotary hoists especially — and add them as extra boxes (day file "remove": {photo: [[x0,y0,x1,y1]]}).
+     clothes hanging on washing lines especially (box the washing only, not the hoist) — and add them as extra boxes (day file "remove": {photo: [[x0,y0,x1,y1]]}).
 """
 import sys, os, json, math
 import numpy as np
@@ -173,7 +173,7 @@ def clean(src, dst, cam, lot, remove=(), keep=(), review=None, dry=False):
     """lot = {"poly": [[lat,lng],..]} (cadastre) or {"lat","lng"} (no cadastre).
     Candidates c1, c2.. = every car/person/ute/motorbike near the house (within the lot grown 8 m, or 25 m of the house).
     AUTO-removed only with a cadastre outline and >= 60% of the box inside it (grown 1 m).
-    remove = ids ("c3") or [x0,y0,x1,y1] boxes to remove as well (washing lines, misses); keep = ids NOT to remove."""
+    remove = ids ("c3") or [x0,y0,x1,y1] boxes to remove as well (washing on the line, misses); keep = ids NOT to remove."""
     im = Image.open(src); exif = im.info.get('exif'); xmp = im.info.get('xmp'); im = im.convert('RGB')
     W, H = im.size; cands = []
     has_poly = bool(lot and lot.get('poly'))

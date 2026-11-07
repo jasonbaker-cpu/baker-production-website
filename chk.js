@@ -86,7 +86,7 @@ const prefs = Object.assign({
   discOn:true, discText:DEFAULT_DISC
 }, LS.get("prefs", {}));
 if (prefs.pinStyle !== undefined || prefs.v !== 2){ delete prefs.pinStyle; prefs.pinColor = ""; prefs.labelOpacity = 86; prefs.agency = prefs.agency || "red"; prefs.v = 2; }  // old grey/red looks retired
-prefs.skyPlate = "C"; prefs.sky = true;   // 26 Oct: Baker skies are always pale-blue C; a plate picked in an old session never carries over
+prefs.skyPlate = "B"; prefs.sky = true;   // 5 Nov: Baker skies are always plate B (Karabil look); was C; a plate picked in an old session never carries over
 const savePrefs = () => LS.set("prefs", prefs);
 let templates = LS.get("templates", {});
 
@@ -406,7 +406,7 @@ function finishImage(base, p){
     // a few degrees off as a horizon — the portal loads it before finishing, which clamped the sky ~130 px too high and left a grey band)
     const gP = (p.meta && p.meta.gimbal && isFinite(p.meta.gimbal.pitch)) ? p.meta.gimbal.pitch : p.cam.pitch, gF = (p.meta && p.meta.f35) || p.cam.f35;
     const fpx = gF*Math.hypot(p.ow,p.oh)/43.27, yO = p.oh/2 + fpx*Math.tan((gP+0.35)*DEG), geo = (yO - p.y0)*p.k + 0.004*h;
-    const xc = w/2, ydet = sky.m*xc + sky.b;
+    const xc = w/2, ydet = sky.m*xc + sky.b; p._geoH = geo;
     window.__skyDbg=(window.__skyDbg||[]);
     let bandTex = 0; { const ya=Math.max(0,(geo/sky.s)|0), yb=Math.min(sky.sh,(ydet/sky.s)|0); let t=0,n=0; for (let y=ya;y<yb;y++) for (let x=0;x<sky.sw;x+=2){ t+=sky.tex[y*sky.sw+x]; n++; } bandTex = n ? t/n : 0; }
     window.__skyDbg.push({ydet:Math.round(ydet),geo:Math.round(geo),bandTex:+bandTex.toFixed(2)});
@@ -417,12 +417,28 @@ function finishImage(base, p){
           const k = 1 - 0.3*t; px[i]*=k*(1-0.03*t); px[i+1]*=k; px[i+2]*=k*(1+0.02*t); } } }
     }
   }
+  // 5 Nov (Jason): a horizon line drawn by hand wins — the sky is swapped only above it (fixes ocean shots: no swapped sea, no ghost towers)
+  if (p.skyLineUser && p.skyLineUser.length === 2 && p.skyOn !== false && !straightDown){
+    const [[ax,ay],[bx,by]] = p.skyLineUser, sx = w/p.w, sy = h/p.h, m = (by-ay)/((bx-ax)||1);
+    if (!sky) sky = analyseSky(px, w, h);
+    if (sky){ sky.m = m*sy/sx; sky.b = ay*sy - sky.m*ax*sx; p.skyForce = true; }
+  }
   // 2b. dehaze: distant ground just under the horizon goes milky grey into the sun — pull it back
   if (sky && p.dehaze !== false && !(Object.assign({},TUNE,window.__TUNE||{}).noDehaze)) dehazeBand(px, w, h, x => sky.m*x + sky.b);
   // Golden-hour / dawn sky: warm, not blue. Editors leave these alone — so do we.
   if (sky){ let r=0,b=0,n=0; const hz = Math.max(4, Math.min(h-1, sky.b|0)), st = Math.max(1, Math.round(w/300));
     let g=0; for (let y=0; y<hz*0.8; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4; r+=px[i]; g+=px[i+1]; b+=px[i+2]; n++; }
     if (n && (r - b)/n > 6 && (r+g+b)/(3*n) < 236 && !(Object.assign({},TUNE,window.__TUNE||{}).forceSky || (typeof prefs!=='undefined' && prefs.skyPlate==='S'))) { p.skyWarm = true; sky = null; } }   // 30 Oct: twilight jobs (plate S) DO get the editors' sunset sky
+  // 5 Nov (Jason): ocean / beach shots keep their real sky — our swap can't find the horizon over water (ghost towers, cut-off sea).
+  // If that real sky is bad (blown / washed out), the photo is flagged for the photo editor instead.
+  p.skyWater = false; p.needsEditor = false;
+  if (sky && !p.skyForce && !(Object.assign({},TUNE,window.__TUNE||{}).forceSky)){ const hz = Math.max(4, Math.min(h-1, ((p._geoH!=null && p._geoH>0 ? Math.min(p._geoH, sky.b) : sky.b) + 0.03*h)|0)), y1 = Math.min(h, hz + (0.14*h|0)), st = Math.max(1, Math.round(w/300)); let n=0, wat=0;
+    for (let y=hz; y<y1; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2]; n++; if (b > r + 22 && g > r + 8 && b > 90) wat++; }
+    window.__waterDbg = n ? +(wat/n).toFixed(3) : 0; if (n && wat/n > 0.35){ p.skyWater = true;
+      let m=0, clip=0, blue=0; for (let y=0; y<hz*0.85; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2]; m++; if (r>240 && g>240 && b>240) clip++; if (b > r + 28 && b > 120) blue++; }
+      if (m && (clip/m > 0.25 || blue/m < 0.15)) p.needsEditor = true;
+      if (p._geoH != null && p._geoH > 0.05*h && p._geoH < 0.7*h){ sky.b = p._geoH - sky.m*(w/2); p.needsEditor = false; p.skyAutoLine = true; }   /* 5 Nov: ocean shot — swap only above the drone's true horizon (same as drawing the line by hand) */
+      else sky = null; } }
   // Keep a good real sky (blue with proper clouds): the editors only swap washed-out or blown skies.
   p.skyKept = false;
   if (sky && p.skyKeepReal === true){
@@ -726,8 +742,9 @@ function pinGeom(p, pin){
     g.lift = ({ flag:110, pill:150, ylab:120, simple:170, cream:260 })[kind]*s + (pin.lift||0);
     const off = pin.off == null ? .5 : pin.off; let y = pin.ey - g.lift - fh, x = pin.ex - Math.max(fh/2, Math.min(fw - fh/2, fw*off));
     if (kind === "cream"){ x = pin.ex - 2.4*s; if (off > .8 || x + fw > p.w - 14*s) x = pin.ex + 2.4*s - fw; x = Math.max(14*s, Math.min(p.w - fw - 14*s, x)); }   /* 5 Nov (Jason): Beshay line sits on the label's LEFT edge, like his reference (flips to the right edge only near the right side) */
-    if (kind === "cream" && y < 14*s){ const d = Math.min(14*s - y, g.lift - 70*s); if (d > 0){ g.lift -= d; y = pin.ey - g.lift - fh; } }
-    g.box = [x, y, fw, fh]; g.tipY = pin.ey - g.lift; g.flag = { x, y, w:fw, h:fh, fs:(kind==="cream"?44:FS)*s, tx:x+padL, text:text2 };
+    if (kind === "cream" && pin.flip){ y = pin.ey + g.lift; if (y + fh > p.h - 14*s){ y = p.h - 14*s - fh; g.lift = y - pin.ey; } }   /* 5 Nov: label BELOW the place (line goes up to it) — lets crowded far pins fit */
+    else if (kind === "cream" && y < 14*s){ const d = Math.min(14*s - y, g.lift - 70*s); if (d > 0){ g.lift -= d; y = pin.ey - g.lift - fh; } }
+    g.box = [x, y, fw, fh]; g.tipY = (kind === "cream" && pin.flip) ? pin.ey + g.lift : pin.ey - g.lift; g.flag = { x, y, w:fw, h:fh, fs:(kind==="cream"?44:FS)*s, tx:x+padL, text:text2 };
     return g;
   }
   const mw = 141*s, mh = 200*s, R = mw/2;
@@ -895,9 +912,9 @@ function tidySides(p){
   const K = boxed ? 16 : 1, st = boxed ? (A.kind==="simple" ? 62*s : 70*s) : step;
   const place = (pin, others) => {
     let best = null;
-    for (let k=0;k<K;k++) for (const flip of [false]) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : ["right","left","top","bottom"])){   /* 28 Oct: above/below only win when left/right overlap (2500 penalty) — lets 3 pins fit per photo */
+    for (let k=0;k<K;k++) for (const flip of (A.kind==="cream" ? [false,true] : [false])) for (const side of (boxed ? [.5,.25,.75,.08,.92] : pin.sideLocked ? [pin.side] : ["right","left","top","bottom"])){   /* 28 Oct: above/below only win when left/right overlap (2500 penalty) — lets 3 pins fit per photo */
       if (boxed){ pin.off = side; pin.side = "right"; } else pin.side = side;
-      pin.flip = flip; pin.lift = (A.kind==="cream" ? k-3 : k)*st;   /* cream labels can also drop below their default height */
+      pin.flip = flip; pin.lift = (A.kind==="cream" ? (flip ? 70*s/st + k : k-3) : k)*st;   /* cream labels can also drop below their default height */
       const parts = pinParts(p,pin), r = parts[0];
       const mg = 10*s, off = Math.max(0, mg-r[0]) + Math.max(0, r[2]-(p.w-mg)) + Math.max(0, mg-r[1]) + Math.max(0, r[3]-(p.h-mg));
       let o = 0; for (const q of others) for (const a of parts) for (const b of q) o += ov(a,b);
@@ -932,7 +949,7 @@ function textMetrics(c, t, p){
   const bw = w+padX*2, bh = lines.length*lh + padY*2;
   return { size, weight, lines, lh, bw, bh, x:t.x-bw/2, y:t.y-bh/2, padX, padY };
 }
-const ADJ0 = { exp:0, con:0, hl:0, sh:0, warm:0, tint:0, sat:0, bright:0 };
+const ADJ0 = { exp:0, con:0, hl:0, sh:0, warm:0, tint:0, sat:0, bright:0, even:0, land:0, sea:0, sky:0 };
 function adjActive(a){ return a && Object.keys(ADJ0).some(k=>a[k]); }
 // Photo-only adjustments: applied to the picture underneath; pins, boundaries and text are drawn on top afterwards, untouched.
 function adjustedCanvas(src, a){
@@ -944,6 +961,33 @@ function adjustedCanvas(src, a){
     const wh=t*t*(3-2*t); t = t + sh*(1-wh)*t*(1-t)*1.6 + hl*wh*t*(1-t)*1.6; T[v]=cl(t*255); }
   const wr=1+a.warm/400, wb=1-a.warm/400, tg=1-a.tint/400;
   for (let i=0;i<d.length;i+=4){ let r=T[d[i]]*wr, g=T[d[i+1]]*tg, b=T[d[i+2]]*wb; const Y=.299*r+.587*g+.114*b; d[i]=cl(Y+(r-Y)*sat); d[i+1]=cl(Y+(g-Y)*sat); d[i+2]=cl(Y+(b-Y)*sat); }
+  if (a.even || a.land || a.sea || a.sky){   /* 5 Nov (Jason): automatic masks for LAND / SEA / SKY — land evened out (no bright or dark patches), each zone brightened or darkened on its own */
+    x.putImageData(id,0,0);
+    const mw=Math.max(24,Math.round(w/12)), mh=Math.max(16,Math.round(h/12)), N=mw*mh;
+    const z1=document.createElement("canvas"); z1.width=mw; z1.height=mh; const z1x=z1.getContext("2d"); z1x.drawImage(c,0,0,mw,mh);
+    const q=z1x.getImageData(0,0,mw,mh).data, LY=new Float32Array(N), rowY=new Float32Array(mh);
+    for (let i=0;i<N;i++){ const j=i*4; LY[i]=Math.log(1+(.299*q[j]+.587*q[j+1]+.114*q[j+2])); }
+    for (let yy=0;yy<mh;yy++){ let s=0; for (let xx=0;xx<mw;xx++) s+=LY[yy*mw+xx]; rowY[yy]=s/mw; }
+    let hz=Math.round(mh*.3), best=1e9; for (let yy=Math.round(mh*.04); yy<Math.round(mh*.6); yy++){ const a0=rowY[Math.max(0,yy-2)]+rowY[Math.max(0,yy-1)], b0=rowY[Math.min(mh-1,yy+1)]+rowY[Math.min(mh-1,yy+2)], dd=b0-a0; if (dd<best){ best=dd; hz=yy; } }
+    if (best > -0.15) hz = 0;   // no clear horizon (top-down / looking down): everything is land
+    const Ls=new Float32Array(N), Ws=new Float32Array(N), Ss=new Float32Array(N);
+    for (let yy=0;yy<mh;yy++) for (let xx=0;xx<mw;xx++){ const i=yy*mw+xx, j=i*4, r=q[j], g=q[j+1], b=q[j+2];
+      if (yy<hz){ Ss[i]=1; continue; } if (hz>0 && yy < hz + mh*.45 && ((b>r+22 && g>r+8 && b>90) || (b>r+8 && g>r+4 && b>150 && g>140))) Ws[i]=1; else Ls[i]=1; }
+    const blur=(A,R)=>{ const B=new Float32Array(N), C=new Float32Array(N); for (let pass=0;pass<3;pass++){ const S=pass?C:A;
+        for (let yy=0;yy<mh;yy++){ let acc=0,cnt=0; const row=yy*mw; for (let xx=-R;xx<mw;xx++){ if (xx+R<mw){ acc+=S[row+xx+R]; cnt++; } if (xx-R-1>=0){ acc-=S[row+xx-R-1]; cnt--; } if (xx>=0) B[row+xx]=acc/cnt; } }
+        for (let xx=0;xx<mw;xx++){ let acc=0,cnt=0; for (let yy=-R;yy<mh;yy++){ if (yy+R<mh){ acc+=B[(yy+R)*mw+xx]; cnt++; } if (yy-R-1>=0){ acc-=B[(yy-R-1)*mw+xx]; cnt--; } if (yy>=0) C[yy*mw+xx]=acc/cnt; } } } return C; };
+    const Lf=blur(Ls,1), Wf=blur(Ws,1), Sf=blur(Ss,1);
+    const R=Math.max(3,Math.round(mw/16)), num=new Float32Array(N); for (let i=0;i<N;i++) num[i]=LY[i]*Ls[i];
+    const bn=blur(num,R), bd=blur(Ls,R); let tg=0, tn=0; for (let i=0;i<N;i++) if (Ls[i]){ tg+=LY[i]; tn++; } tg = tn ? tg/tn : 0;
+    const ke=(a.even||0)/100, G=new Float32Array(N);
+    for (let i=0;i<N;i++){ const base = bd[i]>.02 ? bn[i]/bd[i] : tg; let ev = ke*0.85*(tg+0.12-base); ev = ev<-.6?-.6:ev>0?0:ev;   /* 5 Nov: pull bright patches DOWN only — lifting dark trees made the land muddy */
+      G[i] = Lf[i]*(ev + (a.land||0)/100*0.7) + Wf[i]*((a.sea||0)/100*0.7) + Sf[i]*((a.sky||0)/100*0.7); }
+    const sx=(mw-1)/Math.max(1,w-1), sy=(mh-1)/Math.max(1,h-1);
+    for (let yy=0;yy<h;yy++){ const fy=yy*sy, y0=fy|0, y1=Math.min(mh-1,y0+1), ty=fy-y0;
+      for (let xx=0;xx<w;xx++){ const fx=xx*sx, x0=fx|0, x1=Math.min(mw-1,x0+1), tx=fx-x0;
+        const gv=(G[y0*mw+x0]*(1-tx)+G[y0*mw+x1]*tx)*(1-ty)+(G[y1*mw+x0]*(1-tx)+G[y1*mw+x1]*tx)*ty; if (gv>-0.003 && gv<0.003) continue;
+        const k=Math.exp(gv), i=(yy*w+xx)*4; d[i]=cl(d[i]*k); d[i+1]=cl(d[i+1]*k); d[i+2]=cl(d[i+2]*k); } }
+  }
   if (a.bright){   /* 4–5 Nov (Jason): "mask the really bright parts" — feathered mask of every bright area (sky, ocean, glare), pulled down with a bit more colour so clouds read */
     const k=a.bright/100, mw=Math.max(8,Math.round(w/8)), mh=Math.max(8,Math.round(h/8));
     const m1=document.createElement("canvas"); m1.width=mw; m1.height=mh; const m1x=m1.getContext("2d"); m1x.drawImage(src,0,0,mw,mh);
@@ -951,14 +995,14 @@ function adjustedCanvas(src, a){
     for (let yy=0;yy<mh;yy++){ let s=0; for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4; s+=Math.log(1+(.299*q[j]+.587*q[j+1]+.114*q[j+2])); } rowY[yy]=s/mw; }
     let hz=Math.round(mh*.35), best=1e9; for (let yy=Math.round(mh*.06); yy<Math.round(mh*.65); yy++){ const a0=rowY[Math.max(0,yy-3)]+rowY[Math.max(0,yy-2)]+rowY[Math.max(0,yy-1)], b0=rowY[Math.min(mh-1,yy+1)]+rowY[Math.min(mh-1,yy+2)]+rowY[Math.min(mh-1,yy+3)], dd=b0-a0; if (dd<best){ best=dd; hz=yy; } }   // horizon = sharpest bright-to-dark step
     for (let yy=0;yy<mh;yy++){ const rel=(yy-hz)/mh, vert = rel<0 ? 1 : 1-.2*Math.min(1,rel/.08);   /* 5 Nov (Jason): every bright part — sky, ocean, glare — not just the sky; slightly gentler below the horizon */
-      for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4, Y=(.299*q[j]+.587*q[j+1]+.114*q[j+2])/255; let t=(Y-.42)/.3; t=t<0?0:t>1?1:t; t=t*t*(3-2*t); if (vert<1){ let bl=(q[j+2]-q[j])/40; bl=bl<0?0:bl>1?1:bl; let vb=(Y-.78)/.12; vb=vb<0?0:vb>1?1:vb; t=Math.max(t*bl, vb*.6)*vert; }   /* below the horizon: bright WATER (blue) + only the very brightest glare — land, roofs and sand untouched */ q[j]=q[j+1]=q[j+2]=255; q[j+3]=Math.round(t*255); } }
+      for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4, Y=(.299*q[j]+.587*q[j+1]+.114*q[j+2])/255; let t=(Y-.42)/.3; t=t<0?0:t>1?1:t; t=t*t*(3-2*t); if (vert<1){ let bl=(q[j+2]-q[j])/40; bl=bl<0?0:bl>1?1:bl; let vb=(Y-.78)/.12; vb=vb<0?0:vb>1?1:vb; let rf=(Y-.62)/.26; rf=rf<0?0:rf>1?1:rf; rf=rf*rf*(3-2*rf); t=Math.max(t*bl, vb*.6, rf*.9);   /* 5 Nov (Jason): white roofs / bright buildings on the land too */ }   /* below the horizon: bright WATER (blue) + only the very brightest glare — land, roofs and sand untouched */ q[j]=q[j+1]=q[j+2]=255; q[j+3]=Math.round(t*255); } }
     m1x.putImageData(md,0,0);
     const m2=document.createElement("canvas"); m2.width=w; m2.height=h; const m2x=m2.getContext("2d"); m2x.imageSmoothingQuality="high";
     if ("filter" in m2x) m2x.filter=`blur(${Math.max(2,w/400)}px)`; m2x.drawImage(m1,0,0,w,h); m2x.filter="none";
     const M=m2x.getImageData(0,0,w,h).data, show=window.__showMask;
     for (let i=0;i<d.length;i+=4){ const f=M[i+3]/255*k; if (f<=0.002) continue;
       if (show){ d[i]=cl(d[i]*(1-.55*f)+255*.55*f); d[i+1]=cl(d[i+1]*(1-.55*f)); d[i+2]=cl(d[i+2]*(1-.55*f)); continue; }
-      let r=d[i]/255, g=d[i+1]/255, b=d[i+2]/255; const lift=1+.14*f; r=(r-f*(.30*r*r+.10))*lift; g=(g-f*(.30*g*g+.10))*lift; b=(b-f*(.30*b*b+.10))*lift;   // pull the haze down, keep clouds brighter than the blue
+      let r=d[i]/255, g=d[i+1]/255, b=d[i+2]/255; const lift=1+.10*f; r=(r-f*(.38*r*r+.06))*lift; g=(g-f*(.38*g*g+.06))*lift; b=(b-f*(.38*b*b+.06))*lift;   /* pulls the brightest values hardest — roofs get detail back */   // pull the haze down, keep clouds brighter than the blue
       const Y=.299*r+.587*g+.114*b, s2=1+.45*f; d[i]=cl((Y+(r-Y)*s2)*255); d[i+1]=cl((Y+(g-Y)*s2)*255); d[i+2]=cl((Y+(b-Y)*s2)*255); } }
   x.putImageData(id,0,0); return c;
 }
@@ -1111,7 +1155,7 @@ function newPhoto(name, base, meta, sample){
     disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0, (!sample && prefs.skyPlate !== "S") ? { con:10 } : {}), undo:[], redo:[] };
   return p;
 }
-const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop"];
+const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet","skyForce","skyLineUser"];
 function snapshotOf(p){ const o={}; SNAP_KEYS.forEach(k=>o[k]=p[k]); return JSON.stringify(o); }
 function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
 function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); ensureFinish(p); }
@@ -1121,7 +1165,22 @@ function updateUndo(){ const p=P(); $("undoBtn").disabled=!p||!p.undo.length; $(
 
 // ================= finish (async so the page stays responsive) =================
 let finishing = 0;
+function autoBright(src){   /* 5 Nov (Jason): "auto make the highlights go down if needed" — measures the bright sky + water and picks the Bright parts amount */
+  const mw=240, mh=Math.max(8,Math.round(src.height/src.width*mw)); const c=document.createElement("canvas"); c.width=mw; c.height=mh; const x=c.getContext("2d"); x.drawImage(src,0,0,mw,mh);
+  const q=x.getImageData(0,0,mw,mh).data, rowY=new Float32Array(mh);
+  for (let yy=0;yy<mh;yy++){ let s=0; for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4; s+=Math.log(1+(.299*q[j]+.587*q[j+1]+.114*q[j+2])); } rowY[yy]=s/mw; }
+  let hz=Math.round(mh*.35), best=1e9; for (let yy=Math.round(mh*.06); yy<Math.round(mh*.65); yy++){ const a0=rowY[Math.max(0,yy-3)]+rowY[Math.max(0,yy-2)]+rowY[Math.max(0,yy-1)], b0=rowY[Math.min(mh-1,yy+1)]+rowY[Math.min(mh-1,yy+2)]+rowY[Math.min(mh-1,yy+3)], dd=b0-a0; if (dd<best){ best=dd; hz=yy; } }
+  let sw=0, sy=0; for (let yy=0;yy<mh;yy++) for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4, Y=(.299*q[j]+.587*q[j+1]+.114*q[j+2])/255; let w = yy<hz ? 1 : Math.min(1, Math.max(0,(q[j+2]-q[j])/40)); if (yy>=hz && Y>.85) w=Math.max(w,.6); if (w<=0 || Y<.42) continue; sw+=w; sy+=w*Y; }
+  const H=new Uint32Array(64); let nl=0; for (let yy=hz+1;yy<mh;yy++) for (let xx=0;xx<mw;xx++){ const j=(yy*mw+xx)*4; H[Math.min(63,Math.floor((.299*q[j]+.587*q[j+1]+.114*q[j+2])/4))]++; nl++; }
+  let acc=0, p97=1; for (let k=63;k>=0;k--){ acc+=H[k]; if (acc>nl*.03){ p97=(k+.5)/64; break; } }   // brightest 3% of the land (white roofs, sand)
+  const hl = p97>.9 ? -Math.min(20, Math.round((p97-.9)*250)) : 0;   /* gentle — only real blow-outs */
+  const br = sw < mw*mh*.04 ? 0 : Math.max(0, Math.min(40, Math.round((sy/sw-.62)*200)));
+  const brL = p97>.80 ? Math.min(45, Math.round((p97-.80)*300)) : 0;   /* bright roofs on the land also raise Bright parts */
+  return { bright:Math.max(br, brL), hl };
+}
+function autoAdj(p, src){ if (p.brightSet || p._autoDone===src || (p.adj && p.adj.bright) || p.editorPhoto || p.extraEdited) return; p._autoDone=src; const ab = autoBright(src); p.adj = Object.assign({}, ADJ0, p.adj||{}, { bright:ab.bright }, (p.adj && p.adj.hl) ? {} : { hl:ab.hl });   /* 5 Nov: land evened by default */ p._adj = null; }
 function ensureFinish(p){ if (p && (p.editorPhoto || p.extraEdited)){ p.finishOn = false; p.fin = null; return; }   /* 31 Oct: editor photos are never re-finished */
+  if (!p.finishOn && !p.sample && p.base) autoAdj(p, p.base);   /* auto highlights also on unfinished photos */
   if (!p.finishOn || p.sample) return;
   const key = p.skyOn ? "skyP"+(prefs.skyPlate||"C") : "nosky";
   if (p.fin && p.finKey === key) return;
@@ -1130,7 +1189,7 @@ function ensureFinish(p){ if (p && (p.editorPhoto || p.extraEdited)){ p.finishOn
   if (p.skyOn && typeof SKYP_CACHE !== "undefined" && !SKYP_CACHE[prefs.skyPlate||"C"]){ $("busy").hidden = false; if (!p._waitSky){ p._waitSky = true; loadSkyPlate(prefs.skyPlate||"C", ()=>{ p._waitSky = false; ensureFinish(p); requestDraw(); }); } return; }
   p._finPending = key; finishing++; $("busy").hidden = false;
   setTimeout(()=>{
-    try{ const r = finishImage(p.base, p); p.fin = r.canvas; p.finKey = key; p._blur = null; p.skyLine = r.sky ? { m:r.sky.m, b:r.sky.b, h:p.base.height } : null; clampPinsToLand(p); makeThumb(p); }
+    try{ const r = finishImage(p.base, p); p.fin = r.canvas; p.finKey = key; p._blur = null; autoAdj(p, p.fin); p.skyLine = r.sky ? { m:r.sky.m, b:r.sky.b, h:p.base.height } : null; clampPinsToLand(p); makeThumb(p); }
     catch(err){ console.error(err); p.finishOn = false; toast("The finish couldn't run on this photo. It's shown unfinished."); }
     p._finPending = null; finishing--; if (!finishing) $("busy").hidden = true;
     refreshStrip(); requestDraw();
@@ -1154,6 +1213,10 @@ function draw(){
     ctx.strokeStyle="#f2b33d"; ctx.lineWidth=2*k; ctx.setLineDash([8*k,6*k]); ctx.strokeRect(cr[0],cr[1],cr[2],cr[3]); ctx.setLineDash([]); ctx.font=`600 ${14*k}px system-ui`; ctx.fillStyle="#f2b33d"; ctx.fillText(tool==="crop" ? "Crop · drag to move, corners to resize" : (p.crop ? "Export area · cropped" : "Export area · 3:2"), cr[0]+8*k, cr[1]+20*k); if (tool==="crop"){ ctx.fillStyle="#f2b33d"; [[0,0],[1,0],[0,1],[1,1]].forEach(([a,b])=>ctx.fillRect(cr[0]+a*cr[2]-7*k, cr[1]+b*cr[3]-7*k, 14*k, 14*k)); } ctx.restore(); } }
   if (hideGfx || showBefore) return;
   const k = 1/view.s;
+  if (tool==="horizon"){ ctx.save(); ctx.strokeStyle="#f2b33d"; ctx.lineWidth=3*k; ctx.setLineDash([10*k,6*k]); const L = p.skyLineUser || (hzDraft && hover ? [hzDraft, hover] : null);
+    if (L){ const [[ax,ay],[bx,by]] = L, m=(by-ay)/((bx-ax)||1); ctx.beginPath(); ctx.moveTo(0, ay - m*ax); ctx.lineTo(p.w, ay + m*(p.w-ax)); ctx.stroke(); }
+    if (hzDraft){ ctx.fillStyle="#f2b33d"; ctx.fillRect(hzDraft[0]-6*k, hzDraft[1]-6*k, 12*k, 12*k); }
+    ctx.setLineDash([]); ctx.font=`600 ${15*k}px system-ui`; ctx.fillStyle="#f2b33d"; ctx.fillText(hzDraft ? "Horizon · click the other end" : (p.skyLineUser ? "Horizon set · sky above the line is replaced · click twice to redo" : "Horizon · click one end of the horizon, then the other"), 20*k, 30*k); ctx.restore(); }
   if (sel && sel.kind==="pin"){ const pin = p.pins.find(x=>x.id===sel.id); if (pin){ const r = pinRect(p,pin), pad=6*k; ctx.save(); ctx.strokeStyle="#f2b33d"; ctx.lineWidth=1.6*k; ctx.setLineDash([5*k,4*k]); ctx.strokeRect(r[0]-pad,r[1]-pad,r[2]-r[0]+pad*2,r[3]-r[1]+pad*2); ctx.restore(); } }
   if (sel && sel.kind==="shape"){
     const sh = p.shapes.find(x=>x.id===sel.id);
@@ -1281,6 +1344,7 @@ cv.addEventListener("pointerdown", e=>{
     if (draft.type==="poly" && draft.pts.length>=3 && dist(pt,draft.pts[0])<12*k){ finishDraft(); return; }
     draft.pts.push(pt); hover=pt; updateDrawbar(); requestDraw(); return;
   }
+  if (tool==="horizon"){ if (!hzDraft){ hzDraft = pt; requestDraw(); return; } commit(); p.skyLineUser = [hzDraft, pt].sort((a,b)=>a[0]-b[0]); hzDraft = null; p.skyOn = true; p.skyForce = true; p.finKey = null; p.fin = null; ensureFinish(p); if (typeof refreshPhotoTab==="function") refreshPhotoTab(); requestDraw(); return; }
   if (tool==="crop"){ const k=1/view.s; if (!p.crop) p.crop = defaultCrop(p); const c=p.crop; const near=(x,y)=>Math.abs(pt[0]-x)<16*k && Math.abs(pt[1]-y)<16*k;
     const corner=[[0,0],[1,0],[0,1],[1,1]].find(([a,b])=>near(c[0]+a*c[2], c[1]+b*c[3]));
     if (corner){ drag={type:"cropsize", ax:c[0]+(1-corner[0])*c[2], ay:c[1]+(1-corner[1])*c[3], committed:false}; return; }
@@ -1357,7 +1421,8 @@ function defaultCrop(p, r){   /* biggest box of ratio r centred on the current e
   return [Math.max(0,Math.min(p.w-w,cx-w/2)), Math.max(0,Math.min(p.h-h,cy-h/2)), w, h];
 }
 function startCrop(){ const p=P(); if(!p) return; if (!p.crop){ commit(); const lc=lotCrop(p); p.crop = lc ? lc.slice() : defaultCrop(p, 1.5); } setTool("crop"); requestDraw(); }
-function setTool(t){
+let hzDraft = null;
+function setTool(t){ if (t!=="horizon") hzDraft = null;
   if (draft && t!==draft.type) cancelDraft();
   tool=t; document.querySelectorAll(".tool[data-tool]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.tool===t));
   cv.style.cursor = t==="select" ? "default" : "crosshair"; setHint();
@@ -1689,10 +1754,14 @@ function refreshPhotoTab(){
   else {
     const f = el(`<label class="check"><input type="checkbox" ${p.finishOn?"checked":""}> Colour, contrast and sharpening</label>`);
     f.querySelector("input").onchange = ev=>{ commit(); p.finishOn = ev.target.checked; prefs.finish = p.finishOn; savePrefs(); ensureFinish(p); refreshStrip(); requestDraw(); };
-    const sk = el(`<label class="check"><input type="checkbox" ${p.skyOn?"checked":""} ${p.finishOn?"":"disabled"}> Replace the sky</label>`);
-    sk.querySelector("input").onchange = ev=>{ commit(); p.skyOn = ev.target.checked; p.finKey = null; prefs.sky = p.skyOn; savePrefs(); ensureFinish(p); requestDraw(); };
+    const sk = el(`<label class="check"><input type="checkbox" ${(p.skyOn && (!p.skyWater || p.skyForce || p.skyAutoLine))?"checked":""} ${p.finishOn?"":"disabled"}> Replace the sky${p.skyWater && !p.skyForce && !p.skyAutoLine ? ' <span class="note">(ocean shot — real sky kept; tick to swap anyway)</span>' : ''}</label>`);
+    sk.querySelector("input").onchange = ev=>{ commit(); p.skyOn = ev.target.checked; p.skyForce = ev.target.checked;   /* 5 Nov: a manual tick always swaps, even over water */ p.finKey = null; prefs.sky = p.skyOn; savePrefs(); ensureFinish(p); requestDraw(); };
 
     s1.appendChild(f); s1.appendChild(sk);
+    { const hr = el(`<div class="row"><button class="btn">${tool==="horizon" ? "Done" : (p.skyLineUser ? "Redraw horizon" : "Draw horizon")}</button><button class="btn ghost">Clear horizon</button></div>`);   /* 5 Nov (Jason): draw where the horizon is so the sky swap never touches the sea */
+      hr.children[0].onclick=()=>{ if (tool==="horizon") setTool("select"); else { if (p.skyLineUser){ commit(); p.skyLineUser=null; } setTool("horizon"); } refreshPhotoTab(); requestDraw(); };
+      hr.children[1].onclick=()=>{ commit(); p.skyLineUser=null; p.skyForce=false; p.finKey=null; p.fin=null; ensureFinish(p); if (tool==="horizon") setTool("select"); refreshPhotoTab(); requestDraw(); };
+      s1.appendChild(hr); s1.appendChild(el(`<p class="note">Ocean or hazy shot? Draw horizon: click one end of the horizon, then the other. The sky is replaced above the line only.</p>`)); }
     { const sr = el(`<div class="row"><label class="lbl">Sky</label><select></select></div>`), ss = sr.querySelector("select");
       Object.entries(SKY_PLATES).forEach(([k,v])=>{ const o=document.createElement("option"); o.value=k; o.textContent=v.name+(k==="C"?" (default)":""); ss.appendChild(o); });
       ss.value = prefs.skyPlate || "C"; ss.disabled = !p.skyOn;
@@ -1708,13 +1777,18 @@ function refreshPhotoTab(){
     const A = [["exp","Brightness"],["con","Contrast"],["hl","Highlights"],["sh","Shadows"],["warm","Warmth"],["tint","Tint"],["sat","Colour"]];
     let tm=null; const redraw=()=>{ clearTimeout(tm); tm=setTimeout(()=>{ p._blur=null; refreshStrip(); requestDraw(); }, 60); };
     A.forEach(([k,lab])=>sa.appendChild(slider("adj_"+k, lab, -100, 100, 1, p.adj[k]||0, v=>(v>0?"+":"")+v, v=>{ p.adj[k]=v; redraw(); }, commit)));
-    sa.appendChild(slider("adj_bright", "Bright parts (pull down)", 0, 100, 1, p.adj.bright||0, v=>v?String(v):"off", v=>{ p.adj.bright=v; redraw(); }, commit));   /* 5 Nov: pulls down every bright area — sky, ocean, glare */
+    sa.appendChild(slider("adj_bright", "Bright parts (pull down)", 0, 100, 1, p.adj.bright||0, v=>v?String(v):"off", v=>{ p.adj.bright=v; p.brightSet=true; redraw(); }, commit));   /* 5 Nov: pulls down every bright area — sky, ocean, glare */
+    sa.appendChild(el(`<p class="note" style="margin-top:8px"><b>Auto masks</b> — land, sea and sky are found automatically.</p>`));
+    sa.appendChild(slider("adj_even", "Even out land", 0, 100, 1, p.adj.even||0, v=>v?String(v):"off", v=>{ p.adj.even=v; p.brightSet=true; redraw(); }, commit));
+    sa.appendChild(slider("adj_land", "Land brightness", -50, 50, 1, p.adj.land||0, v=>v>0?"+"+v:String(v), v=>{ p.adj.land=v; p.brightSet=true; redraw(); }, commit));
+    sa.appendChild(slider("adj_sea", "Sea brightness", -50, 50, 1, p.adj.sea||0, v=>v>0?"+"+v:String(v), v=>{ p.adj.sea=v; p.brightSet=true; redraw(); }, commit));
+    sa.appendChild(slider("adj_sky", "Sky brightness", -50, 50, 1, p.adj.sky||0, v=>v>0?"+"+v:String(v), v=>{ p.adj.sky=v; p.brightSet=true; redraw(); }, commit));
     { const mb = el(`<div class="row"><button class="btn" aria-pressed="false">Show mask</button><span class="note" style="margin:0">Red = what the mask touches</span></div>`); const bt = mb.children[0];
       bt.onclick=()=>{ window.__showMask=!window.__showMask; bt.setAttribute("aria-pressed", String(!!window.__showMask)); bt.textContent = window.__showMask ? "Hide mask" : "Show mask"; p._blur=null; requestDraw(); };
       sa.appendChild(mb); }
     const rb = el(`<div class="row"><button class="btn">Reset</button><button class="btn">Copy to all photos</button></div>`);
-    rb.children[0].onclick=()=>{ commit(); p.adj=Object.assign({}, ADJ0); p._blur=null; refreshPhotoTab(); refreshStrip(); requestDraw(); };
-    rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample && !q.editorPhoto && !q.extraEdited){ q.adj=Object.assign({}, p.adj); q.finishOn=p.finishOn; q._blur=null; if (q.finishOn) ensureFinish(q); } }); toast(`Copied colour + finish to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
+    rb.children[0].onclick=()=>{ commit(); p.adj=Object.assign({}, ADJ0); p.brightSet=true; p._blur=null; refreshPhotoTab(); refreshStrip(); requestDraw(); };
+    rb.children[1].onclick=()=>{ photos.forEach(q=>{ if (q!==p && !q.sample && !q.editorPhoto && !q.extraEdited){ q.adj=Object.assign({}, p.adj); q.brightSet=true; q.finishOn=p.finishOn; q._blur=null; if (q.finishOn) ensureFinish(q); } }); toast(`Copied colour + finish to ${photos.length-1} other photo${photos.length===2?"":"s"}`); refreshStrip(); };
     sa.appendChild(rb); box.appendChild(sa);
     { const sc = el(`<section class="sec"><h2><span>Crop</span></h2></section>`);   /* 4 Nov (Jason): a button for cropping */
       sc.appendChild(el(`<p class="note">Choose a shape, then drag the box on the photo. Drag the corners to resize. Export uses this crop.</p>`));
@@ -1763,7 +1837,9 @@ function pinPanel(p, pin){
     fr.querySelectorAll("button").forEach(b=>{ b.setAttribute("aria-pressed", (!!pin.flip)===(b.dataset.v==="up")); b.onclick=()=>{ commit(); pin.flip = b.dataset.v==="up"; pin.layoutLocked=true; refreshPanel(); requestDraw(); }; });
     selSec.appendChild(fr);
     const sr = el(`<div class="row"><label class="lbl">Label side</label><div class="seg"><button data-v="left">Left</button><button data-v="top">Above</button><button data-v="bottom">Below</button><button data-v="right">Right</button></div></div>`);
-    sr.querySelectorAll("button").forEach(b=>{ b.setAttribute("aria-pressed", pin.side===b.dataset.v); b.onclick=()=>{ commit(); pin.side=b.dataset.v; pin.sideLocked=true; refreshPanel(); requestDraw(); }; });
+    const boxedK = agency().kind !== "pin";   /* 5 Nov (Jason): Label side did nothing on box labels — now Left/Right move the box, Above/Below put it over or under the place */
+    sr.querySelectorAll("button").forEach(b=>{ const v=b.dataset.v; b.setAttribute("aria-pressed", boxedK ? (v==="left" ? (pin.off||.5)>.8 : v==="right" ? (pin.off||.5)<=.8 : v==="bottom" ? !!pin.flip : !pin.flip) : pin.side===v);
+      b.onclick=()=>{ commit(); if (boxedK){ if (v==="left") pin.off=.92; else if (v==="right") pin.off=.08; else if (v==="top"){ pin.flip=false; pin.lift=Math.max(pin.lift||0, 0); } else { pin.flip=true; pin.lift=Math.max(0, Math.min(pin.lift||0, 200)); } pin.layoutLocked=true; } else { pin.side=v; pin.sideLocked=true; } refreshPanel(); requestDraw(); }; });
     selSec.appendChild(sr);
   }
   const q = pin.key ? placeForKey(pin.key) : null;
@@ -2162,7 +2238,7 @@ function lotSnap(p, pts, ll){ const C=Object.assign({ on:true, R:2.5, rot:3, sc:
   return P1;
 }
 function shadeHex(h,k){ const n=parseInt(h.slice(1),16); const f=v=>Math.round(v*k).toString(16).padStart(2,"0"); return "#"+f(n>>16&255)+f(n>>8&255)+f(n&255); }
-window.__bae = { project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) return false; commit(); p.pins=[]; p.shapes=[]; p.texts=[]; p.outside='none'; refreshAll(); return true; },   /* 30 Oct: clean photo, no graphics (agent asked) */ setFinish:(on)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.finishOn=!!on; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return true; }, setSky:(on)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.skyOn=!!on; p.finKey=null; ensureFinish(p); refreshAll(); return true; }, setAdj:(o)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.adj=Object.assign({}, ADJ0, o); refreshAll(); return true; }, setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt, pxo)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts= pxo ? pxo.map(q=>toWork(p, q)) : ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); /* pxo: boundary hand-traced on the fences (original-photo pixels) */ if (pts.some(q=>!q)) return false; commit();
+window.__bae = { project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) return false; commit(); p.pins=[]; p.shapes=[]; p.texts=[]; p.outside='none'; refreshAll(); return true; },   /* 30 Oct: clean photo, no graphics (agent asked) */ setFinish:(on)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.finishOn=!!on; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return true; }, setHorizon:(fa,fb)=>{ const p=P(); if(!p) return false; p.skyLineUser = fa==null ? null : [[0,fa*p.h],[p.w,fb*p.h]]; p.skyOn=true; p.skyForce = fa!=null; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return [p.w,p.h]; }, setSky:(on,force)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.skyOn=!!on; if (force!==undefined) p.skyForce=!!force; p.finKey=null; ensureFinish(p); refreshAll(); return true; }, setAdj:(o)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.adj=Object.assign({}, ADJ0, o); refreshAll(); return true; }, setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt, pxo)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts= pxo ? pxo.map(q=>toWork(p, q)) : ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); /* pxo: boundary hand-traced on the fences (original-photo pixels) */ if (pts.some(q=>!q)) return false; commit();
     try { const R=lotSnap(p, pts, ll); if (R) { pts.splice(0, pts.length, ...R); } } catch(e){ console.warn(e); }
     try { const EO=window.__edgeOff; if (EO && Object.keys(EO).length){ const n=pts.length; let per_px=0, per_m=0; const mLat=111132.92, mLng=111412.84*Math.cos(ll[0][0]*Math.PI/180);
         for (let i=0;i<ll.length;i++){ const a=ll[i], b=ll[(i+1)%ll.length]; per_m+=Math.hypot((b[0]-a[0])*mLat,(b[1]-a[1])*mLng); }
@@ -2183,7 +2259,7 @@ window.__bae = { project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) retu
     let cx=(x0+x1)/2-cw/2, cy=(y0+y1)/2-chh/2; cx=Math.max(0,Math.min(p.w-cw,cx)); cy=Math.max(0,Math.min(p.h-chh,cy)); const zf=p.w/cw;
     const col = prefs.agency==="grey-s" ? "#FFFFFF" : (agency().line || shadeHex(agency().color, 0.75)); const sh={ id:nid(), type:"poly", pts, color:col, width:(agency().lotWidth||17)/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:1.5*72/(62*zf), lensWeight:400 }; p.shapes.push(sh); p.outside=agency().lotOutside||'blur'; p.blurAmt=45; p._blur=null; p.pins.length=0;
     if (area){ p.texts.push({ id:nid(), link:sh.id, style:"area", color:"#ffffff", size:200, x:0, y:0, autoSize:true, lot:area, text:area+"m2", weight:wt||700, fitW:0.62, fitH:0.55 }); }
-    refreshAll(); return { crop:[cx,cy,cw,chh], w:p.w, h:p.h, snap:window.__lotSnap }; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { w:p.w, h:p.h, cam:p.cam, shapes:p.shapes.map(s=>s.pts.map(q=>q.map(Math.round))), snap:window.__lotSnap||null, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
+    refreshAll(); return { crop:[cx,cy,cw,chh], w:p.w, h:p.h, snap:window.__lotSnap }; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { skyWater:p.skyWater, needsEditor:p.needsEditor, skyOn:p.skyOn, w:p.w, h:p.h, cam:p.cam, shapes:p.shapes.map(s=>s.pts.map(q=>q.map(Math.round))), snap:window.__lotSnap||null, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
 
 // ---- Previous days: open any published job (original photos + saved edits + map) in one click
 const DAYS_ROOT = /^https?:$/.test(location.protocol) ? "/aerials/" : "https://bakerproduction.com/aerials/";
@@ -2195,7 +2271,11 @@ function showCheckMap(entry){
   const url = DAYS_ROOT + entry.src.replace(/src\/?$/, "") + "check.html?v=" + Date.now();
   box = document.createElement("div"); box.id = "chkBox";
   const notes = (entry.notes||"").trim(); const esc = t => t.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-  box.innerHTML = (notes ? `<div class="chkNotes"><b>Booking notes — follow these:</b> ${esc(notes)}</div>` : "") + `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost chkTab on" data-v="b" title="Show the lot boundary">Boundary</button><button class="btn ghost chkTab" data-v="a" title="Show every pinned place">Map</button><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary"></iframe>`;
+  const dbx = p => "https://www.dropbox.com/home" + encodeURI(p).replace(/#/g,"%23").replace(/\?/g,"%3F");   /* 5 Nov (Jason): job documents open from the editor (Dropbox, team login — never published on the site) */
+  const docs = (entry.docs||[]).map(d => `<a target="_blank" rel="noopener" href="${dbx(d.path.replace(/\/[^\/]*$/,""))}?preview=${encodeURIComponent(d.name)}" title="${esc(d.name)}">${esc(d.name.length>38 ? d.name.slice(0,35)+"…" : d.name)}</a>`);
+  if (entry.rawPath) docs.push(`<a target="_blank" rel="noopener" href="${dbx(entry.rawPath)}">Open job folder</a>`);
+  const docsHtml = docs.length ? `<div class="chkNotes chkDocs"><b>Documents:</b> ${docs.join(" · ")}</div>` : "";
+  box.innerHTML = (notes ? `<div class="chkNotes"><b>Booking notes — follow these:</b> ${esc(notes)}</div>` : "") + docsHtml + `<div class="chkHead"><b>Map &amp; boundary</b><span><button class="btn ghost chkTab on" data-v="b" title="Show the lot boundary">Boundary</button><button class="btn ghost chkTab" data-v="a" title="Show every pinned place">Map</button><button class="btn ghost" id="chkBig" title="Bigger">&#x2922;</button><button class="btn ghost" id="chkMin" title="Hide">&#x2013;</button></span></div><iframe src="${url}" title="Map and boundary"></iframe>`;
   ($("stage") || document.body).appendChild(box);
   let small = false; try { small = localStorage.getItem("chkMin") === "1"; } catch(e){}
   const set = () => { box.classList.toggle("min", small); try { localStorage.setItem("chkMin", small ? "1" : "0"); } catch(e){} };
@@ -2295,6 +2375,13 @@ function fixApply(p, sh, op, a){
     const A2=[A[0]+nx*d*a, A[1]+ny*d*a], B2=[B[0]+nx*d*a, B[1]+ny*d*a];
     const P0=sh.pts[(i-1+n)%n], P3=sh.pts[(j+1)%n];
     const nA=lineX(P0,A,A2,B2), nB=lineX(B,P3,A2,B2); sh.pts[i]=nA||A2; sh.pts[j]=nB||B2; }
+  else if (op==="square" && n>=4){   /* 5 Nov (Jason): one-click right angles — every side snapped square to the boundary's main direction, size and position kept */
+    let sx=0, sy=0; for (let i=0;i<n;i++){ const A=sh.pts[i], B=sh.pts[(i+1)%n], dx=B[0]-A[0], dy=B[1]-A[1], L=Math.hypot(dx,dy), t=4*Math.atan2(dy,dx); sx+=L*Math.cos(t); sy+=L*Math.sin(t); }
+    const th=Math.atan2(sy,sx)/4, cs=Math.cos(th), sn=Math.sin(th);
+    const R=sh.pts.map(q=>{ const x=q[0]-c[0], y=q[1]-c[1]; return [x*cs+y*sn, -x*sn+y*cs]; });   // into the boundary's own axes
+    const E=[]; for (let i=0;i<n;i++){ const A=R[i], B=R[(i+1)%n]; const hor=Math.abs(B[0]-A[0])>=Math.abs(B[1]-A[1]); E.push({hor, v: hor ? (A[1]+B[1])/2 : (A[0]+B[0])/2}); }
+    const Q=R.map((q,i)=>{ const e0=E[(i-1+n)%n], e1=E[i]; if (e0.hor!==e1.hor) return e0.hor ? [e1.v, e0.v] : [e0.v, e1.v]; return e1.hor ? [q[0], e1.v] : [e1.v, q[1]]; });
+    sh.pts=Q.map(q=>[c[0]+q[0]*cs-q[1]*sn, c[1]+q[0]*sn+q[1]*cs]); }
   else if (op==="addpt" && edge!=null){ const i=edge, j=(i+1)%n, m=[(sh.pts[i][0]+sh.pts[j][0])/2,(sh.pts[i][1]+sh.pts[j][1])/2]; sh.pts.splice(i+1,0,m);
     if (sh.lens) sh.lens.splice(i+1,0,""); if (sh.dashed) sh.dashed.splice(i+1,0,!!sh.dashed[i]); sel={kind:"shape", id:sh.id, vtx:i+1}; }
   else if (op==="delpt" && vtx!=null && n>3){ sh.pts.splice(vtx,1); if (sh.lens) sh.lens.splice(vtx,1); if (sh.dashed) sh.dashed.splice(vtx,1); sel={kind:"shape", id:sh.id}; }
@@ -2315,6 +2402,7 @@ function fixSection(p, sh){
   const r1 = el(`<div class="row"><button class="btn" title="Rotate left">⟲ Rotate</button><button class="btn" title="Rotate right">Rotate ⟳</button><button class="btn" title="Smaller">− Smaller</button><button class="btn" title="Bigger">+ Bigger</button></div>`);
   const b1 = r1.querySelectorAll("button"); b1[0].onclick=()=>fixApply(p,sh,"rot",-0.25); b1[1].onclick=()=>fixApply(p,sh,"rot",0.25); b1[2].onclick=()=>fixApply(p,sh,"scale",-0.005); b1[3].onclick=()=>fixApply(p,sh,"scale",0.005);
   s.appendChild(r1);
+  if (sh.pts.length>=4){ const rq = el(`<div class="row"><button class="btn" title="Make every corner a right angle (90°)">∟ Square corners</button></div>`); rq.querySelector("button").onclick=()=>fixApply(p,sh,"square"); s.appendChild(rq); }
   if (edge!=null){ const r2 = el(`<div class="row"><button class="btn">Pull side ${edge+1} in</button><button class="btn">Push side ${edge+1} out</button><button class="btn ghost">Add corner here</button></div>`);
     const b2=r2.querySelectorAll("button"); b2[0].onclick=()=>fixApply(p,sh,"side",-1); b2[1].onclick=()=>fixApply(p,sh,"side",1); b2[2].onclick=()=>fixApply(p,sh,"addpt"); s.appendChild(r2); }
   if (vtx!=null && sh.pts.length>3){ const r3 = el(`<div class="row"><button class="btn ghost">Delete corner ${vtx+1}</button></div>`); r3.querySelector("button").onclick=()=>fixApply(p,sh,"delpt"); s.appendChild(r3); }

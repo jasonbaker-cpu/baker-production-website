@@ -281,13 +281,13 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 - Scripted POSTs to the site are blocked — click the school links (chain from one school page to the next; the "Schools near" list is on every school page).
 - 5 Nov audit of 2–4 Nov jobs: removed Bayswater PS, Inglewood PS, Mount Lawley SHS (42/86 Caledonian), Wirrabirra PS (22 Sandridge), Dudley Park PS (115 Mandurah). All other pinned public schools were confirmed in zone.
 
-## Remove cars, washing lines and people ON THE PROPERTY (Jason, 7 Nov 2026: "from now on")
+## Remove cars, people and CLOTHES ON WASHING LINES on the property (Jason, 7 Nov 2026: "from now on" — he means the washing itself, not the line)
 - prep_day runs `clean_lot.py` on every photo of every job (after levelling, before the editor). Models: ../models/yolox.onnx (COCO detector) + ../models/lama.onnx — both download themselves on first run.
 - AUTO: with a cadastre `poly`, any car / person / ute / motorbike whose box is ≥60% inside the lot (grown 1 m) is erased with LaMa. Size caps stop roofs being read as trucks. No `poly` (strata) → nothing is auto-removed; everything found is listed for you to decide.
 - YOU MUST LOOK at every review sheet in `e2e/clean_<day>/` (`log.json` has the ids). Yellow = lot, blue = search area, RED box = will be removed, GREEN = left alone.
-  - Washing lines / rotary hoists / clothes airers, and any car, trailer, boat or person on the property the detector missed → day file `"remove": {"<photo file name>": [{"sheet": [x0,y0,x1,y1]}]}` (pixels read straight off the review sheet) or the candidate id `"c3"`.
+  - Clothes / sheets / towels hanging on a washing line, rotary hoist or clothes airer (box ONLY the washing — the line and hoist stay), and any car, trailer, boat or person on the property the detector missed → day file `"remove": {"<photo file name>": [{"sheet": [x0,y0,x1,y1]}]}` (pixels read straight off the review sheet) or the candidate id `"c3"`.
   - A green candidate that IS on the property (driveway, carport, yard) → add its id to `remove`. A red one that isn't (street, verge, neighbour) → `"keep": {"<photo file name>": ["c1"]}`.
   - Then run prep_day again. Street cars and neighbours' cars stay.
 - Every patch must look natural. If a removal leaves a smear (big car close up, car half under a carport roof), keep it and flag the job toEditor with editorReason "remove car/people on property".
-- Twilight / editor jobs: the editor email + guide now tell Profocus to remove cars, washing lines and people on the property (their photos replace ours).
+- Twilight / editor jobs: the editor email + guide now tell Profocus to remove cars, people and clothes hanging on washing lines on the property (keep the line itself) (their photos replace ours).
 - `"noClean": true` on a job (or NOCLEAN=1) skips it — only if the agent asks to keep them.

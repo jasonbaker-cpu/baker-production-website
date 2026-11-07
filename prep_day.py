@@ -39,10 +39,10 @@ for j in D['jobs']:
             lv[nf] = f
             if f in cams: c = dict(cams.pop(f)); c['roll'] = c.get('roll', 0) + ang; c['f35'] = c.get('f35', 24) * zm; cams[nf] = c
     ph = [next((n for n, o in lv.items() if o == f), f) for f in ph]
-    # 7 Nov 2026 (Jason): "delete cars, washing lines and people on the property from now on".
+    # 7 Nov 2026 (Jason): cars, people and clothes on washing lines on the property (washing only — the line stays).
     # clean_lot.py: auto-removes cars/people/utes/motorbikes inside the cadastre lot (LaMa); every photo gets a review sheet
-    # in e2e/clean_<day>/ (yellow = lot, blue = search area, red = removed, green = left). LOOK at every sheet: washing
-    # lines and anything missed go in the day file  "remove": {"<photo file name>": ["c2", [x0,y0,x1,y1]]},
+    # in e2e/clean_<day>/ (yellow = lot, blue = search area, red = removed, green = left). LOOK at every sheet: clothes on
+    # washing lines and anything missed go in the day file  "remove": {"<photo file name>": ["c2", [x0,y0,x1,y1]]},
     # wrong removals in  "keep": {"<photo file name>": ["c1"]}  — then run prep_day again. "noClean": true skips a job.
     if not j.get('noClean') and not os.environ.get('NOCLEAN'):
         from clean_lot import clean as _clean, xmp_cam as _xcam
