@@ -4,9 +4,9 @@
 (function () {
   /* STRICT 9.5 standard (6 Nov 2026): every photo must be inside the targets. One miss = not ready. */
   /* 7 Nov 2026 "best in Perth": Mathews Group brightness + blue skies, Crib Creative contrast + held highlights, greens at both. */
-  var B = { wallLo: 208, wallHi: 224, castLo: 1, castHi: 9, lLo: 155, lHi: 194, clip: 0.8, skySat: 0.48, skyPale: 0.25, extDark: 118, extShadow: 34, greenSat: 0.50, extHot: 230,
+  var B = { wallLo: 207, wallHi: 224, castLo: 1, castHi: 9, lLo: 155, lHi: 194, clip: 0.8, skySat: 0.48, skyPale: 0.25, extDark: 118, extShadow: 34, greenSat: 0.50, extHot: 230,
     extCast: 13, flatP5: 75, flatRng: 150,
-    setWallLo: 211, setWallHi: 219, setCastLo: 2, setCastHi: 7, setLLo: 165, setLHi: 186, setSd: 5, setFlat: 70 };
+    setWallLo: 209, setWallHi: 219, setCastLo: 2, setCastHi: 7, setLLo: 165, setLHi: 186, setSd: 5, setFlat: 70 };
   var $ = function (id) { return document.getElementById(id); };
   var drop = $("scDrop"), input = $("scInput"), out = $("scOut"), jobEl = $("scJob");
   if (!drop) return;
@@ -54,7 +54,8 @@
       var isExt = (blueFrac > 0.15 && ceilF < 0.5) || greenF > 0.15 || (greenF > 0.03 && (ceilF < 0.12 || (ceilF < 0.45 && warmF > 0.08)));
       var skySat0 = topBlue ? skyS / topBlue : 0;
       /* Dusk/twilight: warm clouds in the sky, or soft blue-violet sky with pink/orange clouds (premium dusk). */
-      var dusk = isExt && ((warmF > 0.08 && blueFrac < 0.3) || (warmF > 0.06 && skySat0 < 0.2 && topBlue && skyL / topBlue < 200));
+      var twiBox = document.getElementById("scTwi");
+      var dusk = isExt && twiBox && twiBox.checked && ((warmF > 0.08 && blueFrac < 0.3) || (warmF > 0.06 && skySat0 < 0.2 && topBlue && skyL / topBlue < 200));
       var s = document.createElement("canvas"); s.width = 9; s.height = 8; var sx = s.getContext("2d"); sx.drawImage(im, 0, 0, 9, 8);
       var sd = sx.getImageData(0, 0, 9, 8).data, gray = [];
       for (var q = 0; q < sd.length; q += 4) gray.push(0.299 * sd[q] + 0.587 * sd[q + 1] + 0.114 * sd[q + 2]);
@@ -81,7 +82,7 @@
   function flags(r) {
     var f = [];
     if (r.kind === "INT") {
-      if (r.wallW < 205 || (r.wallW < B.wallLo && r.L < 168)) f.push({ k: "dim", t: "Walls grey/dim (" + r.wallW.toFixed(0) + ", target ~215). Brighten." });
+      if (r.wallW < 202 || (r.wallW < B.wallLo && r.L < 168)) f.push({ k: "dim", t: "Walls grey/dim (" + r.wallW.toFixed(0) + ", target ~215). Brighten." });
       if (r.wallW > B.wallHi) f.push({ k: "hot", t: "Walls too white (" + r.wallW.toFixed(0) + ", target ~215). Pull back." });
       if (r.cast < B.castLo) f.push({ k: "cold", t: "Walls cold/grey (warmth " + r.cast.toFixed(1) + ", target +2 to +7). Warm slightly." });
       if (r.cast > B.castHi) f.push({ k: "cream", t: "Walls too cream/yellow (warmth +" + r.cast.toFixed(1) + ", target +2 to +7). Neutralise: clean white like Mathews Group." });

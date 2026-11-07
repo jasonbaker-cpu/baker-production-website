@@ -120,6 +120,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   <div class="card sc">
     <label class="meta" for="scJob">Job address</label>
     <input id="scJob" type="text" placeholder="e.g. 23 Riding Way, Bull Creek">
+    <label class="meta" style="display:flex;gap:8px;align-items:center;margin:8px 0"><input id="scTwi" type="checkbox"> Twilight / dusk shoot (house lights on). Leave unticked for day and golden-hour jobs so every exterior gets the full sky, greens and shadow checks.</label>
     <div id="scDrop" class="scdrop" role="button" tabindex="0"><b>Drop photos here</b><span>or tap to choose (JPG, a whole job at once)</span></div>
     <input id="scInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
     <div id="scOut"></div>
@@ -228,7 +229,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
 <div id="lb"><img alt=""></div>
 
 <script src="data.js?v=6"></script>
-<script src="selfcheck.js?v=9" defer></script>
+<script src="selfcheck.js?v=10" defer></script>
 <script>
 (function(){
   var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})};
