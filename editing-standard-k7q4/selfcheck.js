@@ -2,6 +2,7 @@
    Same measurements as Baker's internal QC: wall white, warm cast (R-B on walls),
    brightness, shadows, clipped highlights, sky saturation, near-duplicates, sizes. */
 (function () {
+  var VER = "v10 · 8 Nov 2026"; /* bump on every rule change */
   /* STRICT 9.5 standard (6 Nov 2026): every photo must be inside the targets. One miss = not ready. */
   /* 7 Nov 2026 "best in Perth": Mathews Group brightness + blue skies, Crib Creative contrast + held highlights, greens at both. */
   var B = { wallLo: 207, wallHi: 224, castLo: 1, castHi: 9, lLo: 155, lHi: 194, clip: 0.8, skySat: 0.48, skyPale: 0.25, extDark: 118, extShadow: 34, greenSat: 0.50, extHot: 230,
@@ -158,7 +159,7 @@
     var job = (jobEl.value || "").trim() || "Untitled job";
     var when = new Date().toLocaleString("en-AU", { dateStyle: "medium", timeStyle: "short" });
 
-    var html = '<div class="scr" id="scReport"><div class="scr-head"><div><div class="job">' + esc(job) + '</div><div class="meta">Self-check · ' + esc(when) + ' · ' + rs.length + ' photos (' + ints.length + ' interior, ' + (rs.length - ints.length) + ' exterior)</div></div><span class="score ' + cls + '">' + score + '/10 est.</span></div>' +
+    var html = '<div class="scr" id="scReport"><div class="scr-head"><div><div class="job">' + esc(job) + '</div><div class="meta">Self-check ' + VER + ' · run ' + esc(when) + ' · ' + rs.length + ' photos (' + ints.length + ' interior, ' + (rs.length - ints.length) + ' exterior)</div></div><span class="score ' + cls + '">' + score + '/10 est.</span></div>' +
       '<p class="vd"><b>' + verdict + '.</b></p>' +
       '<div class="scr-stats"><div><b>' + aw.toFixed(0) + '</b><span>Walls (target ~215)</span></div><div><b>' + (ac >= 0 ? "+" : "") + ac.toFixed(1) + '</b><span>Warmth (+2 to +7)</span></div><div><b>' + al.toFixed(0) + '</b><span>Brightness (165-185)</span></div><div><b>' + flagged.length + '</b><span>Photos flagged</span></div><div><b>' + dupes.length + '</b><span>Possible duplicates</span></div></div>';
     if (setIssues.length) html += '<h4>Whole-set issues</h4><ul>' + setIssues.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ul>";
@@ -173,7 +174,7 @@
       '<div class="scr-btns"><button type="button" id="scCopy">Copy report text</button><button type="button" id="scPrint">Print / save PDF</button></div></div>';
     out.innerHTML = html;
 
-    var txt = "BAKER SELF-CHECK: " + job + "\n" + when + " · " + rs.length + " photos\nScore (est.): " + score + "/10, " + verdict +
+    var txt = "BAKER SELF-CHECK " + VER + ": " + job + "\n" + when + " · " + rs.length + " photos\nScore (est.): " + score + "/10, " + verdict +
       "\nWalls " + aw.toFixed(0) + " (target ~215) · Warmth " + ac.toFixed(1) + " (+2 to +7) · Brightness " + al.toFixed(0) + " (165-185)\n" +
       (setIssues.length ? "\nWHOLE SET:\n- " + setIssues.join("\n- ") + "\n" : "") +
       (dupes.length ? "\nPOSSIBLE DUPLICATES:\n- " + dupes.map(function (p) { return p[0] + " ≈ " + p[1]; }).join("\n- ") + "\n" : "") +
