@@ -2,11 +2,11 @@
    Same measurements as Baker's internal QC: wall white, warm cast (R-B on walls),
    brightness, shadows, clipped highlights, sky saturation, near-duplicates, sizes. */
 (function () {
-  var VER = "v10 · 8 Nov 2026"; /* bump on every rule change */
+  var VER = "v11 · 9 Nov 2026"; /* bump on every rule change */
   /* STRICT 9.5 standard (6 Nov 2026): every photo must be inside the targets. One miss = not ready. */
   /* 7 Nov 2026 "best in Perth": Mathews Group brightness + blue skies, Crib Creative contrast + held highlights, greens at both. */
-  var B = { wallLo: 207, wallHi: 224, castLo: 1, castHi: 9, lLo: 155, lHi: 194, clip: 0.8, skySat: 0.48, skyPale: 0.25, extDark: 118, extShadow: 34, greenSat: 0.50, extHot: 230,
-    extCast: 13, flatP5: 75, flatRng: 150,
+  var B = { wallLo: 207, wallHi: 224, castLo: 1, castHi: 9, lLo: 155, lHi: 194, clip: 0.8, skySat: 0.45, skyPale: 0.20, extDark: 118, extShadow: 34, greenSat: 0.40, extHot: 235,
+    extCast: 10, flatP5: 75, flatRng: 150,
     setWallLo: 209, setWallHi: 219, setCastLo: 2, setCastHi: 7, setLLo: 165, setLHi: 186, setSd: 5, setFlat: 70 };
   var $ = function (id) { return document.getElementById(id); };
   var drop = $("scDrop"), input = $("scInput"), out = $("scOut"), jobEl = $("scJob");
@@ -90,16 +90,16 @@
       if (r.L < B.lLo && r.wallW < 214) f.push({ k: "dark", t: "Room too dark (brightness " + r.L.toFixed(0) + ", target 165-185)." }); /* dark floors/joinery with good walls are fine */
       if (r.L > B.lHi) f.push({ k: "bright", t: "Room too bright/washed out (brightness " + r.L.toFixed(0) + ", target 165-185)." });
     } else {
-      if (!r.dusk && r.skySat > B.skySat) f.push({ k: "sky", t: "Sky oversaturated/cartoon (" + r.skySat.toFixed(2) + ", target 0.28-0.40). Natural clear blue." });
-      if (!r.dusk && r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky pale/hazy (" + r.skySat.toFixed(2) + ", target 0.28-0.40). Clear blue sky with white clouds, like the Mathews Group examples." });
+      if (!r.dusk && r.skySat > B.skySat) f.push({ k: "sky", t: "Sky oversaturated/cartoon (" + r.skySat.toFixed(2) + ", target 0.24-0.36). Natural clear blue, never cartoon." });
+      if (!r.dusk && r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky pale/hazy (" + r.skySat.toFixed(2) + ", target 0.24-0.36). Clear natural blue with white clouds, like Mathews Group / Crib Creative." });
       if (!r.dusk && r.L > 160) f.push({ k: "washed", t: "Exterior washed out (brightness " + r.L.toFixed(0) + ", target 125-150). Bring midtones down slightly so the sky, greens and house have colour and depth." });
       if (r.L < (r.dusk ? 100 : B.extDark)) f.push({ k: "dark", t: "Exterior too dark (brightness " + r.L.toFixed(0) + ", min " + B.extDark + "). Lift the whole frame." });
-      if (!r.dusk && r.greenF > 0.04 && r.greenSat < B.greenSat) f.push({ k: "greens", t: "Greens dull (" + r.greenSat.toFixed(2) + ", target 0.55+). Add vibrance to lawn, trees and hedges." });
-      if (!r.dusk && r.p95 > B.extHot) f.push({ k: "hot", t: "Bright areas too hot (" + r.p95 + ", target 225 or less). Pull highlights back on ground, paths and walls." });
+      if (!r.dusk && r.greenF > 0.04 && r.greenSat < B.greenSat) f.push({ k: "greens", t: "Greens dull (" + r.greenSat.toFixed(2) + ", target 0.45+). Add vibrance to lawn, trees and hedges." });
+      if (!r.dusk && r.p95 > B.extHot) f.push({ k: "hot", t: "Bright areas too hot (" + r.p95 + ", target 230 or less). Pull highlights back on ground, paths and walls." });
       if (!r.dusk && r.p5 < B.extShadow) f.push({ k: "shadow", t: "Shadows too dark (darkest areas " + r.p5 + ", target 40+). Lift shadows under carports, patios and trees." });
       if (r.p5 > B.flatP5 && r.rng < B.flatRng) f.push({ k: "flat", t: "Flat/hazy, no contrast (blacks lifted to " + r.p5 + ", tonal range " + r.rng + "). Add contrast and set a true black point." });
       /* beige paving/brick reads warm in Perth sun; only flag orange when the sky is pushed off-blue too */
-      if (!r.dusk && r.cast > B.extCast && r.skySat < 0.2) f.push({ k: "orange", t: "Orange/yellow cast on the exterior (warmth +" + r.cast.toFixed(1) + "). Neutralise the white balance." });
+      if (!r.dusk && r.cast > B.extCast) f.push({ k: "orange", t: "Yellow/orange cast on the exterior (warmth +" + r.cast.toFixed(1) + ", target 0 to +6 like Crib Creative). Neutralise the white balance: this is what makes exteriors look dull." });
     }
     if (r.clip > B.clip) f.push({ k: "clip", t: "Blown highlights (" + r.clip.toFixed(1) + "% clipped). Recover windows/whites." });
     return f;
