@@ -2,7 +2,7 @@
    To add an example: copy one line in GOOD, BAD or BEFORE_AFTER and change it.
    Put new images in the img/ folder next to this file (webp or jpg, ~1600px wide). */
 
-window.UPDATED = "7 Nov 2026, 7pm";
+window.UPDATED = "9 Nov 2026, 7:30am";
 
 
 /* EDITOR TOOLS: links the editors use every day. */
@@ -15,8 +15,9 @@ window.EDITOR_TOOLS = [
 
 window.REFERENCE_LINKS = [
   { title: "OUR STANDARD: 22 Thorburn Ave, Beechboro (Profocus, 8.5/10)", url: "https://www.dropbox.com/scl/fo/8c0ebpas05y2lo4jkxvl1/AEr14Z7un1FXvkFu-Ve2EaY?rlkey=y81vsut2bd30kervze8vkjpg2&dl=0", note: "Match this on every interior job. May be removed from Dropbox after delivery." },
-  { title: "Crib Creative: 9B Moldavia St, Tuart Hill (day + twilight)", url: "https://holdsworth.com.au/property/sales/9b-moldavia-street-tuart-hill-wa/", note: "The look we are chasing. Warm white walls, bright, soft shadows." },
-  { title: "Crib Creative: 269A Cape St, Yokine (twilight)", url: "https://holdsworth.com.au/property/sales/269a-cape-street-yokine-wa/", note: "Twilight reference." }];
+  { title: "DAY: Crib Creative on Edward Lim's listings (Ray White ELG)", url: "https://raywhiteelg.com.au/agents/edward-lim/177651", note: "Day reference. Clean neutral colour, no yellow cast, true blacks, natural finish." },
+  { title: "DAY: The Mathews Group (blue-sky listings only)", url: "https://reiwa.com.au/real-estate-agency/the-mathews-group-real-estate-160982-0/", note: "Day reference. Clear blue sky with white clouds, vibrant greens, open shadows. Ignore their sunset-sky exteriors." },
+  { title: "TWILIGHT: Crib Creative on Holdsworth listings", url: "https://holdsworth.com.au/properties-for-sale-perth/", note: "Twilight reference, e.g. 269A Cape St Yokine and 9B Moldavia St Tuart Hill." }];
 
 window.GOOD = [
   { img: "img/good-thorburn-living.webp", job: "22 Thorburn Ave", file: "DSC09089", why: "Warm white walls, bright but not blown, windows pulled clean." },
