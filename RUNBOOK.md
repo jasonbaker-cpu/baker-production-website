@@ -297,3 +297,8 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 - Day file `tune` (e.g. `{"noSolid":1}`) now reaches t12 via prep_day. `noSolid` turns off the tower keep — hazy hills on 75 Innamincka were read as towers and pasted up as ghost columns. Portal parity fails on such jobs (project.json doesn't carry tune) — only use it on toEditor jobs.
 - prep_day meta now carries `rawPath` and `docs` from the day file into index.json.
 - Commercial lots (195 Jull St, bank + car park): kept the cars (noClean — a public car park, partial detection would leave a patchy lot) and removed the potential-lots image by hand.
+
+## Top-downs always straight (Jason, 10 Nov 2026, 10 Spotted Wy on the listing: "make sure this is always straight")
+- prep_day squares every top-down after the street turn: `straighten.nadir_skew` finds the lean of the houses/fences (needs straight edges in BOTH directions, so a curved or diagonal road can't fool it; max 6°) and `square_nadir` turns + zooms the photo (camera yaw/zoom follow). File gets `_sq`. `"noSquare": true` on a job skips it; frames with a hand-traced `pxpoly` are never turned.
+- The run passes `gridAng` to the editor. In addLot a box-shaped lot that sits up to 20° off the houses gets the camera heading corrected by that amount and is re-projected (DJI Fly / Mini 4 Pro headings are often 10°+ out — 10 Spotted was 13°, which turned AND shifted the outline), then its corners are squared to the frame (≤4°).
+- t12 prints `squared [yawFix, {by|skipped}]` per top-down. A yawFix over 10° or "skipped" → LOOK at that top-down before publishing (a lot genuinely angled to its street would be wrong to square).

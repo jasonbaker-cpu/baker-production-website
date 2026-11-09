@@ -127,3 +127,41 @@ def level_flight(files, out_dir, force=None):
         r = process(f, dst, force=med) if (med is not None and spread < 0.6) else process(f, dst)
         res[f] = (dst, r[1], r[2]) if r[0] == 'levelled' else (f, 0.0, 1.0)
     return res
+
+MAX_SKEW = 6.0
+DEBUG = False
+
+def nadir_skew(img):
+    """Top-down shots (Jason 10 Nov 2026: 'make sure this is always straight'): degrees the lots/houses lean in the
+    frame (positive = clockwise of square). Roof, fence and driveway edges: buildings give BOTH horizontal and vertical
+    edges at the same lean, a curved/diagonal road gives only one family, so a lean must show in both. Only small leans
+    (<= MAX_SKEW) are corrected — a diagonal street is the street, not a lean. None = no clear answer (leave it)."""
+    a = np.asarray(img.convert('L')); H, W = a.shape; s = 2000 / max(H, W)
+    g = cv2.resize(a, (int(W * s), int(H * s)), interpolation=cv2.INTER_AREA)
+    try:
+        fld = cv2.ximgproc.createFastLineDetector(40, 1.414, 50, 150, 3, True)   # sub-pixel segments (Hough snaps to its angle grid)
+        L = fld.detect(cv2.GaussianBlur(g, (3, 3), 0))
+    except Exception:
+        L = cv2.createLineSegmentDetector().detect(g)[0]
+    if L is None or len(L) < 25: return None
+    L = np.asarray(L, float).reshape(-1, 4); x0, y0, x1, y1 = L[:, 0], L[:, 1], L[:, 2], L[:, 3]
+    ang = np.degrees(np.arctan2(y1 - y0, x1 - x0)); w = np.hypot(x1 - x0, y1 - y0)
+    m = (ang + 45) % 90 - 45
+    hz = np.abs(((ang + 90) % 180) - 90) < 45
+    th = np.arange(-MAX_SKEW, MAX_SKEW + 0.001, 0.05)
+    def score(sel):
+        d = np.abs(m[sel][None, :] - th[:, None]); return (w[sel][None, :] * np.clip(1 - d / 0.6, 0, None)).sum(1)
+    sh, sv = score(hz), score(~hz)
+    if sh.max() == 0 or sv.max() == 0: return None
+    sc = np.sqrt(sh * sv); k = int(sc.argmax()); pk = float(th[k])
+    conf = sc[k] / (np.median(sc) + 1e-9)   # peak vs a typical angle in the window
+    if DEBUG: print('skew dbg', round(pk, 2), 'conf', round(conf, 2))
+    if conf < 2.0: return None
+    return pk
+
+def square_nadir(pil, ang):
+    """rotate a top-down so its grid is square; zoomed just enough that no corner shows. Returns (image, zoom)."""
+    a = np.asarray(pil.convert('RGB')); H, W = a.shape[:2]; t = math.radians(abs(ang))
+    zoom = math.cos(t) + max(W / H, H / W) * math.sin(t)
+    M = cv2.getRotationMatrix2D((W / 2, H / 2), ang, zoom)          # cv2: positive = counter-clockwise, undoing a clockwise lean
+    return Image.fromarray(cv2.warpAffine(a, M, (W, H), flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REFLECT)), zoom

@@ -42,6 +42,7 @@ async def main():
             await pg.evaluate("o=>{window.__edgeOff=o}", job.get('edgeOff',{}))
             if job.get('snap'): await pg.evaluate("c=>{window.__snapCfg=c}", job['snap'])
             if job.get('nosnap'): await pg.evaluate("window.__noSnap=true")
+            await pg.evaluate("g=>{window.__gridAng=(typeof g==='number')?g:null; window.__squared=null; window.__yawFix=null}", job.get('gridAng'))   # 10 Nov: square the lot to the houses
             await pg.evaluate("k=>window.__bae.setPref('skyPlate',k)", job.get('skyPlate','C')); await pg.wait_for_timeout(300)
             if job.get('full'): await pg.evaluate("window.__bae.setPref('outMode','full')")
             await pg.evaluate("p=>{window.__portrait=!!p}", bool(job.get('portrait')))   # 29 Oct: booking asked for vertical drone photos
@@ -98,7 +99,7 @@ async def main():
                         print(f"  AREA CHECK {job.get('slug')}: typed {job['area']} m2 has no areaSource - using cadastre {area} m2"); open('AREA_FLAGS.txt','a').write(f"{job.get('slug')}: typed {job['area']} vs cadastre {area}\n")
                     wt=700   # Jason (25 Oct): bold Open Sans lot size with a real ² (like his 195m² example)
                     rg = job.get('reg',{}).get(ph,[0,0])
-                    ok = await pg.evaluate("([ll,a,b,l,ar,w,px])=>window.__bae.addLot(ll,a,b,l,ar,w,px)", [ll, rg[0], rg[1], lens, area, wt, job.get('pxpoly')]); print('  lot', ph, ok, area, lens)
+                    ok = await pg.evaluate("([ll,a,b,l,ar,w,px])=>window.__bae.addLot(ll,a,b,l,ar,w,px)", [ll, rg[0], rg[1], lens, area, wt, job.get('pxpoly')]); print('  lot', ph, ok, area, lens, 'squared', await pg.evaluate("[window.__yawFix, window.__squared]"))
                     await pg.wait_for_timeout(500); report[ph]=await pg.evaluate("window.__bae.photo()")
                     os.makedirs(OUT+job.get('slug','x'),exist_ok=True); fn=OUT+job.get('slug','x')+'/'+os.path.basename(ph).rsplit('.',1)[0]+'.jpg'; await export(pg, job.get('slug','x')+'/'+os.path.basename(ph).rsplit('.',1)[0]+'.jpg')
                     if ok and ok.get('crop'): report[ph]['cropbox']=ok['crop']

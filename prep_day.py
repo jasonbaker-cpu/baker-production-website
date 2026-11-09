@@ -111,25 +111,39 @@ for j in D['jobs']:
             # 29 Oct (Jason): every top-down goes out with the STREET AT THE BOTTOM. 'streetRot' {variant: 90|180|270}
             # = clockwise turn needed (decide by looking at the frame); the photo is turned and the camera yaw follows.
             rot = int((j.get('streetRot') or {}).get(v, 0)) % 360
-            if rot and n0 not in cams:   # 4 Nov: no satellite line-up (cloud run / no Mac) -> turn using the drone's own gimbal yaw
+            # 10 Nov 2026 (Jason, 10 Spotted Wy on the listing: "make sure this is always straight"): after the street turn,
+            # the top-down is also squared to the houses/fences (straighten.nadir_skew: up to 6 deg, needs a clear grid in
+            # BOTH directions). The boundary is then squared to the frame in the editor (window.__gridAng). "noSquare": true skips.
+            from PIL import Image as _I
+            from straighten import nadir_skew as _nsk, square_nadir as _sqn
+            import math as _m
+            im_ = _I.open(n0); r_ = im_
+            if rot: r_ = im_.transpose({90: _I.Transpose.ROTATE_270, 180: _I.Transpose.ROTATE_180, 270: _I.Transpose.ROTATE_90}[rot])
+            hand = bool(j.get('pxpoly') and i == 0)   # boundary hand-traced in the original pixels: never re-turn that frame
+            sk = None if (hand or j.get('noSquare')) else _nsk(r_)
+            fine = sk if (sk is not None and abs(sk) >= 0.3) else 0.0
+            grid = (0.0 if fine else sk) if sk is not None else None
+            if (rot or fine) and n0 not in cams:   # 4 Nov: no satellite line-up (cloud run / no Mac) -> turn using the drone's own gimbal yaw
                 _x = open(n0,'rb').read(400000).decode('latin1'); _f = re.search(r'FocalLength="35mm[^"]*"|FocalLengthIn35mmFormat="([\d.]+)"', _x)
                 cams[n0] = {'yaw': yaw(n0), 'f35': float(_f.group(1)) if _f and _f.group(1) else 24.0}
-            if rot and n0 in cams:
-                from PIL import Image as _I
-                im_ = _I.open(n0); ex_ = im_.getexif(); ex_[274] = 1
-                tr = {90: _I.Transpose.ROTATE_270, 180: _I.Transpose.ROTATE_180, 270: _I.Transpose.ROTATE_90}[rot]
-                n1 = n0.rsplit('.', 1)[0] + f'_r{rot}.' + n0.rsplit('.', 1)[1]
-                r_ = im_.transpose(tr); c_ = dict(cams[n0]); c_['yaw'] = c_['yaw'] - rot
-                import math as _m
+            if (rot or fine) and n0 in cams:
+                ex_ = im_.getexif(); ex_[274] = 1
+                tag = (f'_r{rot}' if rot else '') + ('_sq' if fine else '')
+                n1 = n0.rsplit('.', 1)[0] + tag + '.' + n0.rsplit('.', 1)[1]
+                c_ = dict(cams[n0]); c_['yaw'] = c_['yaw'] - rot
                 fp_ = c_['f35'] * _m.hypot(*r_.size) / 43.27
                 if r_.size[1] > r_.size[0]:   # portrait after the turn (3 Nov, Jason: the blurred-mirror padding looked over-saturated/fake) -> real 3:2 crop, centred, no padding
                     rw_, rh_ = r_.size; ch_ = int(rw_ / 1.5); y0_ = (rh_ - ch_) // 2
                     r_ = r_.crop((0, y0_, rw_, y0_ + ch_))
                 c_['f35'] = fp_ * 43.27 / _m.hypot(*r_.size)
+                if fine:   # content turned anticlockwise by `fine` deg and zoomed so no corner shows
+                    r_, z_ = _sqn(r_, fine); c_['yaw'] = c_['yaw'] + fine; c_['f35'] = c_['f35'] * z_
+                    print('squared top-down', v, round(fine, 2), 'deg')
                 r_.save(n1, quality=95, exif=ex_.tobytes(), xmp=im_.info.get('xmp')); cams[n1] = c_; n0 = n1
             run.append(dict(base, slug=v, photos=[n0], poly=j['poly'], full=1,
                             snap={'on': True, 'mode': 'ridge', 'sc': 0.0, 'R': 2.5, 'rot': 3},
                             edgeOff=(j.get('edgeOff', {}) if i == 0 else (j.get('edgeOffs') or {}).get(v, {})), cams={n0: cams[n0]} if n0 in cams else {}))
+            if grid is not None and not hand: run[-1]['gridAng'] = round(grid, 3)   # editor squares the boundary to this
             if j.get('pxpoly') and i == 0: run[-1].update(pxpoly=j['pxpoly'], nosnap=1); run[-1].pop('snap', None)   # boundary hand-traced on the fences
     else:
         run.append(dict(base, slug=j['slug'], photos=ph, cams={f: cams[f] for f in ph if f in cams}))
