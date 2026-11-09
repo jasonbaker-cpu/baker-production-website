@@ -1,6 +1,360 @@
 {
  "days": [
   {
+   "id": "09-nov-2026",
+   "label": "Mon 9 Nov 2026",
+   "gallery": "09-nov-2026/",
+   "jobs": [
+    {
+     "slug": "32_wilfred_rd",
+     "addr": "32 Wilfred Rd, Thornlie WA 6108",
+     "who": "Danny Sharrett \u00b7 Century 21 Team Brockhurst",
+     "agency": "c21",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261109_094628_0016_1794213572409_photo.JPG",
+      "dji_fly_20261109_094620_0015_1794213573781_photo.JPG"
+     ],
+     "src": "09-nov-2026/32_wilfred_rd/src/",
+     "map": "32_wilfred_rd_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261109_094628_0016_1794213572409_photo.JPG",
+      "dji_fly_20261109_094620_0015_1794213573781_photo.JPG",
+      "dji_fly_20261109_094706_0017_1794213571043_photo.JPG",
+      "dji_fly_20261109_094720_0018_1794213569750_photo.JPG",
+      "dji_fly_20261109_094754_0020_1794213567126_photo.JPG",
+      "dji_fly_20261109_094810_0021_1794213565775_photo.JPG",
+      "dji_fly_20261109_094824_0022_1794213564369_photo.JPG",
+      "dji_fly_20261109_094842_0023_1794213563090_photo.JPG",
+      "dji_fly_20261109_094854_0024_1794213561808_photo.JPG",
+      "dji_fly_20261109_094916_0025_1794213560528_photo.JPG"
+     ],
+     "notes": "Entry Notes: meet danny at the property",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "Complete_COT.pdf (C/T 1363/502, Lot 60 on Plan 10654, 701 m\u00b2)",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/09-11-2026/32 Wilfred Rd, Thornlie WA 6108, Australia/Aerial - Drone Photography/Complete_COT.pdf"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/09-11-2026/32 Wilfred Rd, Thornlie WA 6108, Australia/Aerial - Drone Photography"
+    },
+    {
+     "slug": "157b_fulham_st",
+     "addr": "157B Fulham St, Kewdale WA 6105",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
+     "agency": "red",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261109145127_0127_D.jpg",
+      "DJI_20261109145122_0126_D.jpg"
+     ],
+     "src": "09-nov-2026/157b_fulham_st/src/",
+     "map": "157b_fulham_st_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261109145127_0127_D.jpg",
+      "DJI_20261109145122_0126_D.jpg",
+      "DJI_20261109145153_0128_D.jpg",
+      "DJI_20261109145208_0129_D.jpg",
+      "DJI_20261109145229_0130_D.jpg",
+      "DJI_20261109145242_0131_D.jpg",
+      "DJI_20261109145254_0132_D.jpg",
+      "DJI_20261109145307_0133_D.jpg",
+      "DJI_20261109145320_0134_D.jpg",
+      "DJI_20261109145332_0135_D.jpg"
+     ],
+     "notes": "Entry Notes: I will open\nAmenities or features to highlight: need clean wide shots for VF\nStrata: Yes\nLand size: 347\nTitle and land plan: yes \u2014 Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line\nAny specific boundaries or land features to mark on the aerial photos: BELMONT FORUM\nTOMATO LAKE\nREADING CINEMA\nWICCA PARK\nFAULKNER PARK",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "strata-plan-25696.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/09-11-2026/157B Fulham St, Kewdale WA 6105, Australia/Aerial - Drone Photography/strata-plan-25696.pdf"
+      },
+      {
+       "name": "strata-plan-25696-title-list.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/09-11-2026/157B Fulham St, Kewdale WA 6105, Australia/Aerial - Drone Photography/strata-plan-25696-title-list.pdf"
+      },
+      {
+       "name": "certificate-of-title-1987-623.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/09-11-2026/157B Fulham St, Kewdale WA 6105, Australia/Aerial - Drone Photography/certificate-of-title-1987-623.pdf"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/09-11-2026/157B Fulham St, Kewdale WA 6105, Australia/Aerial - Drone Photography"
+    },
+    {
+     "slug": "2_49_mathoura_st",
+     "addr": "2/49 Mathoura St, Midland WA 6056",
+     "who": "Harry King \u00b7 Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261109_104346_0202_1794232916482_photo_r180.jpg",
+      "dji_fly_20261109_104340_0201_1794232917275_photo.jpg"
+     ],
+     "src": "09-nov-2026/2_49_mathoura_st/src/",
+     "map": "2_49_mathoura_st_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261109_104346_0202_1794232916482_photo_r180.jpg",
+      "dji_fly_20261109_104340_0201_1794232917275_photo.jpg",
+      "dji_fly_20261109_104424_0203_1794232915803_photo.jpg",
+      "dji_fly_20261109_104448_0204_1794232915210_photo.jpg",
+      "dji_fly_20261109_104514_0205_1794232914372_photo.jpg",
+      "dji_fly_20261109_104540_0206_1794232913613_photo.jpg",
+      "dji_fly_20261109_104600_0207_1794232912680_photo.jpg",
+      "dji_fly_20261109_104624_0208_1794232911786_photo.jpg",
+      "dji_fly_20261109_104652_0209_1794232910908_photo.jpg",
+      "dji_fly_20261109_104720_0210_1794232910064_photo.jpg"
+     ],
+     "notes": "Entry Notes: Meet Harry there at the property with the owner.",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "Strata Plan 27779.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/09-11-2026/2-49 Mathoura St, Midland WA 6056, Australia/Aerial - Drone Photography/Strata Plan 27779.pdf"
+      },
+      {
+       "name": "Certificate of Title 2022-878 Villa 2, 49 Mathoura Street, MIDLAND 6056.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/09-11-2026/2-49 Mathoura St, Midland WA 6056, Australia/Aerial - Drone Photography/Certificate of Title 2022-878 Villa 2, 49 Mathoura Street, MIDLAND 6056.pdf"
+      },
+      {
+       "name": "image006.png",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/09-11-2026/2-49 Mathoura St, Midland WA 6056, Australia/Aerial - Drone Photography/image006.png"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/09-11-2026/2-49 Mathoura St, Midland WA 6056, Australia/Aerial - Drone Photography"
+    },
+    {
+     "slug": "25_phoenix_dr",
+     "addr": "25 Phoenix Dr, Kenwick WA 6107",
+     "who": "Nic Pulvirenti \u00b7 Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261109_110006_0027_1794213557059_photo.JPG",
+      "dji_fly_20261109_105958_0026_1794213559228_photo.JPG"
+     ],
+     "src": "09-nov-2026/25_phoenix_dr/src/",
+     "map": "25_phoenix_dr_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261109_110006_0027_1794213557059_photo.JPG",
+      "dji_fly_20261109_105958_0026_1794213559228_photo.JPG",
+      "dji_fly_20261109_110044_0028_1794213555797_photo.JPG",
+      "dji_fly_20261109_110058_0029_1794213554532_photo.JPG",
+      "dji_fly_20261109_110116_0030_1794213553266_photo.JPG",
+      "dji_fly_20261109_110132_0031_1794213551998_photo.JPG",
+      "dji_fly_20261109_110154_0032_1794213550668_photo.JPG",
+      "dji_fly_20261109_110210_0033_1794213549324_photo.JPG",
+      "dji_fly_20261109_110228_0034_1794213548014_photo.JPG",
+      "dji_fly_20261109_110242_0035_1794213546693_photo.JPG"
+     ],
+     "notes": "",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "Plan 19056.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/09-11-2026/25 Phoenix Dr, Kenwick WA 6107, Australia/Aerial - Drone Photography/Plan 19056.pdf"
+      },
+      {
+       "name": "Certificate of Title 1970-83 25 Phoenix Drive, KENWICK 6107.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/09-11-2026/25 Phoenix Dr, Kenwick WA 6107, Australia/Aerial - Drone Photography/Certificate of Title 1970-83 25 Phoenix Drive, KENWICK 6107.pdf"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/09-11-2026/25 Phoenix Dr, Kenwick WA 6107, Australia/Aerial - Drone Photography"
+    },
+    {
+     "slug": "5_price_ct",
+     "addr": "5 Price Ct, Brookdale WA 6112",
+     "who": "Sally Bulpitt \u00b7 Rodway Group",
+     "agency": "rodway",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261109170240_0137_D_r180.jpg",
+      "DJI_20261109170231_0136_D.jpg"
+     ],
+     "src": "09-nov-2026/5_price_ct/src/",
+     "map": "5_price_ct_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261109170240_0137_D_r180.jpg",
+      "DJI_20261109170231_0136_D.jpg",
+      "DJI_20261109170258_0138_D.jpg",
+      "DJI_20261109170312_0139_D.jpg",
+      "DJI_20261109170343_0140_D.jpg",
+      "DJI_20261109170358_0141_D.jpg",
+      "DJI_20261109170413_0142_D.jpg",
+      "DJI_20261109170424_0143_D.jpg",
+      "DJI_20261109170501_0144_D.jpg",
+      "DJI_20261109170513_0145_D.jpg"
+     ],
+     "notes": "Entry Notes: owner and myself will be there\nLand size: 701m2\nTitle and land plan: title yes",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "certificate-of-title-with-sketch-1791-412-certificate-of-title-1791-412.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/09-11-2026/5 Price Ct, Brookdale WA 6112, Australia/Aerial - Drone Photography/certificate-of-title-with-sketch-1791-412-certificate-of-title-1791-412.pdf"
+      },
+      {
+       "name": "certificate-of-title-with-sketch-1791-412-sketch-for-1791-412.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/09-11-2026/5 Price Ct, Brookdale WA 6112, Australia/Aerial - Drone Photography/certificate-of-title-with-sketch-1791-412-sketch-for-1791-412.pdf"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/09-11-2026/5 Price Ct, Brookdale WA 6112, Australia/Aerial - Drone Photography"
+    },
+    {
+     "slug": "14_connell_way_lot1",
+     "addr": "Proposed Lot 1, 14 Connell Way, Girrawheen WA 6064",
+     "who": "Emma Scharf \u00b7 Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261109_152452_0036_1794213545396_photo.JPG",
+      "dji_fly_20261109_152512_0039_1794213540873_photo.JPG"
+     ],
+     "src": "09-nov-2026/14_connell_way_lot1/src/",
+     "map": "14_connell_way_lot1_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261109_152452_0036_1794213545396_photo.JPG",
+      "dji_fly_20261109_152512_0039_1794213540873_photo.JPG",
+      "dji_fly_20261109_152538_0040_1794213538394_photo.JPG",
+      "dji_fly_20261109_152606_0041_1794213536980_photo.JPG",
+      "dji_fly_20261109_152646_0042_1794213535591_photo.JPG",
+      "dji_fly_20261109_152702_0043_1794213534199_photo.JPG",
+      "dji_fly_20261109_152734_0044_1794213532785_photo.JPG",
+      "dji_fly_20261109_152746_0045_1794213531382_photo.JPG",
+      "dji_fly_20261109_152758_0046_1794213529976_photo.JPG",
+      "dji_fly_20261109_152808_0047_1794213528666_photo.JPG",
+      "dji_fly_20261109_152922_0048_1794213526382_photo.JPG"
+     ],
+     "notes": "Entry Notes: Land - lots 1 and 2\nLand size: 2 Lots, no title yet will forward the subdivision plans once the seller sends to me!\nTitle and land plan: ye \u2014 Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line\nAny specific boundaries or land features to mark on the aerial photos: NA\n\nLot 1 and 2 only",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "FEATURE PLAN - WAPC - 14 Connell Way.pdf (proposed 3-lot survey-strata: Lot 1 200 m\u00b2, Lot 2 187 m\u00b2)",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/09-11-2026/14 Connell Way, Girrawheen WA 6064, Australia/Aerial - Drone Photography/FEATURE PLAN - WAPC - 14 Connell Way.pdf"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/09-11-2026/14 Connell Way, Girrawheen WA 6064, Australia/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "hazy/smeared horizon on several aerials (0041, 0042, 0044, 0045) and over-saturated ovals",
+     "lot": "200 m\u00b2 \u2014 13.00 / 14.00 / 12.50 / 2.83 / 10.51 / 2.12 m (proposed subdivision plan)"
+    },
+    {
+     "slug": "14_connell_way_lot2",
+     "addr": "Proposed Lot 2, 14 Connell Way, Girrawheen WA 6064",
+     "who": "Emma Scharf \u00b7 Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261109_152452_0036_1794213545396_photo.JPG",
+      "dji_fly_20261109_152512_0039_1794213540873_photo.JPG"
+     ],
+     "src": "09-nov-2026/14_connell_way_lot2/src/",
+     "map": "14_connell_way_lot2_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261109_152452_0036_1794213545396_photo.JPG",
+      "dji_fly_20261109_152512_0039_1794213540873_photo.JPG",
+      "dji_fly_20261109_152538_0040_1794213538394_photo.JPG",
+      "dji_fly_20261109_152606_0041_1794213536980_photo.JPG",
+      "dji_fly_20261109_152646_0042_1794213535591_photo.JPG",
+      "dji_fly_20261109_152702_0043_1794213534199_photo.JPG",
+      "dji_fly_20261109_152734_0044_1794213532785_photo.JPG",
+      "dji_fly_20261109_152746_0045_1794213531382_photo.JPG",
+      "dji_fly_20261109_152758_0046_1794213529976_photo.JPG",
+      "dji_fly_20261109_152808_0047_1794213528666_photo.JPG",
+      "dji_fly_20261109_152922_0048_1794213526382_photo.JPG"
+     ],
+     "notes": "Entry Notes: Land - lots 1 and 2\nLand size: 2 Lots, no title yet will forward the subdivision plans once the seller sends to me!\nTitle and land plan: ye \u2014 Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line\nAny specific boundaries or land features to mark on the aerial photos: NA\n\nLot 1 and 2 only",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "FEATURE PLAN - WAPC - 14 Connell Way.pdf (proposed 3-lot survey-strata: Lot 1 200 m\u00b2, Lot 2 187 m\u00b2)",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/09-11-2026/14 Connell Way, Girrawheen WA 6064, Australia/Aerial - Drone Photography/FEATURE PLAN - WAPC - 14 Connell Way.pdf"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/09-11-2026/14 Connell Way, Girrawheen WA 6064, Australia/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "hazy/smeared horizon on several aerials (0041, 0042, 0044, 0045) and over-saturated ovals",
+     "lot": "187 m\u00b2 \u2014 12.50 / 13.17 / 12.50 / 2.83 / 9.17 / 2.83 m (proposed subdivision plan)"
+    },
+    {
+     "slug": "8_36_north_st",
+     "addr": "8/36 North St, Midland WA 6056",
+     "who": "Vanessa Tuttle \u00b7 Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261109_164516_0050_1794213523650_photo.JPG",
+      "dji_fly_20261109_164510_0049_1794213525010_photo.JPG"
+     ],
+     "src": "09-nov-2026/8_36_north_st/src/",
+     "map": "8_36_north_st_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261109_164516_0050_1794213523650_photo.JPG",
+      "dji_fly_20261109_164510_0049_1794213525010_photo.JPG",
+      "dji_fly_20261109_164616_0052_1794213520881_photo.JPG",
+      "dji_fly_20261109_164630_0053_1794213519426_photo.JPG",
+      "dji_fly_20261109_164640_0054_1794213517987_photo.JPG",
+      "dji_fly_20261109_164706_0055_1794213516479_photo.JPG",
+      "dji_fly_20261109_164746_0057_1794213513673_photo.JPG",
+      "dji_fly_20261109_164814_0058_1794213512330_photo.JPG"
+     ],
+     "notes": "Entry Notes: Meet Kiarna onsite to let you in [phone removed] 3.30pm\nAmenities or features to highlight: view from balcony raised lounge ceiling\nTitle and land plan: Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line",
+     "portrait": false,
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/09-11-2026/8-36 North St, Midland WA 6056, Australia/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "white haze along the horizon on 0057/0058 (0051 tilted and 0056 fogged were dropped)",
+     "lot": "strata unit \u2014 no boundary"
+    },
+    {
+     "slug": "45_amethyst_cres",
+     "addr": "45 Amethyst Cres, Mount Richon WA 6112",
+     "who": "Jayden Cooke \u00b7 Rodway Group",
+     "agency": "rodway",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261109220857_0157_D.jpg",
+      "DJI_20261109220846_0156_D.jpg"
+     ],
+     "src": "09-nov-2026/45_amethyst_cres/src/",
+     "map": "45_amethyst_cres_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261109220857_0157_D.jpg",
+      "DJI_20261109220846_0156_D.jpg",
+      "DJI_20261109220922_0158_D.jpg",
+      "DJI_20261109220929_0159_D.jpg",
+      "DJI_20261109221002_0160_D.jpg",
+      "DJI_20261109221014_0161_D.jpg",
+      "DJI_20261109221024_0162_D.jpg",
+      "DJI_20261109221033_0163_D.jpg",
+      "DJI_20261109221039_0164_D.jpg",
+      "DJI_20261109221101_0165_D.jpg",
+      "DJI_20261109221119_0166_D.jpg",
+      "DJI_20261109221135_0167_D.jpg",
+      "DJI_20261109221151_0168_D.jpg",
+      "DJI_20261109221205_0169_D.jpg",
+      "DJI_20261109221219_0170_D.jpg",
+      "DJI_20261109221232_0171_D.jpg",
+      "DJI_20261109221245_0172_D.jpg",
+      "DJI_20261109221300_0173_D.jpg"
+     ],
+     "notes": "",
+     "portrait": false,
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/09-11-2026/45 Amethyst Cres, Mount Richon WA 6112, Australia/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "twilight shoot \u2014 edit sky/colour; remove car and person on the driveway; check boundary on the 2nd top-down (0156) \u2014 it is misaligned",
+     "lot": "794 m\u00b2 \u2014 38.23 / 20.26 / 40.95 / 20.08 m (cadastre)"
+    }
+   ]
+  },
+  {
    "id": "07-nov-2026",
    "label": "Sat 7 Nov 2026",
    "gallery": "07-nov-2026/",

@@ -1,0 +1,127 @@
+{
+ "address": "2/49 Mathoura St, Midland WA 6056",
+ "lat": -31.88641,
+ "lng": 116.01758,
+ "pins": [
+  {
+   "name": "St Brigid's Primary School",
+   "cat": "school",
+   "lat": -31.87564,
+   "lng": 116.01435
+  },
+  {
+   "name": "Warnock Park",
+   "cat": "park",
+   "lat": -31.8839966,
+   "lng": 116.0188707
+  },
+  {
+   "name": "Swan Active Midland",
+   "cat": "aquatic",
+   "lat": -31.8834507,
+   "lng": 116.0247076
+  },
+  {
+   "name": "Ron Jose Oval",
+   "cat": "park",
+   "lat": -31.88094,
+   "lng": 116.02482
+  },
+  {
+   "name": "Moir Park",
+   "cat": "park",
+   "lat": -31.88722,
+   "lng": 116.0272
+  },
+  {
+   "name": "Harold Snow Bennett Park",
+   "cat": "park",
+   "lat": -31.8893659,
+   "lng": 116.0201628
+  },
+  {
+   "name": "St Anthony's School Greenmount",
+   "cat": "school",
+   "lat": -31.89625,
+   "lng": 116.04356
+  },
+  {
+   "name": "Greenmount National Park",
+   "cat": "regional_park",
+   "lat": -31.902129,
+   "lng": 116.0521746
+  },
+  {
+   "name": "Hillview Public Golf Course",
+   "cat": "golf",
+   "lat": -31.939379,
+   "lng": 116.01881
+  },
+  {
+   "name": "Midland Gate Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.8898252,
+   "lng": 116.0093
+  },
+  {
+   "name": "Youth Futures Community School Midland",
+   "cat": "school",
+   "lat": -31.8922629,
+   "lng": 116.0066971
+  },
+  {
+   "name": "St John of God Midland Public and Private Hospitals",
+   "cat": "hospital",
+   "lat": -31.8946266,
+   "lng": 116.0070596
+  },
+  {
+   "name": "Indie School Western Australia (Midland)",
+   "cat": "school",
+   "lat": -31.8934,
+   "lng": 116.0035
+  },
+  {
+   "name": "Weeip Park",
+   "cat": "park",
+   "lat": -31.88745,
+   "lng": 116.00775
+  },
+  {
+   "name": "Midland Public Library",
+   "cat": "library",
+   "lat": -31.8894128,
+   "lng": 116.0026456
+  },
+  {
+   "name": "Woodbridge Riverside Park",
+   "cat": "lake",
+   "lat": -31.8863898,
+   "lng": 115.9916694
+  },
+  {
+   "name": "Corti Park",
+   "cat": "park",
+   "lat": -31.8844626,
+   "lng": 116.0147069
+  },
+  {
+   "name": "Koolbardi Park",
+   "cat": "park",
+   "lat": -31.8803639,
+   "lng": 116.0139724
+  },
+  {
+   "name": "La Salle College",
+   "cat": "school",
+   "lat": -31.8786203,
+   "lng": 116.0053066
+  },
+  {
+   "name": "Midland Station",
+   "cat": "train",
+   "lat": -31.8923777,
+   "lng": 116.0037349
+  }
+ ]
+}

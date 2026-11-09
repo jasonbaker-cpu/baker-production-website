@@ -1,0 +1,103 @@
+{
+ "address": "157B Fulham St, Kewdale WA 6105",
+ "lat": -31.96879,
+ "lng": 115.93238,
+ "pins": [
+  {
+   "name": "Belmont Forum",
+   "cat": "shopping",
+   "lat": -31.9645866,
+   "lng": 115.9355207
+  },
+  {
+   "name": "Tomato Lake",
+   "cat": "lake",
+   "lat": -31.97572,
+   "lng": 115.9323
+  },
+  {
+   "name": "Reading Cinemas Belmont",
+   "cat": "landmark",
+   "lat": -31.9673767,
+   "lng": 115.9334823
+  },
+  {
+   "name": "Wicca Reserve",
+   "cat": "park",
+   "lat": -31.9678917,
+   "lng": 115.9310389
+  },
+  {
+   "name": "Faulkner Park",
+   "cat": "park",
+   "lat": -31.9620262,
+   "lng": 115.9324472
+  },
+  {
+   "name": "Belmont Village Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.9664963,
+   "lng": 115.9334232
+  },
+  {
+   "name": "Ruth Faulkner Library",
+   "cat": "library",
+   "lat": -31.96284,
+   "lng": 115.9342
+  },
+  {
+   "name": "Australian Islamic College Kewdale",
+   "cat": "school",
+   "lat": -31.9806,
+   "lng": 115.9327
+  },
+  {
+   "name": "Notre Dame Catholic Primary School",
+   "cat": "school",
+   "lat": -31.956532910446,
+   "lng": 115.941183360266
+  },
+  {
+   "name": "St Augustine's Primary School",
+   "cat": "school",
+   "lat": -31.9601,
+   "lng": 115.9066
+  },
+  {
+   "name": "Carlisle Station",
+   "cat": "train",
+   "lat": -31.9798827,
+   "lng": 115.9100391
+  },
+  {
+   "name": "Redcliffe Station",
+   "cat": "train",
+   "lat": -31.93359,
+   "lng": 115.9497086
+  },
+  {
+   "name": "Peet Park",
+   "cat": "park",
+   "lat": -31.9688928,
+   "lng": 115.9240622
+  },
+  {
+   "name": "Maylands Peninsula Public Golf Course",
+   "cat": "golf",
+   "lat": -31.94611,
+   "lng": 115.90056
+  },
+  {
+   "name": "Redgum Park",
+   "cat": "park",
+   "lat": -31.96843,
+   "lng": 115.93483
+  },
+  {
+   "name": "Willow Lake Park",
+   "cat": "park",
+   "lat": -31.9718065,
+   "lng": 115.9348722
+  }
+ ]
+}

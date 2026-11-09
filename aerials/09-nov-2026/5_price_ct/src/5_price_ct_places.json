@@ -1,0 +1,127 @@
+{
+ "address": "5 Price Ct, Brookdale WA 6112",
+ "lat": -32.16115,
+ "lng": 115.99738,
+ "pins": [
+  {
+   "name": "Armadale Fitness and Aquatic Centre",
+   "cat": "aquatic",
+   "lat": -32.127329526528,
+   "lng": 115.997577643021
+  },
+  {
+   "name": "Dale Christian School",
+   "cat": "school",
+   "lat": -32.159329998381,
+   "lng": 115.998740045353
+  },
+  {
+   "name": "Armadale Arena",
+   "cat": "park",
+   "lat": -32.158113,
+   "lng": 116.003068
+  },
+  {
+   "name": "Gwynne Park",
+   "cat": "park",
+   "lat": -32.157164,
+   "lng": 116.0059368
+  },
+  {
+   "name": "John Calvin Christian College",
+   "cat": "school",
+   "lat": -32.14882,
+   "lng": 116.00733
+  },
+  {
+   "name": "Armadale Station",
+   "cat": "train",
+   "lat": -32.153689,
+   "lng": 116.012962
+  },
+  {
+   "name": "Armadale Shopping City",
+   "cat": "shopping",
+   "lat": -32.1525933,
+   "lng": 116.0146789
+  },
+  {
+   "name": "Armadale Library",
+   "cat": "library",
+   "lat": -32.1511,
+   "lng": 116.0143
+  },
+  {
+   "name": "Minnawarra Park",
+   "cat": "park",
+   "lat": -32.14889,
+   "lng": 116.0169
+  },
+  {
+   "name": "Horrie Hill Reserve",
+   "cat": "park",
+   "lat": -32.1644779,
+   "lng": 116.0074688
+  },
+  {
+   "name": "Don Simmons Reserve",
+   "cat": "park",
+   "lat": -32.1636014,
+   "lng": 116.0019157
+  },
+  {
+   "name": "Kingfisher View Reserve",
+   "cat": "park",
+   "lat": -32.1671,
+   "lng": 116.0027
+  },
+  {
+   "name": "Australian Christian College \u2013 Darling Downs",
+   "cat": "school",
+   "lat": -32.174680699676,
+   "lng": 116.004294564949
+  },
+  {
+   "name": "Bungendore Park",
+   "cat": "regional_park",
+   "lat": -32.1747793,
+   "lng": 116.0356745
+  },
+  {
+   "name": "Xavier Catholic School",
+   "cat": "school",
+   "lat": -32.161224434227,
+   "lng": 115.991946261372
+  },
+  {
+   "name": "Markwell Park",
+   "cat": "park",
+   "lat": -32.1598,
+   "lng": 115.9907
+  },
+  {
+   "name": "Sienna Wood Town Centre",
+   "cat": "shopping",
+   "lat": -32.1642545,
+   "lng": 115.9759301
+  },
+  {
+   "name": "The Springs Club",
+   "cat": "golf",
+   "lat": -32.158407,
+   "lng": 115.959237
+  },
+  {
+   "name": "Sienna Wood Explorer Park",
+   "cat": "playground",
+   "lat": -32.1565,
+   "lng": 115.9874
+  },
+  {
+   "name": "Haynes Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.147709537366,
+   "lng": 115.98850968107
+  }
+ ]
+}

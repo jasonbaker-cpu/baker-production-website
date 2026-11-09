@@ -1,0 +1,67 @@
+{
+ "address": "25 Phoenix Dr, Kenwick WA 6107",
+ "lat": -32.03348,
+ "lng": 115.99203,
+ "pins": [
+  {
+   "name": "Hartfield Golf Club",
+   "cat": "golf",
+   "lat": -31.9988709,
+   "lng": 116.005486
+  },
+  {
+   "name": "St Francis' School",
+   "cat": "school",
+   "lat": -32.0461,
+   "lng": 115.98433
+  },
+  {
+   "name": "Maddington Central",
+   "cat": "shopping",
+   "lat": -32.0533579,
+   "lng": 115.9784746
+  },
+  {
+   "name": "Avila Place Reserve",
+   "cat": "park",
+   "lat": -32.0341,
+   "lng": 115.9902
+  },
+  {
+   "name": "Brixton Street Wetlands",
+   "cat": "reserve",
+   "lat": -32.0313053,
+   "lng": 115.9705158
+  },
+  {
+   "name": "Masters Street Reserve",
+   "cat": "park",
+   "lat": -32.0307059,
+   "lng": 115.986719
+  },
+  {
+   "name": "Gaskin Park",
+   "cat": "park",
+   "lat": -32.0302,
+   "lng": 115.9835
+  },
+  {
+   "name": "Mills Park",
+   "cat": "park",
+   "lat": -32.02481,
+   "lng": 115.96932
+  },
+  {
+   "name": "Kenwick Station",
+   "cat": "train",
+   "lat": -32.0363799,
+   "lng": 115.9697212
+  },
+  {
+   "name": "Maddington Station",
+   "cat": "train",
+   "lat": -32.0493729,
+   "lng": 115.982936
+  }
+ ]
+}

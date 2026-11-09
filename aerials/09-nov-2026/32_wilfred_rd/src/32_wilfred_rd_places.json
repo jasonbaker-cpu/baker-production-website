@@ -1,0 +1,103 @@
+{
+ "address": "32 Wilfred Rd, Thornlie WA 6108",
+ "lat": -32.04674,
+ "lng": 115.94783,
+ "pins": [
+  {
+   "name": "Thornlie Station",
+   "cat": "train",
+   "lat": -32.0473367,
+   "lng": 115.9523821
+  },
+  {
+   "name": "Kenwick Station",
+   "cat": "train",
+   "lat": -32.0363799,
+   "lng": 115.9697212
+  },
+  {
+   "name": "Nicholson Road Station",
+   "cat": "train",
+   "lat": -32.06159,
+   "lng": 115.934678
+  },
+  {
+   "name": "Westfield Carousel",
+   "cat": "shopping",
+   "lat": -32.0194958,
+   "lng": 115.937879
+  },
+  {
+   "name": "Thornlie Square Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.0556845,
+   "lng": 115.9633016
+  },
+  {
+   "name": "Al-Ameen College",
+   "cat": "school",
+   "lat": -32.04501,
+   "lng": 115.93707
+  },
+  {
+   "name": "Australian Islamic College (Thornlie)",
+   "cat": "school",
+   "lat": -32.0540251,
+   "lng": 115.9611396
+  },
+  {
+   "name": "Sacred Heart Primary School Thornlie",
+   "cat": "school",
+   "lat": -32.06789,
+   "lng": 115.95654
+  },
+  {
+   "name": "Fountain College (Ferndale campus)",
+   "cat": "school",
+   "lat": -32.03507,
+   "lng": 115.92978
+  },
+  {
+   "name": "Whaleback Golf Course",
+   "cat": "golf",
+   "lat": -32.052128,
+   "lng": 115.92221
+  },
+  {
+   "name": "Canning River Regional Park",
+   "cat": "regional_park",
+   "lat": -32.0240379,
+   "lng": 115.9189434
+  },
+  {
+   "name": "Thornlie Library",
+   "cat": "library",
+   "lat": -32.0553226,
+   "lng": 115.965042
+  },
+  {
+   "name": "Langford Park Sporting Complex",
+   "cat": "park",
+   "lat": -32.0459025,
+   "lng": 115.943001
+  },
+  {
+   "name": "Bower Street Reserve",
+   "cat": "park",
+   "lat": -32.0459759,
+   "lng": 115.9513784
+  },
+  {
+   "name": "Barson Park",
+   "cat": "park",
+   "lat": -32.05329,
+   "lng": 115.9521
+  },
+  {
+   "name": "Aylesford Reserve",
+   "cat": "park",
+   "lat": -32.0485596,
+   "lng": 115.9526438
+  }
+ ]
+}

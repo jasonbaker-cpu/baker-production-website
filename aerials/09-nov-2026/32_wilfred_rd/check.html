@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 32 Wilfred Rd, Thornlie WA 6108</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary · 701 m²</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (12)</div></div></div>
+<script>const D={"lat": -32.04674, "lng": 115.94783, "poly": [[-32.04668676, 115.9476198], [-32.04656267, 115.94777221], [-32.04679345, 115.94802819], [-32.04691754, 115.94787578]], "places": [{"name": "Thornlie Square Shopping Centre", "lat": -32.0556845, "lng": 115.9633016, "d": "1.8 km"}, {"name": "Sacred Heart Primary School Thornlie", "lat": -32.06789, "lng": 115.95654, "d": "2.5 km"}, {"name": "Thornlie Station", "lat": -32.0473367, "lng": 115.9523821, "d": "430 m"}, {"name": "Barson Park", "lat": -32.05329, "lng": 115.9521, "d": "830 m"}, {"name": "Al-Ameen College", "lat": -32.04501, "lng": 115.93707, "d": "1.0 km"}, {"name": "Whaleback Golf Course", "lat": -32.052128, "lng": 115.92221, "d": "2.5 km"}, {"name": "Langford Park Sporting Complex", "lat": -32.0459025, "lng": 115.943001, "d": "470 m"}, {"name": "Westfield Carousel", "lat": -32.0194958, "lng": 115.937879, "d": "3.2 km"}, {"name": "Fountain College (Ferndale campus)", "lat": -32.03507, "lng": 115.92978, "d": "2.1 km"}, {"name": "Kenwick Station", "lat": -32.0363799, "lng": 115.9697212, "d": "2.4 km"}, {"name": "Bower Street Reserve", "lat": -32.0459759, "lng": 115.9513784, "d": "350 m"}, {"name": "Nicholson Road Station", "lat": -32.06159, "lng": 115.934678, "d": "2.1 km"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[40,40],maxZoom:20});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[230,40]});
+</script></body></html>

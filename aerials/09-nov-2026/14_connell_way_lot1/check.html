@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · Proposed Lot 1, 14 Connell Way, Girrawheen WA 6064</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary · 200 m²</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (11)</div></div></div>
+<script>const D={"lat": -31.8378049, "lng": 115.8507501, "poly": [[-31.83774263, 115.85079161], [-31.83774238, 115.85065426], [-31.83786865, 115.85065395], [-31.83786889, 115.85078602], [-31.83785089, 115.8508072], [-31.83775619, 115.85080743]], "places": [{"name": "Mirrabooka Square Shopping Centre", "lat": -31.8720187, "lng": 115.8594127, "d": "3.9 km"}, {"name": "Emmanuel Christian Community School", "lat": -31.8461908, "lng": 115.8482654, "d": "960 m"}, {"name": "Mercy College", "lat": -31.8484324, "lng": 115.8564539, "d": "1.3 km"}, {"name": "Ferrara Park", "lat": -31.8389209, "lng": 115.8500845, "d": "140 m"}, {"name": "Shelvock Reserve", "lat": -31.8359332, "lng": 115.8578831, "d": "710 m"}, {"name": "Alexander Heights Shopping Centre", "lat": -31.8296, "lng": 115.8537, "d": "960 m"}, {"name": "Paloma Park", "lat": -31.8302221, "lng": 115.8512682, "d": "850 m"}, {"name": "Warwick Station", "lat": -31.8448271, "lng": 115.7963953, "d": "5.2 km"}, {"name": "Marangaroo Golf Course", "lat": -31.827041, "lng": 115.827923, "d": "2.5 km"}, {"name": "Stirling Leisure Balga", "lat": -31.854353, "lng": 115.838478, "d": "2.2 km"}, {"name": "Girrawheen Library", "lat": -31.8397, "lng": 115.83872, "d": "1.2 km"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[40,40],maxZoom:20});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[230,40]});
+</script></body></html>
