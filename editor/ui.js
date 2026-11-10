@@ -28,10 +28,10 @@ function newPhoto(name, base, meta, sample){
     disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0, (!sample && prefs.skyPlate !== "S") ? { con:10 } : {}), undo:[], redo:[] };
   return p;
 }
-const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet","skyForce","skyLineUser"];
+const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet","skyForce","skyLineUser","straight"];
 function snapshotOf(p){ const o={}; SNAP_KEYS.forEach(k=>o[k]=p[k]); return JSON.stringify(o); }
 function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
-function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); ensureFinish(p); }
+function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); if ((p.straight||0)!==(p._straightBuilt||0)) buildStraightBase(p); ensureFinish(p); }
 function undo(){ const p=P(); if(!p||!p.undo.length) return; p.redo.push(snapshotOf(p)); restore(p,p.undo.pop()); sel=null; refreshAll(); }
 function redo(){ const p=P(); if(!p||!p.redo.length) return; p.undo.push(snapshotOf(p)); restore(p,p.redo.pop()); sel=null; refreshAll(); }
 function updateUndo(){ const p=P(); $("undoBtn").disabled=!p||!p.undo.length; $("redoBtn").disabled=!p||!p.redo.length; }
@@ -82,6 +82,7 @@ function draw(){
   ctx.setTransform(view.s*dpr,0,0,view.s*dpr,view.tx*dpr,view.ty*dpr);
   ctx.imageSmoothingQuality="high";
   drawScene(ctx, p, { hide:hideGfx, before:showBefore });
+  if (window.__gridOn && !hideGfx && !showBefore){ const k=1/view.s; ctx.save(); ctx.strokeStyle="rgba(255,255,255,.55)"; ctx.lineWidth=1*k; for (let i=1;i<12;i++){ ctx.beginPath(); ctx.moveTo(0,p.h*i/12); ctx.lineTo(p.w,p.h*i/12); ctx.stroke(); ctx.beginPath(); ctx.moveTo(p.w*i/12,0); ctx.lineTo(p.w*i/12,p.h); ctx.stroke(); } ctx.restore(); }   /* 10 Nov: straighten grid */
   { const cr = !hideGfx && lotCrop(p); if (cr){ const k=1/view.s; ctx.save(); ctx.fillStyle="rgba(0,0,0,.45)"; ctx.beginPath(); ctx.rect(0,0,p.w,p.h); ctx.rect(cr[0],cr[1],cr[2],cr[3]); ctx.fill("evenodd");
     ctx.strokeStyle="#f2b33d"; ctx.lineWidth=2*k; ctx.setLineDash([8*k,6*k]); ctx.strokeRect(cr[0],cr[1],cr[2],cr[3]); ctx.setLineDash([]); ctx.font=`600 ${14*k}px system-ui`; ctx.fillStyle="#f2b33d"; ctx.fillText(tool==="crop" ? "Crop · drag to move, corners to resize" : (p.crop ? "Export area · cropped" : "Export area · 3:2"), cr[0]+8*k, cr[1]+20*k); if (tool==="crop"){ ctx.fillStyle="#f2b33d"; [[0,0],[1,0],[0,1],[1,1]].forEach(([a,b])=>ctx.fillRect(cr[0]+a*cr[2]-7*k, cr[1]+b*cr[3]-7*k, 14*k, 14*k)); } ctx.restore(); } }
   if (hideGfx || showBefore) return;
