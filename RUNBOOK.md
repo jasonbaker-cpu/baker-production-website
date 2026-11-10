@@ -302,3 +302,8 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 - prep_day squares every top-down after the street turn: `straighten.nadir_skew` finds the lean of the houses/fences (needs straight edges in BOTH directions, so a curved or diagonal road can't fool it; max 6°) and `square_nadir` turns + zooms the photo (camera yaw/zoom follow). File gets `_sq`. `"noSquare": true` on a job skips it; frames with a hand-traced `pxpoly` are never turned.
 - The run passes `gridAng` to the editor. In addLot a box-shaped lot that sits up to 20° off the houses gets the camera heading corrected by that amount and is re-projected (DJI Fly / Mini 4 Pro headings are often 10°+ out — 10 Spotted was 13°, which turned AND shifted the outline), then its corners are squared to the frame (≤4°).
 - t12 prints `squared [yawFix, {by|skipped}]` per top-down. A yawFix over 10° or "skipped" → LOOK at that top-down before publishing (a lot genuinely angled to its street would be wrong to square).
+
+## Lens correction + the look (Jason 10 Nov 2026, 157B Fulham: "not straight", "editing looks kinda weird", "a little brighter")
+- prep_day lens-corrects Mavic 3 Pro (L2D-20c) photos that came from our DNG conversion before levelling (`straighten.undistort_flight`, k1 −0.038; marked `baker:Undist` in the XMP so it never runs twice). DJI's own JPGs (Mini 4 Pro / in-camera) are untouched. `"noLens": true` skips a job.
+- 157B Fulham was redone with TUNE {fine 0.6, mid 0.8, lookY 180} + con 14 / sat 6 (less crunchy texture, brighter). If Jason approves, make those the core.js defaults.
+- C21 top-downs: blur outside the lot is back on (Jason 10 Nov); gold line + dark lot fill stay.

@@ -165,3 +165,40 @@ def square_nadir(pil, ang):
     zoom = math.cos(t) + max(W / H, H / W) * math.sin(t)
     M = cv2.getRotationMatrix2D((W / 2, H / 2), ang, zoom)          # cv2: positive = counter-clockwise, undoing a clockwise lean
     return Image.fromarray(cv2.warpAffine(a, M, (W, H), flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REFLECT)), zoom
+
+# 10 Nov 2026 (Jason: "the image is not straight" on 157B Fulham; "are you doing the lens distortion thing as well?").
+# Mavic 3 Pro (Hasselblad L2D-20c) photos converted from DNG still carry barrel distortion: the horizon bows up in the
+# middle (measured sag ~8 px on 1500 px across 5 frames). k1 = -0.038 (normalised by the focal length) flattens it.
+LENS_K1 = {'L2D-20c': -0.038}
+
+def lens_k1(path):
+    raw = open(path, 'rb').read(600000).decode('latin1')
+    if 'baker:Undist' in raw: return 0.0
+    m = re.search(r'tiff:Model="([^"]+)"', raw)
+    if not m or 'image/dng' not in raw: return 0.0          # DJI's own JPGs are already dewarped in camera
+    return LENS_K1.get(m.group(1), 0.0)
+
+def undistort_file(src, dst, k1, f35=24.0):
+    raw = open(src, 'rb').read(); pil = Image.open(io.BytesIO(raw)).convert('RGB'); a = np.asarray(pil); H, W = a.shape[:2]
+    fp = f35 * math.hypot(W, H) / 43.27
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32); u = (xx - W / 2) / fp; v = (yy - H / 2) / fp; s = 1 + k1 * (u * u + v * v)
+    out = cv2.remap(a, (u * s * fp + W / 2).astype(np.float32), (v * s * fp + H / 2).astype(np.float32), cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REFLECT)
+    b = io.BytesIO(); Image.fromarray(out).save(b, 'JPEG', quality=95); j = b.getvalue()
+    segs = []
+    for sg in app1_segments(raw):
+        if b'http://ns.adobe.com/xap/1.0/' in sg[4:44] and b'baker:Undist' not in sg:
+            body = sg[4:].replace(b'drone-dji:GimbalRollDegree=', b'baker:Undist="%.4f" drone-dji:GimbalRollDegree=' % k1, 1)
+            if b'xmlns:baker' not in body: body = body.replace(b'xmlns:drone-dji=', b'xmlns:baker="https://bakerproduction.com/ns/1.0/" xmlns:drone-dji=', 1)
+            sg = b'\xff\xe1' + (len(body) + 2).to_bytes(2, 'big') + body
+        segs.append(sg)
+    open(dst, 'wb').write(j[:2] + b''.join(segs) + j[2:])
+    return dst
+
+def undistort_flight(files, out_dir):
+    """lens-correct every photo that needs it (see LENS_K1). Returns {src: path_to_use}."""
+    res = {}
+    for f in files:
+        k = lens_k1(f)
+        if not k: res[f] = f; continue
+        os.makedirs(out_dir, exist_ok=True); res[f] = undistort_file(f, os.path.join(out_dir, os.path.basename(f)), k)
+    return res

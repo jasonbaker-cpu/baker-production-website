@@ -32,6 +32,13 @@ for j in D['jobs']:
         if r and 'cam' in r and r.get('sc', 0) >= r.get('sc0', 0): cams[f] = r['cam']
     # level the horizon on every oblique shot; the satellite-registered camera gets the same roll/zoom
     lv = {}
+    # 10 Nov: lens correction first (Mavic 3 Pro DNG conversions bow the horizon) so levelling and fences see straight lines
+    if not j.get('noLens'):
+        from straighten import undistort_flight
+        UD = undistort_flight(ph, os.path.join(os.path.dirname(os.path.dirname(ph[0])), 'und'))
+        for f in list(ph):
+            if UD[f] != f and f in cams: cams[UD[f]] = cams.pop(f)
+        ph = [UD[f] for f in ph]
     LF = level_flight(ph, os.path.join(os.path.dirname(os.path.dirname(ph[0])), 'lvl'), force=j.get('level'))
     for f in ph:
         nf, ang, zm = LF[f]
