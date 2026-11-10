@@ -92,7 +92,7 @@
     } else {
       if (!r.dusk && r.skySat > B.skySat) f.push({ k: "sky", t: "Sky too deep/saturated blue (" + r.skySat.toFixed(2) + ", target 0.15-0.30). Soft pale blue, near-white at the horizon, no dark gradient at the top." });
       if (!r.dusk && r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky is grey/white with no blue (" + r.skySat.toFixed(2) + ", target 0.15-0.30). Add a soft pale blue sky." });
-      if (!r.dusk && r.L > 160) f.push({ k: "washed", t: "Exterior washed out (brightness " + r.L.toFixed(0) + ", target 125-150). Bring midtones down slightly so the sky, greens and house have colour and depth." });
+      if (!r.dusk && r.L > 182) f.push({ k: "washed", t: "Exterior very washed out (brightness " + r.L.toFixed(0) + ", target 135-180). Bright and airy is good. Only pull highlights back if the house and greens lose colour; do not darken midtones." });
       if (r.L < (r.dusk ? 100 : B.extDark)) f.push({ k: "dark", t: "Exterior too dark (brightness " + r.L.toFixed(0) + ", min " + B.extDark + "). Lift the whole frame." });
       if (!r.dusk && r.greenF > 0.04 && r.greenSat < B.greenSat) f.push({ k: "greens", t: "Greens dull (" + r.greenSat.toFixed(2) + ", target 0.45+). Add vibrance to lawn, trees and hedges." });
       if (!r.dusk && r.p95 > B.extHot) f.push({ k: "hot", t: "Bright areas too hot (" + r.p95 + ", target 230 or less). Pull highlights back on ground, paths and walls." });
