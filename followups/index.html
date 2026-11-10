@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141412" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Follow-ups">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<title>Baker Follow-ups</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Layout: one phone-width column. Progress first, then today's five as stacked cards, each with its own actions. */
+:root{
+  --bg:#f7f6f3; --card:#ffffff; --fg:#1d1c19; --muted:#6b675f; --line:#e4e1da;
+  --accent:#8a5a00; --accent-soft:#f3e7cc; --on-accent:#ffffff;
+  --good:#1f7a4d; --good-soft:#dff1e7; --warn:#a4541a; --warn-soft:#f7e6d8; --stop:#8b2f2f;
+  --display:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root{
+  --bg:#141412; --card:#1e1d1a; --fg:#f1efe9; --muted:#a39e93; --line:#33312c;
+  --accent:#e0a93a; --accent-soft:#3a2f14; --on-accent:#1a1508;
+  --good:#5fc892; --good-soft:#173326; --warn:#e59a5c; --warn-soft:#3a2617; --stop:#e08a8a; color-scheme:dark } }
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:560px;margin:0 auto;padding-top:max(20px,env(safe-area-inset-top,0px));padding-bottom:max(48px,env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+h1{font-family:var(--display);font-size:22px;font-weight:600;margin:0;text-wrap:balance}
+h2{font-family:var(--display);font-size:15px;font-weight:600;margin:0;color:var(--muted);letter-spacing:.02em}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.sub{color:var(--muted);font-size:13px}
+.progress{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;align-items:center;gap:16px}
+.count{font-family:var(--display);font-size:34px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
+.count small{font-size:16px;color:var(--muted);font-weight:500}
+.dots{display:flex;gap:6px;margin-top:8px}
+.dot{width:22px;height:6px;border-radius:3px;background:var(--line)}
+.dot.on{background:var(--accent)}
+.pmeta{flex:1;min-width:0}
+.tabs{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px}
+.tabs button{flex:1;border:0;background:transparent;color:var(--muted);font:inherit;font-weight:500;padding:11px 6px;border-radius:9px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--accent-soft);color:var(--fg)}
+.list{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.who{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.who > div{min-width:0}
+.name{font-weight:600;font-size:16px;overflow-wrap:anywhere}
+.agency{color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.chip{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap;background:var(--accent-soft);color:var(--fg)}
+.chip.new{background:var(--good-soft);color:var(--good)}
+.chip.quiet{background:var(--warn-soft);color:var(--warn)}
+.chip.off{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.why{font-size:13px;color:var(--muted)}
+.msg{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:14px;user-select:all;-webkit-user-select:all;overflow-wrap:anywhere}
+.contact{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.num{font-variant-numeric:tabular-nums;user-select:all;-webkit-user-select:all;font-weight:500;overflow-wrap:anywhere}
+.btn{font:inherit;font-weight:600;font-size:14px;border-radius:10px;padding:11px 14px;min-height:44px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.big{flex:1;min-width:96px}
+.btn.link{border:0;background:transparent;color:var(--muted);font-weight:500;padding:6px 4px;min-height:0;text-decoration:underline}
+.btn:disabled{opacity:.5;cursor:default}
+.btn:focus-visible,.tabs button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.outcomes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.outcomes .wide{grid-column:1 / -1}
+.btn.quietbtn{color:var(--stop);font-weight:500}
+input,textarea{font:inherit;font-size:16px;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%}
+label{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+form{display:flex;flex-direction:column;gap:12px}
+.numform{flex-direction:row;gap:8px;align-items:center}
+.numform input{flex:1;min-width:0}
+.note{background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:16px;color:var(--muted);font-size:14px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.row{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:44px;display:flex;justify-content:space-between;gap:10px;align-items:center;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.row > div{min-width:0}
+.done{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:14px;padding:8px 0;border-bottom:1px solid var(--line)}
+.done span{min-width:0;overflow-wrap:anywhere}
+.foot{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:8px}
+.footbtns{display:flex;gap:14px;flex-wrap:wrap}
+.gate{min-height:70vh;justify-content:center}
+@media (prefers-reduced-motion:no-preference){.card{transition:opacity .2s}}
+.busy{opacity:.55;pointer-events:none}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<div class="wrap gate" id="gate">
+  <h1>Baker Follow-ups</h1>
+  <div class="sub">Five people a day. About 15 minutes.</div>
+  <button class="btn primary" id="signin">Sign in with Google</button>
+  <button class="btn link" id="signin2" hidden>Trouble signing in? Try the other way</button>
+  <div class="sub" id="gateNote">Checking sign-in…</div>
+</div>
+
+<div class="wrap" id="app" hidden>
+  <div class="top">
+    <h1>Follow-ups</h1>
+    <span class="sub" id="dateLine"></span>
+  </div>
+
+  <div class="progress">
+    <div><div class="count"><span id="doneN">0</span><small> of 5</small></div><div class="dots" id="dots"></div></div>
+    <div class="pmeta"><div id="progLine">Five people a day. About 15 minutes.</div><div class="sub" id="weekLine"></div></div>
+  </div>
+
+  <div class="note" id="banner" hidden><span id="bannerMsg"></span><button class="btn" id="bannerBtn">Connect calendar</button></div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tab-today" data-tab="today" aria-selected="true">Today</button>
+    <button role="tab" id="tab-everyone" data-tab="everyone" aria-selected="false">Everyone</button>
+    <button role="tab" id="tab-add" data-tab="add" aria-selected="false">Add person</button>
+  </div>
+
+  <section id="view-today" class="list">
+    <div class="note" id="todayEmpty">Loading your list.</div>
+    <div class="list" id="dueList"></div>
+    <button class="btn" id="moreBtn" hidden>Show five more</button>
+    <div id="doneWrap" hidden><h2>Done today</h2><div id="doneList"></div></div>
+  </section>
+
+  <section id="view-everyone" class="list" hidden>
+    <input id="search" type="search" placeholder="Search name or agency" autocomplete="off">
+    <div class="list" id="allList"></div>
+  </section>
+
+  <section id="view-add" hidden>
+    <form id="addForm">
+      <div class="sub">Add someone you met or gave a free shoot to. They get a follow-up on day 2, day 10 and day 30, then monthly.</div>
+      <label>Name<input id="f-name" required maxlength="80" autocomplete="off"></label>
+      <label>Agency<input id="f-agency" maxlength="80" autocomplete="off"></label>
+      <label>Mobile<input id="f-phone" inputmode="tel" maxlength="20" autocomplete="off"></label>
+      <label>Email<input id="f-email" type="email" maxlength="120" autocomplete="off"></label>
+      <label>Note (where you met, what you shot)<textarea id="f-note" rows="2" maxlength="300"></textarea></label>
+      <button class="btn primary" type="submit" id="addBtn">Add to follow-ups</button>
+      <div class="sub" id="addMsg"></div>
+    </form>
+  </section>
+
+  <div class="foot">
+    <div id="foot"></div>
+    <div class="footbtns">
+      <button class="btn link" id="refresh">Refresh bookings</button>
+      <button class="btn link" id="signout">Sign out</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+/* ============================================================
+   Baker Follow-ups — standalone phone app.
+   No client names or numbers live in this file. The list is built
+   on the phone from the job calendar after Google sign-in, and
+   what you log is saved to the Baker HQ Firestore project.
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyC0ES1GZsgtl4_vC6Dpp-4aG-Iy4DtXlCE",
+  authDomain: "baker-leads.firebaseapp.com",
+  projectId: "baker-leads",
+  storageBucket: "baker-leads.firebasestorage.app",
+  messagingSenderId: "544396406010",
+  appId: "1:544396406010:web:9e7289e545fa0a0c8a6d43"
+};
+const SDK = "https://www.gstatic.com/firebasejs/10.12.2/";
+const JOB_CALENDAR = "admin@bakerproduction.com";
+const ALLOW = { "admin@bakerproduction.com":"Jason", "jasonbaker@bakerproduction.com":"Jason" };
+const LOOKBACK_DAYS = 365, AHEAD_DAYS = 60, STALE_HOURS = 12;
+const TARGET = 5, STEPS = [2,10,30];
+const DAY = 86400000;
+const FREE_MAIL = /^(gmail|hotmail|outlook|live|yahoo|icloud|me|bigpond|iinet|westnet|optusnet|msn|proton|protonmail)\./i;
+
+let people=[], syncedAt=0, states={}, phones={}, leads={}, shown=5, query="", openId=null, editNum=null;
+let TOKEN=null, ME=null, FB=null, cloud="wait", loaded=false, syncing=false;
+const writing={};
+const $=id=>document.getElementById(id);
+const ls={ get(k){ try{ return JSON.parse(localStorage.getItem(k)||"null") }catch(e){ return null } },
+           set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)) }catch(e){} },
+           del(k){ try{ localStorage.removeItem(k) }catch(e){} } };
+
+/* ── dates (always Perth) ── */
+function pdate(d){ try{ return d.toLocaleDateString("en-CA",{timeZone:"Australia/Perth"}) }catch(e){ return d.toISOString().slice(0,10) } }
+function today(){ return pdate(new Date()) }
+function dnum(s){ const p=String(s).slice(0,10).split("-"); return Date.UTC(+p[0],+p[1]-1,+p[2])/DAY }
+function daysBetween(a,b){ return Math.round(dnum(b)-dnum(a)) }
+function addDays(s,n){ return new Date((dnum(s)+n)*DAY).toISOString().slice(0,10) }
+function fmt(d){ if(!d) return ""; const p=d.split("-"); return (+p[2])+" "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+p[1]-1] }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])) }
+function first(p){ const n=(p.name||"").trim(); if(!n||n.toLowerCase()===(p.agency||"").toLowerCase()) return "team"; return n.split(/\s+/)[0] }
+function tel(ph){ const d=String(ph||"").replace(/\D/g,""); if(d.length<8) return ""; if(d.charAt(0)==="0") return "+61"+d.slice(1); return "+"+d }
+function nice(ph){ const t=tel(ph); if(t.slice(0,3)==="+61"&&t.length===12){ const l="0"+t.slice(3); return l.slice(0,4)+" "+l.slice(4,7)+" "+l.slice(7) } return ph||"" }
+
+/* ── build the people list from the job calendar ── */
+const SKIP=/(check payments|check social|wash up|wind down|ceo hour|key pickup|key drop|birthday|accounting chat|^new event$|test claude)/i;
+const JOBRE=/(media shoot|photos at|photoshoot|photography|social media video|floorplan|drone|reshoot|location shots|walkthrough|twilight)/i;
+function parseEv(ev){
+  const title=ev.summary||"";
+  if(ev.status==="cancelled"||!title||SKIP.test(title)||!JOBRE.test(title)) return null;
+  const start=ev.start&&(ev.start.dateTime||ev.start.date); if(!start) return null;
+  const desc=(ev.description||"").replace(/<br\s*\/?>|<\/(p|div|li)>/gi,"\n").replace(/<[^>]+>/g," ").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/&#x27;|&#39;/g,"'");
+  const g=re=>{ const m=desc.match(re); return m?m[1].trim():"" };
+  const email=(g(/Client Email:\s*([^\s<,;]+@[^\s<,;]+)/i)||g(/Email:\s*([^\s<,;]+@[^\s<,;]+)/i)).toLowerCase();
+  const name=g(/Client Name:\s*([^\n<]+)/i)||g(/Listing Agent:\s*([^\n<]+)/i);
+  const phone=g(/Client Phone:\s*([+\d][\d\s()-]{7,})/i)||g(/Phone:\s*([+\d][\d\s()-]{7,})/i);
+  const address=title.replace(/^.*?media shoot\s*-\s*/i,"").replace(/^photos at\s*/i,"").replace(/\s*\(.+\)\s*$/,"").replace(/\s*-\s*\$\d+.*$/,"").trim()
+    .split(",").slice(0,2).map(x=>x.replace(/\s+WA(\s+\d{4})?\s*$/i,"").trim()).filter(Boolean).join(", ");
+  const dom=email?email.split("@")[1]:"";
+  return { email, name, phone, address,
+    agency: dom&&!FREE_MAIL.test(dom) ? dom.replace(/\.(com|net)\.au$|\.com$|\.au$/,"") : "",
+    date: ev.start.dateTime ? pdate(new Date(start)) : String(start).slice(0,10) };
+}
+function buildPeople(items){
+  const t=today(), m={};
+  items.map(parseEv).filter(Boolean).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0).forEach(j=>{
+    const key = j.email || (j.name ? "n:"+j.name.toLowerCase().replace(/[^a-z0-9]+/g,"-") : "");
+    if(!key) return;
+    const p = m[key] || (m[key]={id:key,name:"",agency:"",email:j.email,phone:"",jobs:0,lastSeen:"",lastAddress:"",next:""});
+    if(j.name) p.name=j.name;
+    if(j.agency) p.agency=j.agency;
+    if(tel(j.phone)) p.phone=j.phone.trim();
+    if(j.date<=t){ p.jobs++; p.lastSeen=j.date; p.lastAddress=j.address; }
+    else if(!p.next) p.next=j.date;
+  });
+  return Object.values(m).map(p=>{ if(!p.name) p.name=p.email?p.email.split("@")[0]:"Unknown"; return p });
+}
+async function fetchCalendar(){
+  const fields="nextPageToken,items(id,status,summary,description,start)";
+  let pageToken=null, items=[];
+  do{
+    const u=new URL("https://www.googleapis.com/calendar/v3/calendars/"+encodeURIComponent(JOB_CALENDAR)+"/events");
+    u.searchParams.set("timeMin",new Date(Date.now()-LOOKBACK_DAYS*DAY).toISOString());
+    u.searchParams.set("timeMax",new Date(Date.now()+AHEAD_DAYS*DAY).toISOString());
+    u.searchParams.set("singleEvents","true"); u.searchParams.set("orderBy","startTime");
+    u.searchParams.set("maxResults","2500"); u.searchParams.set("fields",fields);
+    if(pageToken) u.searchParams.set("pageToken",pageToken);
+    const r=await fetch(u,{headers:{Authorization:"Bearer "+TOKEN}});
+    if(!r.ok){
+      let reason="", msg="";
+      try{ const b=await r.json(); reason=(b.error&&((b.error.errors&&b.error.errors[0]&&b.error.errors[0].reason)||b.error.status))||""; msg=(b.error&&b.error.message)||"" }catch(e){}
+      if(r.status===401||r.status===403){ TOKEN=null; ls.del("fu_tok") }
+      if(/insufficient|ACCESS_TOKEN_SCOPE/i.test(reason+msg)){ const e=new Error("Signed in, but calendar permission wasn't ticked. Tap Connect calendar and tick the calendar box."); e.auth=true; throw e }
+      if(r.status===401||r.status===403){ const e=new Error("Calendar access has timed out."); e.auth=true; throw e }
+      if(r.status===404) throw new Error("This Google account can't see the job calendar. Sign in as admin@bakerproduction.com.");
+      throw new Error("Calendar error "+r.status+(reason?" ("+reason+")":""));
+    }
+    const j=await r.json(); items=items.concat(j.items||[]); pageToken=j.nextPageToken;
+  }while(pageToken);
+  return items;
+}
+async function sync(){
+  if(syncing||!TOKEN) return; syncing=true; renderFoot();
+  try{
+    const list=buildPeople(await fetchCalendar());
+    people=list; syncedAt=Date.now(); loaded=true;
+    ls.set("fu_people",{t:syncedAt,people:list});
+    hideBanner();
+  }catch(e){
+    if(e.auth) showBanner(people.length?"Showing the list from "+ago(syncedAt)+". Reconnect to update it.":e.message,"Connect calendar");
+    else showBanner(e.message||"Couldn't load bookings. Check your signal and tap Refresh.","Try again");
+  }finally{ syncing=false; render() }
+}
+function ago(t){ if(!t) return "earlier"; const h=(Date.now()-t)/3600000; if(h<1) return "just now"; if(h<24) return Math.round(h)+" hour"+(Math.round(h)===1?"":"s")+" ago"; const d=Math.round(h/24); return d+" day"+(d===1?"":"s")+" ago" }
+function showBanner(msg,btn){ $("bannerMsg").textContent=msg; $("bannerBtn").textContent=btn; $("banner").hidden=false }
+function hideBanner(){ $("banner").hidden=true }
+
+/* ── who is due, and what to say ── */
+function everyone(){
+  const byId={};
+  people.forEach(p=>{ byId[p.id]=phones[p.id]?Object.assign({},p,{phone:phones[p.id]}):p });
+  Object.keys(leads).forEach(id=>{ const l=leads[id]; if(!l||!l.name) return;
+    byId[id]={id,name:l.name,agency:l.agency||"",email:l.email||"",phone:phones[id]||l.phone||"",jobs:0,lastSeen:l.addedAt,lastAddress:"",next:"",lead:true,note:l.note||""} });
+  return Object.values(byId);
+}
+function status(p){
+  const t=today(), st=states[p.id]||{}, log=st.log||[];
+  if(st.stop) return {key:"stop",label:"Stopped",due:false};
+  if(p.next) return {key:"ahead",label:"Booked "+fmt(p.next),due:false};
+  if(!p.lastSeen) return {key:"none",label:"No jobs yet",due:false};
+  const d=daysBetween(p.lastSeen,t);
+  const real=log.filter(l=>l.outcome!=="noanswer");
+  const since=real.filter(l=>l.at>=p.lastSeen);
+  const snoozed=st.snooze && st.snooze>t;
+  if((p.lead||p.jobs<=3) && d<=45){
+    const reached=STEPS.filter(s=>s<=d).length;
+    const why=p.lead ? ("Added "+d+" day"+(d===1?"":"s")+" ago"+(p.note?" · "+p.note:"")) : ((p.jobs===1?"First job":"Job "+p.jobs)+" was "+d+" day"+(d===1?"":"s")+" ago");
+    return {key:"new",label:p.lead?"Lead":"New agent",due:since.length<reached && !snoozed,why,step:Math.max(reached,1),d};
+  }
+  if(d>30){
+    const last=real.length?real[real.length-1].at:"";
+    return {key:"quiet",label:"Gone quiet",due:(!last||daysBetween(last,t)>=30) && !snoozed,why:"No booking for "+d+" days · "+p.jobs+" job"+(p.jobs===1?"":"s")+" this year",d};
+  }
+  return {key:"regular",label:"Regular",due:false};
+}
+function message(p,s){
+  const f=first(p), a=p.lastAddress;
+  if(s.key==="quiet") return "Hey "+f+", Jason from Baker Production. It's been a little while"+(a?" since "+a:"")+". Would love to help you out next time.";
+  if(p.lead) return s.step>=2 ? "Hey "+f+", Jason from Baker Production. Just checking in. Would love to help you out next time." : "Hey "+f+", Jason from Baker Production. Great to meet you. Would love to help you out next time.";
+  if(s.step>=2) return "Hey "+f+", Jason from Baker Production. Hope "+(a||"the listing")+" is getting good interest. Would love to help you out next time.";
+  return "Hey "+f+", Jason from Baker Production. How did the photos go for "+(a||"your listing")+"?";
+}
+function dueList(){
+  const out=[]; everyone().forEach(p=>{ const s=status(p); if(s.due) out.push({p,s}) });
+  out.sort((x,y)=>{
+    const gx=x.s.key==="new"?0:1, gy=y.s.key==="new"?0:1; if(gx!==gy) return gx-gy;
+    const px=tel(x.p.phone)?0:1, py=tel(y.p.phone)?0:1; if(px!==py) return px-py;
+    if(gx===0) return x.s.d-y.s.d;
+    return (y.p.jobs-x.p.jobs)||(x.s.d-y.s.d);
+  });
+  return out;
+}
+function doneToday(){
+  const t=today(), out=[], byId={}; everyone().forEach(p=>{byId[p.id]=p});
+  Object.keys(states).forEach(id=>{ ((states[id]&&states[id].log)||[]).forEach(l=>{ if(l.at===t) out.push({id,l,p:byId[id]}) }) });
+  return out;
+}
+const OUT={spoke:"Spoke",texted:"Texted",noanswer:"No answer",booked:"Booked",stop:"Not interested"};
+
+/* ── render ── */
+function cardHTML(p,s){
+  const m=message(p,s), t=tel(p.phone);
+  let h='<div class="card" data-id="'+esc(p.id)+'">'+
+    '<div class="who"><div><div class="name">'+esc(p.name||p.email)+'</div><div class="agency">'+esc(p.agency||"")+'</div></div><span class="chip '+(s.key==="new"?"new":s.key==="quiet"?"quiet":"off")+'">'+esc(s.label)+'</span></div>';
+  if(s.why) h+='<div class="why">'+esc(s.why)+'</div>';
+  h+='<div class="msg" data-msg>'+esc(m)+'</div>';
+  if(editNum===p.id){
+    h+='<form class="numform" data-numform><input inputmode="tel" maxlength="20" placeholder="Mobile number" value="'+esc(p.phone||"")+'" autocomplete="off"><button class="btn primary" type="submit">Save</button></form>';
+  }else if(t){
+    h+='<div class="contact"><a class="btn primary big" href="tel:'+esc(t)+'">Call</a><a class="btn big" href="sms:'+esc(t)+'?&body='+encodeURIComponent(m)+'">Text</a><button class="btn" data-copy>Copy</button></div>'+
+       '<div class="contact"><span class="num">'+esc(nice(p.phone))+'</span><button class="btn link" data-editnum>Change number</button></div>';
+  }else{
+    h+='<div class="contact"><span class="num">'+esc(p.email||"No number saved")+'</span></div>'+
+       '<div class="contact"><button class="btn" data-editnum>Add mobile number</button><button class="btn" data-copy>Copy message</button></div>';
+  }
+  h+='<div class="outcomes">'+
+    '<button class="btn" data-out="spoke">Spoke</button><button class="btn" data-out="texted">Texted</button>'+
+    '<button class="btn" data-out="noanswer">No answer</button><button class="btn" data-out="booked">Booked</button>'+
+    '<button class="btn quietbtn wide" data-out="stop">Not interested, stop following up</button></div></div>';
+  return h;
+}
+function renderFoot(){
+  const bits=[];
+  if(syncing) bits.push("Updating bookings…");
+  else if(syncedAt) bits.push("Bookings updated "+ago(syncedAt)+". "+people.length+" agents.");
+  if(cloud==="local") bits.push("Your ticks are saved on this phone only right now.");
+  if(ME) bits.push("Signed in as "+ME.name+".");
+  $("foot").textContent=bits.join(" ");
+}
+function render(){
+  const t=today(), all=everyone();
+  $("dateLine").textContent=new Date().toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long",timeZone:"Australia/Perth"});
+  const done=doneToday(), n=done.length;
+  $("doneN").textContent=n;
+  let dots=""; for(let i=0;i<TARGET;i++) dots+='<span class="dot'+(i<n?" on":"")+'"></span>'; $("dots").innerHTML=dots;
+  $("progLine").textContent = n>=TARGET ? "Five done. That's today sorted." : (n===0 ? "Five people a day. About 15 minutes." : (TARGET-n)+" to go.");
+  let wk=0; const ws=addDays(t,-6); Object.keys(states).forEach(id=>{ ((states[id]&&states[id].log)||[]).forEach(l=>{ if(l.at>=ws) wk++ }) });
+  $("weekLine").textContent = wk+" contact"+(wk===1?"":"s")+" in the last 7 days";
+
+  const due=dueList();
+  $("todayEmpty").hidden = due.length>0;
+  if(due.length===0) $("todayEmpty").textContent = !loaded ? (syncing?"Loading your bookings…":"Connect the calendar to load your list.") : (all.length ? "Nobody is due right now. New agents show up here two days after a job, and quiet agents after 30 days without a booking." : "No bookings found yet. Add someone on the Add person tab.");
+  $("dueList").innerHTML = due.slice(0,shown).map(x=>cardHTML(x.p,x.s)).join("");
+  $("moreBtn").hidden = due.length<=shown;
+  if(due.length>shown) $("moreBtn").textContent="Show five more ("+(due.length-shown)+" waiting)";
+  $("doneWrap").hidden = n===0;
+  $("doneList").innerHTML = done.map(x=>'<div class="done"><span><b>'+esc(x.p?(x.p.name||x.p.email):x.id)+'</b> · '+esc(OUT[x.l.outcome]||x.l.outcome)+'</span><button class="btn" data-undo="'+esc(x.id)+'">Undo</button></div>').join("");
+
+  const q=query.trim().toLowerCase();
+  const rows=all.filter(p=>!q || (p.name+" "+p.agency+" "+p.email).toLowerCase().indexOf(q)>=0);
+  rows.sort((a,b)=>(b.next||b.lastSeen||"").localeCompare(a.next||a.lastSeen||""));
+  $("allList").innerHTML = rows.slice(0,q?200:60).map(p=>{
+    const s=status(p);
+    if(openId===p.id) return cardHTML(p, s.why?s:{key:s.key,label:s.label,step:1,why:(p.jobs?p.jobs+" job"+(p.jobs===1?"":"s")+" · last "+fmt(p.lastSeen):"")});
+    return '<button class="row" data-open="'+esc(p.id)+'"><div><div class="name">'+esc(p.name||p.email)+'</div><div class="agency">'+esc(p.agency||"")+(p.lastSeen?(p.agency?" · ":"")+"last "+esc(fmt(p.lastSeen)):"")+'</div></div><span class="chip '+(s.due?(s.key==="new"?"new":"quiet"):"off")+'">'+esc(s.due?"Due":s.label)+'</span></button>';
+  }).join("") + (!q&&rows.length>60?'<div class="sub">Showing the 60 most recent. Search to find anyone else.</div>':"");
+  renderFoot();
+  const f=document.querySelector("[data-numform] input"); if(f&&document.activeElement!==f) f.focus();
+}
+
+/* ── saving: phone first, then the cloud ── */
+function saveLocal(){ ls.set("fu_state",{states,phones,leads}) }
+function push(patch){
+  saveLocal();
+  if(!FB||cloud==="wait") return Promise.resolve();
+  return FB.setDoc(FB.ref,patch,{merge:true}).then(()=>{ if(cloud!=="cloud"){ cloud="cloud"; renderFoot() } },()=>{ cloud="local"; renderFoot() });
+}
+function saveState(id,mut){
+  const cur=states[id]||{}, next={log:(cur.log||[]).slice(-40),stop:!!cur.stop,snooze:cur.snooze||""};
+  mut(next); next.updatedAt=new Date().toISOString();
+  states[id]=next; writing[id]=(writing[id]||0)+1; render();
+  return push({state:{[id]:next}}).then(()=>{ writing[id]--; });
+}
+function logOutcome(id,outcome){
+  const t=today();
+  return saveState(id,s=>{
+    s.log.push({at:t,outcome});
+    if(outcome==="noanswer") s.snooze=addDays(t,3);
+    if(outcome==="booked") s.snooze=addDays(t,14);
+    if(outcome==="stop") s.stop=true;
+  });
+}
+function undo(id){
+  const t=today();
+  return saveState(id,s=>{
+    for(let i=s.log.length-1;i>=0;i--){ if(s.log[i].at===t){ const o=s.log[i].outcome; s.log.splice(i,1); if(o==="stop") s.stop=false; if(o==="noanswer"||o==="booked") s.snooze=""; break } }
+  });
+}
+
+/* ── events ── */
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button,[data-tab]"); if(!b) return;
+  if(b.dataset.tab){ setTab(b.dataset.tab); return }
+  if(b.id==="moreBtn"){ shown+=5; render(); return }
+  if(b.dataset.open){ openId=b.dataset.open; editNum=null; render(); return }
+  if(b.dataset.undo){ undo(b.dataset.undo); return }
+  const card=b.closest(".card"); if(!card) return;
+  const id=card.dataset.id;
+  if(b.hasAttribute("data-editnum")){ editNum=id; render(); return }
+  if(b.hasAttribute("data-copy")){
+    const el=card.querySelector("[data-msg]"), txt=el.textContent;
+    (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{ b.textContent="Copied" },()=>{ const r=document.createRange(); r.selectNodeContents(el); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent="Selected" });
+    return;
+  }
+  if(b.dataset.out){ card.classList.add("busy"); logOutcome(id,b.dataset.out) }
+});
+document.addEventListener("submit",e=>{
+  const f=e.target.closest("[data-numform]"); if(!f) return;
+  e.preventDefault();
+  const id=f.closest(".card").dataset.id, v=f.querySelector("input").value.trim();
+  if(v && !tel(v)){ f.querySelector("input").focus(); return }
+  phones[id]=v; editNum=null; render(); push({phones:{[id]:v}});
+});
+$("search").addEventListener("input",e=>{ query=e.target.value; openId=null; editNum=null; render() });
+$("addForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("f-name").value.trim(); if(!name) return;
+  const id="lead-"+Date.now().toString(36);
+  leads[id]={name,agency:$("f-agency").value.trim(),phone:$("f-phone").value.trim(),email:$("f-email").value.trim(),note:$("f-note").value.trim(),addedAt:today()};
+  $("addForm").reset(); $("addMsg").textContent=name+" added. First follow-up in two days.";
+  render(); push({leads:{[id]:leads[id]}});
+});
+function setTab(t){
+  if(["today","everyone","add"].indexOf(t)<0) t="today";
+  ["today","everyone","add"].forEach(k=>{ $("view-"+k).hidden=k!==t; $("tab-"+k).setAttribute("aria-selected",k===t?"true":"false") });
+  try{ if(location.hash!=="#"+t) history.replaceState(null,"","#"+t) }catch(e){}
+}
+addEventListener("hashchange",()=>setTab(location.hash.slice(1)));
+setTab(location.hash.slice(1)||"today");
+
+/* ── sign-in, calendar token, cloud sync ── */
+function saveTok(t){ TOKEN=t||null; if(t) ls.set("fu_tok",{t,exp:Date.now()+50*60000}) }
+function loadTok(){
+  const mine=ls.get("fu_tok"); if(mine&&mine.exp>Date.now()) return mine.t;
+  const hq=ls.get("hq_tok"); if(hq&&hq.exp>Date.now()) return hq.t;   // read only: reuse Baker HQ's calendar pass if it's still fresh
+  return null;
+}
+function showApp(){
+  $("gate").hidden=true; $("app").hidden=false;
+  const c=ls.get("fu_people"); if(c&&c.people){ people=c.people; syncedAt=c.t||0; loaded=true }
+  const s=ls.get("fu_state"); if(s){ states=s.states||{}; phones=s.phones||{}; leads=s.leads||{} }
+  render();
+}
+async function connect(redirect){
+  if(!FB){ $("gateNote").textContent="No connection. Check your signal and reopen the app."; return false }
+  $("gateNote").textContent="Opening Google…";
+  try{
+    if(redirect){ await FB.signInWithRedirect(FB.auth,FB.provider); return true }
+    const res=await FB.signInWithPopup(FB.auth,FB.provider);
+    const cred=FB.GoogleAuthProvider.credentialFromResult(res);
+    saveTok(cred&&cred.accessToken); $("gateNote").textContent="";
+    return true;
+  }catch(e){
+    const code=(e&&e.code)||"";
+    if(/popup-blocked|cancelled-popup-request|operation-not-supported/.test(code)){ try{ await FB.signInWithRedirect(FB.auth,FB.provider); return true }catch(e2){} }
+    $("gateNote").textContent=/popup-closed-by-user/.test(code)?"Sign-in was closed. Tap to try again.":"Sign-in failed. "+((e&&e.message)||code);
+    $("signin2").hidden=false;
+    return false;
+  }
+}
+$("signin").onclick=()=>connect(false);
+$("signin2").onclick=()=>connect(true);
+$("signout").onclick=()=>{ ls.del("fu_tok"); ls.del("fu_me"); TOKEN=null; if(FB) FB.signOut(FB.auth); else location.reload() };
+async function refresh(){
+  if(!TOKEN) TOKEN=loadTok();
+  if(!TOKEN){ const ok=await connect(false); if(!ok||!TOKEN){ showBanner("Calendar isn't connected.","Connect calendar"); return } }
+  await sync();
+}
+$("refresh").onclick=refresh;
+$("bannerBtn").onclick=async()=>{ if(!TOKEN){ ls.del("fu_tok"); const ok=await connect(false); if(!ok) return } await sync() };
+
+function startCloud(){
+  FB.onSnapshot(FB.ref,snap=>{
+    const v=snap.exists()?snap.data():null;
+    const first=cloud==="wait"; cloud="cloud";
+    const rs=(v&&v.state)||{}, rp=(v&&v.phones)||{}, rl=(v&&v.leads)||{};
+    const up={state:{},phones:{},leads:{}}; let any=false;
+    if(first){
+      // anything ticked on this phone while the cloud was unreachable goes up now
+      Object.keys(states).forEach(id=>{ if(!rs[id] || (states[id].updatedAt||"")>(rs[id].updatedAt||"")){ up.state[id]=states[id]; any=true } });
+      Object.keys(phones).forEach(id=>{ if(!(id in rp)){ up.phones[id]=phones[id]; any=true } });
+      Object.keys(leads).forEach(id=>{ if(!(id in rl)){ up.leads[id]=leads[id]; any=true } });
+    }
+    Object.keys(rs).forEach(id=>{ if(!writing[id] && !(id in up.state)) states[id]=rs[id] });
+    Object.assign(phones,rp); Object.assign(leads,rl);
+    if(any) FB.setDoc(FB.ref,up,{merge:true}).catch(()=>{});
+    saveLocal(); render();
+  },()=>{ cloud="local"; renderFoot() });
+}
+
+(async function boot(){
+  const remembered=ls.get("fu_me");
+  try{
+    const [a,au,fs]=await Promise.all([import(SDK+"firebase-app.js"),import(SDK+"firebase-auth.js"),import(SDK+"firebase-firestore.js")]);
+    const app=a.initializeApp(firebaseConfig), auth=au.getAuth(app), db=fs.getFirestore(app);
+    const provider=new au.GoogleAuthProvider();
+    provider.addScope("https://www.googleapis.com/auth/calendar.readonly");
+    FB={auth,provider,GoogleAuthProvider:au.GoogleAuthProvider,signInWithPopup:au.signInWithPopup,signInWithRedirect:au.signInWithRedirect,signOut:au.signOut,
+        ref:fs.doc(db,"hq","followups"),setDoc:fs.setDoc,onSnapshot:fs.onSnapshot};
+    try{ const rr=await au.getRedirectResult(auth); if(rr){ const c=au.GoogleAuthProvider.credentialFromResult(rr); saveTok(c&&c.accessToken) } }catch(e){}
+    let started=false;
+    au.onAuthStateChanged(auth,async user=>{
+      if(!user){ ME=null; ls.del("fu_me"); $("app").hidden=true; $("gate").hidden=false; if(!/failed|closed/.test($("gateNote").textContent)) $("gateNote").textContent=""; return }
+      const email=(user.email||"").toLowerCase();
+      if(!(email in ALLOW)){ $("gateNote").textContent=email+" isn't on the allow list."; await au.signOut(auth); return }
+      ME={email,name:ALLOW[email]}; ls.set("fu_me",ME);
+      showApp();
+      if(!started){ started=true; startCloud() }
+      TOKEN=TOKEN||loadTok();
+      const stale=!syncedAt || (Date.now()-syncedAt)>STALE_HOURS*3600000;
+      if(TOKEN) sync();
+      else if(!people.length) showBanner("One more tap to load your bookings from the job calendar.","Connect calendar");
+      else if(stale) showBanner("Showing the list from "+ago(syncedAt)+".","Update bookings");
+    });
+  }catch(e){
+    // No signal and the SDK isn't cached: still open the list saved on this phone.
+    if(remembered&&remembered.email in ALLOW){ ME=remembered; cloud="local"; showApp(); showBanner("You're offline. Showing the list saved on this phone; ticks will sync next time you open it with signal.","Try again"); $("bannerBtn").onclick=()=>location.reload() }
+    else $("gateNote").textContent="No connection. Check your signal and reopen the app.";
+  }
+})();
+
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "Baker Follow-ups",
+  "short_name": "Follow-ups",
+  "description": "Five follow-up calls or texts a day.",
+  "start_url": "/followups/",
+  "scope": "/followups/",
+  "display": "standalone",
+  "background_color": "#141412",
+  "theme_color": "#141412",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
