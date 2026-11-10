@@ -22,6 +22,7 @@ def pitch(f):
     return float(m.group(1)) if m else 0.0
 
 run, meta = [], {}
+FF = {}   # fence-fit report per top-down
 for j in D['jobs']:
     ph = sorted(f for f in glob.glob(j['photos'].rstrip('/') + '/*') if f.lower().endswith(('.jpg', '.jpeg')))
     if j.get('pick'): ph = [f for f in ph if pitch(f) < -75 or any(p in os.path.basename(f) for p in j['pick'])]   # pick only narrows the aerials; top-downs always stay   # 28 Oct: agent wants only these frames
@@ -152,9 +153,24 @@ for j in D['jobs']:
                             edgeOff=(j.get('edgeOff', {}) if i == 0 else (j.get('edgeOffs') or {}).get(v, {})), cams={n0: cams[n0]} if n0 in cams else {}))
             if grid is not None and not hand: run[-1]['gridAng'] = round(grid, 3)   # editor squares the boundary to this
             if j.get('pxpoly') and i == 0: run[-1].update(pxpoly=j['pxpoly'], nosnap=1); run[-1].pop('snap', None)   # boundary hand-traced on the fences
+            elif j.get('poly') and not j.get('noFenceFit') and not os.environ.get('NOFENCEFIT'):
+                # 10 Nov 2026 (Jason: "yes automatic fence thing"): fencefit.py puts the cadastre outline on the real fences
+                # (thin-line evidence, whole-outline then per-side). Applied only when it clearly finds fences; otherwise the
+                # editor's own snap runs and the job is listed in e2e/fencefit_<day>.json as "check".
+                try:
+                    from fencefit import fit_ll
+                    from clean_lot import xmp_cam as _xc
+                    ring = [q for q in j['poly']]; ring = ring[:-1] if ring[0] == ring[-1] else ring
+                    cam_ = dict(_xc(n0) or {}); cam_.update({k: v for k, v in (cams.get(n0) or {}).items() if k in ('lat', 'lng', 'h', 'yaw', 'pitch', 'roll', 'f35')})
+                    px, inf = fit_ll(n0, cam_, ring, j.get('area')) if cam_.get('lat') is not None else (None, {'error': 'no camera'})
+                    FF[v] = inf
+                    if px and len(px) == len(ring): run[-1].update(pxpoly=px, nosnap=1, poly=ring); run[-1].pop('snap', None); print('fence fit', v, inf.get('moved_m'), 'm')
+                    else: print('fence fit: CHECK', v, inf)
+                except Exception as e:
+                    FF[v] = {'error': str(e)}; print('fence fit failed', v, e)
     else:
         run.append(dict(base, slug=j['slug'], photos=ph, cams={f: cams[f] for f in ph if f in cams}))
     meta[j['slug']] = {'addr': j['addr'], 'who': j.get('who', ''), 'notes': j.get('notes', ''), 'portrait': bool(j.get('portrait')), **{k: j[k] for k in ('rawPath', 'docs') if j.get(k)}}   # 29 Oct: booking notes travel to the editor
 os.makedirs('e2e', exist_ok=True)
-json.dump(run, open(f'e2e/run_{day}.json', 'w')); json.dump(meta, open(f'e2e/meta_{day}.json', 'w'))
+json.dump(FF, open(f'e2e/fencefit_{day}.json', 'w')); json.dump(run, open(f'e2e/run_{day}.json', 'w')); json.dump(meta, open(f'e2e/meta_{day}.json', 'w'))
 print(f'e2e/run_{day}.json', len(run), 'jobs;', sum(len(r['photos']) for r in run), 'photos')

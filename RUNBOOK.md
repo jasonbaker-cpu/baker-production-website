@@ -307,3 +307,9 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 - prep_day lens-corrects Mavic 3 Pro (L2D-20c) photos that came from our DNG conversion before levelling (`straighten.undistort_flight`, k1 −0.038; marked `baker:Undist` in the XMP so it never runs twice). DJI's own JPGs (Mini 4 Pro / in-camera) are untouched. `"noLens": true` skips a job.
 - 157B Fulham was redone with TUNE {fine 0.6, mid 0.8, lookY 180} + con 14 / sat 6 (less crunchy texture, brighter). If Jason approves, make those the core.js defaults.
 - C21 top-downs: blur outside the lot is back on (Jason 10 Nov); gold line + dark lot fill stay.
+
+## Automatic fence fit (Jason 10 Nov 2026: "yes automatic fence thing")
+- prep_day runs `fencefit.py` on every top-down with a cadastre: projects the outline with the drone camera, then moves it onto the real fences (thin-line evidence — fences are thin lines, roof/wall edges are one-sided steps and don't count; whole outline ±4.5 m / ±2° / ±3%, then each side ±0.9 m). The result goes to the editor as `pxpoly` (editor snap off; squaring to the houses still runs).
+- It only applies when it clearly sees fences (score ≥ 0.42 and well above the search median). Otherwise the editor's own snap runs and `e2e/fencefit_<day>.json` has no fit for that top-down → LOOK at it and fix by hand / send to editor. Twilight and bush lots usually fail this (45 Amethyst did) — that's intended.
+- Tested 10 Nov from the raw cadastre on 9 Nov Price Ct, Phoenix, Wilfred (6 top-downs): all landed on the fences unaided; recovers from 2–3 m / 2° starting errors. `"noFenceFit": true` or NOFENCEFIT=1 skips it.
+- The old independent-agent fence check (section 5) still runs after.
