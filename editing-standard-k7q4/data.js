@@ -16,14 +16,14 @@ window.EDITOR_TOOLS = [
 window.REFERENCE_LINKS = [
   { title: "OUR STANDARD: 22 Thorburn Ave, Beechboro (Profocus, 8.5/10)", url: "https://www.dropbox.com/scl/fo/8c0ebpas05y2lo4jkxvl1/AEr14Z7un1FXvkFu-Ve2EaY?rlkey=y81vsut2bd30kervze8vkjpg2&dl=0", note: "Match this on every interior job. May be removed from Dropbox after delivery." },
   { title: "DAY: Crib Creative on Edward Lim's listings (Ray White ELG)", url: "https://raywhiteelg.com.au/agents/edward-lim/177651", note: "Day reference. Clean neutral colour, no yellow cast, true blacks, natural finish." },
-  { title: "DAY: The Mathews Group (blue-sky listings only)", url: "https://reiwa.com.au/real-estate-agency/the-mathews-group-real-estate-160982-0/", note: "Day reference. Clear blue sky with white clouds, vibrant greens, open shadows. Ignore their sunset-sky exteriors." },
+  { title: "DAY: The Mathews Group (greens and shadows only)", url: "https://reiwa.com.au/real-estate-agency/the-mathews-group-real-estate-160982-0/", note: "Day reference for vibrant greens and open shadows. Our skies are paler and softer than theirs: soft pale blue, near-white at the horizon. Ignore their sunset-sky exteriors." },
   { title: "TWILIGHT: Crib Creative on Holdsworth listings", url: "https://holdsworth.com.au/properties-for-sale-perth/", note: "Twilight reference, e.g. 269A Cape St Yokine and 9B Moldavia St Tuart Hill." }];
 
 window.GOOD = [
   { img: "img/good-thorburn-living.webp", job: "22 Thorburn Ave", file: "DSC09089", why: "Warm white walls, bright but not blown, windows pulled clean." },
   { img: "img/good-thorburn-kitchen.webp", job: "22 Thorburn Ave", file: "DSC09105", why: "Clean whites, true cabinet colour, straight verticals." },
   { img: "img/good-thorburn-bedroom.webp", job: "22 Thorburn Ave", file: "DSC09125", why: "Even light across the room, no grey cast." },
-  { img: "img/good-thorburn-front.webp", job: "22 Thorburn Ave", file: "DSC09185", why: "Clear blue sky, natural grass, bright facade." },
+  { img: "img/good-thorburn-front.webp", job: "22 Thorburn Ave", file: "DSC09185", why: "Natural grass, bright facade." },
   { img: "img/good-wattle-living.webp", job: "1/32 Wattle St", file: "DSC09241", why: "Bright, airy, consistent with the rest of the set." },
   { img: "img/good-wattle-kitchen.webp", job: "1/32 Wattle St", file: "DSC09264", why: "Crisp whites, window view kept." },
   { img: "img/good-hermitage-dusk-rear.webp", job: "29 Hermitage Dr", file: "DSC08256", why: "Natural sunset twilight: soft pink clouds, lights on, not fake purple." },
@@ -103,5 +103,5 @@ window.PREMIUM = [
   { img: "img/premium/beeliar-dining.webp", job: "Beeliar", file: "Dining / fireplace", why: "Fire kept warm, brick true colour, windows pulled." },
   { img: "img/premium/glenforrest-kitchen.webp", job: "4 McGlew Rd, Glen Forrest", file: "Kitchen / dining", why: "Benchmark job. Natural daylight mood, timber and brick true to life." },
   { img: "img/premium/glenforrest-veranda.webp", job: "4 McGlew Rd, Glen Forrest", file: "Veranda / facade", why: "Clear sky, garden colour natural, shadows lifted under the veranda." },
-  { img: "img/premium/madeley-facade.webp", job: "Madeley", file: "Facade", why: "Clear blue sky, natural grass, bright clean facade." }
+  { img: "img/premium/madeley-facade.webp", job: "Madeley", file: "Facade", why: "Natural grass, bright clean facade." }
 ];

@@ -4,8 +4,8 @@
 (function () {
   var VER = "v11 · 9 Nov 2026"; /* bump on every rule change */
   /* STRICT 9.5 standard (6 Nov 2026): every photo must be inside the targets. One miss = not ready. */
-  /* 7 Nov 2026 "best in Perth": Mathews Group brightness + blue skies, Crib Creative contrast + held highlights, greens at both. */
-  var B = { wallLo: 207, wallHi: 224, castLo: 1, castHi: 9, lLo: 155, lHi: 194, clip: 0.8, skySat: 0.45, skyPale: 0.20, extDark: 118, extShadow: 34, greenSat: 0.40, extHot: 235,
+  /* 7 Nov 2026 "best in Perth": Mathews Group brightness, soft pale skies (11 Nov), Crib Creative contrast + held highlights, greens at both. */
+  var B = { wallLo: 207, wallHi: 224, castLo: 1, castHi: 9, lLo: 155, lHi: 194, clip: 0.8, skySat: 0.32, skyPale: 0.05, extDark: 118, extShadow: 34, greenSat: 0.40, extHot: 235,
     extCast: 10, flatP5: 75, flatRng: 150,
     setWallLo: 209, setWallHi: 219, setCastLo: 2, setCastHi: 7, setLLo: 165, setLHi: 186, setSd: 5, setFlat: 70 };
   var $ = function (id) { return document.getElementById(id); };
@@ -74,7 +74,7 @@
     "No pink/green/purple colour fringing in window views or on roofs and gutters.",
     "Window views clean and natural: no grey or glowing pulls, no ghosting.",
     "Verticals dead straight on every photo (walls, door frames, cabinets).",
-    "Sky on every exterior: clear blue with white clouds (Mathews Group look), edges masked cleanly, no cut-off hills or trees.",
+    "Sky on every exterior: soft pale blue fading to near-white at the horizon, light wispy clouds, never deep or saturated blue. Edges masked cleanly, no cut-off hills or trees.",
     "Grass green and even, no burnt or patchy lawn left in.",
     "No AI artefacts: warped lines, smeared textures, melted objects.",
     "Only one photo per angle: drop near-duplicates and older versions of redone files.",
@@ -90,8 +90,8 @@
       if (r.L < B.lLo && r.wallW < 214) f.push({ k: "dark", t: "Room too dark (brightness " + r.L.toFixed(0) + ", target 165-185)." }); /* dark floors/joinery with good walls are fine */
       if (r.L > B.lHi) f.push({ k: "bright", t: "Room too bright/washed out (brightness " + r.L.toFixed(0) + ", target 165-185)." });
     } else {
-      if (!r.dusk && r.skySat > B.skySat) f.push({ k: "sky", t: "Sky oversaturated/cartoon (" + r.skySat.toFixed(2) + ", target 0.24-0.36). Natural clear blue, never cartoon." });
-      if (!r.dusk && r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky pale/hazy (" + r.skySat.toFixed(2) + ", target 0.24-0.36). Clear natural blue with white clouds, like Mathews Group / Crib Creative." });
+      if (!r.dusk && r.skySat > B.skySat) f.push({ k: "sky", t: "Sky too deep/saturated blue (" + r.skySat.toFixed(2) + ", target 0.15-0.30). Soft pale blue, near-white at the horizon, no dark gradient at the top." });
+      if (!r.dusk && r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky is grey/white with no blue (" + r.skySat.toFixed(2) + ", target 0.15-0.30). Add a soft pale blue sky." });
       if (!r.dusk && r.L > 160) f.push({ k: "washed", t: "Exterior washed out (brightness " + r.L.toFixed(0) + ", target 125-150). Bring midtones down slightly so the sky, greens and house have colour and depth." });
       if (r.L < (r.dusk ? 100 : B.extDark)) f.push({ k: "dark", t: "Exterior too dark (brightness " + r.L.toFixed(0) + ", min " + B.extDark + "). Lift the whole frame." });
       if (!r.dusk && r.greenF > 0.04 && r.greenSat < B.greenSat) f.push({ k: "greens", t: "Greens dull (" + r.greenSat.toFixed(2) + ", target 0.45+). Add vibrance to lawn, trees and hedges." });
