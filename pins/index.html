@@ -1406,10 +1406,10 @@ function newPhoto(name, base, meta, sample){
     disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0, (!sample && prefs.skyPlate !== "S") ? { con:10 } : {}), undo:[], redo:[] };
   return p;
 }
-const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet","skyForce","skyLineUser"];
+const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet","skyForce","skyLineUser","straight"];
 function snapshotOf(p){ const o={}; SNAP_KEYS.forEach(k=>o[k]=p[k]); return JSON.stringify(o); }
 function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
-function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); ensureFinish(p); }
+function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); if ((p.straight||0)!==(p._straightBuilt||0)) buildStraightBase(p); ensureFinish(p); }
 function undo(){ const p=P(); if(!p||!p.undo.length) return; p.redo.push(snapshotOf(p)); restore(p,p.undo.pop()); sel=null; refreshAll(); }
 function redo(){ const p=P(); if(!p||!p.redo.length) return; p.undo.push(snapshotOf(p)); restore(p,p.redo.pop()); sel=null; refreshAll(); }
 function updateUndo(){ const p=P(); $("undoBtn").disabled=!p||!p.undo.length; $("redoBtn").disabled=!p||!p.redo.length; }
@@ -1460,6 +1460,7 @@ function draw(){
   ctx.setTransform(view.s*dpr,0,0,view.s*dpr,view.tx*dpr,view.ty*dpr);
   ctx.imageSmoothingQuality="high";
   drawScene(ctx, p, { hide:hideGfx, before:showBefore });
+  if (window.__gridOn && !hideGfx && !showBefore){ const k=1/view.s; ctx.save(); ctx.strokeStyle="rgba(255,255,255,.55)"; ctx.lineWidth=1*k; for (let i=1;i<12;i++){ ctx.beginPath(); ctx.moveTo(0,p.h*i/12); ctx.lineTo(p.w,p.h*i/12); ctx.stroke(); ctx.beginPath(); ctx.moveTo(p.w*i/12,0); ctx.lineTo(p.w*i/12,p.h); ctx.stroke(); } ctx.restore(); }   /* 10 Nov: straighten grid */
   { const cr = !hideGfx && lotCrop(p); if (cr){ const k=1/view.s; ctx.save(); ctx.fillStyle="rgba(0,0,0,.45)"; ctx.beginPath(); ctx.rect(0,0,p.w,p.h); ctx.rect(cr[0],cr[1],cr[2],cr[3]); ctx.fill("evenodd");
     ctx.strokeStyle="#f2b33d"; ctx.lineWidth=2*k; ctx.setLineDash([8*k,6*k]); ctx.strokeRect(cr[0],cr[1],cr[2],cr[3]); ctx.setLineDash([]); ctx.font=`600 ${14*k}px system-ui`; ctx.fillStyle="#f2b33d"; ctx.fillText(tool==="crop" ? "Crop · drag to move, corners to resize" : (p.crop ? "Export area · cropped" : "Export area · 3:2"), cr[0]+8*k, cr[1]+20*k); if (tool==="crop"){ ctx.fillStyle="#f2b33d"; [[0,0],[1,0],[0,1],[1,1]].forEach(([a,b])=>ctx.fillRect(cr[0]+a*cr[2]-7*k, cr[1]+b*cr[3]-7*k, 14*k, 14*k)); } ctx.restore(); } }
   if (hideGfx || showBefore) return;
@@ -2020,6 +2021,13 @@ function refreshPhotoTab(){
       s1.appendChild(sr); }
     s1.appendChild(el(`<p class="note">Learned from our delivered aerials: brighter midtones, about 25% more colour, crisper detail, and the clean blue sky our editor uses. Hold <b>Hold for before</b> (or the \\ key) to compare.</p>`));
     box.appendChild(s1);
+    { const st = el(`<div class="sec"><h2><span>Straighten</span><span class="note">${(P().straight||0).toFixed(2)}°</span></h2><div class="row"><button class="btn" title="Turn left 0.5°">⟲ 0.5°</button><button class="btn" title="Turn left 0.1°">⟲ 0.1°</button><button class="btn" title="Turn right 0.1°">0.1° ⟳</button><button class="btn" title="Turn right 0.5°">0.5° ⟳</button></div><div class="row"><button class="btn ghost">${window.__gridOn ? "Hide grid" : "Show grid"}</button><button class="btn ghost">Reset</button></div><p class="note">Line the horizon (aerials) or the fences and houses (top-downs) up with the grid. Pins and the boundary turn with the photo.</p></div>`);
+      const b = st.querySelectorAll("button"), q = P();   /* 10 Nov (Jason): straighten button */
+      b[0].onclick=()=>{ setStraight(q,(q.straight||0)+0.5); refreshPhotoTab(); }; b[1].onclick=()=>{ setStraight(q,(q.straight||0)+0.1); refreshPhotoTab(); };
+      b[2].onclick=()=>{ setStraight(q,(q.straight||0)-0.1); refreshPhotoTab(); }; b[3].onclick=()=>{ setStraight(q,(q.straight||0)-0.5); refreshPhotoTab(); };
+      b[4].onclick=()=>{ window.__gridOn=!window.__gridOn; refreshPhotoTab(); requestDraw(); }; b[5].onclick=()=>{ setStraight(q,0); refreshPhotoTab(); };
+      box.appendChild(st); }
+
   }
   if (!p.sample && !p.editorPhoto && !p.extraEdited){
     if (!p.adj) p.adj = Object.assign({}, ADJ0);
@@ -2181,7 +2189,7 @@ fileIn.onchange=()=>{ addFiles([...fileIn.files]); fileIn.value=""; };
 function projectJSON(){ return JSON.stringify({ bakerProject:1, saved:new Date().toISOString(), job: job||null, agency: prefs.agency, skyPlate: prefs.skyPlate||"C", photos: photos.filter(q=>!q.sample).map(q=>{ const o={ name:q.name }; SNAP_KEYS.forEach(k=>o[k]=q[k]); return o; }) }); }
 let pendingProject = null;
 function applyProject(){ if (!pendingProject) return 0; let n=0;
-  photos.forEach(q=>{ const s = pendingProject.photos.find(o=>o.name===q.name); if (!s) return; SNAP_KEYS.forEach(k=>{ if (s[k]!==undefined) q[k]=JSON.parse(JSON.stringify(s[k])); }); q.fin=null; q.finKey=null; q._blur=null; q._adj=null; ensureFinish(q); n++; });
+  photos.forEach(q=>{ const s = pendingProject.photos.find(o=>o.name===q.name); if (!s) return; SNAP_KEYS.forEach(k=>{ if (s[k]!==undefined) q[k]=JSON.parse(JSON.stringify(s[k])); }); q.fin=null; q.finKey=null; q._blur=null; q._adj=null; if (q.straight) buildStraightBase(q); ensureFinish(q); n++; });
   return n; }
 async function addFiles(files){
   const pf = []; for (const f of files){ if (/\.json$/i.test(f.name)){ try{ const o=JSON.parse(await f.text()); if (o && o.bakerProject){ pendingProject=o; if (o.job) job=o.job; if (o.skyPlate && typeof SKY_PLATES!=="undefined" && SKY_PLATES[o.skyPlate]) prefs.skyPlate=o.skyPlate; if (o.agency) { prefs.agency=o.agency; savePrefs(); } pf.push(f); } }catch(e){} } }
@@ -2227,7 +2235,7 @@ async function addFiles(files){
         else { cx.drawImage(bmp, 0, 0, nw, nh, 0, 0, q.w, q.h); fit = "stretched"; }
         if (bmp.close) bmp.close();
         commit && (P()===q) && commit();
-        q.base = c; q.finishOn = false; q.skyOn = false; q.adj = Object.assign({}, ADJ0); q.fin = null; q.finKey = null; q._adj = null; q._blur = null; q.editorPhoto = f.name; q.editorFit = fit;
+        q.base = c; q.base0 = null; q.straight = 0; q._straightBuilt = 0; q.finishOn = false; q.skyOn = false; q.adj = Object.assign({}, ADJ0); q.fin = null; q.finKey = null; q._adj = null; q._blur = null; q.editorPhoto = f.name; q.editorFit = fit;
         makeThumb(q); swapped.push(q.name + (fit === "stretched" ? " (different shape — check carefully)" : ""));
       }catch(err){ console.error(err); }
       if (qs.some(q => q.editorPhoto === f.name)) imgs.splice(imgs.indexOf(f), 1);
@@ -2488,6 +2496,25 @@ function lotSnap(p, pts, ll){ const C=Object.assign({ on:true, R:2.5, rot:3, sc:
   window.__lotSnap={ base, best:bestS, dx:bp[0]/ppm, dy:bp[1]/ppm, sc:bp[2], rt:bp[3]*180/Math.PI, edges:info.map(e=>({d:+e.d.toFixed(2), r:+e.r.toFixed(2), s0:+e.s0.toFixed(1), s:+e.s.toFixed(1)})) };
   return P1;
 }
+
+/* ===== 10 Nov 2026 (Jason: "have a button for straightening images too"): turn the photo itself ===== */
+// p.straight = degrees the photo content is turned anticlockwise (cv convention), zoomed just enough that no corner shows.
+// Pins, boundaries, text and the horizon line move with the photo; the camera follows (roll for aerials, heading for top-downs).
+function straightZoom(p, deg){ const t=Math.abs(deg)*Math.PI/180, W=p.base0 ? p.base0.width : p.base.width, H=p.base0 ? p.base0.height : p.base.height; return Math.cos(t) + Math.max(W/H, H/W)*Math.sin(t); }
+function buildStraightBase(p){ if (!p.base0) p.base0 = p.base; const deg = p.straight||0; if (!deg){ p.base = p.base0; } else {
+    const W=p.base0.width, H=p.base0.height, z=straightZoom(p,deg), c=document.createElement("canvas"); c.width=W; c.height=H; const x=c.getContext("2d");
+    x.imageSmoothingQuality="high"; x.translate(W/2,H/2); x.rotate(-deg*Math.PI/180); x.scale(z,z); x.drawImage(p.base0,-W/2,-H/2); p.base=c; }
+  p._straightBuilt = deg; p.fin=null; p.finKey=null; p._adj=null; p._blur=null; }
+function syncStraight(p){ if ((p.straight||0) !== (p._straightBuilt||0)){ buildStraightBase(p); ensureFinish(p); } }
+function setStraight(p, deg){ deg = Math.max(-8, Math.min(8, Math.round(deg*100)/100)); const old=p.straight||0; if (deg===old) return; commit();
+  const W=p.w, H=p.h, cx=W/2, cy=H/2, s=straightZoom(p,deg)/straightZoom(p,old), a=-(deg-old)*Math.PI/180, cs=Math.cos(a), sn=Math.sin(a);
+  const T=(x,y)=>{ const u=x-cx, v=y-cy; return [cx+s*(u*cs-v*sn), cy+s*(u*sn+v*cs)]; };
+  (p.pins||[]).forEach(q=>{ if (q.ex!=null){ [q.ex,q.ey]=T(q.ex,q.ey); } });
+  (p.shapes||[]).forEach(sh=>{ if (sh.pts) sh.pts=sh.pts.map(q=>T(q[0],q[1])); });
+  (p.texts||[]).forEach(t=>{ if (!t.link && t.x!=null){ [t.x,t.y]=T(t.x,t.y); } });
+  if (p.skyLineUser) p.skyLineUser=p.skyLineUser.map(q=>T(q[0],q[1]));
+  if (p.cam){ const d=deg-old, nad=(p.cam.pitch||0) < -75; if (nad) p.cam.yaw=(p.cam.yaw||0)+d; else p.cam.roll=(p.cam.roll||0)-d; p.cam.f35=(p.cam.f35||24)*s; }
+  p.straight=deg; buildStraightBase(p); ensureFinish(p); refreshAll(); }
 function shadeHex(h,k){ const n=parseInt(h.slice(1),16); const f=v=>Math.round(v*k).toString(16).padStart(2,"0"); return "#"+f(n>>16&255)+f(n>>8&255)+f(n&255); }
 window.__bae = { project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) return false; commit(); p.pins=[]; p.shapes=[]; p.texts=[]; p.outside='none'; refreshAll(); return true; },   /* 30 Oct: clean photo, no graphics (agent asked) */ setFinish:(on)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.finishOn=!!on; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return true; }, setHorizon:(fa,fb)=>{ const p=P(); if(!p) return false; p.skyLineUser = fa==null ? null : [[0,fa*p.h],[p.w,fb*p.h]]; p.skyOn=true; p.skyForce = fa!=null; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return [p.w,p.h]; }, setSky:(on,force)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.skyOn=!!on; if (force!==undefined) p.skyForce=!!force; p.finKey=null; ensureFinish(p); refreshAll(); return true; }, setAdj:(o)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.adj=Object.assign({}, ADJ0, o); refreshAll(); return true; }, setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt, pxo)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts= pxo ? pxo.map(q=>toWork(p, q)) : ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); /* pxo: boundary hand-traced on the fences (original-photo pixels) */ if (pts.some(q=>!q)) return false; commit();
     /* 10 Nov 2026 (Jason, 10 Spotted Wy): on a squared top-down the lot must line up with the houses. DJI Fly drones report a
@@ -2495,8 +2522,8 @@ window.__bae = { project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) retu
        houses' grid (window.__gridAng), the camera heading is corrected by that amount and the lot re-projected (fixes the turn
        and the drift together); the squaring step below finishes it. */
     try { const g=window.__gridAng; if (!pxo && typeof g==="number" && pts.length>=4){
-        const dirOf=P=>{ const n=P.length; let sx=0, sy=0, per=0; for (let i=0;i<n;i++){ const A=P[i], B=P[(i+1)%n], dx=B[0]-A[0], dy=B[1]-A[1], L=Math.hypot(dx,dy), t=4*Math.atan2(dy,dx); sx+=L*Math.cos(t); sy+=L*Math.sin(t); per+=L; }
-          const th=Math.atan2(sy,sx)/4; let boxy=true; for (let i=0;i<n;i++){ const A=P[i], B=P[(i+1)%n], L=Math.hypot(B[0]-A[0],B[1]-A[1]); if (L<0.03*per) continue; let a=Math.atan2(B[1]-A[1],B[0]-A[0])-th; a=((a+Math.PI/4)%(Math.PI/2)+Math.PI/2)%(Math.PI/2)-Math.PI/4; if (Math.abs(a)>8*Math.PI/180) boxy=false; } return { th, boxy }; };
+        const dirOf=P=>{ const n=P.length; let sx=0, sy=0, per=0; for (let i=0;i<n;i++) per+=Math.hypot(P[(i+1)%n][0]-P[i][0],P[(i+1)%n][1]-P[i][1]); for (let i=0;i<n;i++){ const A=P[i], B=P[(i+1)%n], dx=B[0]-A[0], dy=B[1]-A[1], L=Math.hypot(dx,dy), t=4*Math.atan2(dy,dx); if (L<0.15*per) continue; sx+=L*L*Math.cos(t); sy+=L*L*Math.sin(t); }
+          const th=Math.atan2(sy,sx)/4; let boxy=true; for (let i=0;i<n;i++){ const A=P[i], B=P[(i+1)%n], L=Math.hypot(B[0]-A[0],B[1]-A[1]); if (L<0.15*per) continue; let a=Math.atan2(B[1]-A[1],B[0]-A[0])-th; a=((a+Math.PI/4)%(Math.PI/2)+Math.PI/2)%(Math.PI/2)-Math.PI/4; if (Math.abs(a)>8*Math.PI/180) boxy=false; } return { th, boxy }; };
         const fold=a=>((a+Math.PI/4)%(Math.PI/2)+Math.PI/2)%(Math.PI/2)-Math.PI/4;
         const D0=dirOf(pts), d=fold(g*Math.PI/180-D0.th)*180/Math.PI; window.__yawFix={ d:+d.toFixed(2), boxy:D0.boxy };
         if (D0.boxy && Math.abs(d)>0.3 && Math.abs(d)<=20){ let best=null;
@@ -2517,14 +2544,20 @@ window.__bae = { project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) retu
     // houses' lean in the frame, ~0 after prep_day turns the photo) a box-shaped lot is turned to line up with the houses and
     // its corners made 90 deg. Only when every side is within 8 deg of the lot's main direction and that is within 4 deg of the grid.
     try { const g=window.__gridAng; const n=pts.length; if (typeof g==="number" && n>=4){ let per=0; for (let i=0;i<n;i++) per+=Math.hypot(pts[(i+1)%n][0]-pts[i][0], pts[(i+1)%n][1]-pts[i][1]);
-        let sx=0, sy=0; for (let i=0;i<n;i++){ const A=pts[i], B=pts[(i+1)%n], dx=B[0]-A[0], dy=B[1]-A[1], L=Math.hypot(dx,dy), t=4*Math.atan2(dy,dx); sx+=L*Math.cos(t); sy+=L*Math.sin(t); }
-        const th=Math.atan2(sy,sx)/4, fold=a=>{ a=((a+Math.PI/4)%(Math.PI/2)+Math.PI/2)%(Math.PI/2)-Math.PI/4; return a; };
-        let boxy=true; for (let i=0;i<n;i++){ const A=pts[i], B=pts[(i+1)%n], L=Math.hypot(B[0]-A[0],B[1]-A[1]); if (L < 0.03*per) continue; if (Math.abs(fold(Math.atan2(B[1]-A[1],B[0]-A[0])-th)) > 8*Math.PI/180) boxy=false; }
+        const fold=a=>((a+Math.PI/4)%(Math.PI/2)+Math.PI/2)%(Math.PI/2)-Math.PI/4;
+        let sx=0, sy=0; for (let i=0;i<n;i++){ const A=pts[i], B=pts[(i+1)%n], dx=B[0]-A[0], dy=B[1]-A[1], L=Math.hypot(dx,dy), t=4*Math.atan2(dy,dx); if (L<0.15*per) continue; sx+=L*L*Math.cos(t); sy+=L*L*Math.sin(t); }
+        const th=Math.atan2(sy,sx)/4;
+        let boxy=true; for (let i=0;i<n;i++){ const A=pts[i], B=pts[(i+1)%n], L=Math.hypot(B[0]-A[0],B[1]-A[1]); if (L < 0.15*per) continue; if (Math.abs(fold(Math.atan2(B[1]-A[1],B[0]-A[0])-th)) > 8*Math.PI/180) boxy=false; }
         const d=fold(g*Math.PI/180-th);
-        if (boxy && Math.abs(d) <= 4*Math.PI/180){ let cx=0, cy=0; pts.forEach(q=>{cx+=q[0];cy+=q[1];}); cx/=n; cy/=n; const ga=th+d, cs=Math.cos(ga), sn=Math.sin(ga);
-          const R=pts.map(q=>{ const x=q[0]-cx, y=q[1]-cy; return [x*cs+y*sn, -x*sn+y*cs]; });
-          const E=[]; for (let i=0;i<n;i++){ const A=R[i], B=R[(i+1)%n]; const hor=Math.abs(B[0]-A[0])>=Math.abs(B[1]-A[1]); E.push({hor, v: hor ? (A[1]+B[1])/2 : (A[0]+B[0])/2}); }
-          const Q=R.map((q,i)=>{ const e0=E[(i-1+n)%n], e1=E[i]; if (e0.hor!==e1.hor) return e0.hor ? [e1.v, e0.v] : [e0.v, e1.v]; return e1.hor ? [q[0], e1.v] : [e1.v, q[1]]; });
+        if (boxy && Math.abs(d) <= 4*Math.PI/180){ let cx=0, cy=0; pts.forEach(q=>{cx+=q[0];cy+=q[1];}); cx/=n; cy/=n; const ga=g*Math.PI/180, cs=Math.cos(ga), sn=Math.sin(ga);
+          // into the houses' frame (rotated by the lot's own lean d first), then every side within 8 deg of square is made exactly
+          // horizontal/vertical; any other side (a corner truncation, an angled boundary) keeps its own line; corners = intersections
+          const cr=Math.cos(d), sr=Math.sin(d); const P=pts.map(q=>{ let x=q[0]-cx, y=q[1]-cy; const x1=x*cr-y*sr, y1=x*sr+y*cr; return [x1*cs+y1*sn, -x1*sn+y1*cs]; });
+          const Ls=[]; for (let i=0;i<n;i++){ const A=P[i], B=P[(i+1)%n], an=fold(Math.atan2(B[1]-A[1],B[0]-A[0]));
+            if (Math.abs(an) <= 8*Math.PI/180){ const hor=Math.abs(B[0]-A[0])>=Math.abs(B[1]-A[1]); if (hor){ const v=(A[1]+B[1])/2; Ls.push([[A[0],v],[B[0],v]]); } else { const v=(A[0]+B[0])/2; Ls.push([[v,A[1]],[v,B[1]]]); } }
+            else Ls.push([A,B]); }
+          const Q=[]; for (let i=0;i<n;i++){ const [p1,p2]=Ls[(i-1+n)%n], [p3,p4]=Ls[i]; const d1x=p2[0]-p1[0], d1y=p2[1]-p1[1], d2x=p4[0]-p3[0], d2y=p4[1]-p3[1]; const den=d1x*d2y-d1y*d2x;
+            if (Math.abs(den)/(Math.hypot(d1x,d1y)*Math.hypot(d2x,d2y)+1e-9) < 0.05) Q.push([(p2[0]+p3[0])/2,(p2[1]+p3[1])/2]); else { const t=((p3[0]-p1[0])*d2y-(p3[1]-p1[1])*d2x)/den; Q.push([p1[0]+d1x*t, p1[1]+d1y*t]); } }
           pts.splice(0, n, ...Q.map(q=>[cx+q[0]*cs-q[1]*sn, cy+q[0]*sn+q[1]*cs])); window.__squared = { by: +(d*180/Math.PI).toFixed(2) }; } else window.__squared = { skipped: boxy ? "lot turned >4 deg from the houses" : "not a box-shaped lot" }; } } catch(e){ console.warn(e); }
     let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; pts.forEach(q=>{ x0=Math.min(x0,q[0]); x1=Math.max(x1,q[0]); y0=Math.min(y0,q[1]); y1=Math.max(y1,q[1]); });
     const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3);
