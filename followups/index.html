@@ -122,6 +122,7 @@ form{display:flex;flex-direction:column;gap:12px}
     <div class="list" id="dueList"></div>
     <button class="btn" id="moreBtn" hidden>Show five more</button>
     <div id="doneWrap" hidden><h2>Done today</h2><div id="doneList"></div></div>
+    <div id="skipWrap" hidden><h2>Skipped today</h2><div id="skipList"></div></div>
   </section>
 
   <section id="view-everyone" class="list" hidden>
@@ -338,7 +339,7 @@ function cardHTML(p,s){
   h+='<div class="outcomes">'+
     '<button class="btn" data-out="spoke">Spoke</button><button class="btn" data-out="texted">Texted</button>'+
     '<button class="btn" data-out="noanswer">No answer</button><button class="btn" data-out="booked">Booked</button>'+
-    '<button class="btn quietbtn wide" data-out="stop">Not interested, stop following up</button></div></div>';
+    '<button class="btn wide" data-out="skip">Skip for now</button><button class="btn quietbtn wide" data-out="stop">Not interested, stop following up</button></div></div>';
   return h;
 }
 function renderFoot(){
@@ -366,6 +367,9 @@ function render(){
   $("moreBtn").hidden = due.length<=shown;
   if(due.length>shown) $("moreBtn").textContent="Show five more ("+(due.length-shown)+" waiting)";
   $("doneWrap").hidden = n===0;
+  var skById={}; all.forEach(function(p){skById[p.id]=p}); var sk=Object.keys(states).filter(function(id){return states[id]&&states[id].skip===t});
+  $("skipWrap").hidden = sk.length===0;
+  $("skipList").innerHTML = sk.map(function(id){var p=skById[id];return '<div class="done"><span><b>'+esc(p?(p.name||p.email):id)+'</b> · back in a week</span><button class="btn" data-unskip="'+esc(id)+'">Bring back</button></div>'}).join("");
   $("doneList").innerHTML = done.map(x=>'<div class="done"><span><b>'+esc(x.p?(x.p.name||x.p.email):x.id)+'</b> · '+esc(OUT[x.l.outcome]||x.l.outcome)+'</span><button class="btn" data-undo="'+esc(x.id)+'">Undo</button></div>').join("");
 
   const q=query.trim().toLowerCase();
@@ -388,7 +392,7 @@ function push(patch){
   return FB.setDoc(FB.ref,patch,{merge:true}).then(()=>{ if(cloud!=="cloud"){ cloud="cloud"; renderFoot() } },()=>{ cloud="local"; renderFoot() });
 }
 function saveState(id,mut){
-  const cur=states[id]||{}, next={log:(cur.log||[]).slice(-40),stop:!!cur.stop,snooze:cur.snooze||""};
+  const cur=states[id]||{}, next={log:(cur.log||[]).slice(-40),stop:!!cur.stop,snooze:cur.snooze||"",skip:cur.skip||""};
   mut(next); next.updatedAt=new Date().toISOString();
   states[id]=next; writing[id]=(writing[id]||0)+1; render();
   return push({state:{[id]:next}}).then(()=>{ writing[id]--; });
@@ -396,6 +400,7 @@ function saveState(id,mut){
 function logOutcome(id,outcome){
   const t=today();
   return saveState(id,s=>{
+    if(outcome==="skip"){ s.skip=t; s.snooze=addDays(t,7); return }
     s.log.push({at:t,outcome});
     if(outcome==="noanswer") s.snooze=addDays(t,3);
     if(outcome==="booked") s.snooze=addDays(t,14);
@@ -416,6 +421,7 @@ document.addEventListener("click",e=>{
   if(b.id==="moreBtn"){ shown+=5; render(); return }
   if(b.dataset.open){ openId=b.dataset.open; editNum=null; render(); return }
   if(b.dataset.undo){ undo(b.dataset.undo); return }
+  if(b.dataset.unskip){ saveState(b.dataset.unskip,function(s){s.skip="";s.snooze=""}); return }
   const card=b.closest(".card"); if(!card) return;
   const id=card.dataset.id;
   if(b.hasAttribute("data-editnum")){ editNum=id; render(); return }
