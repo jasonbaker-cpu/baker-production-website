@@ -1,0 +1,256 @@
+{
+ "videos": {
+  "DfG_jKMhFDy": {
+   "comments": 17,
+   "format": "Talking head",
+   "fortnight": "F0",
+   "likes": 88,
+   "link": "https://www.instagram.com/jpobrienwa/reel/DfG_jKMhFDy/",
+   "postedOn": "2026-10-29",
+   "status": "Posted",
+   "suburb": "Perth",
+   "title": "Perth market update, \"8,000+\"",
+   "views": 1440
+  },
+  "DfZPnT6hPuX": {
+   "format": "Talking head",
+   "fortnight": "F1",
+   "link": "https://www.instagram.com/jpobrienwa/reel/DfZPnT6hPuX/",
+   "order": 10,
+   "postedOn": "2026-11-06",
+   "status": "Posted",
+   "suburb": "Coogee",
+   "title": "\"How's Coogee tracking?\" market reel",
+   "views": 980
+  },
+  "f1-stewart-listing": {
+   "format": "Listing video",
+   "fortnight": "F1",
+   "hook": "Edited and delivered. The walkthrough is up but the listing video isn't yet.",
+   "order": 1,
+   "owner": "John",
+   "postBy": "2026-11-14",
+   "postedOn": "2026-11-11",
+   "status": "Posted",
+   "suburb": "Scarborough",
+   "title": "4/14 Stewart St listing video"
+  },
+  "DfRSiulh22M": {
+   "format": "Walkthrough",
+   "fortnight": "F1",
+   "link": "https://www.instagram.com/jpobrienwa/reel/DfRSiulh22M/",
+   "order": 11,
+   "postedOn": "2026-11-03",
+   "status": "Posted",
+   "suburb": "Scarborough",
+   "title": "4/14 Stewart St walkthrough",
+   "views": 625
+  },
+  "f1-port-coogee": {
+   "format": "B-roll + John to camera",
+   "fortnight": "F1",
+   "hook": "\"Here's what living at Port Coogee actually looks like.\" Marina, Ngarkal Beach, the cafés. Location only, no sold claims.",
+   "luxury": true,
+   "order": 5,
+   "owner": "Baker",
+   "postBy": "2026-11-16",
+   "status": "Editing",
+   "suburb": "North Coogee",
+   "title": "Port Coogee spotlight"
+  },
+  "f1-market-part2": {
+   "format": "Talking head, under 40s",
+   "fortnight": "F1",
+   "hook": "\"My last video got more questions than anything I've posted. Here are the answers.\"",
+   "order": 2,
+   "owner": "John",
+   "postBy": "2026-11-16",
+   "status": "To film",
+   "suburb": "Coogee",
+   "title": "Part 2 of the market update"
+  },
+  "DeyAHPrhQLV": {
+   "comments": 6,
+   "format": "Walkthrough",
+   "fortnight": "F0",
+   "likes": 20,
+   "link": "https://www.instagram.com/jpobrienwa/reel/DeyAHPrhQLV/",
+   "postedOn": "2026-10-21",
+   "status": "Posted",
+   "suburb": "Scarborough",
+   "title": "4/14 Stewart St, Scarborough",
+   "views": 19000
+  },
+  "f1-walkthrough": {
+   "format": "Walk and talk, 30–60s",
+   "fortnight": "F1",
+   "hook": "Open on the best feature. John walks room by room, 3 features that matter. Vendor's OK to film.",
+   "order": 4,
+   "owner": "John",
+   "postBy": "2026-11-16",
+   "status": "To film",
+   "suburb": "Next listing",
+   "title": "Walkthrough at the next listing"
+  },
+  "f1-xmas": {
+   "format": "Talking head, under 40s",
+   "fortnight": "F1",
+   "hook": "\"Should you sell before Christmas or wait until February?\" The question every seller is asking right now.",
+   "luxury": true,
+   "order": 3,
+   "owner": "John",
+   "postBy": "2026-11-16",
+   "status": "To film",
+   "suburb": "Coogee",
+   "title": "Sell before Christmas or wait?"
+  }
+ },
+ "fortnights": {
+  "F1": {
+   "end": "2026-11-16",
+   "fixNext": "Post the Stewart St listing video. Fix the profile.",
+   "followers": 2087,
+   "label": "Fortnight 1",
+   "start": "2026-11-03",
+   "target": 5
+  },
+  "F0": {
+   "bestReel": "Perth market update",
+   "bestReelLink": "https://www.instagram.com/jpobrienwa/reel/DfG_jKMhFDy/",
+   "bestViews": 1440,
+   "end": "2026-11-02",
+   "fixNext": "Post every week. Rewrite the profile. More John on camera.",
+   "followers": 2081,
+   "label": "Baseline",
+   "reelsPosted": 2,
+   "start": "2026-10-20",
+   "target": 5
+  }
+ },
+ "fixes": {
+  "headshot": {
+   "done": false,
+   "label": "Clean, well-lit headshot as the profile photo",
+   "order": 4
+  },
+  "link": {
+   "done": false,
+   "label": "Link straight to an appraisal booking page, not beacons.ai",
+   "order": 3
+  },
+  "name": {
+   "done": false,
+   "label": "Name: \"John O'Brien | Coogee Real Estate\"",
+   "order": 1
+  },
+  "highlights": {
+   "done": false,
+   "label": "Highlights: Sold, Suburbs, Reviews",
+   "order": 5
+  },
+  "pins": {
+   "done": false,
+   "label": "Pin the 3 best reels",
+   "order": 6
+  },
+  "bio": {
+   "done": false,
+   "label": "Bio: \"Coastal homes, Coogee to Port Coogee · Raspa · Book an appraisal ↓\"",
+   "order": 2
+  },
+  "tiles": {
+   "done": false,
+   "label": "Move the Sold / Under Offer tiles to Stories",
+   "order": 7
+  }
+ },
+ "ideas": {
+  "sold-recut": {
+   "format": "Walkthrough recut with the result",
+   "hook": "\"This one's sold. Here's how we marketed it.\"",
+   "order": 9,
+   "suburb": "Coogee",
+   "title": "Sold recut: 74 King St, Coogee",
+   "why": "Proof for future vendors. Only once John confirms the sale and the result he can share."
+  },
+  "home-open-bts": {
+   "format": "Walk and talk, 30s",
+   "hook": "\"Here's what actually happens at a home open.\"",
+   "order": 5,
+   "suburb": "Next listing",
+   "title": "Behind the scenes at a Sunday home open",
+   "why": "Shows the work vendors never see. Needs the vendor's OK."
+  },
+  "worth-question": {
+   "format": "Talking head, under 40s",
+   "hook": "\"Online estimates are guessing. Here's how a real appraisal works.\"",
+   "order": 6,
+   "suburb": "Coogee",
+   "title": "\"What's my home worth?\" The honest answer",
+   "why": "Speaks straight to people thinking of selling and ends on the appraisal ask."
+  },
+  "coogee-vs-port": {
+   "format": "The Numbers, under 40s",
+   "hook": "\"Same budget, two suburbs, very different homes.\"",
+   "luxury": true,
+   "order": 4,
+   "suburb": "Coogee / North Coogee",
+   "title": "Coogee vs Port Coogee: what the same money buys",
+   "why": "Needs real REIWA figures for both suburbs. No estimates."
+  },
+  "who-buying": {
+   "format": "Talking head, under 40s",
+   "hook": "\"I've met every buyer through my last few home opens. Here's who they are.\"",
+   "luxury": true,
+   "order": 7,
+   "suburb": "Coogee",
+   "title": "Who's buying in Coogee right now",
+   "why": "From John's own home opens: downsizers, families, interstate. Real observations only."
+  },
+  "quiet-sale": {
+   "format": "Talking head, under 40s",
+   "hook": "\"Not every Coogee home I sell ever hits the portals.\"",
+   "luxury": true,
+   "order": 1,
+   "suburb": "Coogee",
+   "title": "Selling a premium home without the whole street knowing",
+   "why": "High-end sellers care about privacy. Explain private and pre-market campaigns, then the appraisal ask."
+  },
+  "beach-walk": {
+   "format": "Suburb spotlight, B-roll + voice",
+   "hook": "\"The best walk on the coast, and the homes you pass on it.\"",
+   "luxury": true,
+   "order": 8,
+   "suburb": "Coogee / North Coogee",
+   "title": "Coogee Beach to Ngarkal Beach in 60 seconds",
+   "why": "Lifestyle reel locals send to friends. Great for reach."
+  },
+  "shoot-day": {
+   "format": "Behind the scenes, 30s",
+   "hook": "\"Here's the day we shoot your home.\"",
+   "luxury": true,
+   "order": 10,
+   "suburb": "Next listing",
+   "title": "What a premium listing shoot looks like",
+   "why": "Drone, twilight, video. Shows luxury vendors the marketing they get with John."
+  },
+  "prep-value": {
+   "format": "Talking head + b-roll, 40s",
+   "hook": "\"Three things I get every coastal vendor to do before we shoot.\"",
+   "luxury": true,
+   "order": 3,
+   "suburb": "Coogee",
+   "title": "3 things to do before you list a coastal home",
+   "why": "Salt-air paint, garden, lighting. Useful, sendable, and it positions John as the expert."
+  },
+  "port-coogee-morning": {
+   "format": "B-roll + John to camera, 30s",
+   "hook": "\"6am at the marina. This is why people pay to live here.\"",
+   "luxury": true,
+   "order": 2,
+   "suburb": "North Coogee",
+   "title": "A morning at Port Coogee",
+   "why": "Sunrise over the marina, coffee, the boardwalk. Location only, no sold claims."
+  }
+ }
+}
