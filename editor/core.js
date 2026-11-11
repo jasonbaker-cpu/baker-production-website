@@ -306,7 +306,52 @@ function dehazeBand(px, w, h, line){
     }
   }
 }
-function finishImage(base, p){
+/* 11 Nov: "needs to look like this drone every time" (Jason, ref = 15 Douglas Ave Yokine listing drones).
+   Last step of every day finish: white balance so white roofs read neutral, land tones + colour pulled to the reference,
+   sky pulled to the reference's pale clean blue gradient (clouds/detail kept). Twilight jobs skipped. */
+const REF = { qp:[.02,.1,.25,.5,.75,.9,.98], q:[20,52,85,135,181,213,239], qTop:[14,69,115,163,202,219,238], white:[215,218,222], chroma:25,
+  sky:[[187,219,254],[209,231,252],[216,231,245]] };
+function refMatch(cv, sky, p){
+  const T = Object.assign({}, TUNE, window.__TUNE||{});
+  if (T.noRef || (typeof prefs!=='undefined' && prefs.skyPlate==='S') || (p && p.skyWarm)) return;
+  const w = cv.width, h = cv.height, ctx = cv.getContext('2d'), id = ctx.getImageData(0,0,w,h), px = id.data;
+  const top = p && p.cam && typeof p.cam.pitch==='number' && p.cam.pitch < -65;
+  const line = (sky && !top) ? (x => sky.m*x + sky.b) : null, band = 0.015*h, st = Math.max(1, Math.round(w/700));
+  const Ls = []; let wr=0, wg=0, wb=0, wn=0, ch=0, cn=0; const SB = 24, sr = new Float64Array(SB*4);
+  for (let y=0; y<h; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, r=px[i], g=px[i+1], b=px[i+2], L=0.299*r+0.587*g+0.114*b;
+    if (line){ const hz=line(x); if (y < hz - band){ const t=Math.max(0,Math.min(SB-1,(y/Math.max(hz,1)*SB)|0)); sr[t*4]+=r; sr[t*4+1]+=g; sr[t*4+2]+=b; sr[t*4+3]++; continue; } if (y < hz + 3*band) continue; }
+    Ls.push(L); ch += Math.hypot(r-L, g-L, b-L); cn++;
+    const mx=Math.max(r,g,b), mn=Math.min(r,g,b); if (L>165 && L<250 && mx-mn<40){ wr+=r; wg+=g; wb+=b; wn++; } }
+  if (Ls.length < 400) return;
+  Ls.sort((a,b)=>a-b); const Q = REF.qp.map(q => Ls[Math.floor(q*(Ls.length-1))]);
+  // white balance (only if enough near-white surfaces), gentle
+  let G = [1,1,1];
+  if (wn > 0.004*Ls.length){ const m=(wr+wg+wb)/(3*wn), rm=(REF.white[0]+REF.white[1]+REF.white[2])/3, a=T.refWB ?? 1;
+    G = [wr/wn, wg/wn, wb/wn].map((v,k) => { const gk = (REF.white[k]/rm)/(v/m); return Math.max(0.86, Math.min(1.14, 1 + a*(gk-1))); }); }
+  // tone curve on luminance, knots pulled toward the reference
+  const s = T.refAmt ?? 0.7, RQ = top ? REF.qTop : REF.q, kx=[0], ky=[0];
+  Q.forEach((q,k) => { const end = k===0 || k===Q.length-1, y = q + (end || k<=2 || RQ[k] > q ? s : 0.15)*(RQ[k]-q);   /* black + white points to the reference; mids only lifted (grey-roof estates are brighter than the ref street) */ if (q > kx[kx.length-1]+2) { kx.push(q); ky.push(Math.max(ky[ky.length-1]+1, y)); } }); kx.push(255); ky.push(255);
+  const curve = new Float32Array(256); for (let v=0, k=0; v<256; v++){ while (k < kx.length-2 && v > kx[k+1]) k++; const f=(v-kx[k])/Math.max(1,kx[k+1]-kx[k]); curve[v] = ky[k] + f*(ky[k+1]-ky[k]); }
+  const ourC = ch/cn, kc = Math.max(0.85, Math.min(1.4, 1 + (T.refSat ?? 1)*(REF.chroma/Math.max(1,ourC) - 1)));
+  // sky: per-row-band shift toward the reference gradient
+  const sa = T.refSky ?? 0.6, shift = new Float32Array(SB*4);
+  for (let t=0; t<SB; t++){ const n=sr[t*4+3]; if (!n) continue; const u=t/(SB-1)*2, k0=Math.min(1,u|0), f=u-k0, R=REF.sky[k0], R2=REF.sky[k0+1];
+    for (let c=0;c<3;c++) shift[t*4+c] = sa*((R[c]*(1-f)+R2[c]*f) - sr[t*4+c]/n); shift[t*4+3] = (0.299*sr[t*4]+0.587*sr[t*4+1]+0.114*sr[t*4+2])/n; }
+  for (let y=0; y<h; y++) for (let x=0; x<w; x++){ const i=(y*w+x)*4; let r=px[i], g=px[i+1], b=px[i+2];
+    let lw = 1, hz = 0; if (line){ hz=line(x); const d=(y-hz)/band; lw = d<=-1 ? 0 : d>=1 ? 1 : 0.5+0.5*d; }
+    let R=r, Gg=g, B=b;
+    if (lw > 0){ const r1=r*G[0], g1=g*G[1], b1=b*G[2], L=0.299*r1+0.587*g1+0.114*b1, L2=curve[Math.min(255,Math.max(0,L|0))], sc = L>1 ? L2/L : 1;
+      R = L2 + kc*(r1*sc-L2); Gg = L2 + kc*(g1*sc-L2); B = L2 + kc*(b1*sc-L2); }
+    if (lw < 1){ const t=Math.max(0,Math.min(SB-1,(y/Math.max(hz,1)*SB)|0)); const Lp=0.299*r+0.587*g+0.114*b, sim=Math.max(0, 1-Math.abs(Lp-shift[t*4+3])/45) * (t>=SB-2 ? 0.5 : 1), sr_=r+sim*shift[t*4], sg_=g+sim*shift[t*4+1], sb_=b+sim*shift[t*4+2];   /* trees/roofs poking above the line are left alone */
+      R = R*lw + sr_*(1-lw); Gg = Gg*lw + sg_*(1-lw); B = B*lw + sb_*(1-lw); }
+    px[i]=R; px[i+1]=Gg; px[i+2]=B; }
+  ctx.putImageData(id, 0, 0);
+  if (p) p._ref = { G:G.map(v=>+v.toFixed(3)), kc:+kc.toFixed(2), Q:Q.map(Math.round) }; (window.__refs = window.__refs || []).push([p && p.name, wn, Ls.length, ourC.toFixed(1), (p&&p._ref)]);
+}
+function finishImage(base, p){   /* 11 Nov: per-photo look override saved in the project (p.tune), e.g. cool grey-roof estates */
+  const prevT = window.__TUNE; if (p && p.tune) window.__TUNE = Object.assign({}, prevT||{}, p.tune);
+  try { const r = finishImage0(base, p); try{ refMatch(r.canvas, r.sky, p); }catch(e){ console.warn("refMatch", e); } return r; } finally { window.__TUNE = prevT; } }
+function finishImage0(base, p){
   { const pk = (typeof prefs!=="undefined" && prefs.skyPlate) || "C"; if (typeof SKYP_CACHE!=="undefined" && SKYP_CACHE[pk]) SKYP = SKYP_CACHE[pk]; }
   const w = base.width, h = base.height;
   const ctx = base.getContext("2d"); const id = ctx.getImageData(0,0,w,h); const px = id.data;

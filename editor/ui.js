@@ -28,7 +28,7 @@ function newPhoto(name, base, meta, sample){
     disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0, (!sample && prefs.skyPlate !== "S") ? { con:10 } : {}), undo:[], redo:[] };
   return p;
 }
-const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet","skyForce","skyLineUser","straight"];
+const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet","skyForce","skyLineUser","straight","tune"];
 function snapshotOf(p){ const o={}; SNAP_KEYS.forEach(k=>o[k]=p[k]); return JSON.stringify(o); }
 function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
 function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); if ((p.straight||0)!==(p._straightBuilt||0)) buildStraightBase(p); ensureFinish(p); }
