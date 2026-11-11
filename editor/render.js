@@ -53,7 +53,7 @@ const AGENCIES = {
   "fn":          { name:"Blue pins + First National board (Suresh Sama, Nish Jayant)",   kind:"pin",  color:"#004480", scale:.88, house:{ type:"board", w:142, h:142, stem:250, mark:"fn" } },
   "orange":      { name:"Top Realty — orange pins + small black house pin on a white post (Raymond Chen)", kind:"pin",  color:"#F4783C", house:{ type:"pin", w:144, h:196, stem:296, mark:"house", color:"#111111" } },
   "green-belle": { name:"Green pins + belle (Shane Garrett, Cory Garrett, Megan Topham)", kind:"pin", color:"#22644E", house:{ type:"pin", w:176, h:281, mark:"belle", markR:.91 } },
-  "flags-p":     { name:"Red flags + P pin (Professionals: Annique Woodford, Nic Pulvirenti, Stephanie Briers, Emma Scharf, James Kennedy; Armadale: Grant Wilson)", kind:"flag", color:"#FF2744", bigHouse:true, house:{ type:"pin", w:330, h:469, color:"#3C3C3C", mark:"p", markR:.85 } },   /* 11 Nov (Jason): Professionals P pin bigger */
+  "flags-p":     { name:"Red flags + P pin (Professionals: Annique Woodford, Nic Pulvirenti, Stephanie Briers, Emma Scharf, James Kennedy; Armadale: Grant Wilson)", kind:"flag", color:"#FF2744", scale:1.3, bigHouse:true, house:{ type:"pin", w:208, h:296, color:"#3C3C3C", mark:"p", markR:.85 } },   /* 11 Nov (Jason): Professionals P pin bigger */
   "yellow":      { name:"Yellow labels + address (Gregory Swiatek, Shah Akbari)", kind:"ylab", color:"#F4DC00", house:{ type:"label" } },
   "simple":      { name:"Simple — dark labels on thin lines, name + distance (28 Oct template)", kind:"simple", color:"#34373B", house:{ type:"pin", w:150, h:206, outline:true, color:"#FFFFFF" } },
   "pill-r":      { name:"Navy labels + R pin (Mandie Cubeddu)",             kind:"pill", color:"#223454", house:{ type:"pin", w:82, h:104, stem:190, mark:"r", markR:.9 } },
@@ -73,7 +73,7 @@ const HOUSE_STYLES = {
 // (measured from his Top Realty reference). One size for all agencies; house pins capped to the same small size.
 const PIN_K = .77, HOUSE_MAXW = 144;
 function agency(){ const A0 = AGENCIES[prefs.agency] || AGENCIES.grey, o = HOUSE_STYLES[prefs.houseStyle||""];
-  const A = Object.assign({}, A0, { scale:PIN_K * (A0.kind==="cream" ? (A0.scale||1) : 1) }, o && o.house ? { house:o.house } : {});   /* Beshay cream labels sized to their own reference */
+  const A = Object.assign({}, A0, { scale:PIN_K * ((A0.kind==="cream" || A0.kind==="flag") ? (A0.scale||1) : 1) }, o && o.house ? { house:o.house } : {});   /* Beshay cream labels sized to their own reference */
   const H = A.house; if (H && H.type === "pin" && H.w > HOUSE_MAXW && prefs.houseStyle !== "big" && !A0.bigHouse) A.house = Object.assign({}, H, { w:HOUSE_MAXW, h:Math.round(HOUSE_MAXW*H.h/H.w) });
   return A; }
 function pinColour(){ return prefs.pinColor || agency().color; }
