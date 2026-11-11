@@ -351,15 +351,19 @@ function refMatch(cv, sky, p){
   if (line && ca > 0){
     const bc = document.createElement('canvas'); bc.width = w; bc.height = h; const bx = bc.getContext('2d');
     bx.filter = `blur(${Math.max(3, Math.round(w/220))}px)`; bx.drawImage(cv, 0, 0); const bd = bx.getImageData(0,0,w,h).data;
-    const id2 = ctx.getImageData(0,0,w,h), q = id2.data, span = 0.42*h;
+    const id2 = ctx.getImageData(0,0,w,h), q = id2.data, span = 0.42*h, glare = !!(p && p.skyForce);
     let hr=0, hg=0, hb=0, hn=0;   // haze colour = what sits just below the horizon
     for (let x=0; x<w; x+=4){ const y=Math.round(line(x)+0.01*h); if (y<0||y>=h) continue; const i=(y*w+x)*4; hr+=bd[i]; hg+=bd[i+1]; hb+=bd[i+2]; hn++; }
     if (hn){ hr/=hn; hg/=hn; hb/=hn; }
     for (let y=0; y<h; y++) for (let x=0; x<w; x++){
       const hz = line(x), d = (y-hz)/span; if (d < -0.01 || d > 1) continue;
       const wv = d < 0.03 ? Math.max(0, (d+0.01)/0.04) : Math.pow(1-d, 1.3), i = (y*w+x)*4;
-      const kd = 1 + 1.1*ca*wv, kh = 0.13*ca*wv, H=[hr,hg,hb];
-      for (let c=0;c<3;c++){ let v = bd[i+c] + (q[i+c]-bd[i+c])*kd; v = hn ? (v - kh*H[c])/(1-kh) : v; q[i+c] = v; }
+      /* 11 Nov v2: gentler + halo/noise safe — soft-capped detail boost, coring of tiny (noise) detail, glare left alone */
+      const Lp = 0.3*q[i]+0.59*q[i+1]+0.11*q[i+2], gl = Lp > 185 ? Math.max(0, 1 - (Lp-185)/45) : 1;
+      const kd = 0.62*ca*wv*gl, kh = 0.11*ca*wv, H=[hr,hg,hb];
+      const sm = glare && d < 0.3 && Lp > 175 ? 0.55*Math.min(1,(Lp-175)/40)*(1-d/0.3) : 0;
+      for (let c=0;c<3;c++){ const dl = q[i+c]-bd[i+c], core = Math.abs(dl) < 3 ? Math.abs(dl)/3 : 1;
+        let v = q[i+c] + 10*Math.tanh(dl*kd*core/10); v = v - (v - bd[i+c])*sm; v = hn ? (v - kh*H[c])/(1-kh) : v; q[i+c] = v; }
     }
     ctx.putImageData(id2, 0, 0);
   }
