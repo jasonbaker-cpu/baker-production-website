@@ -1,6 +1,33 @@
 {
  "days": [
   {
+   "id": "10-nov-2026",
+   "label": "Tue 10 Nov 2026",
+   "gallery": "10-nov-2026/",
+   "jobs": [
+    {
+     "slug": "76_dolphin_dr",
+     "addr": "76 Dolphin Dr, Alkimos WA 6038",
+     "who": "Nic Pulvirenti \u00b7 Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261110_194622_0085_1794300729862_photo.jpg"
+     ],
+     "src": "10-nov-2026/76_dolphin_dr/src/",
+     "map": "76_dolphin_dr_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261110_194622_0085_1794300729862_photo.jpg",
+      "dji_fly_20261110_194750_0087_1794300728754_photo.jpg"
+     ],
+     "notes": "",
+     "portrait": false,
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/10-11-2026/76 Dolphin Dr, Alkimos WA 6038, Australia/Aerial - Drone Photography"
+    }
+   ]
+  },
+  {
    "id": "09-nov-2026",
    "label": "Mon 9 Nov 2026",
    "gallery": "09-nov-2026/",

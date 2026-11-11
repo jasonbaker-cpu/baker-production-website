@@ -1,0 +1,193 @@
+{
+ "address": "76 Dolphin Dr, Alkimos WA 6038",
+ "lat": -31.630035,
+ "lng": 115.684248,
+ "pins": [
+  {
+   "name": "Kaiser Park",
+   "cat": "park",
+   "lat": -31.630668800000002,
+   "lng": 115.6861096
+  },
+  {
+   "name": "Macquarie Park",
+   "cat": "park",
+   "lat": -31.6317019,
+   "lng": 115.682153
+  },
+  {
+   "name": "Midsummer Park",
+   "cat": "park",
+   "lat": -31.6329779,
+   "lng": 115.6866282
+  },
+  {
+   "name": "Fontana Park",
+   "cat": "park",
+   "lat": -31.6282613,
+   "lng": 115.6878158
+  },
+  {
+   "name": "Eden Beach Pump Track",
+   "cat": "rec",
+   "lat": -31.6314918,
+   "lng": 115.67980070000002
+  },
+  {
+   "name": "Alkimos Beach Fitness Park",
+   "cat": "park",
+   "lat": -31.626380400000002,
+   "lng": 115.68144319999998
+  },
+  {
+   "name": "Marlinspike Park",
+   "cat": "park",
+   "lat": -31.6351269,
+   "lng": 115.6842863
+  },
+  {
+   "name": "Pearson Park",
+   "cat": "park",
+   "lat": -31.6251166,
+   "lng": 115.682843
+  },
+  {
+   "name": "Leatherback Park",
+   "cat": "park",
+   "lat": -31.625052999999998,
+   "lng": 115.6805342
+  },
+  {
+   "name": "Trinity Village Shopping Centre",
+   "cat": "shop",
+   "lat": -31.628201100000002,
+   "lng": 115.6919951
+  },
+  {
+   "name": "Solida Park",
+   "cat": "park",
+   "lat": -31.634328999999997,
+   "lng": 115.6769039
+  },
+  {
+   "name": "Bristlebird Park",
+   "cat": "park",
+   "lat": -31.621534699999998,
+   "lng": 115.68573640000001
+  },
+  {
+   "name": "Eden Beach Foreshore Park",
+   "cat": "park",
+   "lat": -31.638093500000004,
+   "lng": 115.6778632
+  },
+  {
+   "name": "Halesworth Park",
+   "cat": "park",
+   "lat": -31.632077100000004,
+   "lng": 115.6967158
+  },
+  {
+   "name": "The Gateway Shopping Precinct - Alkimos Beach",
+   "cat": "shop",
+   "lat": -31.619681600000003,
+   "lng": 115.68841560000001
+  },
+  {
+   "name": "St James' Anglican School",
+   "cat": "school",
+   "lat": -31.618844900000003,
+   "lng": 115.6864188
+  },
+  {
+   "name": "Bathers Park",
+   "cat": "park",
+   "lat": -31.6246883,
+   "lng": 115.67233010000001
+  },
+  {
+   "name": "Jindee Beach",
+   "cat": "beach",
+   "lat": -31.6425576,
+   "lng": 115.67913200000001
+  },
+  {
+   "name": "Butler Central",
+   "cat": "shop",
+   "lat": -31.6363707,
+   "lng": 115.6983412
+  },
+  {
+   "name": "Alkimos Park",
+   "cat": "park",
+   "lat": -31.627789600000003,
+   "lng": 115.70000809999998
+  },
+  {
+   "name": "Alkimos Beach",
+   "cat": "beach",
+   "lat": -31.6262769,
+   "lng": 115.66813270000002
+  },
+  {
+   "name": "Butler Station",
+   "cat": "transit",
+   "lat": -31.635399999999997,
+   "lng": 115.70009999999999
+  },
+  {
+   "name": "Alkimos Aquatic Recreation Centre",
+   "cat": "rec",
+   "lat": -31.616191199999996,
+   "lng": 115.6938008
+  },
+  {
+   "name": "Alkimos Station",
+   "cat": "transit",
+   "lat": -31.615147799999995,
+   "lng": 115.69251539999999
+  },
+  {
+   "name": "Brampton Park",
+   "cat": "park",
+   "lat": -31.648558,
+   "lng": 115.69932419999999
+  },
+  {
+   "name": "Picasso Park",
+   "cat": "park",
+   "lat": -31.606584599999998,
+   "lng": 115.68515749999997
+  },
+  {
+   "name": "Quinns Dog Beach",
+   "cat": "beach",
+   "lat": -31.657906299999997,
+   "lng": 115.68833979999998
+  },
+  {
+   "name": "Eglinton Station",
+   "cat": "transit",
+   "lat": -31.5838,
+   "lng": 115.6725
+  },
+  {
+   "name": "Clarkson Library",
+   "cat": "library",
+   "lat": -31.689425699999997,
+   "lng": 115.7176336
+  },
+  {
+   "name": "Yanchep National Park",
+   "cat": "park",
+   "lat": -31.548695799999997,
+   "lng": 115.68533140000001
+  },
+  {
+   "name": "Yanchep National Park Golf Course",
+   "cat": "golf",
+   "lat": -31.541544299999995,
+   "lng": 115.68293990000001
+  }
+ ]
+}
