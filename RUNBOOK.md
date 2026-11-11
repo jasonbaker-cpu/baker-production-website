@@ -313,3 +313,6 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 - It only applies when it clearly sees fences (score ≥ 0.42 and well above the search median). Otherwise the editor's own snap runs and `e2e/fencefit_<day>.json` has no fit for that top-down → LOOK at it and fix by hand / send to editor. Twilight and bush lots usually fail this (45 Amethyst did) — that's intended.
 - Tested 10 Nov from the raw cadastre on 9 Nov Price Ct, Phoenix, Wilfred (6 top-downs): all landed on the fences unaided; recovers from 2–3 m / 2° starting errors. `"noFenceFit": true` or NOFENCEFIT=1 skips it.
 - The old independent-agent fence check (section 5) still runs after.
+
+## Aerial Boundary Overlay (Satellite) = the hood map (Jason, 11 Nov 2026)
+- The product 'Aerial Boundary Overlay (Satellite)' is ALWAYS made with `hoodmap.py` (identical to the hood map). Never a hand-built style. Front-exterior photo from the job's Sales Photography finals as the inset. Example: maps/hood_34_goodall_st.json.
