@@ -1,13 +1,1 @@
-{"sat":"sat/goodall_loc","house":[-31.95387,115.94581],"photo":"../goodall/ph/h.jpg","W":3000,"aspect":1.6,"photoCorner":"auto",
-"places":[
- {"name":"Belmay Park","lat":-31.95095,"lng":115.94501,"icon":"park"},
- {"name":"Notre Dame Catholic Primary School","lat":-31.956403,"lng":115.94175,"icon":"school"},
- {"name":"Signal Hill Bushland","lat":-31.9537313,"lng":115.9346673,"icon":"pine"},
- {"name":"Belmont Forum","lat":-31.9645866,"lng":115.9355207,"icon":"shop"},
- {"name":"DFO Perth","lat":-31.9384,"lng":115.9486,"icon":"shop"},
- {"name":"Redcliffe Station","lat":-31.93359,"lng":115.9497086,"icon":"train"},
- {"name":"Ruth Faulkner Library","lat":-31.96284,"lng":115.9342,"icon":"library"},
- {"name":"Tomato Lake","lat":-31.97572,"lng":115.9323,"icon":"lake"},
- {"name":"Smythe Lake Reserve","lat":-31.9396664,"lng":115.94078,"icon":"lake"},
- {"name":"Perth Airport","lat":-31.9403,"lng":115.9669,"icon":"plane"}
-]}
+{"sat": "sat/goodall_loc", "house": [-31.95387, 115.94581], "photo": "../goodall/ph/h.jpg", "W": 3000, "aspect": 1.6, "photoCorner": "auto", "places": [{"name": "Belmay Park", "lat": -31.95095, "lng": 115.94501, "icon": "park"}, {"name": "Notre Dame Catholic Primary School", "lat": -31.956403, "lng": 115.94175, "icon": "school"}, {"name": "Signal Hill Bushland", "lat": -31.9537313, "lng": 115.9346673, "icon": "pine"}, {"name": "Belmont Forum", "lat": -31.9645866, "lng": 115.9355207, "icon": "shop"}, {"name": "DFO Perth", "lat": -31.9384, "lng": 115.9486, "icon": "shop"}, {"name": "Redcliffe Station", "lat": -31.93359, "lng": 115.9497086, "icon": "train"}, {"name": "Tomato Lake", "lat": -31.97572, "lng": 115.9323, "icon": "lake"}, {"name": "Smythe Lake Reserve", "lat": -31.9396664, "lng": 115.94078, "icon": "lake"}, {"name": "Perth Airport", "lat": -31.9403, "lng": 115.9669, "icon": "plane"}]}

@@ -55,7 +55,7 @@ def pin(x, y, ic):
 img = img.convert('RGBA')
 # photo inset (white frame), in the corner with fewest places, away from the house
 placed = []
-def hits(bb): return any(not (bb[2] < p[0] or bb[0] > p[2] or bb[3] < p[1] or bb[1] > p[3]) for p in placed)
+def hits(bb, skip=None): return any(not (bb[2] < p[0] or bb[0] > p[2] or bb[3] < p[1] or bb[1] > p[3]) for p in placed if p is not skip)
 hx, hy = P(hlat, hlng)
 pts = [P(p['lat'], p['lng']) for p in C['places']]
 PWf = C.get('photoW', 0.33); PW = int(W*PWf); FR = int(9*U); M = int(36*U)
@@ -78,7 +78,8 @@ if C.get('photo'):
     C['places'] = [C['places'][i] for i in keep]; pts = [pts[i] for i in keep]
 # reserve every pin (heads + stems) first so labels never cover a pin
 placed.append((hx-R-6, hy-TIP-R-6, hx+R+6, hy+4))
-for (x, y) in pts: placed.append((x-R-6, y-TIP-R-6, x+R+6, y+4))
+PINBOX = []
+for (x, y) in pts: b_ = (x-R-6, y-TIP-R-6, x+R+6, y+4); placed.append(b_); PINBOX.append(b_)
 order = sorted(range(len(C['places'])), key=lambda i: dist(C['places'][i]['lat'], C['places'][i]['lng']))
 labels, pins_ = [], []
 for i in order:
@@ -86,24 +87,30 @@ for i in order:
     if not (R < x < W-R and TIP+R < y < H): print('off map', p['name']); continue
     nm = p.get('label', p['name']); nm = nm.upper() if C.get('labelCase', 'upper') == 'upper' else nm
     t = f"{nm} - {dtxt(dist(p['lat'], p['lng']))}"
-    bw = tw(t)+2*int(18*U); cy = y-TIP; done = None
-    for side in ([1, -1] if p.get('side', 'r') == 'r' else [-1, 1]):
-        for dy in (0, -LH*0.9, LH*0.9, -LH*1.8, LH*1.8):
-            bx = x+R+GAP if side > 0 else x-R-GAP-bw; by = cy-LH/2+dy
+    bw = tw(t)+2*int(18*U)+R; cy = y-TIP; done = None   # 11 Nov (Jason): the white box is joined to the pin head (pin sits on the box's end)
+    for dy in (0, -LH*0.9, LH*0.9):
+        for side in ([1, -1] if p.get('side', 'r') == 'r' else [-1, 1]):
+            bx = x if side > 0 else x-bw; by = cy-LH/2+dy
             bb = (bx, by, bx+bw, by+LH)
             if bx < 12 or bx+bw > W-12 or by < 12 or by+LH > H-12: continue
-            if not hits(bb): done = bb; break
+            if not hits(bb, PINBOX[i]): done = (bb, side); break
         if done: break
     if not done: print('no room', p['name']); pins_.append((x, y, p.get('icon', 'park'))); continue
-    placed.append(done); labels.append((done, t)); pins_.append((x, y, p.get('icon', 'park')))
+    placed.append(done[0]); labels.append((done[0], t, done[1])); pins_.append((x, y, p.get('icon', 'park')))
 # draw labels then pins (pins always on top)
-for (bb, t) in labels:
+for (bb, t, sd_) in labels:
     sh = Image.new('RGBA', img.size, (0, 0, 0, 0)); ImageDraw.Draw(sh).rectangle([bb[0]+3, bb[1]+6, bb[2]+3, bb[3]+6], fill=(0, 0, 0, 90))
     img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(6*U)))
     d = ImageDraw.Draw(img); d.rectangle(bb, fill=(255, 255, 255, 255))
-    xx = bb[0]+int(18*U); yy = (bb[1]+bb[3])/2+1
+    xx = bb[0]+int(18*U)+(R if sd_ > 0 else 0); yy = (bb[1]+bb[3])/2+1
     for c in t: d.text((xx, yy), c, font=font, fill=(20, 20, 20), anchor='lm'); xx += d.textlength(c, font=font)+TRACK
+if C.get('photo'):   # 11 Nov (Jason): white line from the house photo to the house pin
+    lx = min(max(hx, fb[0]+FR*3), fb[2]-FR*3); ly = fb[3] if hy-TIP > fb[3] else fb[1]
+    if fb[1] <= hy-TIP <= fb[3]: ly = hy-TIP; lx = fb[2] if hx > fb[2] else fb[0]
+    sh = Image.new('RGBA', img.size, (0, 0, 0, 0)); ImageDraw.Draw(sh).line([(lx+2, ly+3), (hx+2, hy-TIP+3)], fill=(0, 0, 0, 120), width=int(5*U))
+    img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(3*U)))
+    ImageDraw.Draw(img).line([(lx, ly), (hx, hy-TIP)], fill=(255, 255, 255, 255), width=int(4*U))
 for (x, y, ic) in pins_: pin(x, y, ic)
 pin(hx, hy, 'house')
 img.convert('RGB').save(OUT, quality=93)
-print('labels', [t for _, t in labels])
+print('labels', [l[1] for l in labels])
