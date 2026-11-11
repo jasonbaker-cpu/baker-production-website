@@ -5,7 +5,7 @@
   var VER = "v11 · 9 Nov 2026"; /* bump on every rule change */
   /* STRICT 9.5 standard (6 Nov 2026): every photo must be inside the targets. One miss = not ready. */
   /* 7 Nov 2026 "best in Perth": Mathews Group brightness, soft pale skies (11 Nov), Crib Creative contrast + held highlights, greens at both. */
-  var B = { wallLo: 207, wallHi: 224, castLo: 1, castHi: 9, lLo: 155, lHi: 194, clip: 0.8, skySat: 0.32, skyPale: 0.05, extDark: 118, extShadow: 34, greenSat: 0.40, extHot: 235,
+  var B = { wallLo: 207, wallHi: 224, castLo: 1, castHi: 9, lLo: 155, lHi: 194, clip: 0.8, skySat: 0.50, skyLum: 172, skyPale: 0.05, extDark: 118, extShadow: 34, greenSat: 0.40, extHot: 235,
     extCast: 10, flatP5: 75, flatRng: 150,
     setWallLo: 209, setWallHi: 219, setCastLo: 2, setCastHi: 7, setLLo: 165, setLHi: 186, setSd: 5, setFlat: 70 };
   var $ = function (id) { return document.getElementById(id); };
@@ -66,7 +66,7 @@
       var t = document.createElement("canvas"); t.width = 320; t.height = Math.round(320 * H / W); t.getContext("2d").drawImage(im, 0, 0, t.width, t.height);
       var thumb = t.toDataURL("image/jpeg", 0.7); URL.revokeObjectURL(o.url);
       return { name: file.name, W: W, H: H, kind: isExt ? "EXT" : "INT", dusk: dusk, L: sumL / n, wallW: (wall[0] + wall[1] + wall[2]) / 3,
-               cast: wall[0] - wall[2], p5: p5, rng: p95 - p5, p95: p95, greenF: greenF, greenSat: green ? greenS / green : 0, clip: clip / n * 100, skySat: topBlue ? skyS / topBlue : 0, blueFrac: blueFrac, hash: hash, ch: ch, lay: lay, thumb: thumb };
+               cast: wall[0] - wall[2], p5: p5, rng: p95 - p5, p95: p95, greenF: greenF, greenSat: green ? greenS / green : 0, clip: clip / n * 100, skySat: topBlue ? skyS / topBlue : 0, skyLum: topBlue ? skyL / topBlue : 0, blueFrac: blueFrac, hash: hash, ch: ch, lay: lay, thumb: thumb };
     });
   }
 
@@ -90,7 +90,7 @@
       if (r.L < B.lLo && r.wallW < 214) f.push({ k: "dark", t: "Room too dark (brightness " + r.L.toFixed(0) + ", target 165-185)." }); /* dark floors/joinery with good walls are fine */
       if (r.L > B.lHi) f.push({ k: "bright", t: "Room too bright/washed out (brightness " + r.L.toFixed(0) + ", target 165-185)." });
     } else {
-      if (!r.dusk && r.skySat > B.skySat) f.push({ k: "sky", t: "Sky too deep/saturated blue (" + r.skySat.toFixed(2) + ", target 0.15-0.30). Soft pale blue, near-white at the horizon, no dark gradient at the top." });
+      if (!r.dusk && r.blueFrac > 0.15 && (r.skyLum < B.skyLum || r.skySat > B.skySat)) f.push({ k: "sky", t: "Sky too deep/dark blue (sky brightness " + r.skyLum.toFixed(0) + ", target 172+). Soft pale blue, near-white at the horizon, no dark gradient at the top." });
       if (!r.dusk && r.blueFrac > 0.15 && r.skySat < B.skyPale) f.push({ k: "pale", t: "Sky is grey/white with no blue (" + r.skySat.toFixed(2) + ", target 0.15-0.30). Add a soft pale blue sky." });
       if (!r.dusk && r.L > 182) f.push({ k: "washed", t: "Exterior very washed out (brightness " + r.L.toFixed(0) + ", target 135-180). Bright and airy is good. Only pull highlights back if the house and greens lose colour; do not darken midtones." });
       if (r.L < (r.dusk ? 100 : B.extDark)) f.push({ k: "dark", t: "Exterior too dark (brightness " + r.L.toFixed(0) + ", min " + B.extDark + "). Lift the whole frame." });
