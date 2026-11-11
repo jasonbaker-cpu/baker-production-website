@@ -13,6 +13,7 @@ Disallow: /snap/
 Disallow: /leads-7x2k9q.html
 Disallow: /team/
 Disallow: /pins/
+Disallow: /john/
 
 # --- AI answer engines: explicitly welcome ---
 User-agent: GPTBot
