@@ -175,6 +175,8 @@ const TARGET = 5, STEPS = [2,10,30];
 const DAY = 86400000;
 const FREE_MAIL = /^(gmail|hotmail|outlook|live|yahoo|icloud|me|bigpond|iinet|westnet|optusnet|msn|proton|protonmail)\./i;
 
+const OUTREACH_CAL="Baker Outreach";
+let outreach=[];
 let people=[], syncedAt=0, states={}, phones={}, leads={}, shown=5, query="", openId=null, editNum=null;
 let TOKEN=null, ME=null, FB=null, cloud="wait", loaded=false, syncing=false;
 const writing={};
@@ -252,10 +254,31 @@ async function fetchCalendar(){
   }while(pageToken);
   return items;
 }
+/* ── agents the daily outreach task has emailed (from the "Baker Outreach" calendar) ── */
+async function fetchOutreach(){
+  const r=await fetch("https://www.googleapis.com/calendar/v3/users/me/calendarList?fields=items(id,summary)",{headers:{Authorization:"Bearer "+TOKEN}});
+  if(!r.ok) return null;
+  const cal=((await r.json()).items||[]).find(c=>(c.summary||"").trim().toLowerCase()===OUTREACH_CAL.toLowerCase());
+  if(!cal) return [];
+  const u=new URL("https://www.googleapis.com/calendar/v3/calendars/"+encodeURIComponent(cal.id)+"/events");
+  u.searchParams.set("timeMin",new Date(Date.now()-60*DAY).toISOString());
+  u.searchParams.set("singleEvents","true"); u.searchParams.set("maxResults","2500");
+  u.searchParams.set("fields","items(id,status,summary,description,start)");
+  const e=await fetch(u,{headers:{Authorization:"Bearer "+TOKEN}}); if(!e.ok) return null;
+  return ((await e.json()).items||[]).map(ev=>{
+    if(ev.status==="cancelled") return null;
+    const d=(ev.description||"").replace(/<br\s*\/?>/gi,"\n").replace(/<[^>]+>/g," ");
+    const g=k=>{ const m=d.match(new RegExp("^\\s*"+k+":\\s*(.*)$","im")); return m?m[1].trim():"" };
+    const email=g("Email").toLowerCase(), name=g("Name"); if(!email||!name) return null;
+    const st=ev.start&&(ev.start.date||ev.start.dateTime); if(!st) return null;
+    return {id:"out:"+email,name,email,agency:g("Agency"),phone:g("Phone"),suburb:g("Suburb"),status:g("Status").toLowerCase(),addedAt:String(st).slice(0,10)};
+  }).filter(Boolean);
+}
 async function sync(){
   if(syncing||!TOKEN) return; syncing=true; renderFoot();
   try{
     const list=buildPeople(await fetchCalendar());
+    try{ const o=await fetchOutreach(); if(o){ outreach=o; ls.set("fu_out",o) } }catch(e){}
     people=list; syncedAt=Date.now(); loaded=true;
     ls.set("fu_people",{t:syncedAt,people:list});
     hideBanner();
@@ -274,6 +297,10 @@ function everyone(){
   people.forEach(p=>{ byId[p.id]=phones[p.id]?Object.assign({},p,{phone:phones[p.id]}):p });
   Object.keys(leads).forEach(id=>{ const l=leads[id]; if(!l||!l.name) return;
     byId[id]={id,name:l.name,agency:l.agency||"",email:l.email||"",phone:phones[id]||l.phone||"",jobs:0,lastSeen:l.addedAt,lastAddress:"",next:"",lead:true,note:l.note||""} });
+  outreach.forEach(o=>{ if(byId[o.email]||byId[o.id]) return;   // already a client or already added by hand
+    const replied=o.status==="replied";
+    byId[o.id]={id:o.id,name:o.name,agency:o.agency,email:o.email,phone:phones[o.id]||o.phone||"",jobs:0,lastSeen:o.addedAt,lastAddress:o.suburb||"",next:"",lead:true,outreach:true,replied,
+      note:replied?"Replied to your email – check admin@":"Emailed "+fmt(o.addedAt)} });
   return Object.values(byId);
 }
 function status(p){
@@ -285,6 +312,7 @@ function status(p){
   const real=log.filter(l=>l.outcome!=="noanswer");
   const since=real.filter(l=>l.at>=p.lastSeen);
   const snoozed=st.snooze && st.snooze>t;
+  if(p.replied){ const done=real.some(l=>l.at>=p.lastSeen); return {key:"new",label:"Replied",due:!done&&!snoozed,why:p.note,step:1,d}; }
   if((p.lead||p.jobs<=3) && d<=45){
     const reached=STEPS.filter(s=>s<=d).length;
     const why=p.lead ? ("Added "+d+" day"+(d===1?"":"s")+" ago"+(p.note?" · "+p.note:"")) : ((p.jobs===1?"First job":"Job "+p.jobs)+" was "+d+" day"+(d===1?"":"s")+" ago");
@@ -299,6 +327,11 @@ function status(p){
 function message(p,s){
   const f=first(p), a=p.lastAddress;
   if(s.key==="quiet") return "Hey "+f+", Jason from Baker Production. It's been a little while"+(a?" since "+a:"")+". Would love to help you out next time.";
+  if(p.outreach){
+    if(p.replied) return "Hey "+f+", Jason from Baker Production. Thanks for getting back to me. Would love to help you out next time.";
+    return s.step>=2 ? "Hey "+f+", Jason from Baker Production. Just checking in. Would love to help you out next time."
+      : "Hey "+f+", Jason from Baker Production – just sent you an email about photos for your listings. Free floor plan on your first shoot if you want to give us a go.";
+  }
   if(p.lead) return s.step>=2 ? "Hey "+f+", Jason from Baker Production. Just checking in. Would love to help you out next time." : "Hey "+f+", Jason from Baker Production. Great to meet you. Would love to help you out next time.";
   if(s.step>=2) return "Hey "+f+", Jason from Baker Production. Hope "+(a||"the listing")+" is getting good interest. Would love to help you out next time.";
   return "Hey "+f+", Jason from Baker Production. How did the photos go for "+(a||"your listing")+"?";
@@ -466,6 +499,7 @@ function loadTok(){
 function showApp(){
   $("gate").hidden=true; $("app").hidden=false;
   const c=ls.get("fu_people"); if(c&&c.people){ people=c.people; syncedAt=c.t||0; loaded=true }
+  const o=ls.get("fu_out"); if(Array.isArray(o)) outreach=o;
   const s=ls.get("fu_state"); if(s){ states=s.states||{}; phones=s.phones||{}; leads=s.leads||{} }
   render();
 }
