@@ -79,7 +79,7 @@
     "No AI artefacts: warped lines, smeared textures, melted objects.",
     "Only one photo per angle: drop near-duplicates and older versions of redone files.",
     "Every photo same size and crop, sharp, no noise in shadows.",
-    "Dusk/twilight shots: rich blue-to-pink sky (not pale or hazy), every window and light glowing, lawn green, tight framing."];
+    "Dusk/twilight shots: natural sunset sky (soft pink, peach or golden is fine, no dark fake purple), every window and light glowing, lawn green, tight framing."];
   function flags(r) {
     var f = [];
     if (r.kind === "INT") {
