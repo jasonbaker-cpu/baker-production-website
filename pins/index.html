@@ -629,7 +629,10 @@ function dehazeBand(px, w, h, line){
     }
   }
 }
-function finishImage(base, p){
+function finishImage(base, p){   /* 11 Nov: per-photo look override saved in the project (p.tune), e.g. cool grey-roof estates */
+  const prevT = window.__TUNE; if (p && p.tune) window.__TUNE = Object.assign({}, prevT||{}, p.tune);
+  try { return finishImage0(base, p); } finally { window.__TUNE = prevT; } }
+function finishImage0(base, p){
   { const pk = (typeof prefs!=="undefined" && prefs.skyPlate) || "C"; if (typeof SKYP_CACHE!=="undefined" && SKYP_CACHE[pk]) SKYP = SKYP_CACHE[pk]; }
   const w = base.width, h = base.height;
   const ctx = base.getContext("2d"); const id = ctx.getImageData(0,0,w,h); const px = id.data;
@@ -1406,7 +1409,7 @@ function newPhoto(name, base, meta, sample){
     disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0, (!sample && prefs.skyPlate !== "S") ? { con:10 } : {}), undo:[], redo:[] };
   return p;
 }
-const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet","skyForce","skyLineUser","straight"];
+const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet","skyForce","skyLineUser","straight","tune"];
 function snapshotOf(p){ const o={}; SNAP_KEYS.forEach(k=>o[k]=p[k]); return JSON.stringify(o); }
 function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
 function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); if ((p.straight||0)!==(p._straightBuilt||0)) buildStraightBase(p); ensureFinish(p); }
