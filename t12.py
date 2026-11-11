@@ -55,7 +55,7 @@ async def main():
                 import re as _rq
                 _x=open(ph,'rb').read(600000).decode('latin1')
                 _alt=float((_rq.search(r'RelativeAltitude="([-+\d.]+)"',_x) or [0,'999'])[1]); _pit=float((_rq.search(r'GimbalPitchDegree="([-+\d.]+)"',_x) or [0,'0'])[1])
-                _clean = bool(job.get('plain')) or (_alt < 60 and _pit > -75) or (_pit < -75 and not job.get('poly'))
+                _clean = bool(job.get('plain')) or (_alt < 60 and _pit > -75) or (_pit < -75 and not job.get('poly') and not job.get('mapPins'))
                 os.environ['PLAIN_JOB'] = '1' if _clean else ''
                 await th.nth(base+k).click(); await busy(pg); await pg.wait_for_timeout(400)
                 if job.get('cams',{}).get(ph): await pg.evaluate("o=>window.__bae.setCam(o)", job['cams'][ph]); await pg.wait_for_timeout(300)
