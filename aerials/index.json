@@ -12,14 +12,23 @@
      "agency": "flags-p",
      "full": false,
      "fullPhotos": [
-      "dji_fly_20261110_194622_0085_1794300729862_photo.jpg"
+      "DJI_20261110_0086_r180.jpg",
+      "DJI_20261110_0085.jpg"
      ],
      "src": "10-nov-2026/76_dolphin_dr/src/",
      "map": "76_dolphin_dr_places.json",
      "project": "project.json",
      "photos": [
-      "dji_fly_20261110_194622_0085_1794300729862_photo.jpg",
-      "dji_fly_20261110_194750_0087_1794300728754_photo.jpg"
+      "DJI_20261110_0086_r180.jpg",
+      "DJI_20261110_0085.jpg",
+      "DJI_20261110_0087.jpg",
+      "DJI_20261110_0088.jpg",
+      "DJI_20261110_0089.jpg",
+      "DJI_20261110_0090.jpg",
+      "DJI_20261110_0091.jpg",
+      "DJI_20261110_0092.jpg",
+      "DJI_20261110_0093.jpg",
+      "DJI_20261110_0094.jpg"
      ],
      "notes": "",
      "portrait": false,
