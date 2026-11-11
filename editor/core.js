@@ -346,6 +346,23 @@ function refMatch(cv, sky, p){
       R = R*lw + sr_*(1-lw); Gg = Gg*lw + sg_*(1-lw); B = B*lw + sb_*(1-lw); }
     px[i]=R; px[i+1]=Gg; px[i+2]=B; }
   ctx.putImageData(id, 0, 0);
+  /* 11 Nov (Jason): mid + far distance clearer, like the reference — local contrast + a little haze lifted, fading out toward the foreground */
+  const ca = T.refClar ?? 1;
+  if (line && ca > 0){
+    const bc = document.createElement('canvas'); bc.width = w; bc.height = h; const bx = bc.getContext('2d');
+    bx.filter = `blur(${Math.max(3, Math.round(w/220))}px)`; bx.drawImage(cv, 0, 0); const bd = bx.getImageData(0,0,w,h).data;
+    const id2 = ctx.getImageData(0,0,w,h), q = id2.data, span = 0.42*h;
+    let hr=0, hg=0, hb=0, hn=0;   // haze colour = what sits just below the horizon
+    for (let x=0; x<w; x+=4){ const y=Math.round(line(x)+0.01*h); if (y<0||y>=h) continue; const i=(y*w+x)*4; hr+=bd[i]; hg+=bd[i+1]; hb+=bd[i+2]; hn++; }
+    if (hn){ hr/=hn; hg/=hn; hb/=hn; }
+    for (let y=0; y<h; y++) for (let x=0; x<w; x++){
+      const hz = line(x), d = (y-hz)/span; if (d < -0.01 || d > 1) continue;
+      const wv = d < 0.03 ? Math.max(0, (d+0.01)/0.04) : Math.pow(1-d, 1.3), i = (y*w+x)*4;
+      const kd = 1 + 1.1*ca*wv, kh = 0.13*ca*wv, H=[hr,hg,hb];
+      for (let c=0;c<3;c++){ let v = bd[i+c] + (q[i+c]-bd[i+c])*kd; v = hn ? (v - kh*H[c])/(1-kh) : v; q[i+c] = v; }
+    }
+    ctx.putImageData(id2, 0, 0);
+  }
   if (p) p._ref = { G:G.map(v=>+v.toFixed(3)), kc:+kc.toFixed(2), Q:Q.map(Math.round) }; (window.__refs = window.__refs || []).push([p && p.name, wn, Ls.length, ourC.toFixed(1), (p&&p._ref)]);
 }
 function finishImage(base, p){   /* 11 Nov: per-photo look override saved in the project (p.tune), e.g. cool grey-roof estates */
