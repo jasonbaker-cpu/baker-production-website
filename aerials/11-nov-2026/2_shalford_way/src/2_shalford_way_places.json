@@ -1,0 +1,103 @@
+{
+ "address": "2B Shalford Way, Girrawheen WA 6064",
+ "lat": -31.84062,
+ "lng": 115.8416,
+ "pins": [
+  {
+   "name": "Curtis Park",
+   "cat": "park",
+   "lat": -31.8391966,
+   "lng": 115.8448072
+  },
+  {
+   "name": "Ferrara Park",
+   "cat": "park",
+   "lat": -31.8389209,
+   "lng": 115.8500845
+  },
+  {
+   "name": "Hainsworth Park",
+   "cat": "park",
+   "lat": -31.8462604,
+   "lng": 115.8461367
+  },
+  {
+   "name": "Paloma Park",
+   "cat": "park",
+   "lat": -31.8302221,
+   "lng": 115.8512682
+  },
+  {
+   "name": "Emmanuel Christian Community School",
+   "cat": "private",
+   "lat": -31.8461908,
+   "lng": 115.8482654
+  },
+  {
+   "name": "Mercy College",
+   "cat": "private",
+   "lat": -31.8484324,
+   "lng": 115.8564539
+  },
+  {
+   "name": "Majella Catholic Primary School",
+   "cat": "private",
+   "lat": -31.85607,
+   "lng": 115.84788
+  },
+  {
+   "name": "Girrawheen Library",
+   "cat": "library",
+   "lat": -31.8397,
+   "lng": 115.83872
+  },
+  {
+   "name": "Alexander Heights Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.8296,
+   "lng": 115.8537
+  },
+  {
+   "name": "Hawaiian's Newpark Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.8352605,
+   "lng": 115.8298507
+  },
+  {
+   "name": "Mirrabooka Square Shopping Centre",
+   "cat": "regional_shopping",
+   "lat": -31.8720187,
+   "lng": 115.8594127
+  },
+  {
+   "name": "Stirling Leisure Balga",
+   "cat": "aquatic",
+   "lat": -31.854353,
+   "lng": 115.838478
+  },
+  {
+   "name": "Marangaroo Golf Course",
+   "cat": "golf",
+   "lat": -31.827041,
+   "lng": 115.827923
+  },
+  {
+   "name": "Warwick Station",
+   "cat": "train",
+   "lat": -31.844827,
+   "lng": 115.796395
+  },
+  {
+   "name": "Shelvock Reserve",
+   "cat": "reserve",
+   "lat": -31.8359332,
+   "lng": 115.8578831
+  },
+  {
+   "name": "Montrose Park",
+   "cat": "park",
+   "lat": -31.8433,
+   "lng": 115.8544
+  }
+ ]
+}

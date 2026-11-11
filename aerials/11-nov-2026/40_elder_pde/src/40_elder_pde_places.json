@@ -1,0 +1,187 @@
+{
+ "address": "40 Elder Parade, Bassendean WA 6054",
+ "lat": -31.9138011,
+ "lng": 115.9480285,
+ "pins": [
+  {
+   "name": "Abell Reserve",
+   "cat": "reserve",
+   "lat": -31.913756699999997,
+   "lng": 115.9497094
+  },
+  {
+   "name": "The Lookout",
+   "cat": "park",
+   "lat": -31.9160398,
+   "lng": 115.9456508
+  },
+  {
+   "name": "Ashfield Flats",
+   "cat": "reserve",
+   "lat": -31.919590199999995,
+   "lng": 115.94599079999999
+  },
+  {
+   "name": "Ashfield Primary School",
+   "cat": "zoned",
+   "lat": -31.915309999999998,
+   "lng": 115.940902
+  },
+  {
+   "name": "Sandy Beach Reserve",
+   "cat": "reserve",
+   "lat": -31.921352000000002,
+   "lng": 115.9503105
+  },
+  {
+   "name": "Palmerston Square",
+   "cat": "park",
+   "lat": -31.906065199999997,
+   "lng": 115.95210829999999
+  },
+  {
+   "name": "Ashfield Reserve",
+   "cat": "reserve",
+   "lat": -31.9131056,
+   "lng": 115.938076
+  },
+  {
+   "name": "Garvey Park",
+   "cat": "park",
+   "lat": -31.922023900000003,
+   "lng": 115.94429439999999
+  },
+  {
+   "name": "Bassendean Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.905270999999995,
+   "lng": 115.95114760000001
+  },
+  {
+   "name": "Pickering Park",
+   "cat": "park",
+   "lat": -31.912870999999996,
+   "lng": 115.95880999999999
+  },
+  {
+   "name": "Saint Michael's School Bassendean",
+   "cat": "private",
+   "lat": -31.904339399999998,
+   "lng": 115.9504992
+  },
+  {
+   "name": "Bassendean Memorial Library",
+   "cat": "library",
+   "lat": -31.9041617,
+   "lng": 115.94934900000001
+  },
+  {
+   "name": "Ashfield Station",
+   "cat": "train",
+   "lat": -31.912812,
+   "lng": 115.936091
+  },
+  {
+   "name": "Bassendean Station",
+   "cat": "train",
+   "lat": -31.90372,
+   "lng": 115.946997
+  },
+  {
+   "name": "Casa Mia Montessori School",
+   "cat": "private",
+   "lat": -31.903089,
+   "lng": 115.95207099999999
+  },
+  {
+   "name": "Steel Blue Oval",
+   "cat": "park",
+   "lat": -31.903143699999998,
+   "lng": 115.95590030000001
+  },
+  {
+   "name": "Anzac Terrace Reserve",
+   "cat": "reserve",
+   "lat": -31.898853999999996,
+   "lng": 115.94668750000001
+  },
+  {
+   "name": "Success Hill Station",
+   "cat": "train",
+   "lat": -31.900185,
+   "lng": 115.955872
+  },
+  {
+   "name": "Point Reserve",
+   "cat": "reserve",
+   "lat": -31.904381599999994,
+   "lng": 115.96200189999999
+  },
+  {
+   "name": "Success Hill Reserve",
+   "cat": "reserve",
+   "lat": -31.8966799,
+   "lng": 115.9568558
+  },
+  {
+   "name": "Redcliffe Station",
+   "cat": "train",
+   "lat": -31.93359,
+   "lng": 115.949709
+  },
+  {
+   "name": "Jubilee Reserve",
+   "cat": "reserve",
+   "lat": -31.890939699999997,
+   "lng": 115.93974929999999
+  },
+  {
+   "name": "DFO Perth",
+   "cat": "shopping",
+   "lat": -31.938440699999997,
+   "lng": 115.94864749999999
+  },
+  {
+   "name": "Eric Singleton Bird Sanctuary",
+   "cat": "reserve",
+   "lat": -31.927252799999998,
+   "lng": 115.92288330000001
+  },
+  {
+   "name": "Morley Station",
+   "cat": "train",
+   "lat": -31.896032,
+   "lng": 115.920018
+  },
+  {
+   "name": "Ascot Racecourse",
+   "cat": "park",
+   "lat": -31.936662,
+   "lng": 115.92143890000001
+  },
+  {
+   "name": "Bayswater Waves",
+   "cat": "aquatic",
+   "lat": -31.897845900000004,
+   "lng": 115.9103646
+  },
+  {
+   "name": "Embleton Golf Course",
+   "cat": "golf",
+   "lat": -31.9052818,
+   "lng": 115.90681319999997
+  },
+  {
+   "name": "Airport Central Station",
+   "cat": "train",
+   "lat": -31.943961,
+   "lng": 115.974846
+  },
+  {
+   "name": "Galleria Shopping Centre",
+   "cat": "regional_shopping",
+   "lat": -31.8971626,
+   "lng": 115.8992309
+  }
+ ]
+}

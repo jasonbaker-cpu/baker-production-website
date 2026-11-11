@@ -1,6 +1,187 @@
 {
  "days": [
   {
+   "id": "11-nov-2026",
+   "label": "Wed 11 Nov 2026",
+   "gallery": "11-nov-2026/",
+   "jobs": [
+    {
+     "slug": "40_elder_pde",
+     "addr": "40 Elder Parade, Bassendean WA 6054",
+     "who": "Paul Hanich \u00b7 Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "p_1019_30_r180.jpg",
+      "p_1019_21_sq.jpg"
+     ],
+     "src": "11-nov-2026/40_elder_pde/src/",
+     "map": "40_elder_pde_places.json",
+     "project": "project.json",
+     "photos": [
+      "p_1019_30_r180.jpg",
+      "p_1019_21_sq.jpg",
+      "p_1019_59.jpg",
+      "p_1021_05.jpg",
+      "p_1021_38.jpg",
+      "p_1022_07.jpg",
+      "p_1023_04.jpg",
+      "p_1023_25.jpg"
+     ],
+     "notes": "",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "LOT 5-Diagram 23728.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/11-11-2026/40 Elder Parade, Bassendean WA 6054, Australia/Aerial - Drone Photography/LOT 5-Diagram 23728.pdf"
+      },
+      {
+       "name": "40_elder_pde_bassendean_map.html",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/11-11-2026/40 Elder Parade, Bassendean WA 6054, Australia/Aerial - Drone Photography/40_elder_pde_bassendean_map.html"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/11-11-2026/40 Elder Parade, Bassendean WA 6054, Australia/Aerial - Drone Photography"
+    },
+    {
+     "slug": "16_ashworth_st",
+     "addr": "16 Ashworth St, Cloverdale WA 6105",
+     "who": "Franklin Martinez \u00b7 Laurie Kelly",
+     "agency": "black",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261111_134910_0226_photo_r180_sq.jpg",
+      "dji_fly_20261111_134856_0225_photo_sq.jpg"
+     ],
+     "src": "11-nov-2026/16_ashworth_st/src/",
+     "map": "16_ashworth_st_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261111_134910_0226_photo_r180_sq.jpg",
+      "dji_fly_20261111_134856_0225_photo_sq.jpg",
+      "dji_fly_20261111_135030_0228_photo.jpg",
+      "dji_fly_20261111_135052_0229_photo.jpg",
+      "dji_fly_20261111_135126_0230_photo.jpg",
+      "dji_fly_20261111_135148_0231_photo.jpg",
+      "dji_fly_20261111_135224_0232_photo.jpg",
+      "dji_fly_20261111_135252_0233_photo.jpg",
+      "dji_fly_20261111_135326_0234_photo.jpg",
+      "dji_fly_20261111_135402_0235_photo.jpg"
+     ],
+     "notes": "",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "Survey Strata Plan 45167.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/11-11-2026/16 ashworth st, cloverdale wa 6105, australia/Floorplan or Drone/Survey Strata Plan 45167.pdf"
+      },
+      {
+       "name": "Block Plan (1).jpg",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/11-11-2026/16 ashworth st, cloverdale wa 6105, australia/Floorplan or Drone/Block Plan (1).jpg"
+      },
+      {
+       "name": "16_ashworth_st_cloverdale_map.html",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/11-11-2026/16 ashworth st, cloverdale wa 6105, australia/Floorplan or Drone/16_ashworth_st_cloverdale_map.html"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/11-11-2026/16 ashworth st, cloverdale wa 6105, australia/Floorplan or Drone",
+     "toEditor": true,
+     "editorReason": "sky blends over the hazy airport horizon on 0229/0230/0232 (flat land and hills painted as sky) \u2014 please replace the sky cleanly",
+     "lot": "325 m\u00b2 \u2014 13.00 / 25.16 / 12.81 / 28.15 m (survey-strata plan SSP 45167, Lot 3)"
+    },
+    {
+     "slug": "2_shalford_way",
+     "addr": "2B Shalford Way, Girrawheen WA 6064",
+     "who": "Emma Scharf \u00b7 Professionals TWT",
+     "agency": "flags-p",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261111_141510_0060_photo_sq.JPG",
+      "dji_fly_20261111_141506_0059_photo.JPG"
+     ],
+     "src": "11-nov-2026/2_shalford_way/src/",
+     "map": "2_shalford_way_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261111_141510_0060_photo_sq.JPG",
+      "dji_fly_20261111_141506_0059_photo.JPG",
+      "dji_fly_20261111_141528_0061_photo.JPG",
+      "dji_fly_20261111_141540_0062_photo.JPG",
+      "dji_fly_20261111_141558_0063_photo.JPG",
+      "dji_fly_20261111_141610_0064_photo.JPG",
+      "dji_fly_20261111_141628_0065_photo.JPG",
+      "dji_fly_20261111_141646_0066_photo.JPG",
+      "dji_fly_20261111_141702_0067_photo.JPG",
+      "dji_fly_20261111_141716_0068_photo.JPG"
+     ],
+     "notes": "",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "Certificate of Title 2609-890 2B Shalford Way, GIRRAWHEEN 6064.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/11-11-2026/2 shalford way, girrawheen wa 6064, australia/Aerial - Drone Photography/Certificate of Title 2609-890 2B Shalford Way, GIRRAWHEEN 6064.pdf"
+      },
+      {
+       "name": "Strata Plan 48119.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/11-11-2026/2 shalford way, girrawheen wa 6064, australia/Aerial - Drone Photography/Strata Plan 48119.pdf"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/11-11-2026/2 shalford way, girrawheen wa 6064, australia/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "visible sky seam/haze band above the hills on 0061\u20130063, ghosted radio mast on 0064/0065, heavy texture; the house sits at the bottom edge of every aerial",
+     "lot": "strata Lot 2 on SP 48119 (540 m\u00b2) \u2014 pins only, no boundary"
+    },
+    {
+     "slug": "6_marsden_st",
+     "addr": "6 Marsden St, Scarborough WA 6019",
+     "who": "Lexy Hyde",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261111220009_0180_D.jpg",
+      "DJI_20261111220024_0181_D_sq.jpg"
+     ],
+     "src": "11-nov-2026/6_marsden_st/src/",
+     "map": "6_marsden_st_scarborough_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261111220009_0180_D.jpg",
+      "DJI_20261111220024_0181_D_sq.jpg",
+      "DJI_20261111220109_0182_D.jpg",
+      "DJI_20261111220137_0183_D.jpg",
+      "DJI_20261111220150_0184_D.jpg",
+      "DJI_20261111220206_0185_D.jpg",
+      "DJI_20261111220216_0186_D.jpg",
+      "DJI_20261111220229_0187_D.jpg",
+      "DJI_20261111220242_0188_D.jpg",
+      "DJI_20261111220301_0189_D.jpg",
+      "DJI_20261111220317_0190_D.jpg",
+      "DJI_20261111220353_0191_D.jpg",
+      "DJI_20261111220405_0192_D.jpg",
+      "DJI_20261111220454_0193_D.jpg",
+      "DJI_20261111220539_0194_D.jpg",
+      "DJI_20261111220644_0195_D.jpg",
+      "DJI_20261111220650_0196_D.jpg"
+     ],
+     "notes": "",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "6_marsden_st_scarborough_map.html",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/11-11-2026/6 Marsden St, Scarborough WA 6019, Australia/Aerial - Drone Photography/6_marsden_st_scarborough_map.html"
+      },
+      {
+       "name": "6_marsden_st_scarborough_qa.txt",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/11-11-2026/6 Marsden St, Scarborough WA 6019, Australia/Aerial - Drone Photography/6_marsden_st_scarborough_qa.txt"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/11-11-2026/6 Marsden St, Scarborough WA 6019, Australia/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "twilight shoot \u2014 edit sky/colour; remove cars/people on the property",
+     "lot": "927 m\u00b2 (cadastre)"
+    }
+   ]
+  },
+  {
    "id": "10-nov-2026",
    "label": "Tue 10 Nov 2026",
    "gallery": "10-nov-2026/",

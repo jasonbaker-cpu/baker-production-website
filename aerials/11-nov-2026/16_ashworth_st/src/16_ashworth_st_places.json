@@ -1,0 +1,163 @@
+{
+ "address": "16 Ashworth St, Cloverdale WA 6105",
+ "lat": -31.9514432,
+ "lng": 115.9479618,
+ "pins": [
+  {
+   "name": "Monier Park",
+   "cat": "park",
+   "lat": -31.951525000000004,
+   "lng": 115.95166499999998
+  },
+  {
+   "name": "Middleton Park",
+   "cat": "park",
+   "lat": -31.9551162,
+   "lng": 115.9519816
+  },
+  {
+   "name": "Redcliffe Park",
+   "cat": "park",
+   "lat": -31.9460945,
+   "lng": 115.9482803
+  },
+  {
+   "name": "Notre Dame Catholic Primary School",
+   "cat": "private",
+   "lat": -31.9559979,
+   "lng": 115.9412308
+  },
+  {
+   "name": "Miles Park",
+   "cat": "park",
+   "lat": -31.9585688,
+   "lng": 115.9411386
+  },
+  {
+   "name": "Hoffman Park",
+   "cat": "park",
+   "lat": -31.960747999999995,
+   "lng": 115.9503161
+  },
+  {
+   "name": "Signal Hill",
+   "cat": "reserve",
+   "lat": -31.9537164,
+   "lng": 115.93543590000002
+  },
+  {
+   "name": "Arlunya Park",
+   "cat": "park",
+   "lat": -31.963257499999994,
+   "lng": 115.9422802
+  },
+  {
+   "name": "St Maria Goretti\u2019s Catholic School",
+   "cat": "private",
+   "lat": -31.93908,
+   "lng": 115.9437801
+  },
+  {
+   "name": "DFO Perth",
+   "cat": "shopping",
+   "lat": -31.938440699999997,
+   "lng": 115.94864749999999
+  },
+  {
+   "name": "Belmont City College",
+   "cat": "zoned",
+   "lat": -31.958040199999996,
+   "lng": 115.93414299999999
+  },
+  {
+   "name": "Faulkner Park",
+   "cat": "park",
+   "lat": -31.961585,
+   "lng": 115.93338530000001
+  },
+  {
+   "name": "Ruth Faulkner Library",
+   "cat": "library",
+   "lat": -31.9628782,
+   "lng": 115.9341921
+  },
+  {
+   "name": "Belmont Oasis Leisure Centre",
+   "cat": "aquatic",
+   "lat": -31.960246199999997,
+   "lng": 115.9313455
+  },
+  {
+   "name": "Forster Park",
+   "cat": "park",
+   "lat": -31.9683195,
+   "lng": 115.94528210000001
+  },
+  {
+   "name": "Centenary Park",
+   "cat": "park",
+   "lat": -31.9448007,
+   "lng": 115.9293141
+  },
+  {
+   "name": "Selby Park",
+   "cat": "park",
+   "lat": -31.9352131,
+   "lng": 115.94091999999999
+  },
+  {
+   "name": "Belmont Forum",
+   "cat": "regional_shopping",
+   "lat": -31.964962,
+   "lng": 115.93491360000002
+  },
+  {
+   "name": "Redcliffe Station",
+   "cat": "train",
+   "lat": -31.93359,
+   "lng": 115.949709
+  },
+  {
+   "name": "Airport Central Station",
+   "cat": "train",
+   "lat": -31.943961,
+   "lng": 115.974846
+  },
+  {
+   "name": "Adachi Park",
+   "cat": "park",
+   "lat": -31.9489584,
+   "lng": 115.91809180000001
+  },
+  {
+   "name": "Peachey Park",
+   "cat": "park",
+   "lat": -31.9768565,
+   "lng": 115.9407181
+  },
+  {
+   "name": "Tomato Lake",
+   "cat": "lake",
+   "lat": -31.976892600000003,
+   "lng": 115.9335065
+  },
+  {
+   "name": "Garvey Park",
+   "cat": "park",
+   "lat": -31.922023900000003,
+   "lng": 115.94429439999999
+  },
+  {
+   "name": "High Wycombe Station",
+   "cat": "train",
+   "lat": -31.954628,
+   "lng": 115.992199
+  },
+  {
+   "name": "Maylands Peninsula Public Golf Course",
+   "cat": "golf",
+   "lat": -31.9419503,
+   "lng": 115.9024031
+  }
+ ]
+}
