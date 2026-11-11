@@ -1,0 +1,11 @@
+BEGIN:VCARD
+VERSION:3.0
+N:O'Brien;John;;;
+FN:John O'Brien
+ORG:Raspa Property Group
+TITLE:Sales Executive
+TEL;TYPE=CELL,VOICE:+61455466033
+EMAIL;TYPE=INTERNET,WORK:john@raspa.com.au
+ADR;TYPE=WORK:;;8/83 Mell Road;Spearwood;WA;6163;Australia
+URL:https://www.bakerproduction.com/john-obrien/
+END:VCARD
