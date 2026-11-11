@@ -151,3 +151,38 @@ form.lead .btn{width:100%}
 .reg{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:56px;align-items:start}
 @media (max-width:900px){.reg{grid-template-columns:minmax(0,1fr);gap:32px}}
 .reg .card{box-shadow:0 20px 50px -34px rgba(0,0,0,.4);border:1px solid var(--line)}
+
+/* ---------- White theme (12 Nov 2026) ---------- */
+:root{--ivory:#ffffff;--paper:#ffffff;--soft:#f6f5f2}
+body{background:#fff}
+.top{color:var(--ink);background:rgba(255,255,255,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky}
+.callbtn{border-color:var(--ink)}
+.callbtn:hover{background:var(--ink);color:#fff}
+.logo span{color:var(--sand-2);opacity:1}
+.hero{background:#fff;color:var(--ink)}
+.hero::after{display:none}
+.hero .wrap{padding-top:48px;padding-bottom:72px;align-items:start}
+.hero .lede{color:var(--muted)}
+.hero h1 em,.page-hero h1 em{color:var(--sand-2)}
+.hero-photo{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:6px;margin-top:32px}
+.hero .credit{position:static;color:var(--muted);margin-top:8px;font-size:12px}
+.card{border:1px solid var(--line);box-shadow:0 24px 50px -36px rgba(0,0,0,.35)}
+.sec{background:#fff}
+.sec.dark,.sec.sea{background:var(--soft);color:var(--ink)}
+.dark .sec-h p,.sea .sec-h p,.dark .list span,.sea .list span{color:var(--muted)}
+.suburbs span{border-color:var(--line);background:#fff}
+.btn-ghost{border-color:var(--ink);color:var(--ink)}
+.btn-ghost:hover{background:var(--ink);color:#fff}
+.cta{background:#fff;color:var(--ink);border-top:1px solid var(--line)}
+.foot{background:var(--soft);color:var(--muted);border-top:1px solid var(--line)}
+.foot b,.foot a{color:var(--ink)}
+.foot .legal{border-top-color:var(--line)}
+.pillars{background:var(--line)}
+.page-hero{background:#fff;color:var(--ink);padding:48px 0 24px}
+.page-hero p.lede{color:var(--muted)}
+.ph-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:48px;align-items:center}
+.ph-grid img{position:static;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:6px;opacity:1}
+@media (max-width:900px){.ph-grid{grid-template-columns:minmax(0,1fr);gap:24px}}
+@media (max-width:960px){.hero .wrap{padding-top:28px}}
+@media (max-width:760px){.mbar{background:rgba(255,255,255,.96);border-top:1px solid var(--line)}}
+@media (max-width:960px){.hero-photo,.hero .credit{display:none}}
