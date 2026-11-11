@@ -8,7 +8,7 @@ import json, sys, math, os
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
 HERE = os.path.dirname(os.path.abspath(__file__))
 C = json.load(open(sys.argv[1])); OUT = sys.argv[2]
-FONT = os.path.join(HERE, 'fonts', 'BarlowSemiCondensed-'+C.get('fontW','500')+'.ttf') if C.get('font','barlow') == 'barlow' else '/usr/share/fonts/truetype/google-fonts/Poppins-'+C.get('fontW','Regular')+'.ttf'   # 11 Nov (Jason): condensed caps like his reference map
+FONT = os.path.join(HERE, 'fonts', 'SourceSans3-'+C.get('fontW','400')+'.ttf') if C.get('font','editor') == 'editor' else '/usr/share/fonts/truetype/google-fonts/Poppins-'+C.get('fontW','Regular')+'.ttf'   # 11 Nov (Jason): same font as the aerial drone editor labels (Source Sans 3)
 if not os.path.exists(FONT): FONT = '/usr/share/fonts/opentype/inter/Inter-Regular.otf'
 S = json.load(open(C['sat']+'.json')); base = Image.open(C['sat']+'.jpg').convert('RGB')
 def gpx(lat, lng):
