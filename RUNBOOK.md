@@ -325,3 +325,8 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 - Name matching is EXACT: "Scarborough Beach" must never tick "Scarborough Beach Skate Park" (that bug dropped Scarborough Beach on 6 Marsden, 11 Nov).
 - Check every location photo before publishing: if a famous landmark is in frame (Scarborough Beach, Cottesloe, Westfield, a station) and not pinned, fix it.
 - Also 12 Nov: top-down lot always dead centre of the frame; lot size always centred; house pin 1.5x (HOUSE_MAXW 216).
+
+## Night pass + morning catch-up (Jason 13 Nov 2026: editors want the email "around 12")
+- NIGHT PASS (scheduled 11:13pm Perth): edits the drone jobs shot TODAY (Perth date) whose raws are already in Dropbox, day-id = today. Do SEND TO EDITOR jobs (twilight, hard ones) FIRST: as soon as each editor job is ready (photos + pins/boundary + editor_map.jpg + rawPath + lot), push it in aerials/index.json straight away so the GitHub editor email goes out ~midnight — don't wait for the rest of the day. Then do the normal jobs. A job whose raws aren't uploaded yet is left for the morning catch-up (list it in the report).
+- MORNING RUN (3:43am): it covers YESTERDAY. First read aerials/index.json and the day folder — any job the night pass already published is DONE: skip it (no re-run, no republish, no second editor email). Only do jobs that are missing (raws uploaded after the night pass). Editor jobs still go first.
+- editor_sent.json already stops duplicate emails; never delete entries from it.
