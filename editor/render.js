@@ -459,13 +459,15 @@ function fitAreaText(c, p, t, sh){
   const w100 = areaWidth(c, t.text||" ", 100, t.weight||700, t.sup) || 1;
   const byW = (t.fitW||0.5)*bw/w100*100, byH = (t.fitH||0.55)*bh;
   t.size = Math.max(20, Math.min(byW, byH)/s);
-  if (!t.moved){ const ct = centroid(pts); t.x = ct[0]; t.y = ct[1]; }
+  if (!t.moved){ /* 12 Nov (Jason): lot size ALWAYS in the centre — true area centroid of the lot */
+    let A=0, cx=0, cy=0; for (let i=0;i<pts.length;i++){ const a=pts[i], b=pts[(i+1)%pts.length], k=a[0]*b[1]-b[0]*a[1]; A+=k; cx+=(a[0]+b[0])*k; cy+=(a[1]+b[1])*k; }
+    if (Math.abs(A) > 1e-6){ t.x = cx/(3*A); t.y = cy/(3*A); } else { const ct = centroid(pts); t.x = ct[0]; t.y = ct[1]; } }
   // irregular lots (battleaxe, curved corners): move to the roomiest spot and shrink until the text sits clear of every edge
   if (!t.moved && pts.length > 4){
     const inside = (x,y)=>{ let c=false; for (let i=0,j=pts.length-1;i<pts.length;j=i++){ const a=pts[i], b=pts[j]; if ((a[1]>y)!==(b[1]>y) && x < (b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]) c=!c; } return c; };
     const segD = (x,y)=>{ let m=1e9; for (let i=0;i<pts.length;i++){ const a=pts[i], b=pts[(i+1)%pts.length], dx=b[0]-a[0], dy=b[1]-a[1], L=dx*dx+dy*dy||1, u=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/L)); m=Math.min(m, Math.hypot(x-a[0]-u*dx, y-a[1]-u*dy)); } return m; };
     let best=null; const N=28; for (let i=1;i<N;i++) for (let j=1;j<N;j++){ const x=x0+bw*i/N, y=y0+bh*j/N; if (!inside(x,y)) continue; const d=segD(x,y); if (!best||d>best[2]) best=[x,y,d]; }
-    if (best){ t.x=best[0]; t.y=best[1];
+    if (best){ /* stays centred; only shrinks to fit */
       const fits = sz => { c.font = `${t.weight||700} ${sz*s}px ${AREA_FONT}`; const w = areaWidth(c, t.text||" ", sz*s, t.weight||700, t.sup)*1.08, h = sz*s*0.8;
         for (let a=0;a<=8;a++) for (let b=0;b<=4;b++){ const x=t.x-w/2+w*a/8, y=t.y-h/2+h*b/4; if (!inside(x,y) || segD(x,y) < 0.05*h) return false; } return true; };
       let sz=t.size; while (sz>30 && !fits(sz)) sz*=0.92; t.size=sz; } }
