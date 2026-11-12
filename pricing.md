@@ -64,18 +64,6 @@ Floor plans are billed on the internal living area measured on site. If the meas
 | Twilight Add-On | Golden-hour exterior shots, added to a photography booking. | $75 |
 | Aerial Boundary Overlay | Top-down satellite image with boundary lines and dimensions overlaid. Ideal for land and lifestyle blocks. 24-hour turnaround. | $25 |
 
-## Virtual staging and editing — Baker Studio (self-serve)
-
-Rendered in roughly two to five minutes per image at https://studio.bakerproduction.com/client
-
-| Service | Price (inc. GST) |
-|---|---|
-| Virtual staging | from $1.50 per image |
-| Decluttering / object removal | from $1.50 per image |
-| Day to dusk | from $1.50 per image |
-| Rain & wet-weather cleanup | from $1.50 per image |
-| 3D staging | $25 per image |
-
 ## Virtual staging and editing — added to a shoot booking
 
 We run the render, selection and quality check for you.
