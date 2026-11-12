@@ -14,6 +14,7 @@ Disallow: /leads-7x2k9q.html
 Disallow: /team/
 Disallow: /pins/
 Disallow: /john/
+Disallow: /josh/
 
 # --- AI answer engines: explicitly welcome ---
 User-agent: GPTBot

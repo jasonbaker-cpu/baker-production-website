@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>The Guide · Josh Carroll</title>
+<link rel="icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&display=swap">
+<style>
+  /* Josh's guide: one readable column of white cards, same look as Baker HQ. */
+  :root{--bg:#F5F5F7;--panel:#FFFFFF;--sunk:#F2F2F7;--line:#EEEEF1;--ink:#1D1D1F;--muted:#6E6E73;--faint:#86868B;--accent:#0071E3;--accent-soft:#E8F1FC;--ok:#1F8A3D;--ok-bg:#E6F6EA;--warn:#B25A00;--warn-bg:#FFF2E0;
+    --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+    --display:"Inter Tight","Inter",-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif}
+  @media (prefers-color-scheme:dark){:root{--bg:#000;--panel:#1C1C1E;--sunk:#2C2C2E;--line:#2C2C2E;--ink:#F5F5F7;--muted:#A1A1A6;--faint:#8E8E93;--accent:#0A84FF;--accent-soft:#12283F;--ok:#30D158;--ok-bg:#0E2A18;--warn:#FF9F0A;--warn-bg:#2E2208;--shadow:0 1px 2px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.35);color-scheme:dark}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:760px;margin:0 auto;padding:22px max(16px,env(safe-area-inset-right,0px)) 80px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:16px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .brand{font-family:var(--display);font-weight:700;font-size:15px;color:var(--muted);display:inline-flex;align-items:center;gap:8px}
+  .brand i{font-style:normal;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;background:var(--ink);color:var(--bg);font-size:12px}
+  .btn{display:inline-flex;align-items:center;font-weight:600;font-size:14px;padding:8px 15px;border-radius:999px;background:var(--accent);color:#fff}
+  .btn:hover{text-decoration:none;filter:brightness(1.07)}
+  .card{background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:20px 22px}
+  h1,h2,h3{margin:0;font-family:var(--display);letter-spacing:-.02em;text-wrap:balance}
+  h1{font-size:clamp(30px,6vw,40px);letter-spacing:-.03em;line-height:1.05}
+  h2{font-size:21px;margin-bottom:10px}
+  p{margin:0 0 10px} p:last-child{margin-bottom:0}
+  .lead{font-size:17px;color:var(--muted);margin-top:8px}
+  .muted{color:var(--muted)}
+  nav.toc{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+  nav.toc::-webkit-scrollbar{display:none}
+  nav.toc a{white-space:nowrap;font-size:13.5px;font-weight:500;padding:6px 12px;border-radius:999px;background:var(--panel);box-shadow:var(--shadow);color:var(--ink)}
+  ul,ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px}
+  li::marker{color:var(--accent);font-weight:600}
+  .tbl{overflow-x:auto;margin:4px -4px 0}
+  table{border-collapse:collapse;width:100%;font-size:14.5px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;font-weight:600;color:var(--faint)}
+  tr:last-child td{border-bottom:0}
+  td b{font-weight:600}
+  .pill{display:inline-block;padding:1px 9px;border-radius:999px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent)}
+  .say{background:var(--sunk);border-radius:12px;padding:12px 14px;font-weight:500;margin:6px 0 10px}
+  .rules li b{font-weight:600}
+  .phase{display:grid;gap:10px}
+  .ph{border-radius:14px;background:var(--sunk);padding:14px 16px}
+  .ph h3{font-size:16px;margin-bottom:6px}
+  .ph .gate{font-size:13px;color:var(--muted);margin-top:8px}
+  .ph.now{background:var(--accent-soft)}
+  .foot{text-align:center;font-size:12.5px;color:var(--faint)}
+  section{scroll-margin-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><span class="brand"><i>B</i>Baker Production</span><a class="btn" href="/josh-carroll/app-t4h9/#content">Open my tracker</a></div>
+
+  <header class="card">
+    <h1>Number one in Heathridge</h1>
+    <p class="lead">Josh Carroll · Professionals Carroll Property Group. The plan to become the agent every Heathridge homeowner has seen ten times before they think about selling.</p>
+  </header>
+
+  <nav class="toc" aria-label="Sections">
+    <a href="#goal">The goal</a><a href="#style">The style</a><a href="#patch">The patch</a><a href="#content">The content</a><a href="#make">Making each video</a><a href="#post">Posting</a><a href="#listings">Views to listings</a><a href="#leads">Your lead system</a><a href="#score">Scoreboard</a><a href="#plan">90 days</a><a href="#rules">The rules</a>
+  </nav>
+
+  <section class="card" id="goal">
+    <h2>The goal</h2>
+    <p>When a Heathridge homeowner decides to sell, Josh is the first agent they think of, because they've already watched him walk through a dozen homes in their suburb.</p>
+    <p>Followers and likes aren't the score. <b>Appraisals booked and listings won from Instagram are.</b></p>
+    <p class="muted">The edge: Josh already sells like a top agent (REA Heathridge Top Agent 2025), and his reels already travel. The Caprice Pl walk-and-talk did 12,100 views on a 439-follower account. He just doesn't post enough. The grid is almost all Under Offer tiles.</p>
+  </section>
+
+  <section class="card" id="style">
+    <h2>The style</h2>
+    <p>Keep it super easy. Josh walks and talks like he's showing a mate around. No dancing, no pointing at text, no hype voice.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Reference</th><th>What to take from it</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://www.instagram.com/ben_manolitsas/" target="_blank" rel="noopener"><b>Ben Manolitsas</b></a></td><td>The main look. Calm, polished walk-and-talk, one story per home.</td></tr>
+        <tr><td><a href="https://www.instagram.com/oliver_lavers/" target="_blank" rel="noopener"><b>Oliver Lavers</b></a></td><td>The main look. More personality, quick cuts, a dry line up front. The agent is the hook.</td></tr>
+        <tr><td><b>Corey Adamson</b></td><td>A little. Perth agent who answers buyer and seller questions straight to camera. Easiest format to batch.</td></tr>
+        <tr><td><b>Nathan Whennen</b></td><td>A little. Another Perth agent to keep an eye on.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="card" id="patch">
+    <h2>The patch</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Zone</th><th>Suburbs</th><th>What to post</th></tr></thead>
+      <tbody>
+        <tr><td><b>Core, now</b></td><td>Heathridge (6027)</td><td>Walk-and-talks, local spots, what sold, seller questions</td></tr>
+        <tr><td><b>Next, once he owns Heathridge</b></td><td>Beldon, Edgewater</td><td>One suburb spotlight each, then listings as they come</td></tr>
+        <tr><td><b>Listings only</b></td><td>Connolly, Craigie, Kallaroo, Ocean Reef and further out</td><td>Walk-and-talks go up, but don't get pinned</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="card" id="content">
+    <h2>The content: 3 reels a week</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Pillar</th><th>Share</th><th>Why it wins listings</th></tr></thead>
+      <tbody>
+        <tr><td><b>Listing walk-and-talk</b></td><td>40%</td><td>Every listing. Shows future vendors exactly how he'll market their home. Under 45 seconds.</td></tr>
+        <tr><td><b>Heathridge local</b></td><td>40%</td><td>Lysander Park, the Caridean shops, cafés, local owners. Non-sellers follow, then become sellers.</td></tr>
+        <tr><td><b>Results and market</b></td><td>20%</td><td>Monthly "What sold in Heathridge" with real prices and days on market. Seller questions.</td></tr>
+      </tbody>
+    </table></div>
+    <p style="margin-top:12px"><b>Stories every day</b> on his phone: home opens, sold signs, the drive between listings. The Under Offer and Just Listed tiles live here now, not on the grid.</p>
+  </section>
+
+  <section class="card" id="make">
+    <h2>Making each video</h2>
+    <ul>
+      <li><b>One hook, first two seconds,</b> and say "Heathridge" in the first line. The big TikTok Josh Carroll owns the name, so Josh owns "Josh Carroll Heathridge".</li>
+      <li><b>Walk and talk.</b> Talking points, not a script.</li>
+      <li><b>Never criticise a vendor's home.</b> Put the honesty on the buyer: "Not for you if you want a big backyard."</li>
+      <li><b>WA terms:</b> home open, offers, appraisal.</li>
+      <li><b>Captions burned in.</b> Most people watch with the sound off.</li>
+      <li><b>Instagram caption:</b> one line. No hashtag walls.</li>
+    </ul>
+    <p style="margin-top:12px"><b>End every video with one ask:</b></p>
+    <p class="say">"Thinking of selling in Heathridge? DM me 'HEATHRIDGE' and I'll send you what's sold on your street."</p>
+    <p style="margin-top:12px"><b>The filming routine.</b> Listing walk-and-talks are filmed at each listing shoot. Local and market reels are batched on a Baker shoot day: Thu 26 Nov, Thu 17 Dec, Thu 21 Jan.</p>
+  </section>
+
+  <section class="card" id="post">
+    <h2>Where and when to post</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Platform</th><th>What goes there</th></tr></thead>
+      <tbody>
+        <tr><td><b>Instagram</b></td><td>Every reel, Stories daily</td></tr>
+        <tr><td><b>Facebook</b></td><td>Every reel. Heathridge's 40+ homeowners, the sellers, are here.</td></tr>
+        <tr><td><b>TikTok</b></td><td>The same reels, as they are. Set up @joshcarrollheathridge.</td></tr>
+      </tbody>
+    </table></div>
+    <ul style="margin-top:12px">
+      <li><b>Mon, Wed, Fri.</b> Never miss a week; a gap costs more than a weak video.</li>
+      <li><b>$50–100 a week</b> behind the best reel, targeted to Heathridge + 2km, once reels are going up every week.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="listings">
+    <h2>Turning views into listings</h2>
+    <ol>
+      <li><b>Fix the profile.</b> Pin Caprice plus two other strong reels. Move the award tiles to a highlight. Bio link: bakerproduction.com/josh-carroll.</li>
+      <li><b>Every video asks</b> for the "HEATHRIDGE" DM.</li>
+      <li><b>Reply within the hour</b> to every comment and DM. The Caprice reel had a buyer asking for details in the comments.</li>
+      <li><b>Capture the lead</b> in the Heathridge app the same day. Website leads land there by themselves.</li>
+      <li><b>Show the videos</b> in every listing presentation: "This is how your home will be marketed."</li>
+      <li><b>Every listing feeds the next.</b> Letterbox the 50–100 homes around each listing with a QR to the reel.</li>
+    </ol>
+  </section>
+
+  <section class="card" id="leads">
+    <h2>Your lead system</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Page</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><a href="/josh-carroll/">Private valuation</a></td><td>Heathridge owners ask what their home is worth, with an off-market option. Put this in the bio and end reels on it.</td></tr>
+        <tr><td><a href="/josh-carroll/register.html">Private register</a></td><td>Buyers join to hear about homes before they're advertised. Send every home-open buyer here.</td></tr>
+        <tr><td><a href="/josh-carroll/app-t4h9/">Heathridge app</a></td><td>Josh's private app. New leads with Call and Text, vendors from appraisal to sold, register buyers, and his content tracker.</td></tr>
+      </tbody>
+    </table></div>
+    <ol style="margin-top:14px">
+      <li><b>Every boosted reel gets a reel link.</b> App → Links → + Reel link. Use it as the ad's link, and the app shows the cost per lead for that reel.</li>
+      <li><b>Call new leads within 5 minutes.</b> They land on the app's Today screen.</li>
+      <li><b>Log appraisals from Instagram</b> with + Appraisal so the scoreboard counts them.</li>
+    </ol>
+  </section>
+
+  <section class="card" id="score">
+    <h2>The scoreboard</h2>
+    <p>Baker Production updates these every fortnight in the <a href="/josh-carroll/app-t4h9/#content">Content tab</a>.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Number</th><th>Today</th><th>90 days</th></tr></thead>
+      <tbody>
+        <tr><td><b>Appraisals from Instagram</b></td><td>not tracked</td><td>2 a month</td></tr>
+        <tr><td><b>Listings won from Instagram</b></td><td>not tracked</td><td>Counted from here</td></tr>
+        <tr><td>Reels posted</td><td>~0 a week</td><td>3 a week</td></tr>
+        <tr><td>Average views, 30 days</td><td>~6k</td><td>5–8k</td></tr>
+        <tr><td>Instagram followers</td><td>439</td><td>1,000</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="card" id="plan">
+    <h2>The 90-day plan</h2>
+    <div class="phase">
+      <div class="ph now"><h3>Weeks 1–2: Reset</h3><ul><li>Fix the profile</li><li>Set up TikTok, post to Facebook</li><li>First shoot day, Thu 26 Nov</li></ul><div class="gate">Done when: 6 of 6 posted in the first fortnight</div></div>
+      <div class="ph"><h3>Weeks 3–6: Consistency</h3><ul><li>3 reels a week, no gaps</li><li>Ads on from week 3</li><li>First "What sold in Heathridge" in early December</li></ul><div class="gate">Done when: 10+ reels live, averaging 5k+ views</div></div>
+      <div class="ph"><h3>Weeks 7–12: Compound</h3><ul><li>Shoot days 17 Dec and 21 Jan</li><li>Double down on the pillar that's winning</li><li>Start the move into Beldon and Edgewater</li></ul><div class="gate">Done when: 1,000 followers and 2+ appraisals a month from Instagram</div></div>
+    </div>
+  </section>
+
+  <section class="card" id="rules">
+    <h2>The rules</h2>
+    <ol class="rules">
+      <li><b>Josh on camera every time.</b> His face is the product.</li>
+      <li><b>Never claim a result he didn't get.</b> Every number is real: REIWA or his own sales.</li>
+      <li><b>Never criticise a vendor's home</b> on camera.</li>
+      <li><b>Get the vendor's OK</b> before filming their home.</li>
+      <li><b>Never miss a week.</b></li>
+      <li><b>Every video ends on the "HEATHRIDGE" ask.</b></li>
+    </ol>
+  </section>
+
+  <p class="foot"><a href="/josh/">Back to Josh's page</a> · Baker Production · bakerproduction.com</p>
+</div>
+</body>
+</html>

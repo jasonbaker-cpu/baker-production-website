@@ -1,0 +1,322 @@
+{
+ "videos": {
+  "f1-intro": {
+   "title": "Intro: \"I'm Josh, I sell Heathridge\"",
+   "fortnight": "F1",
+   "format": "Talking head, under 40s",
+   "owner": "Josh",
+   "postBy": "2026-11-23",
+   "hook": "Posts before the 26 Nov shoot day, so film it at the next listing shoot or move it to week 2.",
+   "order": 1,
+   "suburb": "Heathridge",
+   "status": "To film",
+   "luxury": false
+  },
+  "f1-listing-1": {
+   "title": "Listing walk-and-talk",
+   "fortnight": "F1",
+   "format": "Walk and talk, under 45s",
+   "owner": "Josh",
+   "postBy": "2026-11-25",
+   "hook": "Next listing. Vendor's OK to film. Talking points, not a script.",
+   "order": 2,
+   "suburb": "Next listing",
+   "status": "To film",
+   "luxury": false
+  },
+  "f1-lysander": {
+   "title": "Lysander Park: why families pick this end of Heathridge",
+   "fortnight": "F1",
+   "format": "Josh to camera + b-roll",
+   "owner": "Baker",
+   "postBy": "2026-11-27",
+   "hook": "Shoot day Thu 26 Nov.",
+   "order": 3,
+   "suburb": "Heathridge",
+   "status": "To film",
+   "luxury": true
+  },
+  "f1-listing-2": {
+   "title": "Listing walk-and-talk",
+   "fortnight": "F1",
+   "format": "Walk and talk, under 45s",
+   "owner": "Josh",
+   "postBy": "2026-11-30",
+   "hook": "",
+   "order": 4,
+   "suburb": "Next listing",
+   "status": "To film",
+   "luxury": false
+  },
+  "f1-caridean": {
+   "title": "Caridean shops: meet a local owner",
+   "fortnight": "F1",
+   "format": "Josh + local owner",
+   "owner": "Baker",
+   "postBy": "2026-12-02",
+   "hook": "Shoot day Thu 26 Nov. Book the owner first.",
+   "order": 5,
+   "suburb": "Heathridge",
+   "status": "To film",
+   "luxury": true
+  },
+  "f1-caprice-result": {
+   "title": "Caprice Pl result: under offer in days, here's how",
+   "fortnight": "F1",
+   "format": "Talking head + listing clips",
+   "owner": "Josh",
+   "postBy": "2026-12-04",
+   "hook": "Real result only.",
+   "order": 6,
+   "suburb": "Heathridge",
+   "status": "To film",
+   "luxury": false
+  },
+  "f2-sold-nov": {
+   "title": "What sold in Heathridge, November",
+   "fortnight": "F2",
+   "format": "Talking head + b-roll",
+   "owner": "Josh",
+   "postBy": "2026-12-07",
+   "hook": "Needs REIWA November figures. No estimates.",
+   "order": 1,
+   "suburb": "Heathridge",
+   "status": "To film",
+   "luxury": false
+  },
+  "f2-listing-1": {
+   "title": "Listing walk-and-talk",
+   "fortnight": "F2",
+   "format": "Walk and talk, under 45s",
+   "owner": "Josh",
+   "postBy": "2026-12-09",
+   "hook": "",
+   "order": 2,
+   "suburb": "Next listing",
+   "status": "To film",
+   "luxury": false
+  },
+  "f2-3things": {
+   "title": "3 things you didn't know about Heathridge",
+   "fortnight": "F2",
+   "format": "Josh to camera + b-roll",
+   "owner": "Baker",
+   "postBy": "2026-12-11",
+   "hook": "",
+   "order": 3,
+   "suburb": "Heathridge",
+   "status": "To film",
+   "luxury": true
+  },
+  "f2-listing-2": {
+   "title": "Listing walk-and-talk",
+   "fortnight": "F2",
+   "format": "Walk and talk, under 45s",
+   "owner": "Josh",
+   "postBy": "2026-12-14",
+   "hook": "",
+   "order": 4,
+   "suburb": "Next listing",
+   "status": "To film",
+   "luxury": false
+  },
+  "f2-coffee": {
+   "title": "Best coffee in 6027",
+   "fortnight": "F2",
+   "format": "Josh + local café",
+   "owner": "Baker",
+   "postBy": "2026-12-16",
+   "hook": "",
+   "order": 5,
+   "suburb": "Heathridge",
+   "status": "To film",
+   "luxury": true
+  },
+  "f2-xmas-vs-feb": {
+   "title": "Selling before Christmas vs waiting for Feb",
+   "fortnight": "F2",
+   "format": "Talking head",
+   "owner": "Josh",
+   "postBy": "2026-12-18",
+   "hook": "Seller question. Drives appraisals.",
+   "order": 6,
+   "suburb": "Heathridge",
+   "status": "To film",
+   "luxury": false
+  },
+  "caprice-reel": {
+   "title": "15 Caprice Pl walk-and-talk",
+   "fortnight": "F0",
+   "format": "Walk and talk",
+   "owner": "Josh",
+   "status": "Posted",
+   "postedOn": "2026-10-31",
+   "views": 12100,
+   "suburb": "Heathridge",
+   "hook": "Under offer within days. A buyer asked for details in the comments. Pin it.",
+   "order": 1,
+   "link": ""
+  }
+ },
+ "fortnights": {
+  "F0": {
+   "label": "Baseline",
+   "start": "2026-10-26",
+   "end": "2026-11-22",
+   "followers": 439,
+   "target": 6,
+   "bestReel": "15 Caprice Pl walk-and-talk",
+   "bestViews": 12100,
+   "fixNext": "Start 3 a week. Pin Caprice. Reply to the Caprice buyer.",
+   "reelsPosted": 0
+  },
+  "F1": {
+   "label": "Fortnight 1",
+   "start": "2026-11-23",
+   "end": "2026-12-06",
+   "target": 6,
+   "fixNext": "Post the intro. Fix the profile."
+  },
+  "F2": {
+   "label": "Fortnight 2",
+   "start": "2026-12-07",
+   "end": "2026-12-20",
+   "target": 6,
+   "fixNext": ""
+  }
+ },
+ "fixes": {
+  "fix-1": {
+   "label": "Pin 3 reels: Caprice Pl plus the two best older ones",
+   "done": false,
+   "order": 1
+  },
+  "fix-2": {
+   "label": "Unpin the award tiles or move them to a highlight",
+   "done": false,
+   "order": 2
+  },
+  "fix-3": {
+   "label": "Move Under Offer / Just Listed tiles to Stories",
+   "done": false,
+   "order": 3
+  },
+  "fix-4": {
+   "label": "Put bakerproduction.com/josh-carroll in the bio",
+   "done": false,
+   "order": 4
+  },
+  "fix-5": {
+   "label": "Set up TikTok @joshcarrollheathridge",
+   "done": false,
+   "order": 5
+  },
+  "fix-6": {
+   "label": "Post every reel to the Facebook page too",
+   "done": false,
+   "order": 6
+  },
+  "fix-7": {
+   "label": "Highlights: Sold, Heathridge, Reviews",
+   "done": false,
+   "order": 7
+  },
+  "fix-8": {
+   "label": "Reply to the buyer who commented on the Caprice reel",
+   "done": false,
+   "order": 8
+  }
+ },
+ "ideas": {
+  "christmas-lights": {
+   "title": "Christmas lights street in Heathridge",
+   "hook": "\"The best-lit street in 6027.\"",
+   "format": "B-roll + Josh to camera",
+   "why": "Easy reach in December, zero sell. Film on the 17 Dec shoot day.",
+   "suburb": "Heathridge",
+   "luxury": true,
+   "order": 1
+  },
+  "year-in-60": {
+   "title": "Josh's year: the sales in 60 seconds",
+   "hook": "\"Here's my year in Heathridge.\"",
+   "format": "Fast cuts, talking head",
+   "why": "Proof for future vendors. Real results only.",
+   "suburb": "Heathridge",
+   "luxury": true,
+   "order": 2
+  },
+  "what-buys": {
+   "title": "What $X buys in Heathridge right now",
+   "hook": "\"Here's what $750k gets you in Heathridge.\"",
+   "format": "Walk and talk",
+   "why": "Buyers share it. Use a real current listing.",
+   "suburb": "Heathridge",
+   "luxury": true,
+   "order": 3
+  },
+  "schools": {
+   "title": "Schools and the school-run streets",
+   "hook": "\"If you've got kids, here's the Heathridge map.\"",
+   "format": "Josh to camera + b-roll",
+   "why": "Family buyers. No school rankings claims.",
+   "suburb": "Heathridge",
+   "luxury": true,
+   "order": 4
+  },
+  "worth": {
+   "title": "Vendor question: \"What's my house worth?\"",
+   "hook": "\"Three things that set your price in Heathridge.\"",
+   "format": "Talking head",
+   "why": "Ends on a private valuation.",
+   "suburb": "Heathridge",
+   "luxury": true,
+   "order": 5
+  },
+  "renovate": {
+   "title": "Vendor question: \"Should I renovate first?\"",
+   "hook": "\"Don't spend $40k before you sell. Here's why.\"",
+   "format": "Talking head",
+   "why": "Seller trust. Drives appraisals.",
+   "suburb": "Heathridge",
+   "luxury": true,
+   "order": 6
+  },
+  "vs-beldon": {
+   "title": "Heathridge vs Beldon vs Edgewater",
+   "hook": "\"Same price, three suburbs. Here's the difference.\"",
+   "format": "Talking head + map",
+   "why": "Starts the move into Beldon and Edgewater.",
+   "suburb": "Heathridge",
+   "luxury": true,
+   "order": 7
+  },
+  "beach-run": {
+   "title": "Heathridge to the beach in X minutes",
+   "hook": "\"From the Caridean shops to the water.\"",
+   "format": "Drive or ride POV",
+   "why": "Lifestyle reach. Time it for real.",
+   "suburb": "Heathridge",
+   "luxury": true,
+   "order": 8
+  },
+  "day-in-life": {
+   "title": "Day in the life of a Heathridge agent",
+   "hook": "\"Here's what selling a house actually looks like.\"",
+   "format": "Vlog style",
+   "why": "Personality. Shows the work vendors never see.",
+   "suburb": "Heathridge",
+   "luxury": true,
+   "order": 9
+  },
+  "giants": {
+   "title": "Local sport: Joondalup Giants Rugby Club",
+   "hook": "\"Saturday mornings in 6027.\"",
+   "format": "Josh + club b-roll",
+   "why": "Community reach. Ask the club first.",
+   "suburb": "Heathridge",
+   "luxury": true,
+   "order": 10
+  }
+ }
+}
