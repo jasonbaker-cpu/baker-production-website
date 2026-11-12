@@ -1,0 +1,169 @@
+{
+ "address": "27 Norfolk St, Hammond Park WA 6164",
+ "lat": -32.1763207,
+ "lng": 115.8330263,
+ "pins": [
+  {
+   "name": "Jilbup Primary School",
+   "cat": "zoned",
+   "lat": -32.175782999999996,
+   "lng": 115.83526219999999
+  },
+  {
+   "name": "Hammond West Estate Park",
+   "cat": "park",
+   "lat": -32.1754368,
+   "lng": 115.8309267
+  },
+  {
+   "name": "Canary Park",
+   "cat": "park",
+   "lat": -32.1768746,
+   "lng": 115.8374856
+  },
+  {
+   "name": "McPhee Park",
+   "cat": "park",
+   "lat": -32.1735897,
+   "lng": 115.8394447
+  },
+  {
+   "name": "Sayers Park",
+   "cat": "park",
+   "lat": -32.175432799999996,
+   "lng": 115.84036849999998
+  },
+  {
+   "name": "Dickerson Park",
+   "cat": "park",
+   "lat": -32.1737598,
+   "lng": 115.84110139999999
+  },
+  {
+   "name": "Frankland Park",
+   "cat": "park",
+   "lat": -32.1793648,
+   "lng": 115.8440431
+  },
+  {
+   "name": "Serventy Park",
+   "cat": "park",
+   "lat": -32.1714724,
+   "lng": 115.84340820000001
+  },
+  {
+   "name": "Hammond Park Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.176491399999996,
+   "lng": 115.8453399
+  },
+  {
+   "name": "Harry Waring Marsupial Reserve",
+   "cat": "reserve",
+   "lat": -32.165573099999996,
+   "lng": 115.8314731
+  },
+  {
+   "name": "Hammond Park Catholic Primary School",
+   "cat": "private",
+   "lat": -32.1729614,
+   "lng": 115.84873469999998
+  },
+  {
+   "name": "Holdsworth Park",
+   "cat": "park",
+   "lat": -32.1677422,
+   "lng": 115.8200116
+  },
+  {
+   "name": "Hammond Park Secondary College",
+   "cat": "zoned",
+   "lat": -32.1745519,
+   "lng": 115.85017219999999
+  },
+  {
+   "name": "Mokare Reserve Adventure Playground",
+   "cat": "park",
+   "lat": -32.1824608,
+   "lng": 115.85060979999999
+  },
+  {
+   "name": "Botany Park",
+   "cat": "park",
+   "lat": -32.1661095,
+   "lng": 115.84840899999999
+  },
+  {
+   "name": "Thomsons Lake Nature Reserve",
+   "cat": "lake",
+   "lat": -32.15699,
+   "lng": 115.83443079999999
+  },
+  {
+   "name": "The Park Hive",
+   "cat": "shopping",
+   "lat": -32.1603771,
+   "lng": 115.84684469999999
+  },
+  {
+   "name": "Aubin Grove Station",
+   "cat": "train",
+   "lat": -32.1550174,
+   "lng": 115.8579469
+  },
+  {
+   "name": "Honeywood Park",
+   "cat": "park",
+   "lat": -32.1986887,
+   "lng": 115.8616512
+  },
+  {
+   "name": "Kogolup Lake",
+   "cat": "lake",
+   "lat": -32.137610599999995,
+   "lng": 115.83123320000001
+  },
+  {
+   "name": "Success Library",
+   "cat": "library",
+   "lat": -32.1297798,
+   "lng": 115.85317230000001
+  },
+  {
+   "name": "Cockburn Gateway Shopping City",
+   "cat": "regional_shopping",
+   "lat": -32.13062250000001,
+   "lng": 115.8579277
+  },
+  {
+   "name": "Henderson Cliffs Lookout Platform",
+   "cat": "park",
+   "lat": -32.1732817,
+   "lng": 115.77210889999999
+  },
+  {
+   "name": "Cockburn ARC",
+   "cat": "aquatic",
+   "lat": -32.125503099999996,
+   "lng": 115.850766
+  },
+  {
+   "name": "Cockburn Central Station",
+   "cat": "train",
+   "lat": -32.12528,
+   "lng": 115.85834
+  },
+  {
+   "name": "Kwinana Station",
+   "cat": "train",
+   "lat": -32.2349423,
+   "lng": 115.84264689999998
+  },
+  {
+   "name": "Marri Park Golf Course",
+   "cat": "golf",
+   "lat": -32.231131999999995,
+   "lng": 115.87047299999998
+  }
+ ]
+}

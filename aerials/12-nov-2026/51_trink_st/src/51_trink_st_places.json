@@ -1,0 +1,163 @@
+{
+ "address": "51 Trink St, Cloverdale WA 6105",
+ "lat": -31.9663099,
+ "lng": 115.9476812,
+ "pins": [
+  {
+   "name": "Hoffman Park",
+   "cat": "park",
+   "lat": -31.960748,
+   "lng": 115.9503161
+  },
+  {
+   "name": "Middleton Park",
+   "cat": "park",
+   "lat": -31.9551162,
+   "lng": 115.9519816
+  },
+  {
+   "name": "Redcliffe Park",
+   "cat": "park",
+   "lat": -31.9460945,
+   "lng": 115.9482803
+  },
+  {
+   "name": "DFO Perth",
+   "cat": "shopping",
+   "lat": -31.9384407,
+   "lng": 115.9486475
+  },
+  {
+   "name": "Redcliffe Station",
+   "cat": "train",
+   "lat": -31.93357,
+   "lng": 115.95007
+  },
+  {
+   "name": "Airport Central Station",
+   "cat": "train",
+   "lat": -31.94411,
+   "lng": 115.97483
+  },
+  {
+   "name": "P H Dod Reserve",
+   "cat": "park",
+   "lat": -31.9697887,
+   "lng": 115.9514192
+  },
+  {
+   "name": "Gerry Archer Sports & Recreation Facility",
+   "cat": "park",
+   "lat": -31.973096,
+   "lng": 115.9473504
+  },
+  {
+   "name": "Forster Park",
+   "cat": "park",
+   "lat": -31.9683195,
+   "lng": 115.9452821
+  },
+  {
+   "name": "Peachey Park",
+   "cat": "park",
+   "lat": -31.9768565,
+   "lng": 115.9407181
+  },
+  {
+   "name": "Tomato Lake Reserve",
+   "cat": "lake",
+   "lat": -31.9751065,
+   "lng": 115.9323867
+  },
+  {
+   "name": "Australian Islamic College Kewdale",
+   "cat": "private",
+   "lat": -31.9806276,
+   "lng": 115.9326998
+  },
+  {
+   "name": "Oats Street Station",
+   "cat": "train",
+   "lat": -31.9870139,
+   "lng": 115.9160575
+  },
+  {
+   "name": "Belmont Forum",
+   "cat": "regional_shopping",
+   "lat": -31.964962,
+   "lng": 115.9349136
+  },
+  {
+   "name": "Belmont Hub",
+   "cat": "library",
+   "lat": -31.9628782,
+   "lng": 115.9341921
+  },
+  {
+   "name": "Faulkner Park",
+   "cat": "park",
+   "lat": -31.961585,
+   "lng": 115.9333853
+  },
+  {
+   "name": "Wicca Reserve",
+   "cat": "park",
+   "lat": -31.9680977,
+   "lng": 115.9314629
+  },
+  {
+   "name": "Arlunya Park",
+   "cat": "park",
+   "lat": -31.9632575,
+   "lng": 115.9422802
+  },
+  {
+   "name": "Miles Park",
+   "cat": "park",
+   "lat": -31.9585688,
+   "lng": 115.9411386
+  },
+  {
+   "name": "Notre Dame Catholic Primary School",
+   "cat": "private",
+   "lat": -31.955998,
+   "lng": 115.9412308
+  },
+  {
+   "name": "Cloverdale Primary School",
+   "cat": "zoned",
+   "lat": -31.9593146,
+   "lng": 115.9364187
+  },
+  {
+   "name": "Belmont City College",
+   "cat": "zoned",
+   "lat": -31.9580402,
+   "lng": 115.934143
+  },
+  {
+   "name": "Belmont Oasis Leisure Centre",
+   "cat": "aquatic",
+   "lat": -31.9602462,
+   "lng": 115.9313455
+  },
+  {
+   "name": "Adachi Park",
+   "cat": "park",
+   "lat": -31.9489584,
+   "lng": 115.9180918
+  },
+  {
+   "name": "Ascot Racecourse",
+   "cat": "park",
+   "lat": -31.936662,
+   "lng": 115.9214389
+  },
+  {
+   "name": "Maylands Peninsula Public Golf Course",
+   "cat": "golf",
+   "lat": -31.9419503,
+   "lng": 115.9024031
+  }
+ ]
+}

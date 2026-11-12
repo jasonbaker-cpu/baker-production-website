@@ -1,0 +1,193 @@
+{
+ "address": "7/1-13 Higgins Way, Bayswater WA 6053",
+ "lat": -31.9235,
+ "lng": 115.92408,
+ "pins": [
+  {
+   "name": "Charles Newman Gardens",
+   "cat": "park",
+   "lat": -31.923857199999997,
+   "lng": 115.92176110000001
+  },
+  {
+   "name": "Eric Singleton Bird Sanctuary",
+   "cat": "reserve",
+   "lat": -31.927252799999998,
+   "lng": 115.92288330000001
+  },
+  {
+   "name": "Gobba Lake",
+   "cat": "lake",
+   "lat": -31.9258616,
+   "lng": 115.9281365
+  },
+  {
+   "name": "Riverside Gardens",
+   "cat": "park",
+   "lat": -31.9300858,
+   "lng": 115.9230949
+  },
+  {
+   "name": "Garratt Road Bridge Park",
+   "cat": "park",
+   "lat": -31.930195,
+   "lng": 115.9177194
+  },
+  {
+   "name": "Bayswater Library",
+   "cat": "library",
+   "lat": -31.9199849,
+   "lng": 115.9137549
+  },
+  {
+   "name": "Claughton Reserve",
+   "cat": "park",
+   "lat": -31.927110499999998,
+   "lng": 115.93655349999999
+  },
+  {
+   "name": "Bayswater Primary School",
+   "cat": "zoned",
+   "lat": -31.920929799999996,
+   "lng": 115.91139589999999
+  },
+  {
+   "name": "Bayswater Station",
+   "cat": "train",
+   "lat": -31.918095599999997,
+   "lng": 115.91254239999998
+  },
+  {
+   "name": "St Columba's School Bayswater",
+   "cat": "private",
+   "lat": -31.922881899999997,
+   "lng": 115.9106511
+  },
+  {
+   "name": "Gary Blanch Park",
+   "cat": "park",
+   "lat": -31.920013500000003,
+   "lng": 115.9370987
+  },
+  {
+   "name": "Ascot Racecourse",
+   "cat": "park",
+   "lat": -31.936662,
+   "lng": 115.92143890000001
+  },
+  {
+   "name": "Ashfield Station",
+   "cat": "train",
+   "lat": -31.9127765,
+   "lng": 115.93611220000001
+  },
+  {
+   "name": "Ashfield Reserve",
+   "cat": "park",
+   "lat": -31.9131056,
+   "lng": 115.938076
+  },
+  {
+   "name": "Ashfield Primary School",
+   "cat": "zoned",
+   "lat": -31.915309999999998,
+   "lng": 115.940902
+  },
+  {
+   "name": "Garvey Park",
+   "cat": "park",
+   "lat": -31.922023900000003,
+   "lng": 115.94429439999999
+  },
+  {
+   "name": "Ashfield Flats",
+   "cat": "reserve",
+   "lat": -31.919590199999995,
+   "lng": 115.94599079999999
+  },
+  {
+   "name": "Meltham Station",
+   "cat": "train",
+   "lat": -31.922461700000003,
+   "lng": 115.90029489999999
+  },
+  {
+   "name": "Sandy Beach Reserve",
+   "cat": "reserve",
+   "lat": -31.921352000000002,
+   "lng": 115.9503105
+  },
+  {
+   "name": "St Maria Goretti's Catholic School",
+   "cat": "private",
+   "lat": -31.93908,
+   "lng": 115.9437801
+  },
+  {
+   "name": "Embleton Golf Course",
+   "cat": "golf",
+   "lat": -31.9052818,
+   "lng": 115.90681319999997
+  },
+  {
+   "name": "Chisholm Catholic College",
+   "cat": "private",
+   "lat": -31.910858899999994,
+   "lng": 115.90015580000001
+  },
+  {
+   "name": "Redcliffe Station",
+   "cat": "train",
+   "lat": -31.93357,
+   "lng": 115.95007000000001
+  },
+  {
+   "name": "DFO Perth",
+   "cat": "shopping",
+   "lat": -31.938440699999997,
+   "lng": 115.94864749999999
+  },
+  {
+   "name": "Maylands Peninsula Public Golf Course",
+   "cat": "golf",
+   "lat": -31.9419503,
+   "lng": 115.9024031
+  },
+  {
+   "name": "John Forrest Secondary College",
+   "cat": "zoned",
+   "lat": -31.904454400000002,
+   "lng": 115.9007335
+  },
+  {
+   "name": "Morley Station",
+   "cat": "train",
+   "lat": -31.89598,
+   "lng": 115.91994000000001
+  },
+  {
+   "name": "Bassendean Station",
+   "cat": "train",
+   "lat": -31.9035773,
+   "lng": 115.9471616
+  },
+  {
+   "name": "Bayswater Waves",
+   "cat": "aquatic",
+   "lat": -31.897845900000004,
+   "lng": 115.9103646
+  },
+  {
+   "name": "Galleria Shopping Centre",
+   "cat": "regional_shopping",
+   "lat": -31.8971626,
+   "lng": 115.8992309
+  },
+  {
+   "name": "Airport Central Station",
+   "cat": "train",
+   "lat": -31.944109999999995,
+   "lng": 115.97483
+  }
+ ]
+}

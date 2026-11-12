@@ -1,0 +1,199 @@
+{
+ "address": "23 Galian Way, Spearwood WA 6163",
+ "lat": -32.11044,
+ "lng": 115.78687,
+ "pins": [
+  {
+   "name": "Edwardes Park",
+   "cat": "park",
+   "lat": -32.1083717,
+   "lng": 115.78591909999999
+  },
+  {
+   "name": "Newton Primary School",
+   "cat": "zoned",
+   "lat": -32.1123282,
+   "lng": 115.7890022
+  },
+  {
+   "name": "Watson Reserve",
+   "cat": "park",
+   "lat": -32.1070187,
+   "lng": 115.7831083
+  },
+  {
+   "name": "Smart Park",
+   "cat": "park",
+   "lat": -32.115595,
+   "lng": 115.78627130000001
+  },
+  {
+   "name": "Stargate Shopping Centre - Spearwood",
+   "cat": "shopping",
+   "lat": -32.1153166,
+   "lng": 115.78321170000001
+  },
+  {
+   "name": "Interim Reserve",
+   "cat": "park",
+   "lat": -32.1046319,
+   "lng": 115.7943015
+  },
+  {
+   "name": "Kooboolong Park",
+   "cat": "park",
+   "lat": -32.1047571,
+   "lng": 115.7771003
+  },
+  {
+   "name": "Spearwood Library",
+   "cat": "library",
+   "lat": -32.100175899999996,
+   "lng": 115.7837086
+  },
+  {
+   "name": "Hagan Park",
+   "cat": "park",
+   "lat": -32.121131399999996,
+   "lng": 115.7862421
+  },
+  {
+   "name": "St Jerome's Primary School",
+   "cat": "private",
+   "lat": -32.1213204,
+   "lng": 115.7825187
+  },
+  {
+   "name": "Beale Park",
+   "cat": "park",
+   "lat": -32.100401999999995,
+   "lng": 115.7777067
+  },
+  {
+   "name": "Phoenix Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.0972575,
+   "lng": 115.78413049999999
+  },
+  {
+   "name": "Santich Park",
+   "cat": "park",
+   "lat": -32.1245417,
+   "lng": 115.78747320000001
+  },
+  {
+   "name": "Bavich Park",
+   "cat": "park",
+   "lat": -32.0962536,
+   "lng": 115.7864456
+  },
+  {
+   "name": "Lopresti Park",
+   "cat": "park",
+   "lat": -32.1242762,
+   "lng": 115.7906879
+  },
+  {
+   "name": "Ravello Reserve",
+   "cat": "park",
+   "lat": -32.1243626,
+   "lng": 115.79464089999998
+  },
+  {
+   "name": "Visko Park",
+   "cat": "park",
+   "lat": -32.1268922,
+   "lng": 115.8011959
+  },
+  {
+   "name": "Coogee Jetty",
+   "cat": "beach",
+   "lat": -32.111716699999995,
+   "lng": 115.7621918
+  },
+  {
+   "name": "Manning Park",
+   "cat": "park",
+   "lat": -32.094665899999995,
+   "lng": 115.76967880000001
+  },
+  {
+   "name": "Port Coogee Village Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.103181899999996,
+   "lng": 115.76254030000001
+  },
+  {
+   "name": "Coogee Beach",
+   "cat": "beach",
+   "lat": -32.1184837,
+   "lng": 115.76168
+  },
+  {
+   "name": "Sherbrooke Garden Reserve",
+   "cat": "park",
+   "lat": -32.0930276,
+   "lng": 115.8066588
+  },
+  {
+   "name": "Lakelands Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.1194487,
+   "lng": 115.81832229999999
+  },
+  {
+   "name": "Lake Coogee",
+   "cat": "lake",
+   "lat": -32.1382962,
+   "lng": 115.77748899999999
+  },
+  {
+   "name": "Lakes Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.106459799999996,
+   "lng": 115.8276957
+  },
+  {
+   "name": "Yangebup Lake",
+   "cat": "lake",
+   "lat": -32.1195832,
+   "lng": 115.82999419999999
+  },
+  {
+   "name": "Bibra Lake Regional Playground",
+   "cat": "lake",
+   "lat": -32.0873832,
+   "lng": 115.8226012
+  },
+  {
+   "name": "Woodman Point Regional Park",
+   "cat": "reserve",
+   "lat": -32.134730399999995,
+   "lng": 115.7379879
+  },
+  {
+   "name": "Cockburn ARC",
+   "cat": "aquatic",
+   "lat": -32.125503099999996,
+   "lng": 115.850766
+  },
+  {
+   "name": "Fremantle Public Golf Course",
+   "cat": "golf",
+   "lat": -32.05325,
+   "lng": 115.76589459999998
+  },
+  {
+   "name": "Cockburn Central Station",
+   "cat": "train",
+   "lat": -32.12528,
+   "lng": 115.85834
+  },
+  {
+   "name": "Cockburn Gateway Shopping City",
+   "cat": "regional_shopping",
+   "lat": -32.13062250000001,
+   "lng": 115.8579277
+  }
+ ]
+}
