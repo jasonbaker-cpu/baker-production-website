@@ -36,7 +36,7 @@ class R:
 out = {}
 for f in photos:
     lat, lng, galt = exif(f); img = cv2.cvtColor(cv2.imread(f), cv2.COLOR_BGR2RGB)
-    hr = None if __import__("os").environ.get("NADIR") else horizon_row(img); H, W = img.shape[:2]; fp = 24*math.hypot(W, H)/43.27
+    hr = None if __import__("os").environ.get("NADIR") else (float(__import__("os").environ["HR"]) if __import__("os").environ.get("HR") else horizon_row(img)); H, W = img.shape[:2]; fp = 24*math.hypot(W, H)/43.27
     ex = (hg-lng)*111320*math.cos(lat*D); ny = (hl-lat)*111320; brg = math.degrees(math.atan2(ex, ny))
     r = R(f); best = (-2, None)
     if hr is None:   # top-down

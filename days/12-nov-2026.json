@@ -1,0 +1,315 @@
+{
+ "label": "Thu 12 Nov 2026",
+ "jobs": [
+  {
+   "slug": "23_galian_way",
+   "addr": "23 Galian Way, Spearwood WA 6163",
+   "who": "Alex Ricciardi \u00b7 Realty Plus",
+   "agency": "realty-plus",
+   "photos": "batch/23_galian_way/jpg",
+   "map": "batch/23_galian_way/23_galian_way_places.json",
+   "poly": [
+    [
+     -32.110267018961885,
+     115.78697086283437
+    ],
+    [
+     -32.11061171002931,
+     115.78697265064363
+    ],
+    [
+     -32.11061247821183,
+     115.7867701991488
+    ],
+    [
+     -32.11026778815674,
+     115.786768410349
+    ],
+    [
+     -32.110267018961885,
+     115.78697086283437
+    ]
+   ],
+   "area": 731,
+   "areaSource": "title (Diagram 47876, Lot 267)",
+   "lens": [
+    38.23,
+    19.11,
+    38.23,
+    19.11
+   ],
+   "nadirPick": [
+    "0069",
+    "0070"
+   ],
+   "streetRot": {
+    "23_galian_way__nadir": 0,
+    "23_galian_way__nadir2": 0
+   },
+   "notes": "",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/12-11-2026/23 Galian Way, Spearwood WA 6163, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "Certificate of Title 1413-758 23 Galian Way, SPEARWOOD 6163.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/12-11-2026/23 Galian Way, Spearwood WA 6163, Australia/Aerial - Drone Photography/Certificate of Title 1413-758 23 Galian Way, SPEARWOOD 6163.pdf"
+    },
+    {
+     "name": "Diagram 47876.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/12-11-2026/23 Galian Way, Spearwood WA 6163, Australia/Aerial - Drone Photography/Diagram 47876.pdf"
+    },
+    {
+     "name": "23_galian_way_spearwood_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/12-11-2026/23 Galian Way, Spearwood WA 6163, Australia/Aerial - Drone Photography/23_galian_way_spearwood_map.html"
+    }
+   ],
+   "remove": {
+    "dji_fly_20261112_103348_0069_1794450353300_photo.JPG": [
+     {
+      "sheet": [
+       200,
+       1155,
+       266,
+       1296
+      ]
+     },
+     {
+      "sheet": [
+       198,
+       1330,
+       272,
+       1456
+      ]
+     }
+    ],
+    "dji_fly_20261112_103352_0070_1794450350930_photo.JPG": [
+     {
+      "sheet": [
+       1166,
+       670,
+       1294,
+       731
+      ]
+     },
+     {
+      "sheet": [
+       1324,
+       668,
+       1442,
+       731
+      ]
+     }
+    ],
+    "dji_fly_20261112_103424_0071_1794450349508_photo.JPG": [
+     "c2"
+    ],
+    "dji_fly_20261112_103438_0072_1794450348139_photo.JPG": [
+     "c1",
+     "c2"
+    ],
+    "dji_fly_20261112_103458_0073_1794450346765_photo.JPG": [
+     "c1"
+    ],
+    "dji_fly_20261112_103528_0075_1794450343930_photo.JPG": [
+     "c3",
+     {
+      "sheet": [
+       324,
+       336,
+       423,
+       393
+      ]
+     }
+    ],
+    "dji_fly_20261112_103542_0076_1794450342524_photo.JPG": [
+     "c4"
+    ],
+    "dji_fly_20261112_103600_0077_1794450341125_photo.JPG": [
+     {
+      "sheet": [
+       362,
+       1035,
+       437,
+       1138
+      ]
+     },
+     {
+      "sheet": [
+       354,
+       1209,
+       433,
+       1336
+      ]
+     }
+    ],
+    "dji_fly_20261112_103612_0078_1794450339719_photo.JPG": [
+     "c2",
+     "c4"
+    ]
+   },
+   "edgeOffs": {
+    "23_galian_way__nadir2": {
+     "0": 0.4,
+     "2": -0.6
+    }
+   }
+  },
+  {
+   "slug": "51_trink_st",
+   "addr": "51 Trink St, Cloverdale WA 6105",
+   "who": "Cooper Winter \u00b7 Laurie Kelly",
+   "agency": "black",
+   "photos": "batch/51_trink_st/jpg",
+   "map": "batch/51_trink_st/51_trink_st_places.json",
+   "poly": [
+    [
+     -31.96637661,
+     115.94749962
+    ],
+    [
+     -31.9664531,
+     115.94758975
+    ],
+    [
+     -31.96645304,
+     115.94761222
+    ],
+    [
+     -31.96628934,
+     115.94780269
+    ],
+    [
+     -31.96625097,
+     115.94780255
+    ],
+    [
+     -31.9661841,
+     115.94772361
+    ],
+    [
+     -31.96637661,
+     115.94749962
+    ]
+   ],
+   "area": 400,
+   "areaSource": "survey-strata plan (SSP 88713, Lot 1)",
+   "lens": [
+    12.0,
+    2.12,
+    25.52,
+    4.24,
+    10.5,
+    30.01
+   ],
+   "nadirPick": [
+    "0097",
+    "0096"
+   ],
+   "streetRot": {
+    "51_trink_st__nadir": 0,
+    "51_trink_st__nadir2": 0
+   },
+   "notes": "",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/51 Trink St, Cloverdale WA 6105, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "Certificate of Title (Public).pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/51 Trink St, Cloverdale WA 6105, Australia/Aerial - Drone Photography/Certificate of Title (Public).pdf"
+    },
+    {
+     "name": "survey-strata-plan-88713.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/51 Trink St, Cloverdale WA 6105, Australia/Aerial - Drone Photography/survey-strata-plan-88713.pdf"
+    },
+    {
+     "name": "survey-strata-plan-88713-title-list.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/51 Trink St, Cloverdale WA 6105, Australia/Aerial - Drone Photography/survey-strata-plan-88713-title-list.pdf"
+    },
+    {
+     "name": "51_trink_st_cloverdale_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/51 Trink St, Cloverdale WA 6105, Australia/Aerial - Drone Photography/51_trink_st_cloverdale_map.html"
+    },
+    {
+     "name": "51_trink_st_cloverdale_map_CHECK.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/51 Trink St, Cloverdale WA 6105, Australia/Aerial - Drone Photography/51_trink_st_cloverdale_map_CHECK.html"
+    },
+    {
+     "name": "51_trink_st_cloverdale_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/51 Trink St, Cloverdale WA 6105, Australia/Aerial - Drone Photography/51_trink_st_cloverdale_qa.txt"
+    }
+   ]
+  },
+  {
+   "slug": "7_1_13_higgins_way",
+   "addr": "7/1-13 Higgins Way, Bayswater WA 6053",
+   "who": "Nic Pulvirenti \u00b7 Professionals TWT",
+   "agency": "flags-p",
+   "photos": "batch/7_1_13_higgins_way/jpg",
+   "map": "batch/7_1_13_higgins_way/7_1_13_higgins_way_places.json",
+   "poly": null,
+   "nadirSplit": true,
+   "nadirPick": [
+    "0237",
+    "0236"
+   ],
+   "streetRot": {
+    "7_1_13_higgins_way__nadir": 180,
+    "7_1_13_higgins_way__nadir2": 0
+   },
+   "notes": "",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/12-11-2026/7-1-13 Higgins Way, Bayswater, Western Australia 6053, AU/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "7_1-13_higgins_way_bayswater_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/12-11-2026/7-1-13 Higgins Way, Bayswater, Western Australia 6053, AU/Aerial - Drone Photography/7_1-13_higgins_way_bayswater_map.html"
+    }
+   ],
+   "tune": {
+    "noSolid": 1
+   }
+  },
+  {
+   "slug": "27_norfolk_st",
+   "addr": "27 Norfolk St, Hammond Park WA 6164",
+   "who": "Cory Garrett \u00b7 Belle Property",
+   "agency": "green-belle",
+   "photos": "batch/27_norfolk_st/jpg",
+   "map": "batch/27_norfolk_st/27_norfolk_st_places.json",
+   "poly": null,
+   "nadirSplit": true,
+   "twilight": true,
+   "skyPlate": "S",
+   "noClean": true,
+   "nadirPick": [
+    "0121",
+    "0120"
+   ],
+   "streetRot": {
+    "27_norfolk_st__nadir": 270,
+    "27_norfolk_st__nadir2": 0
+   },
+   "notes": "",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/27 Norfolk St, Hammond Park WA 6164, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "Certificate of Title 4057-655 27 Norfolk Street, HAMMOND PARK 6164.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/27 Norfolk St, Hammond Park WA 6164, Australia/Aerial - Drone Photography/Certificate of Title 4057-655 27 Norfolk Street, HAMMOND PARK 6164.pdf"
+    },
+    {
+     "name": "image001.png",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/27 Norfolk St, Hammond Park WA 6164, Australia/Aerial - Drone Photography/image001.png"
+    },
+    {
+     "name": "27_norfolk_st_hammond_park_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/27 Norfolk St, Hammond Park WA 6164, Australia/Aerial - Drone Photography/27_norfolk_st_hammond_park_map.html"
+    },
+    {
+     "name": "27_norfolk_st_hammond_park_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/27 Norfolk St, Hammond Park WA 6164, Australia/Aerial - Drone Photography/27_norfolk_st_hammond_park_qa.txt"
+    },
+    {
+     "name": "27_norfolk_st_hammond_park_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/12-11-2026/27 Norfolk St, Hammond Park WA 6164, Australia/Aerial - Drone Photography/27_norfolk_st_hammond_park_directions.txt"
+    }
+   ]
+  }
+ ]
+}
