@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Real Estate Photography Gallery Perth | Baker Production</title>
-  <meta name="description" content="Gallery of recent property photography, drone, twilight and virtual editing work by Baker Production in Perth.">
+  <meta name="description" content="Selected Perth real estate photography, twilight, drone, listing video, 3D tours and virtual staging by Baker Production.">
   <link rel="canonical" href="https://www.bakerproduction.com/gallery.html">
 
   <!-- Open Graph -->
@@ -651,11 +651,130 @@
   .filter-btn { font-size: 11px; padding: 10px 16px; }
   .filter-btn-sub { font-size: 10.5px; padding: 8px 14px; }
 }</style>
+<style>
+/* ===== Gallery v3 — dark editorial (12 Nov 2026) ===== */
+body.g3 { --g-bg: #0b0b0b; --g-ink: #f2efe9; --g-mute: rgba(242,239,233,.52); --g-line: rgba(242,239,233,.12); --g-gold: #c9a45c;
+  background: var(--g-bg); color: var(--g-ink); }
+body.g3 ::selection { background: var(--g-gold); color: #0b0b0b; }
+.g-wrap { width: 100%; max-width: 1520px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 64px); }
+
+/* nav: always dark glass on this page */
+.navbar.g-dark, .navbar.g-dark.scrolled { background: rgba(11,11,11,.72) !important; backdrop-filter: saturate(140%) blur(16px); -webkit-backdrop-filter: saturate(140%) blur(16px); box-shadow: 0 1px 0 rgba(255,255,255,.06) !important; }
+.navbar.g-dark .nav-logo, .navbar.g-dark .nav-links a { color: #f2efe9 !important; }
+.navbar.g-dark .nav-hamburger span { background: #f2efe9 !important; }
+
+/* header */
+.g-head { padding: clamp(128px, 16vw, 200px) 0 clamp(36px, 5vw, 64px); }
+.g-eyebrow { font: 500 11px/1 var(--font-body); letter-spacing: 3px; text-transform: uppercase; color: var(--g-gold); margin: 0 0 22px; }
+.g-head h1 { font: 300 clamp(56px, 10vw, 148px)/.9 var(--font-display); letter-spacing: -0.045em; margin: 0; color: var(--g-ink); }
+.g-lede { max-width: 520px; margin: 28px 0 0; font: 400 15.5px/1.65 var(--font-body); color: var(--g-mute); }
+
+/* filter bar */
+.g-bar { position: sticky; top: 72px; z-index: 40; background: rgba(11,11,11,.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid var(--g-line); border-bottom: 1px solid var(--g-line); }
+.g-bar-in { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 58px; }
+.g-bar-l { font: 600 10.5px/1 var(--font-body); letter-spacing: 2.6px; text-transform: uppercase; color: var(--g-mute); flex: none; }
+.g-filters { display: flex; gap: clamp(14px, 2.4vw, 34px); overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding: 4px 0; }
+.g-filters::-webkit-scrollbar { display: none; }
+.f-btn { position: relative; flex: none; background: none; border: 0; padding: 10px 0; cursor: pointer; color: var(--g-mute);
+  font: 600 11px/1 var(--font-body); letter-spacing: 2.2px; text-transform: uppercase; transition: color .25s; }
+.f-btn sup { font-size: 8.5px; letter-spacing: .5px; margin-left: 4px; opacity: .55; vertical-align: 6px; }
+.f-btn::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1px; background: var(--g-gold); transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease-confident); }
+.f-btn:hover { color: var(--g-ink); }
+.f-btn.on { color: var(--g-ink); }
+.f-btn.on::after { transform: scaleX(1); }
+.f-btn:focus-visible { outline: 1px solid var(--g-gold); outline-offset: 4px; }
+
+/* grid: JS justifies rows; CSS fallback is a simple 3-up grid */
+.g-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; padding: clamp(28px, 4vw, 56px) 0 clamp(64px, 8vw, 120px); }
+.g-grid.js { display: flex; flex-wrap: wrap; gap: 0; }
+.w { margin: 0; min-width: 0; }
+.g-grid.js .w { flex: none; transition: opacity .7s var(--ease-confident), transform .9s var(--ease-confident); }
+.g-grid.js .w.pre { opacity: 0; transform: translateY(18px); }
+.w.off { display: none !important; }
+.w-m { display: block; position: relative; width: 100%; overflow: hidden; background: #161616; border: 0; padding: 0; margin: 0; cursor: zoom-in; aspect-ratio: 3/2; color: inherit; }
+.g-grid.js .w-m { aspect-ratio: auto; }
+.w-m img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-confident), opacity .5s; }
+@media (hover: hover) {
+  .w-m:hover img { transform: scale(1.025); }
+  .g-grid.js:hover .w .w-m img { opacity: .82; }
+  .g-grid.js:hover .w:hover .w-m img { opacity: 1; }
+}
+.w-m:focus-visible { outline: 1px solid var(--g-gold); outline-offset: 3px; }
+figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 12px 1px 0; min-height: 34px; }
+.w-k { font: 600 10px/1.2 var(--font-body); letter-spacing: 2.2px; text-transform: uppercase; color: var(--g-gold); white-space: nowrap; }
+.w-l { font: 400 12.5px/1.3 var(--font-body); color: var(--g-mute); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* video + tour tiles */
+.w-vid { cursor: pointer; }
+.w-vid img { filter: brightness(.82); }
+.w-play { position: absolute; left: 50%; top: 50%; width: 76px; height: 76px; margin: -38px 0 0 -38px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.55); background: rgba(10,10,10,.28); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  display: grid; place-items: center; transition: transform .5s var(--ease-confident), background .3s, border-color .3s; }
+.w-play svg { width: 22px; height: 22px; fill: #fff; margin-left: 3px; }
+.w-vid:hover .w-play { transform: scale(1.08); background: var(--g-gold); border-color: var(--g-gold); }
+.w-vid:hover .w-play svg { fill: #0b0b0b; }
+.w-tour { cursor: pointer; background: radial-gradient(ellipse at 50% 46%, rgba(201,164,92,.16), transparent 62%), linear-gradient(160deg, #1a1916, #0d0d0d); }
+.w-tour-in { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
+.w-ring { width: 84px; height: 84px; border-radius: 50%; border: 1px solid rgba(201,164,92,.6); display: grid; place-items: center; color: var(--g-gold);
+  font: 500 15px/1 var(--font-display); letter-spacing: .5px; box-shadow: 0 0 0 14px rgba(201,164,92,.05); transition: transform .5s var(--ease-confident), box-shadow .5s; }
+.w-tour:hover .w-ring { transform: scale(1.06); box-shadow: 0 0 0 22px rgba(201,164,92,.07); }
+.w-tour-t { font: 600 10px/1 var(--font-body); letter-spacing: 2.4px; text-transform: uppercase; color: var(--g-mute); }
+
+/* CTA */
+.g-cta { border-top: 1px solid var(--g-line); padding: clamp(72px, 10vw, 140px) 0; }
+.g-cta h2 { font: 300 clamp(34px, 5.4vw, 72px)/1.02 var(--font-display); letter-spacing: -0.035em; margin: 0; max-width: 900px; color: var(--g-ink); }
+.g-cta p:not(.g-eyebrow) { color: var(--g-mute); font: 400 15.5px/1.6 var(--font-body); margin: 22px 0 0; max-width: 520px; }
+.g-cta-a { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+.g-b { display: inline-flex; align-items: center; height: 50px; padding: 0 28px; background: var(--g-gold); color: #0b0b0b; text-decoration: none;
+  font: 600 11px/1 var(--font-body); letter-spacing: 2.2px; text-transform: uppercase; transition: background .25s, color .25s; }
+.g-b:hover { background: #f2efe9; }
+.g-b-ghost { background: transparent; color: var(--g-ink); box-shadow: inset 0 0 0 1px var(--g-line); }
+.g-b-ghost:hover { background: transparent; box-shadow: inset 0 0 0 1px var(--g-ink); }
+body.g3 .footer { background: #070707; }
+
+/* lightbox */
+.lb { position: fixed; inset: 0; z-index: 2000; background: #060606; display: grid; grid-template-rows: auto 1fr auto; opacity: 0; transition: opacity .35s; }
+.lb[hidden] { display: none; }
+.lb.show { opacity: 1; }
+.lb-top { display: flex; justify-content: space-between; align-items: center; padding: 18px clamp(16px, 3vw, 36px); }
+.lb-n { font: 500 11px/1 var(--font-body); letter-spacing: 2.4px; color: var(--g-mute); font-variant-numeric: tabular-nums; }
+.lb-x, .lb-arr { background: none; border: 0; cursor: pointer; color: #f2efe9; padding: 10px; display: grid; place-items: center; }
+.lb-x svg, .lb-arr svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.2; }
+.lb-x:hover, .lb-arr:hover { color: var(--g-gold); }
+.lb-stage { position: relative; display: grid; place-items: center; padding: 0 clamp(8px, 7vw, 110px); min-height: 0; touch-action: pan-y; }
+.lb-stage img { max-width: 100%; max-height: calc(100vh - 150px); object-fit: contain; display: block; user-select: none; -webkit-user-drag: none; transition: opacity .3s; }
+.lb-stage img.ld { opacity: 0; }
+.lb-frame { width: min(100%, calc((100vh - 160px) * var(--ar))); aspect-ratio: var(--ar); background: #000; }
+.lb-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.lb-arr { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; }
+.lb-prev { left: clamp(4px, 2vw, 28px); }
+.lb-next { right: clamp(4px, 2vw, 28px); }
+.lb-cap { display: flex; justify-content: center; gap: 14px; align-items: baseline; padding: 16px 16px 24px; }
+.lb-cap .w-l { text-align: left; }
+
+@media (max-width: 760px) {
+  .g-bar { top: 64px; }
+  .g-bar-l { display: none; }
+  .g-bar-in { min-height: 52px; }
+  .lb-arr { display: none; }
+  .lb-stage { padding: 0; }
+  .lb-stage img { max-height: calc(100vh - 140px); }
+  figcaption { padding-top: 9px; min-height: 30px; }
+  .w-l { font-size: 12px; }
+  .w-play { width: 60px; height: 60px; margin: -30px 0 0 -30px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .g-grid.js .w, .w-m img, .lb { transition: none !important; }
+  .g-grid.js .w.pre { opacity: 1; transform: none; }
+}
+.w.nw .w-l { display: none; }
+
+</style>
 </head>
-<body class="overflow-clip">
+<body class="g3">
 
   <!-- NAVIGATION -->
-  <nav class="navbar" id="navbar">
+  <nav class="navbar g-dark" id="navbar">
     <a href="index.html" class="nav-logo"><img src="logo.avif" alt="Baker Production" class="nav-logo-img"><span class="nav-logo-text">Baker Production</span></a>
     <ul class="nav-links">
       <li><a href="index.html#services">Services</a></li>
@@ -681,262 +800,77 @@
     <a href="https://portal.bakerproduction.com/book" class="mobile-menu-cta" onclick="closeMenu()">Book Now</a>
   </div>
 
-  <!-- GALLERY HERO -->
-  <header class="gallery-hero">
-    <div class="gallery-hero-inner">
-      <p class="gallery-hero-eyebrow">Our work &middot; Perth</p>
-      <h1 class="gallery-hero-headline">Recent <strong>Perth</strong> work</h1>
-      <p class="gallery-hero-lede">Photography, drone, twilight, listing video, 3D tours and virtual editing &mdash; shot across the Perth metro and delivered to agents the next day. Click anything to see it full size.</p>
-      <div class="gallery-hero-actions"><a href="https://portal.bakerproduction.com/book" class="g-btn">Book a shoot</a><a href="pricing.html" class="g-btn g-btn-ghost">See pricing</a></div>
-      <div class="gallery-hero-facts"><div class="g-fact"><div class="g-fact-n">1,500+</div><div class="g-fact-l">Perth shoots</div></div><div class="g-fact"><div class="g-fact-n">Next day</div><div class="g-fact-l">Photo delivery</div></div><div class="g-fact"><div class="g-fact-n">5.0 &#9733;</div><div class="g-fact-l">Google rating</div></div><div class="g-fact"><div class="g-fact-n">Alkimos&ndash;Rockingham</div><div class="g-fact-l">Coverage</div></div></div>
+
+  <main id="main">
+  <header class="g-head">
+    <div class="g-wrap g-head-in">
+      <p class="g-eyebrow">Selected work &middot; Perth</p>
+      <h1>Work</h1>
+      <p class="g-lede">Property, twilight, aerial, film and virtual editing &mdash; shot across Perth and delivered to agents the next day.</p>
     </div>
   </header>
 
-  <!-- FILTER BAR -->
-  <div class="filter-bar">
-    <div class="filter-bar-inner">
-      <div class="filter-row filter-primary">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="photography">Photography</button>
-        <button class="filter-btn" data-filter="videography">Videography</button>
-        <button class="filter-btn" data-filter="virtual-editing">Virtual Editing</button>
-      </div>
-      <div class="filter-row filter-secondary" id="filterSecondary"></div>
+  <div class="g-bar" id="gBar">
+    <div class="g-wrap g-bar-in">
+      <span class="g-bar-l">Filter</span>
+      <div class="g-filters" role="toolbar" aria-label="Filter work"><button type="button" class="f-btn on" data-f="all" aria-pressed="true">All<sup>40</sup></button><button type="button" class="f-btn" data-f="property" aria-pressed="false">Property<sup>5</sup></button><button type="button" class="f-btn" data-f="twilight" aria-pressed="false">Twilight<sup>3</sup></button><button type="button" class="f-btn" data-f="aerial" aria-pressed="false">Aerial<sup>5</sup></button><button type="button" class="f-btn" data-f="video" aria-pressed="false">Video<sup>10</sup></button><button type="button" class="f-btn" data-f="tours" aria-pressed="false">3D Tours<sup>5</sup></button><button type="button" class="f-btn" data-f="editing" aria-pressed="false">Virtual Editing<sup>7</sup></button><button type="button" class="f-btn" data-f="headshots" aria-pressed="false">Headshots<sup>5</sup></button></div>
     </div>
   </div>
 
-  <!-- GALLERY GRID -->
-  <section class="gallery-section">
-    <div class="gallery-inner">
-      <div class="gallery-grid" id="galleryGrid">
-        <div class="gallery-item large reveal reveal-up" data-category="photography" data-subcategory="twilight-photography" data-full="img/gal-twilight-1.webp">
-          <img fetchpriority="high" class="gallery-image" loading="eager" decoding="async" src="img/gal-twilight-1-thumb.webp" alt="Twilight Photography — South Guildford, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Twilight Photography</span><span class="gallery-location">South Guildford, WA</span></div>
-        </div>
-        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/DYrn3EM0LXY?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/DYrn3EM0LXY/hq720.jpg'),url('https://i.ytimg.com/vi/DYrn3EM0LXY/mqdefault.jpg');">
-            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">58 Kentucky Drive West</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-1.webp">
-          <img class="gallery-image" loading="eager" src="img/gal-day-1-thumb.webp" alt="Day Photography — Lake Coogee, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Day Photography</span><span class="gallery-location">Lake Coogee, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-4.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-4-thumb.webp" alt="Day Photography — Kenwick, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Day Photography</span><span class="gallery-location">Kenwick, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="virtual-staging" data-full="img/gal-staging-1.webp">
-          <img class="gallery-image" loading="eager" decoding="async" src="img/gal-staging-1-thumb.webp" alt="Virtual Staging — Perth, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Virtual Staging</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item wide reveal reveal-up" data-category="photography" data-subcategory="aerials" data-full="img/gal-aerial-1.webp">
-          <img class="gallery-image" loading="eager" decoding="async" src="img/gal-aerial-1-thumb.webp" alt="Aerials — Roleystone, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Aerials</span><span class="gallery-location">Roleystone, WA</span></div>
-        </div>
-        <div class="gallery-item tall video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="social-media-content">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/QuO0dJS1o1I?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/QuO0dJS1o1I/hq720.jpg'),url('https://i.ytimg.com/vi/QuO0dJS1o1I/mqdefault.jpg');">
-            <span class="v-pill">Social media reel</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Social Media</span><span class="gallery-location">41 Maybach Way, Dianella</span></div>
-        </div>
-        <div class="gallery-item tour3d-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
-          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7MTG1?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
-            <div class="tour-play"><div class="tour-play-icon"><span class="t360">360&deg;</span></div><div class="tour-label">3D virtual tour</div><div class="tour-hint">Walk through the whole home</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
-        </div>
-        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/m0UQ0a1aXtk?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/m0UQ0a1aXtk/hq720.jpg'),url('https://i.ytimg.com/vi/m0UQ0a1aXtk/mqdefault.jpg');">
-            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">27 Twickinham Drive, Kingsley</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="decluttering" data-full="img/gal-declutter-1.webp">
-          <img class="gallery-image" loading="eager" decoding="async" src="img/gal-declutter-1-thumb.webp" alt="Decluttering — Palmyra, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Decluttering</span><span class="gallery-location">Palmyra, WA</span></div>
-        </div>
-        <div class="gallery-item wide reveal reveal-up" data-category="photography" data-subcategory="aerials" data-full="img/gal-aerial-4.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-aerial-4-thumb.webp" alt="Aerials — Alkimos, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Aerials</span><span class="gallery-location">Alkimos, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="twilight-photography" data-full="img/gal-twilight-2.webp">
-          <img class="gallery-image" loading="eager" decoding="async" src="img/gal-twilight-2-thumb.webp" alt="Twilight Photography — Como, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Twilight Photography</span><span class="gallery-location">Como, WA</span></div>
-        </div>
-        <div class="gallery-item wide reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-2.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-2-thumb.webp" alt="Day Photography — Kingsley, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Day Photography</span><span class="gallery-location">Kingsley, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-7.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-7-thumb.webp" alt="Premium Day Photography — Kewdale, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Premium Day Photography</span><span class="gallery-location">Kewdale, WA</span></div>
-        </div>
-        <div class="gallery-item tall reveal reveal-up" data-category="photography" data-subcategory="agent-headshots" data-full="img/gal-headshots-1.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-headshots-1-thumb.webp" alt="Agent Headshots — Perth, WA" style="object-position: center top;">
-          <div class="gallery-caption"><span class="gallery-tag">Agent Headshots</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item tall reveal reveal-up" data-category="photography" data-subcategory="agent-headshots" data-full="img/gal-headshots-2.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-headshots-2-thumb.webp" alt="Agent Headshots — Perth, WA" style="object-position: center top;">
-          <div class="gallery-caption"><span class="gallery-tag">Agent Headshots</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/nW1TccPHJ_4?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/nW1TccPHJ_4/hq720.jpg'),url('https://i.ytimg.com/vi/nW1TccPHJ_4/mqdefault.jpg');">
-            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">9 Greenwich Court, Kingsley</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="virtual-staging" data-full="img/gal-staging-4.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-staging-4-thumb.webp" alt="Virtual Staging — Hocking, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Virtual Staging</span><span class="gallery-location">Hocking, WA</span></div>
-        </div>
-        <div class="gallery-item wide reveal reveal-up" data-category="virtual-editing" data-subcategory="day-to-dusk" data-full="img/gal-day-to-dusk-1.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-to-dusk-1-thumb.webp" alt="Day to Dusk — Tapping, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Day to Dusk</span><span class="gallery-location">Tapping, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="virtual-staging" data-full="img/gal-staging-2.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-staging-2-thumb.webp" alt="Virtual Staging — Perth, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Virtual Staging</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-5.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-5-thumb.webp" alt="Day Photography — Kenwick, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Day Photography</span><span class="gallery-location">Kenwick, WA</span></div>
-        </div>
-        <div class="gallery-item tour3d-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
-          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7MXmn?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
-            <div class="tour-play"><div class="tour-play-icon"><span class="t360">360&deg;</span></div><div class="tour-label">3D virtual tour</div><div class="tour-hint">Walk through the whole home</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="aerials" data-full="img/gal-aerial-2.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-aerial-2-thumb.webp" alt="Aerials — West Perth, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Aerials</span><span class="gallery-location">West Perth, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="virtual-staging" data-full="img/gal-staging-5.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-staging-5-thumb.webp" alt="Virtual Staging — Hocking, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Virtual Staging</span><span class="gallery-location">Hocking, WA</span></div>
-        </div>
-        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/PCw6tkrv_Z0?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/PCw6tkrv_Z0/hq720.jpg'),url('https://i.ytimg.com/vi/PCw6tkrv_Z0/mqdefault.jpg');">
-            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">16 McGrath Place, Noranda</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="twilight-photography" data-full="img/gal-twilight-3.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-twilight-3-thumb.webp" alt="Twilight Photography — Perth, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Twilight Photography</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-3.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-3-thumb.webp" alt="Day Photography — Chittering, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Day Photography</span><span class="gallery-location">Chittering, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="aerials" data-full="img/gal-aerial-5.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-aerial-5-thumb.webp" alt="Aerials — Alkimos, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Aerials</span><span class="gallery-location">Alkimos, WA</span></div>
-        </div>
-        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/L5QTPPZnDMQ?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/L5QTPPZnDMQ/hq720.jpg'),url('https://i.ytimg.com/vi/L5QTPPZnDMQ/mqdefault.jpg');">
-            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">21 Norcia Way, Ellenbrook</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="decluttering" data-full="img/gal-declutter-2.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-declutter-2-thumb.webp" alt="Decluttering — Palmyra, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Decluttering</span><span class="gallery-location">Palmyra, WA</span></div>
-        </div>
-        <div class="gallery-item tour3d-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
-          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7Mkrn?logo=0&info=1&fs=1&vr=0&sd=1&thumbs=1">
-            <div class="tour-play"><div class="tour-play-icon"><span class="t360">360&deg;</span></div><div class="tour-label">3D virtual tour</div><div class="tour-hint">Walk through the whole home</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
-        </div>
-        <div class="gallery-item wide reveal reveal-up" data-category="photography" data-subcategory="aerials" data-full="img/gal-aerial-3.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-aerial-3-thumb.webp" alt="Aerials — Chittering, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Aerials</span><span class="gallery-location">Chittering, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="photography" data-subcategory="day-photography" data-full="img/gal-day-6.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-6-thumb.webp" alt="Day Photography — Stratton, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Day Photography</span><span class="gallery-location">Stratton, WA</span></div>
-        </div>
-        <div class="gallery-item tall reveal reveal-up" data-category="photography" data-subcategory="agent-headshots" data-full="img/gal-headshots-3.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-headshots-3-thumb.webp" alt="Agent Headshots — Perth, WA" style="object-position: center top;">
-          <div class="gallery-caption"><span class="gallery-tag">Agent Headshots</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item tall reveal reveal-up" data-category="photography" data-subcategory="agent-headshots" data-full="img/gal-headshots-4.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-headshots-4-thumb.webp" alt="Agent Headshots — Perth, WA" style="object-position: center top;">
-          <div class="gallery-caption"><span class="gallery-tag">Agent Headshots</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/W7vkfuzMEw8?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/W7vkfuzMEw8/hq720.jpg'),url('https://i.ytimg.com/vi/W7vkfuzMEw8/mqdefault.jpg');">
-            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">9 Adlington Way, Ellenbrook</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="virtual-staging" data-full="img/gal-staging-3.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-staging-3-thumb.webp" alt="Virtual Staging — Perth, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Virtual Staging</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item reveal reveal-up" data-category="virtual-editing" data-subcategory="day-to-dusk" data-full="img/gal-day-to-dusk-2.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-day-to-dusk-2-thumb.webp" alt="Day to Dusk — Perth, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Day to Dusk</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/ltM3520b5vE?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/ltM3520b5vE/hq720.jpg'),url('https://i.ytimg.com/vi/ltM3520b5vE/mqdefault.jpg');">
-            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">26 Hall Road, Roleystone</span></div>
-        </div>
-        <div class="gallery-item tall reveal reveal-up" data-category="photography" data-subcategory="agent-headshots" data-full="img/gal-headshots-5.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-headshots-5-thumb.webp" alt="Agent Headshots — Perth, WA" style="object-position: center top;">
-          <div class="gallery-caption"><span class="gallery-tag">Agent Headshots</span><span class="gallery-location">Perth, WA</span></div>
-        </div>
-        <div class="gallery-item tour3d-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
-          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7MK1v?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
-            <div class="tour-play"><div class="tour-play-icon"><span class="t360">360&deg;</span></div><div class="tour-label">3D virtual tour</div><div class="tour-hint">Walk through the whole home</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
-        </div>
-        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/fwa-Nq-aaWw?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/fwa-Nq-aaWw/hq720.jpg'),url('https://i.ytimg.com/vi/fwa-Nq-aaWw/mqdefault.jpg');">
-            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">45 Charles Street, Maylands</span></div>
-        </div>
-        <div class="gallery-item wide video-item tour-item reveal reveal-up" data-category="videography" data-subcategory="listing-videos">
-          <div class="gallery-image tour-embed video-embed" data-tour="https://www.youtube.com/embed/_0q5iEs13Vk?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="background-image:url('https://i.ytimg.com/vi/_0q5iEs13Vk/hq720.jpg'),url('https://i.ytimg.com/vi/_0q5iEs13Vk/mqdefault.jpg');">
-            <span class="v-pill">Listing video</span><div class="tour-play"><div class="tour-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">Listing Video</span><span class="gallery-location">166 Ponte Vecchio, Ellenbrook</span></div>
-        </div>
-        <div class="gallery-item tour3d-item tour-item reveal reveal-up" data-category="photography" data-subcategory="3d-tours">
-          <div class="gallery-image tour-embed" data-tour="https://kuula.co/share/collection/7H3KG?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
-            <div class="tour-play"><div class="tour-play-icon"><span class="t360">360&deg;</span></div><div class="tour-label">3D virtual tour</div><div class="tour-hint">Walk through the whole home</div></div>
-          </div>
-          <div class="gallery-caption"><span class="gallery-tag">3D Tours</span><span class="gallery-location">Interactive Tour</span></div>
-        </div>
-        <div class="gallery-item wide reveal reveal-up" data-category="virtual-editing" data-subcategory="decluttering" data-full="img/gal-declutter-3.webp">
-          <img class="gallery-image" loading="lazy" decoding="async" src="img/gal-declutter-3-thumb.webp" alt="Decluttering — Palmyra, WA">
-          <div class="gallery-caption"><span class="gallery-tag">Decluttering</span><span class="gallery-location">Palmyra, WA</span></div>
-        </div>
-      </div>
-
-      <!-- LIGHTBOX -->
-      <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Viewer">
-        <button class="lightbox-close" id="lightboxClose" aria-label="Close">×</button>
-        <img class="lightbox-img" id="lightboxImg" alt="Enlarged Baker Production property photo">
-        <div class="lightbox-tour" id="lightboxTour"></div>
-      </div>
-      <div class="gallery-empty" id="galleryEmpty">No items found in this category.</div>
+  <section class="g-wrap" aria-label="Gallery">
+    <div class="g-grid" id="gGrid">
+      <figure class="w" data-cat="twilight" data-ar="1.5" data-feature="1"><a class="w-m" href="img/gal-twilight-1.webp" data-kind="img" data-src="img/gal-twilight-1.webp" aria-label="View Twilight — South Guildford, Baker Production"><img src="img/gal-twilight-1-thumb.webp" width="1200" height="800" alt="Twilight — South Guildford, Baker Production" loading="eager" decoding="async" fetchpriority="high"></a><figcaption><span class="w-k">Twilight</span><span class="w-l">South Guildford</span></figcaption></figure>
+      <figure class="w" data-cat="property" data-ar="1.493"><a class="w-m" href="img/gal-day-1.webp" data-kind="img" data-src="img/gal-day-1.webp" aria-label="View Property — Lake Coogee, Baker Production"><img src="img/gal-day-1-thumb.webp" width="1200" height="804" alt="Property — Lake Coogee, Baker Production" loading="eager" decoding="async"></a><figcaption><span class="w-k">Property</span><span class="w-l">Lake Coogee</span></figcaption></figure>
+      <figure class="w" data-cat="editing" data-ar="1.489"><a class="w-m" href="img/gal-staging-1.webp" data-kind="img" data-src="img/gal-staging-1.webp" aria-label="View Virtual staging — Perth, Baker Production"><img src="img/gal-staging-1-thumb.webp" width="1200" height="806" alt="Virtual staging — Perth, Baker Production" loading="eager" decoding="async"></a><figcaption><span class="w-k">Virtual staging</span><span class="w-l">Perth</span></figcaption></figure>
+      <figure class="w" data-cat="twilight" data-ar="1.498" data-feature="1"><a class="w-m" href="img/gal-twilight-2.webp" data-kind="img" data-src="img/gal-twilight-2.webp" aria-label="View Twilight — Como, Baker Production"><img src="img/gal-twilight-2-thumb.webp" width="1200" height="801" alt="Twilight — Como, Baker Production" loading="eager" decoding="async"></a><figcaption><span class="w-k">Twilight</span><span class="w-l">Como</span></figcaption></figure>
+      <figure class="w" data-cat="headshots" data-ar="0.668"><a class="w-m" href="img/gal-headshots-1.webp" data-kind="img" data-src="img/gal-headshots-1.webp" aria-label="View Headshot — Perth, Baker Production"><img src="img/gal-headshots-1-thumb.webp" width="1200" height="1797" alt="Headshot — Perth, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Headshot</span><span class="w-l">Perth</span></figcaption></figure>
+      <figure class="w" data-cat="property" data-ar="1.498"><a class="w-m" href="img/gal-day-2.webp" data-kind="img" data-src="img/gal-day-2.webp" aria-label="View Property — Kingsley, Baker Production"><img src="img/gal-day-2-thumb.webp" width="1200" height="801" alt="Property — Kingsley, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Property</span><span class="w-l">Kingsley</span></figcaption></figure>
+      <figure class="w" data-cat="property" data-ar="1.496"><a class="w-m" href="img/gal-day-7.webp" data-kind="img" data-src="img/gal-day-7.webp" aria-label="View Premium day — Kewdale, Baker Production"><img src="img/gal-day-7-thumb.webp" width="1200" height="802" alt="Premium day — Kewdale, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Premium day</span><span class="w-l">Kewdale</span></figcaption></figure>
+      <figure class="w" data-cat="video" data-ar="1.778" data-feature="1"><button type="button" class="w-m w-vid" data-kind="video" data-src="https://www.youtube.com/embed/DYrn3EM0LXY?autoplay=1&amp;rel=0&amp;modestbranding=1&amp;playsinline=1" data-ar="1.778" aria-label="Play Listing video — 58 Kentucky Drive West"><img src="https://i.ytimg.com/vi/DYrn3EM0LXY/hq720.jpg" alt="" loading="lazy" decoding="async"><span class="w-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span></button><figcaption><span class="w-k">Listing video</span><span class="w-l">58 Kentucky Drive West</span></figcaption></figure>
+      <figure class="w" data-cat="aerial" data-ar="1.5"><a class="w-m" href="img/gal-aerial-4.webp" data-kind="img" data-src="img/gal-aerial-4.webp" aria-label="View Aerial — Alkimos, Baker Production"><img src="img/gal-aerial-4-thumb.webp" width="1200" height="800" alt="Aerial — Alkimos, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Aerial</span><span class="w-l">Alkimos</span></figcaption></figure>
+      <figure class="w" data-cat="twilight" data-ar="0.668"><a class="w-m" href="img/gal-twilight-3.webp" data-kind="img" data-src="img/gal-twilight-3.webp" aria-label="View Twilight — Perth, Baker Production"><img src="img/gal-twilight-3-thumb.webp" width="1200" height="1797" alt="Twilight — Perth, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Twilight</span><span class="w-l">Perth</span></figcaption></figure>
+      <figure class="w" data-cat="editing" data-ar="1.498"><a class="w-m" href="img/gal-day-to-dusk-1.webp" data-kind="img" data-src="img/gal-day-to-dusk-1.webp" aria-label="View Day to dusk — Tapping, Baker Production"><img src="img/gal-day-to-dusk-1-thumb.webp" width="1200" height="801" alt="Day to dusk — Tapping, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Day to dusk</span><span class="w-l">Tapping</span></figcaption></figure>
+      <figure class="w" data-cat="editing" data-ar="1.489"><a class="w-m" href="img/gal-staging-3.webp" data-kind="img" data-src="img/gal-staging-3.webp" aria-label="View Virtual staging — Perth, Baker Production"><img src="img/gal-staging-3-thumb.webp" width="1200" height="806" alt="Virtual staging — Perth, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Virtual staging</span><span class="w-l">Perth</span></figcaption></figure>
+      <figure class="w" data-cat="property" data-ar="1.5"><a class="w-m" href="img/gal-day-4.webp" data-kind="img" data-src="img/gal-day-4.webp" aria-label="View Property — Kenwick, Baker Production"><img src="img/gal-day-4-thumb.webp" width="1200" height="800" alt="Property — Kenwick, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Property</span><span class="w-l">Kenwick</span></figcaption></figure>
+      <figure class="w" data-cat="headshots" data-ar="0.667"><a class="w-m" href="img/gal-headshots-2.webp" data-kind="img" data-src="img/gal-headshots-2.webp" aria-label="View Headshot — Perth, Baker Production"><img src="img/gal-headshots-2-thumb.webp" width="1200" height="1798" alt="Headshot — Perth, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Headshot</span><span class="w-l">Perth</span></figcaption></figure>
+      <figure class="w" data-cat="aerial" data-ar="1.78" data-feature="1"><a class="w-m" href="img/gal-aerial-2.webp" data-kind="img" data-src="img/gal-aerial-2.webp" aria-label="View Aerial — West Perth, Baker Production"><img src="img/gal-aerial-2-thumb.webp" width="1200" height="674" alt="Aerial — West Perth, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Aerial</span><span class="w-l">West Perth</span></figcaption></figure>
+      <figure class="w" data-cat="editing" data-ar="1.5"><a class="w-m" href="img/gal-staging-4.webp" data-kind="img" data-src="img/gal-staging-4.webp" aria-label="View Virtual staging — Hocking, Baker Production"><img src="img/gal-staging-4-thumb.webp" width="1200" height="800" alt="Virtual staging — Hocking, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Virtual staging</span><span class="w-l">Hocking</span></figcaption></figure>
+      <figure class="w" data-cat="headshots" data-ar="0.667"><a class="w-m" href="img/gal-headshots-3.webp" data-kind="img" data-src="img/gal-headshots-3.webp" aria-label="View Headshot — Perth, Baker Production"><img src="img/gal-headshots-3-thumb.webp" width="1200" height="1798" alt="Headshot — Perth, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Headshot</span><span class="w-l">Perth</span></figcaption></figure>
+      <figure class="w" data-cat="editing" data-ar="1.489"><a class="w-m" href="img/gal-staging-2.webp" data-kind="img" data-src="img/gal-staging-2.webp" aria-label="View Virtual staging — Perth, Baker Production"><img src="img/gal-staging-2-thumb.webp" width="1200" height="806" alt="Virtual staging — Perth, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Virtual staging</span><span class="w-l">Perth</span></figcaption></figure>
+      <figure class="w" data-cat="video" data-ar="1.778"><button type="button" class="w-m w-vid" data-kind="video" data-src="https://www.youtube.com/embed/m0UQ0a1aXtk?autoplay=1&amp;rel=0&amp;modestbranding=1&amp;playsinline=1" data-ar="1.778" aria-label="Play Listing video — 27 Twickinham Drive, Kingsley"><img src="https://i.ytimg.com/vi/m0UQ0a1aXtk/hq720.jpg" alt="" loading="lazy" decoding="async"><span class="w-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span></button><figcaption><span class="w-k">Listing video</span><span class="w-l">27 Twickinham Drive, Kingsley</span></figcaption></figure>
+      <figure class="w" data-cat="video" data-ar="0.562"><button type="button" class="w-m w-vid" data-kind="video" data-src="https://www.youtube.com/embed/QuO0dJS1o1I?autoplay=1&amp;rel=0&amp;modestbranding=1&amp;playsinline=1" data-ar="0.562" aria-label="Play Social reel — 41 Maybach Way, Dianella"><img src="https://i.ytimg.com/vi/QuO0dJS1o1I/hq720.jpg" alt="" loading="lazy" decoding="async"><span class="w-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span></button><figcaption><span class="w-k">Social reel</span><span class="w-l">41 Maybach Way, Dianella</span></figcaption></figure>
+      <figure class="w" data-cat="tours" data-ar="1.778"><button type="button" class="w-m w-tour" data-kind="tour" data-src="https://kuula.co/share/collection/7MTG1?logo=1&amp;info=1&amp;fs=1&amp;vr=0&amp;sd=1&amp;thumbs=1" aria-label="Open interactive 3D tour"><span class="w-tour-in" aria-hidden="true"><span class="w-ring">360°</span><span class="w-tour-t">Walk through the home</span></span></button><figcaption><span class="w-k">3D tour</span><span class="w-l">Interactive</span></figcaption></figure>
+      <figure class="w" data-cat="tours" data-ar="1.778"><button type="button" class="w-m w-tour" data-kind="tour" data-src="https://kuula.co/share/collection/7MXmn?logo=1&amp;info=1&amp;fs=1&amp;vr=0&amp;sd=1&amp;thumbs=1" aria-label="Open interactive 3D tour"><span class="w-tour-in" aria-hidden="true"><span class="w-ring">360°</span><span class="w-tour-t">Walk through the home</span></span></button><figcaption><span class="w-k">3D tour</span><span class="w-l">Interactive</span></figcaption></figure>
+      <figure class="w" data-cat="editing" data-ar="1.5" data-feature="1"><a class="w-m" href="img/gal-day-to-dusk-2.webp" data-kind="img" data-src="img/gal-day-to-dusk-2.webp" aria-label="View Day to dusk — Perth, Baker Production"><img src="img/gal-day-to-dusk-2-thumb.webp" width="1200" height="800" alt="Day to dusk — Perth, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Day to dusk</span><span class="w-l">Perth</span></figcaption></figure>
+      <figure class="w" data-cat="aerial" data-ar="1.78"><a class="w-m" href="img/gal-aerial-1.webp" data-kind="img" data-src="img/gal-aerial-1.webp" aria-label="View Aerial — Roleystone, Baker Production"><img src="img/gal-aerial-1-thumb.webp" width="1200" height="674" alt="Aerial — Roleystone, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Aerial</span><span class="w-l">Roleystone</span></figcaption></figure>
+      <figure class="w" data-cat="property" data-ar="1.498"><a class="w-m" href="img/gal-day-3.webp" data-kind="img" data-src="img/gal-day-3.webp" aria-label="View Property — Chittering, Baker Production"><img src="img/gal-day-3-thumb.webp" width="1200" height="801" alt="Property — Chittering, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Property</span><span class="w-l">Chittering</span></figcaption></figure>
+      <figure class="w" data-cat="headshots" data-ar="0.667"><a class="w-m" href="img/gal-headshots-4.webp" data-kind="img" data-src="img/gal-headshots-4.webp" aria-label="View Headshot — Perth, Baker Production"><img src="img/gal-headshots-4-thumb.webp" width="1200" height="1800" alt="Headshot — Perth, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Headshot</span><span class="w-l">Perth</span></figcaption></figure>
+      <figure class="w" data-cat="editing" data-ar="1.5"><a class="w-m" href="img/gal-staging-5.webp" data-kind="img" data-src="img/gal-staging-5.webp" aria-label="View Virtual staging — Hocking, Baker Production"><img src="img/gal-staging-5-thumb.webp" width="1200" height="800" alt="Virtual staging — Hocking, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Virtual staging</span><span class="w-l">Hocking</span></figcaption></figure>
+      <figure class="w" data-cat="headshots" data-ar="0.671"><a class="w-m" href="img/gal-headshots-5.webp" data-kind="img" data-src="img/gal-headshots-5.webp" aria-label="View Headshot — Perth, Baker Production"><img src="img/gal-headshots-5-thumb.webp" width="1200" height="1789" alt="Headshot — Perth, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Headshot</span><span class="w-l">Perth</span></figcaption></figure>
+      <figure class="w" data-cat="aerial" data-ar="1.5"><a class="w-m" href="img/gal-aerial-5.webp" data-kind="img" data-src="img/gal-aerial-5.webp" aria-label="View Aerial — Alkimos, Baker Production"><img src="img/gal-aerial-5-thumb.webp" width="1200" height="800" alt="Aerial — Alkimos, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Aerial</span><span class="w-l">Alkimos</span></figcaption></figure>
+      <figure class="w" data-cat="aerial" data-ar="1.78" data-feature="1"><a class="w-m" href="img/gal-aerial-3.webp" data-kind="img" data-src="img/gal-aerial-3.webp" aria-label="View Aerial — Chittering, Baker Production"><img src="img/gal-aerial-3-thumb.webp" width="1200" height="674" alt="Aerial — Chittering, Baker Production" loading="lazy" decoding="async"></a><figcaption><span class="w-k">Aerial</span><span class="w-l">Chittering</span></figcaption></figure>
+      <figure class="w" data-cat="video" data-ar="1.778"><button type="button" class="w-m w-vid" data-kind="video" data-src="https://www.youtube.com/embed/nW1TccPHJ_4?autoplay=1&amp;rel=0&amp;modestbranding=1&amp;playsinline=1" data-ar="1.778" aria-label="Play Listing video — 9 Greenwich Court, Kingsley"><img src="https://i.ytimg.com/vi/nW1TccPHJ_4/hq720.jpg" alt="" loading="lazy" decoding="async"><span class="w-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span></button><figcaption><span class="w-k">Listing video</span><span class="w-l">9 Greenwich Court, Kingsley</span></figcaption></figure>
+      <figure class="w" data-cat="video" data-ar="1.778"><button type="button" class="w-m w-vid" data-kind="video" data-src="https://www.youtube.com/embed/PCw6tkrv_Z0?autoplay=1&amp;rel=0&amp;modestbranding=1&amp;playsinline=1" data-ar="1.778" aria-label="Play Listing video — 16 McGrath Place, Noranda"><img src="https://i.ytimg.com/vi/PCw6tkrv_Z0/hq720.jpg" alt="" loading="lazy" decoding="async"><span class="w-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span></button><figcaption><span class="w-k">Listing video</span><span class="w-l">16 McGrath Place, Noranda</span></figcaption></figure>
+      <figure class="w" data-cat="video" data-ar="1.778"><button type="button" class="w-m w-vid" data-kind="video" data-src="https://www.youtube.com/embed/L5QTPPZnDMQ?autoplay=1&amp;rel=0&amp;modestbranding=1&amp;playsinline=1" data-ar="1.778" aria-label="Play Listing video — 21 Norcia Way, Ellenbrook"><img src="https://i.ytimg.com/vi/L5QTPPZnDMQ/hq720.jpg" alt="" loading="lazy" decoding="async"><span class="w-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span></button><figcaption><span class="w-k">Listing video</span><span class="w-l">21 Norcia Way, Ellenbrook</span></figcaption></figure>
+      <figure class="w" data-cat="video" data-ar="1.778"><button type="button" class="w-m w-vid" data-kind="video" data-src="https://www.youtube.com/embed/W7vkfuzMEw8?autoplay=1&amp;rel=0&amp;modestbranding=1&amp;playsinline=1" data-ar="1.778" aria-label="Play Listing video — 9 Adlington Way, Ellenbrook"><img src="https://i.ytimg.com/vi/W7vkfuzMEw8/hq720.jpg" alt="" loading="lazy" decoding="async"><span class="w-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span></button><figcaption><span class="w-k">Listing video</span><span class="w-l">9 Adlington Way, Ellenbrook</span></figcaption></figure>
+      <figure class="w" data-cat="tours" data-ar="1.778"><button type="button" class="w-m w-tour" data-kind="tour" data-src="https://kuula.co/share/collection/7Mkrn?logo=0&amp;info=1&amp;fs=1&amp;vr=0&amp;sd=1&amp;thumbs=1" aria-label="Open interactive 3D tour"><span class="w-tour-in" aria-hidden="true"><span class="w-ring">360°</span><span class="w-tour-t">Walk through the home</span></span></button><figcaption><span class="w-k">3D tour</span><span class="w-l">Interactive</span></figcaption></figure>
+      <figure class="w" data-cat="video" data-ar="1.778"><button type="button" class="w-m w-vid" data-kind="video" data-src="https://www.youtube.com/embed/ltM3520b5vE?autoplay=1&amp;rel=0&amp;modestbranding=1&amp;playsinline=1" data-ar="1.778" aria-label="Play Listing video — 26 Hall Road, Roleystone"><img src="https://i.ytimg.com/vi/ltM3520b5vE/hq720.jpg" alt="" loading="lazy" decoding="async"><span class="w-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span></button><figcaption><span class="w-k">Listing video</span><span class="w-l">26 Hall Road, Roleystone</span></figcaption></figure>
+      <figure class="w" data-cat="video" data-ar="1.778"><button type="button" class="w-m w-vid" data-kind="video" data-src="https://www.youtube.com/embed/fwa-Nq-aaWw?autoplay=1&amp;rel=0&amp;modestbranding=1&amp;playsinline=1" data-ar="1.778" aria-label="Play Listing video — 45 Charles Street, Maylands"><img src="https://i.ytimg.com/vi/fwa-Nq-aaWw/hq720.jpg" alt="" loading="lazy" decoding="async"><span class="w-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span></button><figcaption><span class="w-k">Listing video</span><span class="w-l">45 Charles Street, Maylands</span></figcaption></figure>
+      <figure class="w" data-cat="video" data-ar="1.778"><button type="button" class="w-m w-vid" data-kind="video" data-src="https://www.youtube.com/embed/_0q5iEs13Vk?autoplay=1&amp;rel=0&amp;modestbranding=1&amp;playsinline=1" data-ar="1.778" aria-label="Play Listing video — 166 Ponte Vecchio, Ellenbrook"><img src="https://i.ytimg.com/vi/_0q5iEs13Vk/hq720.jpg" alt="" loading="lazy" decoding="async"><span class="w-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span></button><figcaption><span class="w-k">Listing video</span><span class="w-l">166 Ponte Vecchio, Ellenbrook</span></figcaption></figure>
+      <figure class="w" data-cat="tours" data-ar="1.778"><button type="button" class="w-m w-tour" data-kind="tour" data-src="https://kuula.co/share/collection/7MK1v?logo=1&amp;info=1&amp;fs=1&amp;vr=0&amp;sd=1&amp;thumbs=1" aria-label="Open interactive 3D tour"><span class="w-tour-in" aria-hidden="true"><span class="w-ring">360°</span><span class="w-tour-t">Walk through the home</span></span></button><figcaption><span class="w-k">3D tour</span><span class="w-l">Interactive</span></figcaption></figure>
+      <figure class="w" data-cat="tours" data-ar="1.778"><button type="button" class="w-m w-tour" data-kind="tour" data-src="https://kuula.co/share/collection/7H3KG?logo=1&amp;info=1&amp;fs=1&amp;vr=0&amp;sd=1&amp;thumbs=1" aria-label="Open interactive 3D tour"><span class="w-tour-in" aria-hidden="true"><span class="w-ring">360°</span><span class="w-tour-t">Walk through the home</span></span></button><figcaption><span class="w-k">3D tour</span><span class="w-l">Interactive</span></figcaption></figure>
     </div>
   </section>
 
-  <!-- FOOTER -->
   <section class="g-cta">
-    <h2>Want your listing to look like this?</h2>
-    <p>Pick a package, choose a date, enter the address. The gallery lands in your inbox the next day.</p>
-    <div class="g-cta-actions"><a href="https://portal.bakerproduction.com/book" class="g-btn">Book a shoot</a><a href="pricing.html" class="g-btn g-btn-ghost">See pricing</a></div>
+    <div class="g-wrap g-cta-in">
+      <p class="g-eyebrow">Next listing</p>
+      <h2>Want your listing to look like this?</h2>
+      <p>Pick a package, choose a date, enter the address. Your photos land the next day.</p>
+      <div class="g-cta-a"><a href="https://portal.bakerproduction.com/book" class="g-b">Book a shoot</a><a href="pricing.html" class="g-b g-b-ghost">See pricing</a></div>
+    </div>
   </section>
+  </main>
 
   <footer class="footer" id="contact">
     <div class="footer-inner">
@@ -997,194 +931,188 @@
     </div>
   </footer>
 
-  <script>
-    // ========== NAVBAR ==========
-    const navbar = document.getElementById('navbar');
-    // Transparent over the photo hero, white once scrolled (same as the homepage)
-    const setNav = () => navbar.classList.toggle('scrolled', window.pageYOffset > 80);
-    setNav(); window.addEventListener('scroll', setNav, { passive: true });
+  <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Gallery viewer" hidden>
+    <div class="lb-top"><span class="lb-n" id="lbN"></span><button type="button" class="lb-x" id="lbX" aria-label="Close viewer"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div>
+    <button type="button" class="lb-arr lb-prev" id="lbP" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 4l-8 8 8 8"/></svg></button>
+    <div class="lb-stage" id="lbS"></div>
+    <button type="button" class="lb-arr lb-next" id="lbNx" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 4l8 8-8 8"/></svg></button>
+    <div class="lb-cap" id="lbC"></div>
+  </div>
 
-    // ========== HAMBURGER ==========
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
-    hamburger.addEventListener('click', () => {
+<script>
+(function () {
+  // ---------- nav + mobile menu (kept from the old page) ----------
+  var navbar = document.getElementById('navbar');
+  var hamburger = document.getElementById('hamburger');
+  var mobileMenu = document.getElementById('mobileMenu');
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', function () {
       hamburger.classList.toggle('open');
       mobileMenu.classList.toggle('open');
       navbar.classList.toggle('menu-open');
-      mobileMenu.classList.toggle('light', mobileMenu.classList.contains('open') && navbar.classList.contains('scrolled'));
       document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
     });
-    function closeMenu() {
-      hamburger.classList.remove('open');
-      mobileMenu.classList.remove('open');
-      mobileMenu.classList.remove('light');
-      navbar.classList.remove('menu-open');
-      document.body.style.overflow = '';
-    }
+  }
+  window.closeMenu = function () {
+    if (!hamburger) return;
+    hamburger.classList.remove('open'); mobileMenu.classList.remove('open');
+    navbar.classList.remove('menu-open'); document.body.style.overflow = '';
+  };
 
-    // ========== FILTER SYSTEM ==========
-    const subcategories = {
-      photography: [
-        { label: 'Day Photography', slug: 'day-photography' },
-        { label: 'Twilight Photography', slug: 'twilight-photography' },
-        { label: 'Aerials', slug: 'aerials' },
-        { label: 'Agent Headshots', slug: 'agent-headshots' },
-        { label: '3D Tours', slug: '3d-tours' }
-      ],
-      videography: [
-        { label: 'Listing Videos', slug: 'listing-videos' },
-        { label: 'Social Media Content', slug: 'social-media-content' },
-        { label: 'Social Media Walkthrough', slug: 'social-media-walkthrough' }
-      ],
-      'virtual-editing': [
-        { label: 'Virtual Staging', slug: 'virtual-staging' },
-        { label: 'Decluttering', slug: 'decluttering' },
-        { label: 'Day to Dusk', slug: 'day-to-dusk' }
-      ]
-    };
+  // ---------- justified layout ----------
+  var grid = document.getElementById('gGrid');
+  var all = [].slice.call(grid.querySelectorAll('.w'));
+  grid.classList.add('js');
+  var GAP = 14;
 
-    const items = document.querySelectorAll('.gallery-item');
-    const primaryBtns = document.querySelectorAll('.filter-btn');
-    const secondaryRow = document.getElementById('filterSecondary');
-    let activeCategory = 'all';
-    let activeSubcategory = null;
-
-    function filterGallery() {
-      let visibleCount = 0;
-      items.forEach(item => {
-        const cat = item.dataset.category;
-        const sub = item.dataset.subcategory;
-        let show = false;
-        if (activeCategory === 'all') show = true;
-        else if (activeSubcategory) show = sub === activeSubcategory;
-        else show = cat === activeCategory;
-
-        item.classList.toggle('hidden', !show);
-        if (show) visibleCount++;
+  function layout() {
+    var W = Math.floor(grid.getBoundingClientRect().width) - 1;
+    var mobile = W < 700;
+    var gap = mobile ? 10 : GAP;
+    var target = mobile ? 230 : (W > 1300 ? 470 : 400);
+    var capH = mobile ? 30 : 34;
+    var vis = all.filter(function (f) { return !f.classList.contains('off'); });
+    var row = [], sum = 0;
+    function flush(items, last) {
+      if (!items.length) return;
+      var ars = items.map(function (f) { return parseFloat(f.dataset.ar) || 1.5; });
+      var tot = ars.reduce(function (a, b) { return a + b; }, 0);
+      var avail = W - gap * (items.length - 1);
+      var h = avail / tot;
+      if (last && h > target * 1.15) h = target;           // don't blow up a short last row
+      var used = 0;
+      items.forEach(function (f, k) {
+        var w = (k === items.length - 1 && !(last && h === target)) ? (avail - used) : Math.floor(ars[k] * h);
+        used += w;
+        f.style.width = w + 'px'; f.classList.toggle('nw', w < 170);
+        f.style.marginRight = (k === items.length - 1) ? '0' : gap + 'px';
+        f.style.marginBottom = (mobile ? 18 : 30) + 'px';
+        f.querySelector('.w-m').style.height = Math.round(h) + 'px';
       });
-      document.getElementById('galleryEmpty').classList.toggle('visible', visibleCount === 0);
     }
-
-    function buildSecondary(category) {
-      secondaryRow.innerHTML = '';
-      if (!subcategories[category]) {
-        secondaryRow.classList.remove('visible');
+    vis.forEach(function (f, i) {
+      var ar = parseFloat(f.dataset.ar) || 1.5;
+      if (f.dataset.feature && ar > 1 && !mobile && !row.length) {
+        var h = Math.min(W / ar, window.innerHeight * 0.82);
+        var w = Math.round(h * ar);
+        f.style.width = w + 'px'; f.style.marginRight = '0';
+        f.style.marginLeft = f.style.marginRight = ((W - w) / 2) + 'px';
+        f.style.marginBottom = '30px';
+        f.querySelector('.w-m').style.height = Math.round(h) + 'px';
         return;
       }
-      // Add "All [Category]" button
-      const allBtn = document.createElement('button');
-      allBtn.className = 'filter-btn-sub active';
-      allBtn.textContent = 'All';
-      allBtn.addEventListener('click', () => {
-        activeSubcategory = null;
-        secondaryRow.querySelectorAll('.filter-btn-sub').forEach(b => b.classList.remove('active'));
-        allBtn.classList.add('active');
-        filterGallery();
-      });
-      secondaryRow.appendChild(allBtn);
-
-      subcategories[category].forEach(sub => {
-        const btn = document.createElement('button');
-        btn.className = 'filter-btn-sub';
-        btn.textContent = sub.label;
-        btn.addEventListener('click', () => {
-          activeSubcategory = sub.slug;
-          secondaryRow.querySelectorAll('.filter-btn-sub').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          filterGallery();
-        });
-        secondaryRow.appendChild(btn);
-      });
-      secondaryRow.classList.add('visible');
-    }
-
-    primaryBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        primaryBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeCategory = btn.dataset.filter;
-        activeSubcategory = null;
-        if (activeCategory === 'all') {
-          secondaryRow.classList.remove('visible');
-          secondaryRow.innerHTML = '';
-        } else {
-          buildSecondary(activeCategory);
-        }
-        filterGallery();
-      });
+      f.style.marginLeft = '0';
+      var hPrev = row.length ? (W - gap * (row.length - 1)) / sum : Infinity;
+      var hWith = (W - gap * row.length) / (sum + ar);
+      if (hWith > target) { row.push(f); sum += ar; return; }
+      // adding this item drops the row below target: keep whichever height is closer
+      if (row.length && hPrev <= target * 1.35 && hPrev / target < target / hWith) {
+        flush(row, false); row = [f]; sum = ar;
+      } else {
+        row.push(f); flush(row, false); row = []; sum = 0;
+      }
     });
+    flush(row, true);
+  }
 
-    const hashFilter = window.location.hash.replace('#', '');
-    if (hashFilter) {
-      const targetBtn = document.querySelector(`.filter-btn[data-filter="${hashFilter}"]`);
-      if (targetBtn) targetBtn.click();
+  var rt;
+  window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(layout, 120); });
+
+  // ---------- reveal on scroll ----------
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.remove('pre'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -6% 0px' }) : null;
+  function reveal() {
+    all.forEach(function (f) {
+      if (f.classList.contains('off') || !io) { f.classList.remove('pre'); return; }
+      var r = f.getBoundingClientRect();
+      if (r.top < window.innerHeight) { f.classList.remove('pre'); return; }
+      f.classList.add('pre'); io.observe(f);
+    });
+  }
+
+  // ---------- filters ----------
+  var btns = [].slice.call(document.querySelectorAll('.f-btn'));
+  var LEGACY = { photography: 'property', videography: 'video', 'virtual-editing': 'editing' };
+  function setFilter(k, scroll) {
+    if (!btns.some(function (b) { return b.dataset.f === k; })) k = 'all';
+    btns.forEach(function (b) { var on = b.dataset.f === k; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+    all.forEach(function (f) { f.classList.toggle('off', k !== 'all' && f.dataset.cat !== k); });
+    layout(); reveal();
+    if (scroll) {
+      var bar = document.getElementById('gBar');
+      var y = grid.getBoundingClientRect().top + window.pageYOffset - bar.offsetHeight - (navbar ? navbar.offsetHeight : 0) + 8;
+      if (window.pageYOffset > y) window.scrollTo({ top: y, behavior: 'smooth' });
     }
+  }
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      setFilter(b.dataset.f, true);
+      try { history.replaceState(null, '', b.dataset.f === 'all' ? location.pathname : '#' + b.dataset.f); } catch (e) {}
+      b.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+    });
+  });
+  var h = (location.hash || '').slice(1);
+  setFilter(LEGACY[h] || h || 'all', false);
 
-    // ========== REVEAL ==========
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-          revealObserver.unobserve(entry.target);
-        }
+  // ---------- lightbox ----------
+  var lb = document.getElementById('lb'), stage = document.getElementById('lbS'),
+      num = document.getElementById('lbN'), cap = document.getElementById('lbC');
+  var list = [], idx = 0, lastFocus = null;
+  function current() { return all.filter(function (f) { return !f.classList.contains('off'); }); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function render() {
+    var f = list[idx], m = f.querySelector('.w-m'), kind = m.dataset.kind;
+    stage.innerHTML = '';
+    if (kind === 'img') {
+      var img = new Image(); img.className = 'ld'; img.alt = f.querySelector('img').alt;
+      img.onload = function () { img.classList.remove('ld'); };
+      img.src = m.dataset.src; stage.appendChild(img);
+      [list[idx + 1], list[idx - 1]].forEach(function (n) {
+        var nm = n && n.querySelector('.w-m'); if (nm && nm.dataset.kind === 'img') { var p = new Image(); p.src = nm.dataset.src; }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-    // ========== LIGHTBOX (images + tours) ==========
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const lightboxTour = document.getElementById('lightboxTour');
-    const lightboxClose = document.getElementById('lightboxClose');
-
-    let closeTimer = null;
-    function openImageLightbox(src) {
-      if (window.matchMedia('(max-width: 768px)').matches) return;
-      clearTimeout(closeTimer);
-      lightbox.classList.remove('mode-tour');
-      lightbox.classList.add('mode-image');
-      lightboxImg.src = src;
-      lightbox.classList.add('open');
-      document.body.style.overflow = 'hidden';
+    } else {
+      var ar = kind === 'tour' ? 16 / 9 : (parseFloat(m.dataset.ar) || 16 / 9);
+      var fr = document.createElement('div'); fr.className = 'lb-frame'; fr.style.setProperty('--ar', ar);
+      fr.innerHTML = '<iframe src="' + m.dataset.src + '" allow="autoplay; fullscreen; picture-in-picture; xr-spatial-tracking; gyroscope; accelerometer" allowfullscreen title="' + (kind === 'tour' ? '3D tour' : 'Video') + '"></iframe>';
+      stage.appendChild(fr);
     }
-    function openTourLightbox(url) {
-      clearTimeout(closeTimer);
-      lightbox.classList.remove('mode-image');
-      lightbox.classList.add('mode-tour');
-      lightboxTour.innerHTML = '';
-      const iframe = document.createElement('iframe');
-      iframe.src = url;
-      iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture; xr-spatial-tracking; gyroscope; accelerometer');
-      iframe.setAttribute('allowfullscreen', '');
-      iframe.setAttribute('scrolling', 'no');
-      lightboxTour.appendChild(iframe);
-      lightbox.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeLightbox() {
-      lightbox.classList.remove('open');
-      document.body.style.overflow = '';
-      closeTimer = setTimeout(() => {
-        lightboxImg.removeAttribute('src');
-        lightboxTour.innerHTML = '';
-        lightbox.classList.remove('mode-image', 'mode-tour');
-      }, 320);
-    }
+    num.textContent = pad(idx + 1) + ' / ' + pad(list.length);
+    cap.innerHTML = f.querySelector('figcaption').innerHTML;
+  }
+  function open(f) {
+    list = current(); idx = Math.max(0, list.indexOf(f)); lastFocus = document.activeElement;
+    lb.hidden = false; requestAnimationFrame(function () { lb.classList.add('show'); });
+    document.body.style.overflow = 'hidden'; render(); document.getElementById('lbX').focus();
+  }
+  function close() {
+    lb.classList.remove('show'); stage.innerHTML = ''; document.body.style.overflow = '';
+    setTimeout(function () { lb.hidden = true; }, 250); if (lastFocus) lastFocus.focus();
+  }
+  function go(d) { idx = (idx + d + list.length) % list.length; render(); }
+  grid.addEventListener('click', function (e) {
+    var m = e.target.closest('.w-m'); if (!m) return;
+    e.preventDefault(); open(m.closest('.w'));
+  });
+  document.getElementById('lbX').addEventListener('click', close);
+  document.getElementById('lbP').addEventListener('click', function () { go(-1); });
+  document.getElementById('lbNx').addEventListener('click', function () { go(1); });
+  lb.addEventListener('click', function (e) { if (e.target === stage || e.target === lb) close(); });
+  document.addEventListener('keydown', function (e) {
+    if (lb.hidden) return;
+    if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') go(1); else if (e.key === 'ArrowLeft') go(-1);
+  });
+  var sx = null, sy = null;
+  stage.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  stage.addEventListener('touchend', function (e) {
+    if (sx === null) return;
+    var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? 1 : -1);
+    else if (dy > 90 && Math.abs(dy) > Math.abs(dx)) close();
+    sx = null;
+  });
+})();
 
-    document.querySelectorAll('.gallery-item[data-full]').forEach(item => {
-      item.addEventListener('click', () => openImageLightbox(item.dataset.full));
-    });
-    // Delegated: a click anywhere on a tour/video tile opens it (the click target is the
-    // outer .gallery-item, so binding to the inner .tour-embed alone never fired).
-    document.getElementById('galleryGrid').addEventListener('click', (e) => {
-      const item = e.target.closest('.gallery-item');
-      if (!item) return;
-      const box = item.querySelector('.gallery-image.tour-embed[data-tour]');
-      if (box && box.dataset.tour) openTourLightbox(box.dataset.tour);
-    });
-    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-    lightboxClose.addEventListener('click', closeLightbox);
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox(); });
-  </script>
+</script>
 </body>
 </html>
