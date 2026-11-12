@@ -132,9 +132,17 @@ async def main():
                     names = await pg.evaluate("""()=>[...document.querySelectorAll('.place:not(.off)')].map(b=>[b.querySelector('.t').textContent,b.querySelector('small').textContent+' · '+((b.querySelector('.d')||{}).textContent||'')])""")
                     if os.environ.get('DBG'): print('   NAMES', names)
                     PRI=['beach','shopping','regional shopping','school','train','regional park','golf','hospital','aquatic','library','lake','sport','park','reserve','transport','community','childcare','playground']   # 3 Nov (Jason): beaches, shopping centres, schools, stations, big parks first
-                    rank=lambda c: PRI.index(c) if c in PRI else 99
-                    cands=sorted([(rank(cat.split('·')[0].strip()), i, nm, cat.split('·')[0].strip()) for i,(nm,cat) in enumerate(names)])
                     import re as _re   # never auto-pick childcare/kindy/driving/dance schools (Jason's amenity rules)
+                    def _kmS(s):
+                        m=_re.search(r'([\d.]+)\s*(km|m)', s.split('·')[-1]); return None if not m else (float(m.group(1)) if m.group(2)=='km' else float(m.group(1))/1000)
+                    SMALL=('park','reserve','playground')
+                    def rank(c, nm='', s=''):   # 12 Nov (Jason): big key features beat little places; a park only wins if it's within 200 m
+                        km=_kmS(s) if s else None
+                        if c in SMALL: return -0.5 if (km is not None and km<=0.2) else 50
+                        if c=='beach' and _re.search(r'\bdog\b', nm, _re.I): return 51   # dog beaches are minor
+                        if c=='shopping' and not _re.search(r'shopping|westfield|plaza|centro|forum|square|village|central|precinct|markets|mall|galleria|dfo|quarter', nm, _re.I): return 52   # corner shops/marts are minor
+                        return PRI.index(c) if c in PRI else 99
+                    cands=sorted([(rank(cat.split('·')[0].strip(), nm, cat), i, nm, cat.split('·')[0].strip()) for i,(nm,cat) in enumerate(names)])
                     cands=[c for c in cands if not _re.search(r'child ?care|early learning|kindergarten|kindy|daycare|driving school|dance', c[2], _re.I) and c[3]!='childcare']
                     # 26 Oct: no far-off filler. Small parks/reserves/playgrounds only within 1.5 km; anything else beyond 6 km only if it is a big landmark.
                     def _km(cat):
@@ -149,19 +157,23 @@ async def main():
                     cands=sorted(cands, key=lambda c:(0 if any(m in c[2].lower() for m in MUST) else 1, c[0], c[1]))
                     cands=[(-1 if any(m in c[2].lower() for m in MUST) else c[0],)+tuple(c[1:]) for c in cands]
                     seen={}; kept=0; TARGET=int(job.get('perPhoto',3))   # 28 Oct (Jason): every location photo carries 3 pins
-                    _all=[(rank(cat.split('·')[0].strip()), i, nm, cat.split('·')[0].strip()) for i,(nm,cat) in enumerate(names)]
+                    _all=[(rank(cat.split('·')[0].strip(), nm, cat), i, nm, cat.split('·')[0].strip()) for i,(nm,cat) in enumerate(names)]
                     _all=[c for c in _all if not _re.search(r'child ?care|early learning|kindergarten|kindy|daycare|driving school|dance', c[2], _re.I) and c[3]!='childcare' and not any(x==c[3].lower() or x in c[2].lower() for x in SKIP)]
                     _extra=[(c[0]+100,)+tuple(c[1:]) for c in sorted(_all) if c[2] not in {d[2] for d in cands}]   # fallback pool if the strict list can't reach 3
+                    import re as _rx
+                    def _pl(nm):   # 12 Nov: exact name match — 'Scarborough Beach' must not hit 'Scarborough Beach Skate Park'
+                        ex = pg.locator('.place').filter(has=pg.locator('.t', has_text=_rx.compile('^\\s*'+_rx.escape(nm)+'\\s*$')))
+                        return ex.first
                     for r_,i,nm,c in cands+_extra:
                         if kept>=TARGET: break
                         if r_==99 or r_==199 or (0<=r_<100 and seen.get(c,0)>=2): continue
-                        await pg.locator('.place', has_text=nm).first.click(); await pg.wait_for_timeout(250)
+                        await _pl(nm).click(); await pg.wait_for_timeout(250)
                         ph_ = await pg.evaluate("window.__bae.photo()")
                         if any(q['clash'] for q in ph_['pins'] if not q['house']) or any(q['clash'] for q in ph_['pins'] if q['house']):
-                            await pg.locator('.place', has_text=nm).first.click(); await pg.wait_for_timeout(150)
+                            await _pl(nm).click(); await pg.wait_for_timeout(150)
                             await pg.evaluate("window.__bae.retidy()"); await pg.wait_for_timeout(150)
                         elif not any(q['name']==nm for q in ph_['pins']):   # 29 Oct: ticked but no pin drawn (e.g. Perth Station) - untick, don't count it
-                            await pg.locator('.place', has_text=nm).first.click(); await pg.wait_for_timeout(150)
+                            await _pl(nm).click(); await pg.wait_for_timeout(150)
                         else:
                             kept+=1; seen[c]=seen.get(c,0)+1
                         if os.environ.get('DBG'): print('   try',nm,[(q['name'][:12],q['side'],q['clash']) for q in ph_['pins']])
@@ -170,7 +182,7 @@ async def main():
                         ph_ = await pg.evaluate("window.__bae.photo()")
                         bad=[q['name'] for q in ph_['pins'] if q['clash'] and not q['house']]
                         if not bad: break
-                        await pg.locator('.place', has_text=bad[-1]).first.click(); await pg.wait_for_timeout(150); kept-=1
+                        await _pl(bad[-1]).click(); await pg.wait_for_timeout(150); kept-=1
                         await pg.evaluate("window.__bae.retidy()"); await pg.wait_for_timeout(150)
                     if kept < TARGET:   # 29 Oct: greedy order can paint itself into a corner; try other 3-place combinations before giving up
                         import itertools as _it, re as _r3
