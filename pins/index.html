@@ -1016,7 +1016,7 @@ const HOUSE_STYLES = {
 };
 // 31 Oct 2026 (Jason): every job uses the same SMALL pins — pin head ≈109 px wide and label ≈95 px tall per 3000 px of photo
 // (measured from his Top Realty reference). One size for all agencies; house pins capped to the same small size.
-const PIN_K = .77, HOUSE_MAXW = 144;
+const PIN_K = .77, HOUSE_MAXW = 216;   /* 12 Nov (Jason): house pin 1.5x bigger (was 144) */
 function agency(){ const A0 = AGENCIES[prefs.agency] || AGENCIES.grey, o = HOUSE_STYLES[prefs.houseStyle||""];
   const A = Object.assign({}, A0, { scale:PIN_K * ((A0.kind==="cream" || A0.kind==="flag") ? (A0.scale||1) : 1) }, o && o.house ? { house:o.house } : {});   /* Beshay cream labels sized to their own reference */
   const H = A.house; if (H && H.type === "pin" && H.w > HOUSE_MAXW && prefs.houseStyle !== "big" && !A0.bigHouse) A.house = Object.assign({}, H, { w:HOUSE_MAXW, h:Math.round(HOUSE_MAXW*H.h/H.w) });
