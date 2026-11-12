@@ -497,5 +497,8 @@ function lotCrop(p){
   const polys = p.shapes.filter(x=>x.type==="poly" && x.pts.length>=3); if (!polys.length || Math.abs(p.w/p.h-1.5) < 0.01) return null;
   let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; polys.forEach(sh=>sh.pts.forEach(q=>{ x0=Math.min(x0,q[0]); y0=Math.min(y0,q[1]); x1=Math.max(x1,q[0]); y1=Math.max(y1,q[1]); }));
   const bw=x1-x0, bh=y1-y0; let cw=Math.max(bw/0.6, bh*1.5/0.56); cw=Math.min(cw, p.w, p.h*1.5); cw=Math.max(cw, Math.min(p.w, p.h*1.5)*0.3); const ch=cw/1.5;
-  let cx=(x0+x1)/2-cw/2, cy=(y0+y1)/2-ch/2; cx=Math.max(0,Math.min(p.w-cw,cx)); cy=Math.max(0,Math.min(p.h-ch,cy)); return [cx,cy,cw,ch];
+  /* 12 Nov (Jason): the house/lot must sit dead centre of the frame — shrink the box around the lot centre before ever sliding it off-centre */
+  const mx=(x0+x1)/2, my=(y0+y1)/2, room=Math.min(2*mx, 2*(p.w-mx), 1.5*2*my, 1.5*2*(p.h-my)), need=Math.max(bw/0.78, bh*1.5/0.74);
+  if (room >= need){ const c2=Math.min(cw, room), h2=c2/1.5; return [mx-c2/2, my-h2/2, c2, h2]; }
+  let cx=mx-cw/2, cy=my-ch/2; cx=Math.max(0,Math.min(p.w-cw,cx)); cy=Math.max(0,Math.min(p.h-ch,cy)); return [cx,cy,cw,ch];
 }
