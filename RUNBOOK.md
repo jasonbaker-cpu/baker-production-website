@@ -316,3 +316,12 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 
 ## Aerial Boundary Overlay (Satellite) = the hood map (Jason, 11 Nov 2026)
 - The product 'Aerial Boundary Overlay (Satellite)' is ALWAYS made with `hoodmap.py` (identical to the hood map). Never a hand-built style. Front-exterior photo from the job's Sales Photography finals as the inset. Example: maps/hood_34_goodall_st.json.
+
+## Key features first (Jason, 12 Nov 2026: "make sure from now the key features are picked first")
+- Location pins: big key features ALWAYS before little places — beaches, shopping centres (Westfield/plaza/centro/forum/...), train stations, schools, golf, lakes, hospitals, regional parks.
+- Small parks/reserves/playgrounds only win if within 200 m of the house; otherwise they are filler after every key feature.
+- Dog beaches and corner shops/marts (e.g. "Luna Maxi Mart") are minor — filler only.
+- Coded in t12.py rank() (auto runs). When ticking by hand (steps/ticks/must), follow the same order.
+- Name matching is EXACT: "Scarborough Beach" must never tick "Scarborough Beach Skate Park" (that bug dropped Scarborough Beach on 6 Marsden, 11 Nov).
+- Check every location photo before publishing: if a famous landmark is in frame (Scarborough Beach, Cottesloe, Westfield, a station) and not pinned, fix it.
+- Also 12 Nov: top-down lot always dead centre of the frame; lot size always centred; house pin 1.5x (HOUSE_MAXW 216).
