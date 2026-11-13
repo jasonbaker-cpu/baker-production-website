@@ -286,11 +286,20 @@ function refreshPhotoTab(){
       s1.appendChild(sr); }
     s1.appendChild(el(`<p class="note">Learned from our delivered aerials: brighter midtones, about 25% more colour, crisper detail, and the clean blue sky our editor uses. Hold <b>Hold for before</b> (or the \\ key) to compare.</p>`));
     box.appendChild(s1);
-    { const st = el(`<div class="sec"><h2><span>Straighten</span><span class="note">${(P().straight||0).toFixed(2)}°</span></h2><div class="row"><button class="btn" title="Turn left 0.5°">⟲ 0.5°</button><button class="btn" title="Turn left 0.1°">⟲ 0.1°</button><button class="btn" title="Turn right 0.1°">0.1° ⟳</button><button class="btn" title="Turn right 0.5°">0.5° ⟳</button></div><div class="row"><button class="btn ghost">${window.__gridOn ? "Hide grid" : "Show grid"}</button><button class="btn ghost">Reset</button></div><p class="note">Line the horizon (aerials) or the fences and houses (top-downs) up with the grid. Pins and the boundary turn with the photo.</p></div>`);
-      const b = st.querySelectorAll("button"), q = P();   /* 10 Nov (Jason): straighten button */
-      b[0].onclick=()=>{ setStraight(q,(q.straight||0)+0.5); refreshPhotoTab(); }; b[1].onclick=()=>{ setStraight(q,(q.straight||0)+0.1); refreshPhotoTab(); };
-      b[2].onclick=()=>{ setStraight(q,(q.straight||0)-0.1); refreshPhotoTab(); }; b[3].onclick=()=>{ setStraight(q,(q.straight||0)-0.5); refreshPhotoTab(); };
-      b[4].onclick=()=>{ window.__gridOn=!window.__gridOn; refreshPhotoTab(); requestDraw(); }; b[5].onclick=()=>{ setStraight(q,0); refreshPhotoTab(); };
+    { const q = P(), cur = q.straight||0;   /* 13 Nov (Jason): straighten "more like Lightroom" — slider, Auto, level tool */
+      const st = el(`<div class="sec"><h2><span>Straighten</span><span class="note" id="stVal">${cur.toFixed(2)}°</span></h2>
+        <input type="range" id="stSlider" min="-10" max="10" step="0.05" value="${cur}" style="width:100%">
+        <div class="row"><button class="btn" title="Find the horizon and level it">Auto</button><button class="btn ${tool==="level"?"":"ghost"}" title="Click two points along the horizon (or a fence/roof line on a top-down)">${tool==="level" ? "Cancel" : "Level tool"}</button><button class="btn ghost" title="Turn left 0.1°">⟲</button><button class="btn ghost" title="Turn right 0.1°">⟳</button><button class="btn ghost">Reset</button></div>
+        <p class="note" id="stNote">Like Lightroom: drag the slider (a grid shows while you drag), press <b>Auto</b> to level the horizon, or use the <b>Level tool</b>: click one end of the horizon then the other. Pins and the boundary turn with the photo.</p></div>`);
+      const sl = st.querySelector("#stSlider"), val = st.querySelector("#stVal"), b = st.querySelectorAll("button");
+      let dragging = false, raf = 0, grid0 = false;
+      sl.addEventListener("pointerdown", ()=>{ if (!dragging){ dragging = true; grid0 = !!window.__gridOn; window.__gridOn = true; commit(); } });
+      sl.addEventListener("input", ()=>{ val.textContent = (+sl.value).toFixed(2)+"°"; if (raf) return; raf = requestAnimationFrame(()=>{ raf = 0; setStraight(q, +sl.value, true); }); });
+      sl.addEventListener("change", ()=>{ if (raf){ cancelAnimationFrame(raf); raf = 0; } setStraight(q, +sl.value, true); if (dragging){ dragging = false; window.__gridOn = grid0; } refreshAll(); });
+      b[0].onclick=()=>{ const r = autoHorizon(q); if (!r){ st.querySelector("#stNote").textContent = "Couldn't find a clear horizon in this photo — use the Level tool or the slider."; return; } setStraight(q, (q.straight||0) - r.deg); refreshPhotoTab(); toast(Math.abs(r.deg) < 0.05 ? "Already level." : `Levelled ${(-r.deg).toFixed(2)}°`, 2500); };
+      b[1].onclick=()=>{ setTool(tool==="level" ? "select" : "level"); refreshPhotoTab(); requestDraw(); };
+      b[2].onclick=()=>{ setStraight(q,(q.straight||0)+0.1); refreshPhotoTab(); }; b[3].onclick=()=>{ setStraight(q,(q.straight||0)-0.1); refreshPhotoTab(); };
+      b[4].onclick=()=>{ setStraight(q,0); refreshPhotoTab(); };
       box.appendChild(st); }
 
   }
@@ -772,7 +781,31 @@ function buildStraightBase(p){ if (!p.base0) p.base0 = p.base; const deg = p.str
     x.imageSmoothingQuality="high"; x.translate(W/2,H/2); x.rotate(-deg*Math.PI/180); x.scale(z,z); x.drawImage(p.base0,-W/2,-H/2); p.base=c; }
   p._straightBuilt = deg; p.fin=null; p.finKey=null; p._adj=null; p._blur=null; }
 function syncStraight(p){ if ((p.straight||0) !== (p._straightBuilt||0)){ buildStraightBase(p); ensureFinish(p); } }
-function setStraight(p, deg){ deg = Math.max(-8, Math.min(8, Math.round(deg*100)/100)); const old=p.straight||0; if (deg===old) return; commit();
+/* 13 Nov 2026 (Jason: "make sure aerials are straight"): find the horizon — first band (scanning down) that isn't sky-coloured, in 80 strips, RANSAC line.
+   Returns {deg (+ = right side higher, in the photo as it is now), n, of} or null. Hazy horizons work (haze counts as sky). */
+function autoHorizon(p){
+  const src = p.base; if (!src || (p.cam && (p.cam.pitch||0) < -60)) return null;
+  const W = 600, H = Math.round(src.height*W/src.width), c = document.createElement("canvas"); c.width=W; c.height=H; const x = c.getContext("2d"); x.drawImage(src,0,0,W,H);
+  const d = x.getImageData(0,0,W,H).data, ht = Math.max(2, Math.floor(H*0.06)), tops = [];
+  for (let y=0;y<ht;y++) for (let i=0;i<W;i++){ const k=(y*W+i)*4, r=d[k], g=d[k+1], bb=d[k+2]; if (bb>r+6 && bb>110) tops.push((r+g+bb)/3); }
+  tops.sort((a,b)=>a-b); const topY = tops.length > W ? tops[tops.length>>1] : 0;
+  const land = new Uint8Array(W*H);
+  for (let i=0;i<W*H;i++){ const r=d[i*4], g=d[i*4+1], bb=d[i*4+2], Y=(r+g+bb)/3, mn=Math.min(r,g,bb), mx=Math.max(r,g,bb);
+    land[i] = ((bb>r+6 && bb>110 && Y>topY*0.8) || (mn>165 && mx-mn<55)) ? 0 : 1; }
+  const S = 80, pts = [];
+  for (let k=0;k<S;k++){ const xa=Math.floor(k*W/S), xb=Math.floor((k+1)*W/S); let run=0;
+    for (let y=0;y<H*0.8;y++){ let n=0; for (let i=xa;i<xb;i++) n+=land[y*W+i]; if (n/(xb-xa) > 0.6){ if (++run >= 5){ const yy=y-4; if (yy>H*0.03 && yy<H*0.75) pts.push([(xa+xb)/2, yy]); break; } } else run=0; } }
+  if (pts.length < 20) return null;
+  let seed = 7, best = null; const rnd = ()=>{ seed = (seed*1103515245+12345) & 0x7fffffff; return seed/0x7fffffff; };
+  for (let it=0; it<600; it++){ const a=pts[Math.floor(rnd()*pts.length)], b2=pts[Math.floor(rnd()*pts.length)]; if (Math.abs(a[0]-b2[0]) < W*0.25) continue;
+    const m=(b2[1]-a[1])/(b2[0]-a[0]), c0=a[1]-m*a[0]; const inl = pts.filter(q=>Math.abs(q[1]-(m*q[0]+c0)) < 1.8); if (!best || inl.length > best.length) best = inl; }
+  if (!best || best.length < 15) return null;
+  let n=best.length, sx=0, sy=0, sxx=0, sxy=0; best.forEach(([u,v])=>{ sx+=u; sy+=v; sxx+=u*u; sxy+=u*v; });
+  const m = (n*sxy-sx*sy)/((n*sxx-sx*sx)||1), deg = -Math.atan(m*(H/W)/(src.height/src.width))*180/Math.PI;
+  if (Math.abs(deg) > 6) return null;
+  return { deg: Math.round(deg*100)/100, n, of: pts.length };
+}
+function setStraight(p, deg, quiet){ deg = Math.max(-10, Math.min(10, Math.round(deg*100)/100)); const old=p.straight||0; if (deg===old) return; if (!quiet) commit();
   const W=p.w, H=p.h, cx=W/2, cy=H/2, s=straightZoom(p,deg)/straightZoom(p,old), a=-(deg-old)*Math.PI/180, cs=Math.cos(a), sn=Math.sin(a);
   const T=(x,y)=>{ const u=x-cx, v=y-cy; return [cx+s*(u*cs-v*sn), cy+s*(u*sn+v*cs)]; };
   (p.pins||[]).forEach(q=>{ if (q.ex!=null){ [q.ex,q.ey]=T(q.ex,q.ey); } });
@@ -780,9 +813,9 @@ function setStraight(p, deg){ deg = Math.max(-8, Math.min(8, Math.round(deg*100)
   (p.texts||[]).forEach(t=>{ if (!t.link && t.x!=null){ [t.x,t.y]=T(t.x,t.y); } });
   if (p.skyLineUser) p.skyLineUser=p.skyLineUser.map(q=>T(q[0],q[1]));
   if (p.cam){ const d=deg-old, nad=(p.cam.pitch||0) < -75; if (nad) p.cam.yaw=(p.cam.yaw||0)+d; else p.cam.roll=(p.cam.roll||0)-d; p.cam.f35=(p.cam.f35||24)*s; }
-  p.straight=deg; buildStraightBase(p); ensureFinish(p); refreshAll(); }
+  p.straight=deg; buildStraightBase(p); ensureFinish(p); if (quiet) requestDraw(); else refreshAll(); }
 function shadeHex(h,k){ const n=parseInt(h.slice(1),16); const f=v=>Math.round(v*k).toString(16).padStart(2,"0"); return "#"+f(n>>16&255)+f(n>>8&255)+f(n&255); }
-window.__bae = { project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) return false; commit(); p.pins=[]; p.shapes=[]; p.texts=[]; p.outside='none'; refreshAll(); return true; },   /* 30 Oct: clean photo, no graphics (agent asked) */ setFinish:(on)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.finishOn=!!on; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return true; }, setHorizon:(fa,fb)=>{ const p=P(); if(!p) return false; p.skyLineUser = fa==null ? null : [[0,fa*p.h],[p.w,fb*p.h]]; p.skyOn=true; p.skyForce = fa!=null; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return [p.w,p.h]; }, setSky:(on,force)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.skyOn=!!on; if (force!==undefined) p.skyForce=!!force; p.finKey=null; ensureFinish(p); refreshAll(); return true; }, setAdj:(o)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.adj=Object.assign({}, ADJ0, o); refreshAll(); return true; }, setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt, pxo)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts= pxo ? pxo.map(q=>toWork(p, q)) : ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); /* pxo: boundary hand-traced on the fences (original-photo pixels) */ if (pts.some(q=>!q)) return false; commit();
+window.__bae = { project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) return false; commit(); p.pins=[]; p.shapes=[]; p.texts=[]; p.outside='none'; refreshAll(); return true; },   /* 30 Oct: clean photo, no graphics (agent asked) */ setFinish:(on)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.finishOn=!!on; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return true; }, setHorizon:(fa,fb)=>{ const p=P(); if(!p) return false; p.skyLineUser = fa==null ? null : [[0,fa*p.h],[p.w,fb*p.h]]; p.skyOn=true; p.skyForce = fa!=null; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return [p.w,p.h]; }, setSky:(on,force)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.skyOn=!!on; if (force!==undefined) p.skyForce=!!force; p.finKey=null; ensureFinish(p); refreshAll(); return true; }, setAdj:(o)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.adj=Object.assign({}, ADJ0, o); refreshAll(); return true; }, setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, autoStraight:()=>{ const p=P(); if (!p) return null; const r=autoHorizon(p); if (!r) return { none:true }; if (Math.abs(r.deg) >= 0.15) setStraight(p, (p.straight||0) - r.deg); return Object.assign({ applied: Math.abs(r.deg) >= 0.15, straight: p.straight||0 }, r); }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt, pxo)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts= pxo ? pxo.map(q=>toWork(p, q)) : ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); /* pxo: boundary hand-traced on the fences (original-photo pixels) */ if (pts.some(q=>!q)) return false; commit();
     /* 10 Nov 2026 (Jason, 10 Spotted Wy): on a squared top-down the lot must line up with the houses. DJI Fly drones report a
        heading several degrees out, which turns AND shifts the cadastre outline. If the box-shaped lot is up to 20 deg off the
        houses' grid (window.__gridAng), the camera heading is corrected by that amount and the lot re-projected (fixes the turn

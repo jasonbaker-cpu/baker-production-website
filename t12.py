@@ -116,6 +116,10 @@ async def main():
                 if job.get('noFinish'): await pg.evaluate("window.__bae.setFinish(false)"); await pg.wait_for_timeout(300)   # twilight: keep the drone's own colour and dusk mood
                 if job.get('noSky'): await pg.evaluate("window.__bae.setSky(false)"); await pg.wait_for_timeout(300); await busy(pg)   # twilight/sunset shoots keep their real sky
                 st = job.get('steps',{}).get(ph,{})
+                if not job.get('noAutoLevel') and not (_alt < 60 and _pit > -75):   # low front-of-house frames: horizon hidden, leave them   # 13 Nov (Jason: "make sure aerials are straight"): editor Auto level on every oblique
+                    _lv = await pg.evaluate("window.__bae.autoStraight ? window.__bae.autoStraight() : null"); await busy(pg)
+                    if _lv and _lv.get('applied'): print('  level', os.path.basename(ph), _lv.get('straight'), 'deg  (n', _lv.get('n'), '/', _lv.get('of'), ')')
+                    elif _lv and _lv.get('none') and not _clean: print('  LEVEL? no clear horizon on', os.path.basename(ph), '- check it by eye')
                 if 'house' in st:
                     await pg.click('text=Click the house'); await clickImg(pg,*st['house'])
                     if 'lm' in st: await pg.select_option('#lmSel', st['lm'][0]); await pg.click('#lmGo'); await clickImg(pg,*st['lm'][1])

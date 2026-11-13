@@ -30,7 +30,7 @@ let showBefore = false;
 let view = { s:1, tx:0, ty:0 };
 let userMoved = false;
 let job = null;           // {address, lat, lng, places:[...], sample}
-let armed = null;         // {kind:'house'|'landmark'|'place'|'custom', key?}
+let armed = null; let lvDraft = null;         // {kind:'house'|'landmark'|'place'|'custom', key?}
 let ptab = LS.get("ptab", "pins");
 let uid = 1;
 const nid = () => "o" + (uid++);

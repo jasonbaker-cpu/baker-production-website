@@ -87,6 +87,7 @@ function draw(){
     ctx.strokeStyle="#f2b33d"; ctx.lineWidth=2*k; ctx.setLineDash([8*k,6*k]); ctx.strokeRect(cr[0],cr[1],cr[2],cr[3]); ctx.setLineDash([]); ctx.font=`600 ${14*k}px system-ui`; ctx.fillStyle="#f2b33d"; ctx.fillText(tool==="crop" ? "Crop · drag to move, corners to resize" : (p.crop ? "Export area · cropped" : "Export area · 3:2"), cr[0]+8*k, cr[1]+20*k); if (tool==="crop"){ ctx.fillStyle="#f2b33d"; [[0,0],[1,0],[0,1],[1,1]].forEach(([a,b])=>ctx.fillRect(cr[0]+a*cr[2]-7*k, cr[1]+b*cr[3]-7*k, 14*k, 14*k)); } ctx.restore(); } }
   if (hideGfx || showBefore) return;
   const k = 1/view.s;
+  if (tool==="level" && lvDraft){ const k=1/view.s; ctx.save(); ctx.strokeStyle="#4fd1ff"; ctx.lineWidth=3*k; ctx.setLineDash([10*k,6*k]); ctx.beginPath(); ctx.moveTo(lvDraft[0],lvDraft[1]); const e=hover||lvDraft; ctx.lineTo(e[0],e[1]); ctx.stroke(); ctx.restore(); }   /* 13 Nov: level tool */
   if (tool==="horizon"){ ctx.save(); ctx.strokeStyle="#f2b33d"; ctx.lineWidth=3*k; ctx.setLineDash([10*k,6*k]); const L = p.skyLineUser || (hzDraft && hover ? [hzDraft, hover] : null);
     if (L){ const [[ax,ay],[bx,by]] = L, m=(by-ay)/((bx-ax)||1); ctx.beginPath(); ctx.moveTo(0, ay - m*ax); ctx.lineTo(p.w, ay + m*(p.w-ax)); ctx.stroke(); }
     if (hzDraft){ ctx.fillStyle="#f2b33d"; ctx.fillRect(hzDraft[0]-6*k, hzDraft[1]-6*k, 12*k, 12*k); }
@@ -218,6 +219,8 @@ cv.addEventListener("pointerdown", e=>{
     if (draft.type==="poly" && draft.pts.length>=3 && dist(pt,draft.pts[0])<12*k){ finishDraft(); return; }
     draft.pts.push(pt); hover=pt; updateDrawbar(); requestDraw(); return;
   }
+  if (tool==="level"){ if (!lvDraft){ lvDraft = pt; window.__gridOn = true; requestDraw(); return; } const dx=pt[0]-lvDraft[0], dy=pt[1]-lvDraft[1]; lvDraft=null; setTool("select");   /* 13 Nov: level tool — the clicked line becomes level (or vertical if drawn steeply) */
+    let ang = Math.atan2(dy,dx)*180/Math.PI; if (ang>90) ang-=180; if (ang<-90) ang+=180; if (Math.abs(ang)>45) ang = ang>0 ? ang-90 : ang+90; setStraight(p, (p.straight||0)+ang); if (typeof refreshPhotoTab==="function") refreshPhotoTab(); return; }
   if (tool==="horizon"){ if (!hzDraft){ hzDraft = pt; requestDraw(); return; } commit(); p.skyLineUser = [hzDraft, pt].sort((a,b)=>a[0]-b[0]); hzDraft = null; p.skyOn = true; p.skyForce = true; p.finKey = null; p.fin = null; ensureFinish(p); if (typeof refreshPhotoTab==="function") refreshPhotoTab(); requestDraw(); return; }
   if (tool==="crop"){ const k=1/view.s; if (!p.crop) p.crop = defaultCrop(p); const c=p.crop; const near=(x,y)=>Math.abs(pt[0]-x)<16*k && Math.abs(pt[1]-y)<16*k;
     const corner=[[0,0],[1,0],[0,1],[1,1]].find(([a,b])=>near(c[0]+a*c[2], c[1]+b*c[3]));
