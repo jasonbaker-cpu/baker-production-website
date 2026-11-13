@@ -108,6 +108,20 @@ nav.tabs .dot{position:absolute;top:4px;left:calc(50% + 8px);background:var(--ho
 .gerr{background:#fbecea;border:1px solid #ecc9c0;color:#8a2f1d;border-radius:10px;padding:12px;font-size:14px}
 .bar{height:8px;background:var(--card2);border-radius:999px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--ink)}
+.btn.mini{min-height:30px;padding:4px 10px;font-size:12.5px}
+.cvseg button{font-size:14.5px;padding:9px 16px}
+.day{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);align-items:center}
+.day:last-child{border-bottom:0}
+.day.today{background:#fbf8f1}
+.day.past{opacity:.6}
+.day .dl{display:grid;line-height:1.15}.day .dl b{font-size:13px}.day .dl span{font-size:12px;color:var(--muted)}
+.day.today .dl b{color:var(--sand2)}
+.day .dv{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.pill{border:1px solid var(--line);background:var(--card2);border-radius:10px;padding:6px 10px;font-size:13px;font-weight:700;cursor:pointer;text-align:left;display:grid;gap:1px;max-width:100%;overflow-wrap:anywhere}
+.pill i{font-style:normal;font-weight:600;font-size:11px;color:var(--muted)}
+.pill.ok{background:#eaf3ee;border-color:#cfe3d7}.pill.rd{background:#fff4dc;border-color:#f0dcae}.pill.ed{background:#eef2f6;border-color:#d8e0ea}
+.pill.add{background:none;border-style:dashed;color:var(--muted);font-size:16px;padding:4px 12px;place-items:center}
+.script{white-space:pre-wrap;font-size:19px;line-height:1.55;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
 .notice{border:1px dashed var(--line);border-radius:12px;padding:12px 14px;color:var(--muted);font-size:14px}
 </style>
 </head>
@@ -129,6 +143,7 @@ nav.tabs .dot{position:absolute;top:4px;left:calc(50% + 8px);background:var(--ho
 <div id="ov"></div>
 <div class="toast" id="toast" role="status" hidden></div>
 <script src="qrcode.js"></script>
+<script src="/content-kit/ideas.js?v=1"></script>
 <script type="module">
 const V="10.12.2",BASE="https://www.gstatic.com/firebasejs/"+V+"/";
 const CFG={apiKey:"AIzaSyC0ES1GZsgtl4_vC6Dpp-4aG-Iy4DtXlCE",authDomain:"baker-leads.firebaseapp.com",projectId:"baker-leads",storageBucket:"baker-leads.firebasestorage.app",messagingSenderId:"544396406010",appId:"1:544396406010:web:9e7289e545fa0a0c8a6d43"};
@@ -281,56 +296,130 @@ const postedIn=(f,v)=>v.status==="Posted"&&(v.fortnight===f.id||(!v.fortnight&&v
 const num=n=>n==null||n===""?"–":n>=1e4?(n/1e3).toFixed(n>=1e5?0:1).replace(/\.0$/,"")+"k":Number(n).toLocaleString("en-AU");
 const RULES=["Post 3 reels a week, 6 a fortnight. Showing up beats going viral.","Josh on camera every time. People list with a face, not an Under Offer tile.","Say Heathridge in the first line, on camera and in the caption.","Hook in the first 2 seconds. Say the thing, then show it.","Every reel ends on one ask: a private valuation, or join the register.","Boosted reels get a reel link (Links tab) so you can see what each dollar brings back.","Only real numbers. No sold claims or prices without the vendor's OK and the actual result."];
 function vContent(){
-  const f=curFn(),L=FNS(),t=today();
-  let h=`<div class="h"><div><h1>Content</h1><p>Heathridge Number One. Your reels, the plan and the scoreboard.</p></div><button class="btn" data-a="new-vid">+ Video</button></div>`;
+  const f=curFn();
+  const cv=S.cv||"plan";
+  let h=`<div class="h"><div><h1>Content</h1><p>Heathridge Number One. Plan it, make it, post it.</p></div><button class="btn" data-a="new-vid">+ Video</button></div>`;
   if(!f){
-    h+=`<div class="notice">Nothing here yet.${S.user&&S.user.admin?' <button class="btn pri" data-a="seed">Load Josh\'s content plan</button> <button class="btn" data-a="new-fn">+ Fortnight</button>':" Baker Production is setting this up."}</div>`;
-    return h+rulesBox();
+    h+=`<div class="notice">Nothing here yet.${S.user&&S.user.admin?' <button class="btn pri" data-a="seed">Load the content plan</button> <button class="btn" data-a="new-fn">+ Fortnight</button>':" Baker Production is setting this up."}</div>`;
+    return h+vIdeas(null)+rulesBox();
   }
-  const i=L.findIndex(x=>x.id===f.id),prev=i>0?L[i-1]:null;
-  const V=S.videos.filter(v=>v.fortnight===f.id).sort(byOrder);
+  h+=`<div class="seg cvseg">${[["plan","Plan"],["ideas","Idea maker"],["score","Scoreboard"]].map(([k,l])=>`<button data-a="cv" data-v="${k}" aria-pressed="${cv===k}">${l}</button>`).join("")}</div>`;
+  h+=`<div class="seg">${FNS().map(x=>`<button data-a="fn" data-v="${esc(x.id)}" aria-pressed="${x.id===f.id}">${esc(x.label||x.id)}</button>`).join("")}<button data-a="new-fn">+ Fortnight</button></div>`;
+  if(cv==="ideas")return h+vIdeas(f);
+  if(cv==="score")return h+vScore(f);
+  return h+vPlan(f);
+}
+function fnHead(f){
+  const posted=S.videos.filter(v=>postedIn(f,v)).length,target=+f.target||5,t=today();
+  const planned=S.videos.filter(v=>v.fortnight===f.id).length;
+  return `<div class="card"><div class="t"><h2>${esc(f.label||f.id)}</h2><span>${esc(nice(f.start))} – ${esc(nice(f.end))}${f.start<=t&&t<=f.end?" · now":""} · <button class="btn mini" data-a="edit-fn" data-id="${esc(f.id)}">Edit</button></span></div>
+  <div class="pad" style="display:grid;gap:8px"><div style="display:flex;justify-content:space-between;font-size:14px"><b>${posted} of ${target} posted</b><span class="why">${planned} planned</span></div><span class="bar"><i style="width:${Math.min(100,posted/target*100)}%"></i></span>${f.fixNext?`<span style="font-size:14px"><b>Focus:</b> ${esc(f.fixNext)}</span>`:""}</div></div>`;
+}
+const dayList=f=>{const L=[];let d=new Date(f.start+"T00:00:00");const e=new Date(f.end+"T00:00:00");while(d<=e&&L.length<31){L.push(ymd(d));d.setDate(d.getDate()+1);}return L;};
+const dayLbl=s=>new Date(s+"T00:00:00").toLocaleDateString("en-AU",{weekday:"short",day:"numeric",month:"short"});
+const planDay=v=>v.status==="Posted"?(v.postedOn||""):(v.postOn||"");
+function vPlan(f){
+  const t=today(),V=S.videos.filter(v=>v.fortnight===f.id);
+  const open=V.filter(v=>v.status!=="Posted").sort((a,b)=>String(a.postOn||"9").localeCompare(String(b.postOn||"9"))||byOrder(a,b));
+  const late=open.filter(v=>v.postOn&&v.postOn<t),todays=open.filter(v=>v.postOn===t);
+  const film=open.filter(v=>(v.status||"To film")==="To film"),edit=open.filter(v=>v.status==="Editing"),ready=open.filter(v=>v.status==="Ready to post");
+  let h=fnHead(f);
+  const nx=[...late.map(v=>[v,"Late: was due "+nice(v.postOn),"hot"]),...todays.map(v=>[v,"Post today","good"]),...ready.filter(v=>!late.includes(v)&&!todays.includes(v)).map(v=>[v,"Ready to post"+(v.postOn?" "+nice(v.postOn):""),""])];
+  h+=`<div class="card"><div class="t"><h2>Next up</h2><span>${nx.length?nx.length+" to post":film.length?film.length+" to film":"all clear"}</span></div>${nx.length?nx.map(([v,l,c])=>vidRow(v,l,c)).join(""):film.length?film.slice(0,3).map(v=>vidRow(v,"Film next"+(v.postOn?" · posts "+nice(v.postOn):""),"")).join(""):'<div class="empty">Nothing waiting. Make a few in the Idea maker.</div>'}</div>`;
+  const days=dayList(f),un=open.filter(v=>!v.postOn||!days.includes(v.postOn));
+  h+=`<div class="card"><div class="t"><h2>Posting calendar</h2><span>${un.length?`<button class="btn mini pri" data-a="autoplan">Auto-plan ${un.length}</button>`:"all scheduled"}</span></div>${days.map(d=>{const L=V.filter(v=>planDay(v)===d).sort(byOrder);const past=d<t;return `<div class="day${d===t?" today":""}${past?" past":""}"><div class="dl"><b>${esc(dayLbl(d).split(" ")[0])}</b><span>${esc(dayLbl(d).split(" ").slice(1).join(" "))}</span></div><div class="dv">${L.map(v=>`<button class="pill ${v.status==="Posted"?"ok":v.status==="Ready to post"?"rd":v.status==="Editing"?"ed":""}" data-a="open-vid" data-id="${esc(v.id)}">${esc(v.title||"Untitled")}<i>${esc(v.status||"To film")}</i></button>`).join("")}${past?"":`<button class="pill add" data-a="day-add" data-v="${d}" aria-label="Add a video on ${esc(dayLbl(d))}">+</button>`}</div></div>`;}).join("")}</div>`;
+  if(un.length)h+=`<div class="card"><div class="t"><h2>Not scheduled yet</h2><span>${un.length}</span></div>${un.map(v=>vidRow(v,"No post date","")).join("")}</div>`;
+  if(film.length)h+=`<div class="card"><div class="t"><h2>Film list</h2><span>${film.length} to film</span></div><div class="pad" style="display:grid;gap:12px">${film.map(v=>`<div style="display:grid;gap:4px"><b>${esc(v.title)}</b>${v.hook?`<span style="font-size:14px">Hook: ${esc(v.hook)}</span>`:""}${v.shots?`<span class="why">Shots: ${esc(v.shots)}</span>`:`<span class="why">${esc([v.format,v.suburb].filter(Boolean).join(" · "))}</span>`}<span style="display:flex;gap:6px;flex-wrap:wrap">${v.script?`<button class="btn mini" data-a="script" data-id="${esc(v.id)}">Read script</button>`:""}<button class="btn mini" data-a="vstep" data-id="${esc(v.id)}">Mark filmed</button></span></div>`).join("")}</div></div>`;
+  if(edit.length)h+=`<div class="card"><div class="t"><h2>In the edit</h2><span>${edit.length}</span></div>${edit.map(v=>vidRow(v,v.owner==="Baker"?"Baker is editing":"Editing","")).join("")}</div>`;
+  const done=V.filter(v=>v.status==="Posted").sort((a,b)=>String(b.postedOn).localeCompare(String(a.postedOn)));
+  if(done.length)h+=`<div class="card"><div class="t"><h2>Posted</h2><span>${done.length}</span></div>${done.map(v=>vidRow(v,"","")).join("")}</div>`;
+  return h;
+}
+function vScore(f){
+  const L=FNS(),i=L.findIndex(x=>x.id===f.id),prev=i>0?L[i-1]:null;
   const posted=S.videos.filter(v=>postedIn(f,v)).length,target=+f.target||5;
   const m30=addDays(-30),rec=S.videos.filter(v=>v.status==="Posted"&&v.postedOn>=m30&&+v.views>0),avg=rec.length?Math.round(rec.reduce((a,v)=>a+(+v.views),0)/rec.length):null;
   const appr=S.wins.filter(w=>w.kind==="appraisal"),won=S.wins.filter(w=>w.kind==="listing");
   const apprFn=appr.filter(w=>w.date>=f.start&&w.date<=f.end).length;
   const dF=prev&&f.followers&&prev.followers?f.followers-prev.followers:null;
-  h+=`<div class="seg">${L.map(x=>`<button data-a="fn" data-v="${esc(x.id)}" aria-pressed="${x.id===f.id}">${esc(x.label||x.id)}</button>`).join("")}<button data-a="new-fn">+ Fortnight</button></div>`;
-  h+=`<div class="card"><div class="t"><h2>${esc(f.label||f.id)}</h2><span>${esc(nice(f.start))} – ${esc(nice(f.end))}${f.start<=t&&t<=f.end?" · now":""} · <button class="btn" style="min-height:30px;padding:4px 10px;font-size:12.5px" data-a="edit-fn" data-id="${esc(f.id)}">Edit</button></span></div>
+  let h=`<div class="card"><div class="t"><h2>${esc(f.label||f.id)}</h2><span>${esc(nice(f.start))} – ${esc(nice(f.end))} · <button class="btn mini" data-a="edit-fn" data-id="${esc(f.id)}">Edit</button></span></div>
   <div class="stats"><div><b>${num(f.followers)}</b><span>followers${dF!=null?` (${dF>=0?"+":""}${dF})`:""}</span></div><div><b>${posted}/${target}</b><span>reels posted</span></div><div><b>${num(avg)}</b><span>avg views, 30 days</span></div><div><b>${appr.length}</b><span>appraisals from IG${apprFn?` (${apprFn} this fortnight)`:""}</span></div></div>
-  <div class="pad" style="display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line)"><button class="btn pri" data-a="win" data-v="appraisal">+ Appraisal from Instagram</button><button class="btn" data-a="win" data-v="listing">+ Listing won</button>${won.length?`<span class="why" style="align-self:center">${won.length} listing${won.length===1?"":"s"} won from Instagram</span>`:""}</div>
-  ${f.fixNext?`<div class="pad" style="border-top:1px solid var(--line);font-size:14.5px"><b>Fix next:</b> ${esc(f.fixNext)}</div>`:""}</div>`;
-  h+=`<div class="card"><div class="t"><h2>This fortnight's videos</h2><span>${V.length}</span></div>${V.length?V.map(vidRow).join(""):'<div class="empty">No videos planned. Add one from the reel ideas below, or tap + Video.</div>'}</div>`;
+  <div class="pad" style="display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line)"><button class="btn pri" data-a="win" data-v="appraisal">+ Appraisal from Instagram</button><button class="btn" data-a="win" data-v="listing">+ Listing won</button>${won.length?`<span class="why" style="align-self:center">${won.length} listing${won.length===1?"":"s"} won from Instagram</span>`:""}</div></div>`;
   h+=viewsChart();
-  const I=[...S.ideas].sort(byOrder);
-  h+=`<div class="card"><div class="t"><h2>Reel ideas</h2><span><button class="btn" style="min-height:30px;padding:4px 10px;font-size:12.5px" data-a="new-idea">+ Idea</button></span></div>${I.length?I.map(x=>{const on=S.videos.some(v=>v.idea===x.id&&v.fortnight===f.id);return `<div class="item" style="cursor:default"><button data-a="open-idea" data-id="${esc(x.id)}" style="all:unset;cursor:pointer;grid-column:1/-1;display:grid;gap:2px"><span class="nm">${esc(x.title)}${x.luxury?'<span class="tag sea">local</span>':""}</span><span class="sub">${esc([x.suburb,x.format].filter(Boolean).join(" · "))}${x.hook?" · "+esc(x.hook):""}</span></button><span class="acts">${on?'<span class="tag good" style="margin:0">In this fortnight</span>':`<button class="btn" data-a="idea-add" data-id="${esc(x.id)}">Add to this fortnight</button>`}</span></div>`;}).join(""):'<div class="empty">No ideas yet.</div>'}</div>`;
   const X=[...S.fixes].sort(byOrder);
   if(X.length)h+=`<div class="card"><div class="t"><h2>Profile fixes</h2><span>${X.filter(x=>x.done).length} of ${X.length} done</span></div>${X.map(x=>`<label class="item" style="grid-template-columns:auto minmax(0,1fr);align-items:center"><input type="checkbox" data-a="fix" data-id="${esc(x.id)}" ${x.done?"checked":""} style="width:20px;height:20px;accent-color:var(--ink)"><span style="${x.done?"color:var(--muted);text-decoration:line-through":""}">${esc(x.label)}</span></label>`).join("")}</div>`;
   h+=`<div class="card"><div class="t"><h2>Followers</h2><span>each fortnight</span></div>${L.map((x,j)=>{const p=j?L[j-1]:null,d=p&&x.followers&&p.followers?x.followers-p.followers:null;return `<div class="item" style="cursor:default"><span class="nm">${esc(x.label||x.id)}</span><span class="rt">${num(x.followers)}${d!=null?` <span class="why">${d>=0?"+":""}${d}</span>`:""}</span><span class="sub">${esc(nice(x.start))} – ${esc(nice(x.end))}${x.bestReel?" · best: "+esc(x.bestReel)+(x.bestViews?" ("+num(x.bestViews)+" views)":""):""}</span></div>`;}).reverse().join("")}</div>`;
-  if(won.length||appr.length){const W=[...S.wins].sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,8);h+=`<div class="card"><div class="t"><h2>Wins from Instagram</h2><span>${S.wins.length}</span></div>${W.map(w=>`<div class="item" style="cursor:default"><span class="nm">${w.kind==="listing"?"Listing won":"Appraisal"}</span><span class="rt"><button class="btn dang" style="min-height:30px;padding:4px 10px;font-size:12.5px" data-a="win-del" data-id="${esc(w.id)}">Remove</button></span><span class="sub">${esc(nice(w.date))}</span></div>`).join("")}</div>`;}
+  if(S.wins.length){const W=[...S.wins].sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,8);h+=`<div class="card"><div class="t"><h2>Wins from Instagram</h2><span>${S.wins.length}</span></div>${W.map(w=>`<div class="item" style="cursor:default"><span class="nm">${w.kind==="listing"?"Listing won":"Appraisal"}</span><span class="rt"><button class="btn dang mini" data-a="win-del" data-id="${esc(w.id)}">Remove</button></span><span class="sub">${esc(nice(w.date))}</span></div>`).join("")}</div>`;}
   return h+rulesBox();
 }
+/* ---------- idea maker ---------- */
+const GOALS=[["sell","Win sellers"],["buy","Grow buyers"],["reach","Get reach"],["trust","Build trust"]];
+const AG={first:"Josh"};
+function fillT(s,o){return String(s||"").replace(/\{(\w+)\}/g,(m,k)=>o[k]!=null?o[k]:m);}
+function genIdeas(){
+  const B=window.IDEA_BANK||[],g=S.gGoal||"all",sub=S.gSub||SUBS[0],mo=new Date().getMonth()+1;
+  const near=SUBS.find(x=>x!==sub)||sub,MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const o={sub,near,agent:AG.first,month:MN[mo-1],next:MN[mo%12]};
+  const used=new Set([...S.ideas.map(x=>x.title),...S.videos.map(x=>x.title)]);
+  let L=B.filter(x=>(g==="all"||x.g===g)&&(!x.m||x.m.includes(mo)));
+  L=L.map(x=>({x,r:Math.random()+(x.m?0.6:0)})).sort((a,b)=>b.r-a.r).map(a=>a.x);
+  const out=[];for(const x of L){const t=fillT(x.t,o);if(used.has(t))continue;out.push({key:Math.random().toString(36).slice(2,8),title:t,hook:fillT(x.h,o),beats:x.b.map(b=>fillT(b,o)),cta:fillT(x.c,o),shots:fillT(x.s,o),why:fillT(x.w,o),format:x.f,suburb:sub,luxury:!!x.lux,goal:x.g,seasonal:!!x.m});if(out.length>=5)break;}
+  S.gen=out;
+}
+const scriptOf=x=>[x.hook,...(x.beats||[]).map((b,i)=>(i+1)+". "+b),"Ask: "+x.cta].filter(Boolean).join("\n\n");
+function vIdeas(f){
+  if(!S.gen)genIdeas();
+  const g=S.gGoal||"all";
+  let h=`<div class="card"><div class="t"><h2>Idea maker</h2><span>reel ideas with the script ready</span></div><div class="pad" style="display:grid;gap:10px">
+  <div class="chips">${[["all","Any goal"],...GOALS].map(([k,l])=>`<button class="chip" data-a="g-goal" data-v="${k}" aria-pressed="${g===k}">${l}</button>`).join("")}</div>
+  <div class="chips">${SUBS.slice(0,8).map(s=>`<button class="chip" data-a="g-sub" data-v="${esc(s)}" aria-pressed="${(S.gSub||SUBS[0])===s}">${esc(s)}</button>`).join("")}</div>
+  <div><button class="btn pri" data-a="gen">Make new ideas</button></div></div></div>`;
+  h+=(S.gen||[]).map(x=>`<div class="card idea"><div class="pad" style="display:grid;gap:8px"><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="tag" style="margin:0">${esc((GOALS.find(a=>a[0]===x.goal)||[,""])[1])}</span><span class="tag" style="margin:0">${esc(x.format)}</span>${x.seasonal?'<span class="tag good" style="margin:0">timely</span>':""}${x.luxury?'<span class="tag sea" style="margin:0">premium</span>':""}</div>
+  <h3 style="font-family:var(--display);font-size:24px;line-height:1.1">${esc(x.title)}</h3><p style="margin:0;font-weight:600">${esc(x.hook)}</p><ol style="margin:0;padding-left:20px;display:grid;gap:4px;font-size:14.5px">${x.beats.map(b=>`<li>${esc(b)}</li>`).join("")}</ol><p style="margin:0;font-size:14.5px"><b>Ask:</b> ${esc(x.cta)}</p><p class="why" style="margin:0">Shots: ${esc(x.shots)}</p><p class="why" style="margin:0">Why: ${esc(x.why)}</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">${f?`<button class="btn pri" data-a="gen-add" data-v="${x.key}">Add to ${esc(f.label||"this fortnight")}</button>`:""}<button class="btn" data-a="gen-save" data-v="${x.key}">Save idea</button></div></div></div>`).join("");
+  const I=[...S.ideas].sort(byOrder);
+  h+=`<div class="card"><div class="t"><h2>Saved ideas</h2><span><button class="btn mini" data-a="new-idea">+ Idea</button></span></div>${I.length?I.map(x=>{const on=f&&S.videos.some(v=>v.idea===x.id&&v.fortnight===f.id);return `<div class="item" style="cursor:default"><button data-a="open-idea" data-id="${esc(x.id)}" style="all:unset;cursor:pointer;grid-column:1/-1;display:grid;gap:2px"><span class="nm">${esc(x.title)}${x.luxury?'<span class="tag sea">premium</span>':""}</span><span class="sub">${esc([x.suburb,x.format].filter(Boolean).join(" · "))}${x.hook?" · "+esc(x.hook):""}</span></button>${f?`<span class="acts">${on?'<span class="tag good" style="margin:0">In this fortnight</span>':`<button class="btn" data-a="idea-add" data-id="${esc(x.id)}">Add to this fortnight</button>`}</span>`:""}</div>`;}).join(""):'<div class="empty">No saved ideas yet.</div>'}</div>`;
+  return h;
+}
+function genToIdea(x){return {title:x.title,hook:x.hook,why:x.why,format:x.format,suburb:x.suburb,luxury:x.luxury,script:scriptOf(x),shots:x.shots,goal:x.goal,order:40,createdAt:new Date().toISOString()};}
+function nextFreeDay(f){const t=today(),taken=new Set(S.videos.filter(v=>v.fortnight===f.id).map(planDay));return dayList(f).filter(d=>d>=t&&!taken.has(d))[0]||"";}
+function autoPlan(){
+  const f=curFn();if(!f)return;const t=today(),days=dayList(f).filter(d=>d>=t);
+  const V=S.videos.filter(v=>v.fortnight===f.id&&v.status!=="Posted");
+  const un=V.filter(v=>!v.postOn||!days.includes(v.postOn)).sort(byOrder);if(!un.length)return;
+  const taken=new Set(S.videos.filter(v=>v.fortnight===f.id).map(planDay).filter(Boolean));
+  const free=days.filter(d=>!taken.has(d));if(!free.length){toast("No free days left this fortnight.");return;}
+  const n=un.length,pick=[];
+  for(let k=0;k<n;k++){const idx=n===1?Math.min(1,free.length-1):Math.round(k*(free.length-1)/(n-1));pick.push(free[Math.min(idx,free.length-1)]);}
+  Promise.all(un.map((v,k)=>put("videos",v.id,{postOn:pick[k],postBy:pick[k]}))).then(()=>toast("Planned "+n+" video"+(n===1?"":"s")+". Tap any to move it.")).catch(err);
+}
 function rulesBox(){return `<div class="box"><h3>How to win</h3><ol style="margin:0;padding-left:20px;display:grid;gap:6px;font-size:14.5px">${RULES.map(r=>`<li>${esc(r)}</li>`).join("")}</ol></div>`;}
-function vidRow(v){
-  const k=STEPS.indexOf(v.status||"To film"),nx=STEPS[k+1],late=v.status!=="Posted"&&v.postBy&&v.postBy<today();
-  return `<div class="item" style="cursor:default"><button data-a="open-vid" data-id="${esc(v.id)}" style="all:unset;cursor:pointer;grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px"><span class="nm">${esc(v.title||"Untitled")}<span class="tag${v.status==="Posted"?" good":""}">${esc(v.status||"To film")}</span>${late?'<span class="tag hot">late</span>':""}</span><span class="rt">${v.views?num(v.views)+" views":""}</span><span class="sub" style="grid-column:1/-1">${esc([v.owner?(v.owner==="Baker"?"Baker":"Josh")+" to do":"",v.format,v.suburb,v.status==="Posted"?"posted "+nice(v.postedOn):v.postBy?"post by "+nice(v.postBy):""].filter(Boolean).join(" · "))}</span></button>
-  <span class="acts">${nx?`<button class="btn" data-a="vstep" data-id="${esc(v.id)}">Mark ${esc(nx.toLowerCase())}</button>`:""}${v.status==="Posted"&&!v.link?`<button class="btn" data-a="open-vid" data-id="${esc(v.id)}">Paste Instagram link</button>`:""}${v.link?`<a class="btn" href="${esc(v.link)}" target="_blank" rel="noopener">View reel</a>`:""}</span></div>`;
+function vidRow(v,lbl,cls){
+  const k=STEPS.indexOf(v.status||"To film"),nx=STEPS[k+1];
+  return `<div class="item" style="cursor:default"><button data-a="open-vid" data-id="${esc(v.id)}" style="all:unset;cursor:pointer;grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px"><span class="nm">${esc(v.title||"Untitled")}<span class="tag${v.status==="Posted"?" good":""}">${esc(v.status||"To film")}</span>${lbl?`<span class="tag ${cls||""}">${esc(lbl)}</span>`:""}</span><span class="rt">${v.views?num(v.views)+" views":""}</span><span class="sub" style="grid-column:1/-1">${esc([v.owner?(v.owner==="Baker"?"Baker":AG.first)+" to do":"",v.format,v.suburb,v.status==="Posted"?"posted "+nice(v.postedOn):v.postOn?"posts "+nice(v.postOn):""].filter(Boolean).join(" · "))}</span></button>
+  <span class="acts">${nx?`<button class="btn" data-a="vstep" data-id="${esc(v.id)}">Mark ${esc(nx.toLowerCase())}</button>`:""}${v.script&&v.status!=="Posted"?`<button class="btn" data-a="script" data-id="${esc(v.id)}">Script</button>`:""}${v.status==="Posted"&&!v.link?`<button class="btn" data-a="open-vid" data-id="${esc(v.id)}">Paste Instagram link</button>`:""}${v.link?`<a class="btn" href="${esc(v.link)}" target="_blank" rel="noopener">View reel</a>`:""}</span></div>`;
+}
+function openScript(id){
+  const v=S.videos.find(x=>x.id===id);if(!v)return;
+  sheet(v.title||"Script",`<div class="script">${esc(v.script||v.hook||"No script yet.")}</div>${v.shots?`<p class="why">Shots: ${esc(v.shots)}</p>`:""}<textarea id="scTxt" class="link" style="position:absolute;left:-9999px">${esc(v.script||"")}</textarea>`,`<button class="btn" data-a="copy" data-src="scTxt">Copy script</button><button class="btn pri" data-a="open-vid" data-id="${esc(id)}">Edit video</button>`);
 }
 function viewsChart(){
   const P=S.videos.filter(v=>v.status==="Posted"&&+v.views>0).sort((a,b)=>String(a.postedOn).localeCompare(String(b.postedOn))).slice(-12);
   if(!P.length)return "";const mx=Math.max(...P.map(v=>+v.views));
   return `<div class="card"><div class="t"><h2>Views per reel</h2><span>last ${P.length} posted</span></div><div class="pad" style="display:grid;gap:8px">${P.map(v=>`<div style="display:grid;grid-template-columns:62px minmax(0,1fr) 52px;gap:10px;align-items:center;font-size:13px"><span class="why" style="font-size:12.5px">${esc(nice(v.postedOn))}</span><span title="${esc(v.title)}" style="display:grid;gap:3px;min-width:0"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(v.title)}</span><span class="bar"><i style="width:${Math.max(2,v.views/mx*100)}%"></i></span></span><b style="text-align:right;font-variant-numeric:tabular-nums">${num(v.views)}</b></div>`).join("")}</div></div>`;
 }
-function openVid(id){
-  const f=curFn(),v=id?S.videos.find(x=>x.id===id):{status:"To film",owner:"Josh",fortnight:f?f.id:"",postBy:f?f.end:""};if(!v)return;S.edit={c:"videos",id};
+function openVid(id,preset){
+  const f=curFn(),v=id?S.videos.find(x=>x.id===id):Object.assign({status:"To film",owner:AG.first,fortnight:f?f.id:"",postOn:f?nextFreeDay(f):""},preset||{});if(!v)return;S.edit={c:"videos",id};
   const fo=FNS().map(x=>`<option value="${esc(x.id)}"${x.id===v.fortnight?" selected":""}>${esc(x.label||x.id)}</option>`).join("");
-  sheet(id?(v.title||"Video"):"New video",`<label class="f">Title<input id="vTitle" value="${esc(v.title)}"></label><div class="f">Status${chipRow("vStat",STEPS,v.status||"To film")}</div><label class="f">Instagram link<input id="vLink" inputmode="url" placeholder="Paste the reel link once it's posted" value="${esc(v.link)}"></label><div class="g2"><label class="f">Views<input id="vViews" inputmode="numeric" value="${esc(v.views||"")}"></label><label class="f">Likes<input id="vLikes" inputmode="numeric" value="${esc(v.likes||"")}"></label></div><div class="g2"><label class="f">Comments<input id="vComments" inputmode="numeric" value="${esc(v.comments||"")}"></label><label class="f">Posted on<input id="vPosted" type="date" value="${esc(v.postedOn||"")}"></label></div><label class="f">Hook / what to say<textarea id="vHook">${esc(v.hook)}</textarea></label><div class="g2"><label class="f">Format<input id="vFormat" value="${esc(v.format)}"></label><label class="f">Suburb<input id="vSub" value="${esc(v.suburb)}"></label></div><div class="g2"><label class="f">Fortnight<select id="vFn">${fo}</select></label><label class="f">Post by<input id="vBy" type="date" value="${esc(v.postBy||"")}"></label></div><div class="f">Who's on it${chipRow("vOwn",["Josh","Baker"],v.owner||"Josh")}</div><div class="f">Heathridge local${chipRow("vLux",["Yes","No"],v.luxury?"Yes":"No")}</div>`,`${id?`<button class="btn dang" data-a="del" data-c="videos" data-id="${esc(id)}">Delete</button>`:""}<button class="btn pri" data-a="save-vid">Save</button>`);
+  const own=v.owner==="Baker"?"Baker":AG.first;
+  sheet(id?(v.title||"Video"):"New video",`<label class="f">Title<input id="vTitle" value="${esc(v.title)}"></label><div class="f">Status${chipRow("vStat",STEPS,v.status||"To film")}</div><div class="g2"><label class="f">Post on<input id="vOn" type="date" value="${esc(v.postOn||v.postBy||"")}"></label><label class="f">Fortnight<select id="vFn">${fo}</select></label></div><label class="f">Hook<textarea id="vHook" style="min-height:60px">${esc(v.hook)}</textarea></label><label class="f">Script<textarea id="vScript" style="min-height:140px" placeholder="What to say, beat by beat">${esc(v.script)}</textarea></label><label class="f">Shots<input id="vShots" value="${esc(v.shots)}"></label><label class="f">Instagram link<input id="vLink" inputmode="url" placeholder="Paste the reel link once it's posted" value="${esc(v.link)}"></label><div class="g2"><label class="f">Views<input id="vViews" inputmode="numeric" value="${esc(v.views||"")}"></label><label class="f">Likes<input id="vLikes" inputmode="numeric" value="${esc(v.likes||"")}"></label></div><div class="g2"><label class="f">Comments<input id="vComments" inputmode="numeric" value="${esc(v.comments||"")}"></label><label class="f">Posted on<input id="vPosted" type="date" value="${esc(v.postedOn||"")}"></label></div><div class="g2"><label class="f">Format<input id="vFormat" value="${esc(v.format)}"></label><label class="f">Suburb<input id="vSub" value="${esc(v.suburb)}"></label></div><div class="f">Who's on it${chipRow("vOwn",[AG.first,"Baker"],own)}</div><div class="f">Premium / luxury${chipRow("vLux",["Yes","No"],v.luxury?"Yes":"No")}</div>`,`${id?`<button class="btn dang" data-a="del" data-c="videos" data-id="${esc(id)}">Delete</button>`:""}<button class="btn pri" data-a="save-vid">Save</button>`);
 }
 function saveVid(){
   const {id}=S.edit||{},title=val("vTitle");if(!title){toast("Give the video a title.");return;}
   const n=x=>{const k=parseInt(String(val(x)).replace(/[^\d]/g,""));return isNaN(k)?null:k;};
   const st=chipVal("vStat")||"To film",old=id?S.videos.find(x=>x.id===id):{};
-  const d={title,status:st,link:val("vLink"),views:n("vViews"),likes:n("vLikes"),comments:n("vComments"),postedOn:val("vPosted")||(st==="Posted"?(old.postedOn||today()):""),hook:val("vHook"),format:val("vFormat"),suburb:val("vSub"),fortnight:val("vFn"),postBy:val("vBy"),owner:chipVal("vOwn")||"Josh",luxury:chipVal("vLux")==="Yes"};
-  if(!id){d.createdAt=new Date().toISOString();d.order=50;}
+  const d={title,status:st,postOn:val("vOn"),postBy:val("vOn"),hook:val("vHook"),script:val("vScript"),shots:val("vShots"),link:val("vLink"),views:n("vViews"),likes:n("vLikes"),comments:n("vComments"),postedOn:val("vPosted")||(st==="Posted"?(old.postedOn||today()):""),format:val("vFormat"),suburb:val("vSub"),fortnight:val("vFn"),owner:chipVal("vOwn")==="Baker"?"Baker":AG.first,luxury:chipVal("vLux")==="Yes"};
+  if(!id){d.createdAt=new Date().toISOString();d.order=50;Object.assign(d,S.newExtra||{});}S.newExtra=null;
   put("videos",id,d).then(()=>{close();toast("Saved");}).catch(err);
 }
 function openIdea(id){
@@ -344,7 +433,7 @@ function saveIdea(){
 }
 function ideaAdd(id){
   const x=S.ideas.find(i=>i.id===id),f=curFn();if(!x||!f)return;
-  put("videos","idea-"+id+"-"+f.id,{title:x.title,hook:x.hook||"",format:x.format||"",suburb:x.suburb||"",luxury:!!x.luxury,idea:id,fortnight:f.id,status:"To film",owner:"Josh",postBy:f.end,order:30,createdAt:new Date().toISOString()}).then(()=>{close();toast("Added to "+(f.label||"this fortnight"));}).catch(err);
+  put("videos","idea-"+id+"-"+f.id,{title:x.title,hook:x.hook||"",script:x.script||"",shots:x.shots||"",format:x.format||"",suburb:x.suburb||"",luxury:!!x.luxury,idea:id,fortnight:f.id,status:"To film",owner:AG.first,postOn:nextFreeDay(f),postBy:nextFreeDay(f),order:30,createdAt:new Date().toISOString()}).then(()=>{close();toast("Added to "+(f.label||"this fortnight"));}).catch(err);
 }
 function openFn(id){
   const L=FNS(),last=L[L.length-1];let f;
@@ -466,8 +555,18 @@ document.addEventListener("click",e=>{
     "spend":()=>put("campaigns",id,{spend:parseFloat(val("cSp").replace(/[$,]/g,""))||0}).then(()=>{toast("Spend saved");openC(id);}).catch(err),
     "copy":()=>{const s=document.getElementById(t.dataset.src);if(!s)return;(navigator.clipboard?navigator.clipboard.writeText(s.value):Promise.reject()).then(()=>toast("Copied"),()=>{s.select();document.execCommand("copy");toast("Copied");});},
     "csv":()=>csv(t.dataset.v),
+    "cv":()=>{S.cv=t.dataset.v;render();window.scrollTo(0,0);},
+    "autoplan":autoPlan,
+    "day-add":()=>{const d=t.dataset.v,f=curFn();if(!f)return;const un=S.videos.filter(v=>v.fortnight===f.id&&v.status!=="Posted"&&v.postOn!==d);sheet(dayLbl(d),`<p class="why">Pick a video to post on this day, or start a new one.</p>${un.map(v=>`<button class="item" data-a="place" data-id="${esc(v.id)}" data-v="${d}"><span class="nm">${esc(v.title)}<span class="tag">${esc(v.status||"To film")}</span></span><span class="sub">${v.postOn?"now "+esc(nice(v.postOn)):"not scheduled"}</span></button>`).join("")||'<p class="why">Everything is already scheduled.</p>'}`,`<button class="btn" data-a="cv-ideas">Idea maker</button><button class="btn pri" data-a="new-vid-day" data-v="${d}">New video</button>`);},
+    "place":()=>put("videos",id,{postOn:t.dataset.v,postBy:t.dataset.v}).then(()=>{close();toast("Posting "+nice(t.dataset.v));}).catch(err),
+    "new-vid-day":()=>openVid(null,{postOn:t.dataset.v}),
+    "cv-ideas":()=>{close();S.cv="ideas";render();window.scrollTo(0,0);},
+    "script":()=>openScript(id),
+    "g-goal":()=>{S.gGoal=t.dataset.v;genIdeas();render();},"g-sub":()=>{S.gSub=t.dataset.v;genIdeas();render();},"gen":()=>{genIdeas();render();},
+    "gen-save":()=>{const x=(S.gen||[]).find(g=>g.key===t.dataset.v);if(!x)return;put("ideas",null,genToIdea(x)).then(()=>{S.gen=S.gen.filter(g=>g!==x);render();toast("Idea saved");}).catch(err);},
+    "gen-add":()=>{const x=(S.gen||[]).find(g=>g.key===t.dataset.v),f=curFn();if(!x||!f)return;const d=nextFreeDay(f);put("videos",null,{title:x.title,hook:x.hook,script:scriptOf(x),shots:x.shots,format:x.format,suburb:x.suburb,luxury:x.luxury,fortnight:f.id,status:"To film",owner:AG.first,postOn:d,postBy:d,order:30,createdAt:new Date().toISOString()}).then(()=>{S.gen=S.gen.filter(g=>g!==x);render();toast(d?"Added. Posts "+nice(d)+".":"Added to the fortnight.");}).catch(err);},
     "fn":()=>{S.fn=t.dataset.v;render();},"new-fn":()=>openFn(null),"edit-fn":()=>openFn(id),"save-fn":saveFn,
-    "new-vid":()=>openVid(null),"open-vid":()=>openVid(id),"save-vid":saveVid,
+    "new-vid":()=>openVid(null),"open-vid":()=>{close();openVid(id);},"save-vid":saveVid,
     "vstep":()=>{const v=S.videos.find(x=>x.id===id);if(!v)return;const nx=STEPS[STEPS.indexOf(v.status||"To film")+1];if(!nx)return;const d={status:nx};if(nx==="Posted"&&!v.postedOn)d.postedOn=today();put("videos",id,d).then(()=>toast(nx==="Posted"?"Posted. Paste the Instagram link when you can.":nx)).catch(err);},
     "new-idea":()=>openIdea(null),"open-idea":()=>openIdea(id),"save-idea":saveIdea,"idea-add":()=>ideaAdd(id),
     "fix":()=>put("fixes",id,{done:t.checked}).catch(err),
