@@ -1,0 +1,85 @@
+{
+ "address": "31 Tokay Lane, The Vines WA 6069",
+ "lat": -31.769718,
+ "lng": 115.999143,
+ "pins": [
+  {
+   "name": "The Vines Resort & Country Club",
+   "cat": "golf",
+   "lat": -31.766,
+   "lng": 116.005764
+  },
+  {
+   "name": "Aveley Secondary College",
+   "cat": "school",
+   "lat": -31.7662,
+   "lng": 115.9877
+  },
+  {
+   "name": "Aveley North Primary School",
+   "cat": "school",
+   "lat": -31.778572,
+   "lng": 115.991642
+  },
+  {
+   "name": "Holy Cross College",
+   "cat": "school",
+   "lat": -31.773334,
+   "lng": 115.973875
+  },
+  {
+   "name": "Swan Valley Anglican Community School",
+   "cat": "school",
+   "lat": -31.793617,
+   "lng": 115.985344
+  },
+  {
+   "name": "Brooklane Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.76491,
+   "lng": 115.98687
+  },
+  {
+   "name": "Aveley Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.77755,
+   "lng": 115.987837
+  },
+  {
+   "name": "Ellenbrook Central",
+   "cat": "shopping",
+   "lat": -31.782569,
+   "lng": 115.969426
+  },
+  {
+   "name": "Ellenbrook Station",
+   "cat": "train",
+   "lat": -31.781602,
+   "lng": 115.96339
+  },
+  {
+   "name": "Ellenbrook District Open Space",
+   "cat": "park",
+   "lat": -31.765789,
+   "lng": 115.991317
+  },
+  {
+   "name": "Whiteman Park",
+   "cat": "park",
+   "lat": -31.820938,
+   "lng": 115.963231
+  },
+  {
+   "name": "Walyunga National Park",
+   "cat": "park",
+   "lat": -31.734678,
+   "lng": 116.035343
+  },
+  {
+   "name": "Lake Yakine",
+   "cat": "lake",
+   "lat": -31.7935,
+   "lng": 115.9979
+  }
+ ]
+}
