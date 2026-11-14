@@ -1,0 +1,58 @@
+{
+ "sat": "sat/tokay_loc",
+ "house": [
+  -31.769718,
+  115.999143
+ ],
+ "photo": "batch/31_tokay_ln/und/DJI_20261114184621_0148_D.jpg",
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "places": [
+  {
+   "name": "Aveley Shopping Centre",
+   "lat": -31.77755,
+   "lng": 115.987837,
+   "icon": "shop"
+  },
+  {
+   "name": "Aveley North Primary School",
+   "lat": -31.778572,
+   "lng": 115.991642,
+   "icon": "school"
+  },
+  {
+   "name": "Brooklane Shopping Centre",
+   "lat": -31.76491,
+   "lng": 115.98687,
+   "icon": "shop"
+  },
+  {
+   "name": "Aveley Secondary College",
+   "lat": -31.7662,
+   "lng": 115.9877,
+   "icon": "school"
+  },
+  {
+   "name": "Ellenbrook Station",
+   "lat": -31.781602,
+   "lng": 115.96339,
+   "icon": "train"
+  },
+  {
+   "name": "Walyunga National Park",
+   "lat": -31.734678,
+   "lng": 116.035343,
+   "icon": "park"
+  },
+  {
+   "name": "The Vines Resort & Country Club",
+   "lat": -31.766,
+   "lng": 116.005764,
+   "icon": "golf"
+  }
+ ],
+ "houseY": 0.72,
+ "houseX": 0.55,
+ "fs": 34
+}

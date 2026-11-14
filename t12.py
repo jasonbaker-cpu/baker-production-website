@@ -66,6 +66,7 @@ async def main():
                     ll=job['poly']; la0=math.radians(ll[0][0])
                     MY=111132.92-559.82*math.cos(2*la0)+1.175*math.cos(4*la0); MX=111412.84*math.cos(la0)-93.5*math.cos(3*la0)
                     xy=lambda q:((q[1]-ll[0][1])*MX,(q[0]-ll[0][0])*MY)
+                    _P0=[xy(q) for q in ll]; _area0=round(abs(sum(_P0[i][0]*_P0[(i+1)%len(_P0)][1]-_P0[(i+1)%len(_P0)][0]*_P0[i][1] for i in range(len(_P0))))/2)   # 15 Nov: lot size from the FULL cadastre ring (dropping kinks over-read 31 Tokay by 148 m2)
                     # drop near-collinear vertices (cadastre kinks)
                     while len(ll)>3:
                         drop=None
@@ -92,7 +93,7 @@ async def main():
                             lens[(i+j)//2]=fmt(sum(E[i:j+1]))
                         i=j+1
                     lens=[('' if E[k]<max(3,0.04*sum(E)) else v) for k,v in enumerate(lens)]
-                    area=round(abs(sum(P[i][0]*P[(i+1)%len(P)][1]-P[(i+1)%len(P)][0]*P[i][1] for i in range(len(P))))/2)
+                    area=_area0
                     if job.get('lens') and len(job['lens'])==len(P): lens=[(fmt(v) if v else '') for v in job['lens']]   # side lengths from the title/strata plan beat the cadastre
                     if job.get('area') and job.get('areaSource'): area=int(job['area'])   # lot size from the title/strata plan — only with a stated source
                     elif job.get('area'):   # 29 Oct (Jason): a hand-typed area with no source put 809 m2 on 47 Attra (cadastre 812). Cadastre wins; flag it.
