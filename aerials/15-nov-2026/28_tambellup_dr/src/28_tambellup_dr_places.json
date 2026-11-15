@@ -1,0 +1,103 @@
+{
+ "address": "28 Tambellup Dr, Dawesville WA 6211",
+ "lat": -32.624699004285,
+ "lng": 115.628911031237,
+ "pins": [
+  {
+   "name": "Caddadup Reserve",
+   "cat": "reserve",
+   "lat": -32.6152,
+   "lng": 115.6299
+  },
+  {
+   "name": "The Cut Golf Course",
+   "cat": "golf",
+   "lat": -32.611457,
+   "lng": 115.630967
+  },
+  {
+   "name": "Pyramids Beach",
+   "cat": "beach",
+   "lat": -32.6036296,
+   "lng": 115.6310248
+  },
+  {
+   "name": "Ocean Road Primary School",
+   "cat": "school",
+   "lat": -32.62472,
+   "lng": 115.6306
+  },
+  {
+   "name": "David Andrew Memorial Park",
+   "cat": "park",
+   "lat": -32.62423,
+   "lng": 115.63707
+  },
+  {
+   "name": "AB Bright Memorial Park",
+   "cat": "park",
+   "lat": -32.6263928,
+   "lng": 115.637829
+  },
+  {
+   "name": "Dawesville Foreshore Reserve",
+   "cat": "reserve",
+   "lat": -32.62453,
+   "lng": 115.64078
+  },
+  {
+   "name": "St Damien's Catholic Primary School",
+   "cat": "school",
+   "lat": -32.626501,
+   "lng": 115.631392
+  },
+  {
+   "name": "Ashley Reserve",
+   "cat": "reserve",
+   "lat": -32.6300779,
+   "lng": 115.6406152
+  },
+  {
+   "name": "Dawesville Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.634451,
+   "lng": 115.6388722
+  },
+  {
+   "name": "Warrungup Spring Reserve",
+   "cat": "reserve",
+   "lat": -32.643146,
+   "lng": 115.646317
+  },
+  {
+   "name": "Florida Beach Village",
+   "cat": "shopping",
+   "lat": -32.6301559,
+   "lng": 115.6305148
+  },
+  {
+   "name": "Tims Thicket Beach",
+   "cat": "beach",
+   "lat": -32.653991,
+   "lng": 115.6160879
+  },
+  {
+   "name": "Florida Park",
+   "cat": "park",
+   "lat": -32.6297,
+   "lng": 115.6261
+  },
+  {
+   "name": "Melros Reserve",
+   "cat": "reserve",
+   "lat": -32.6354104,
+   "lng": 115.6220947
+  },
+  {
+   "name": "Melros Beach",
+   "cat": "beach",
+   "lat": -32.634862,
+   "lng": 115.619272
+  }
+ ]
+}

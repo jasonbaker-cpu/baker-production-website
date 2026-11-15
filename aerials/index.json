@@ -1,6 +1,48 @@
 {
  "days": [
   {
+   "id": "15-nov-2026",
+   "label": "Sun 15 Nov 2026",
+   "gallery": "15-nov-2026/",
+   "jobs": [
+    {
+     "slug": "28_tambellup_dr",
+     "addr": "28 Tambellup Drive, Dawesville WA 6211",
+     "who": "David Beshay · Beshay Realty",
+     "agency": "beshay",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261115200433_0208_D_sq.jpg",
+      "DJI_20261115200421_0207_D_sq.jpg"
+     ],
+     "src": "15-nov-2026/28_tambellup_dr/src/",
+     "map": "28_tambellup_dr_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261115200433_0208_D_sq.jpg",
+      "DJI_20261115200421_0207_D_sq.jpg",
+      "DJI_20261115200452_0209_D.jpg",
+      "DJI_20261115200501_0210_D.jpg",
+      "DJI_20261115200526_0211_D.jpg",
+      "DJI_20261115200555_0212_D.jpg",
+      "DJI_20261115200612_0213_D.jpg",
+      "DJI_20261115200629_0214_D.jpg",
+      "DJI_20261115200645_0215_D.jpg",
+      "DJI_20261115200704_0216_D.jpg",
+      "DJI_20261115200735_0217_D.jpg",
+      "DJI_20261115200801_0218_D.jpg",
+      "DJI_20261115200836_0219_D.jpg"
+     ],
+     "notes": "Entry Notes: meet david at the property. Amenities to highlight: -. Boundaries/land features to mark: -. Strata: -. Land size: -. No edit notes for the drone photos.",
+     "portrait": false,
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/15-11-2026/28 Tambellup Dr, Dawesville WA 6211, Australia/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "sea-facing aerials 0209/0210/0216/0217 have sun glare left in and the new sky painted over sea and dunes; 0218 house pin off the house; 0219 over-saturated — please re-edit sky/colour",
+     "lot": "700 m² — 25.35 / 27.36 / 24.69 / 30.23 m (cadastre)"
+    }
+   ]
+  },
+  {
    "id": "14-nov-2026",
    "label": "Sat 14 Nov 2026",
    "gallery": "14-nov-2026/",
