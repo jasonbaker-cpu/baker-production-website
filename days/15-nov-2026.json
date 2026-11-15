@@ -1,0 +1,55 @@
+{
+ "label": "Sun 15 Nov 2026",
+ "jobs": [
+  {
+   "slug": "28_tambellup_dr",
+   "addr": "28 Tambellup Drive, Dawesville WA 6211",
+   "who": "David Beshay \u00b7 Beshay Realty",
+   "agency": "beshay",
+   "photos": "batch/28_tambellup_dr/jpg",
+   "map": "batch/28_tambellup_dr/28_tambellup_dr_places.json",
+   "poly": [
+    [
+     -32.624587766490386,
+     115.62910100630197
+    ],
+    [
+     -32.62480745635464,
+     115.62902887833052
+    ],
+    [
+     -32.62481108759687,
+     115.6287367146834
+    ],
+    [
+     -32.62459178866315,
+     115.62877827359277
+    ]
+   ],
+   "notes": "Entry Notes: meet david at the property. Amenities to highlight: -. Boundaries/land features to mark: -. Strata: -. Land size: -. No edit notes for the drone photos.",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/15-11-2026/28 Tambellup Dr, Dawesville WA 6211, Australia/Aerial - Drone Photography",
+   "docs": [],
+   "nadirPick": [
+    "0208",
+    "0207"
+   ],
+   "streetRot": {
+    "28_tambellup_dr__nadir": 0,
+    "28_tambellup_dr__nadir2": 0
+   },
+   "edgeOff": {
+    "1": -0.5,
+    "2": -0.6
+   },
+   "edgeOffs": {
+    "28_tambellup_dr__nadir2": {
+     "2": -0.75,
+     "3": -0.5
+    }
+   },
+   "tune": {
+    "noSolid": 1
+   }
+  }
+ ]
+}

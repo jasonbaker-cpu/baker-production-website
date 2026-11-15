@@ -1,0 +1,55 @@
+{
+ "sat": "sat/tambellup_loc",
+ "house": [
+  -32.624699,
+  115.628911
+ ],
+ "photo": "batch/28_tambellup_dr/und/DJI_20261115200526_0211_D.jpg",
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "places": [
+  {
+   "name": "The Cut Golf Course",
+   "lat": -32.611457,
+   "lng": 115.630967,
+   "icon": "golf"
+  },
+  {
+   "name": "David Andrew Memorial Park",
+   "lat": -32.62423,
+   "lng": 115.63707,
+   "icon": "park"
+  },
+  {
+   "name": "AB Bright Memorial Park",
+   "lat": -32.6263928,
+   "lng": 115.637829,
+   "icon": "park"
+  },
+  {
+   "name": "Dawesville Shopping Centre",
+   "lat": -32.634451,
+   "lng": 115.6388722,
+   "icon": "shop"
+  },
+  {
+   "name": "Florida Beach Village",
+   "lat": -32.6301559,
+   "lng": 115.6305148,
+   "icon": "shop"
+  },
+  {
+   "name": "Florida Park",
+   "lat": -32.6297,
+   "lng": 115.6261,
+   "icon": "park"
+  },
+  {
+   "name": "Melros Beach",
+   "lat": -32.634862,
+   "lng": 115.619272,
+   "icon": "beach"
+  }
+ ]
+}
