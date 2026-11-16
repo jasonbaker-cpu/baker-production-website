@@ -68,6 +68,7 @@
   #vMedia img,#vMedia video{width:100%;border-radius:8px;margin-top:10px;display:block}
   #vMedia p{margin:12px 0 0;font-weight:600}
   #stage{position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0}
+  .offline{background:#fff4d6;border:1px solid #e8d49a;color:#6b4e00;border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:12px}
   #lock{max-width:420px;margin:80px auto;padding:0 14px}
 </style>
 </head>
@@ -82,6 +83,7 @@
 </div>
 
 <div class="wrap" id="app" style="display:none">
+  <div id="offline" class="offline" style="display:none">No signal — you can still fill it in and press Send. It saves on this phone and sends by itself next time the page is open with signal.</div>
   <header>
     <h1>External Areas</h1>
     <span class="to">Baker Production</span>
@@ -152,7 +154,7 @@
 
   let KEY = "";
   let areas = [], videos = [], sending = false, uid = 0;
-  let jobs = null, jobsErr = "", showAll = false, jobsOpen = true, sentList = [];
+  let jobs = null, jobsErr = "", showAll = false, jobsOpen = true, sentList = [], jobsStale = false;
 
   // ---------- helpers ----------
   function esc(s){ return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
@@ -369,6 +371,7 @@
     });
     if (!list.length) html += `<div class="hint">${showAll ? "No shoots in the last few days." : "No floor plan jobs in the last few days."}</div>`;
     html += `<button type="button" class="linkbtn" id="jobsToggle">${showAll ? "Show floor plan jobs only" : "Show all jobs"}</button>` + ($("#addr").value.trim() ? ` &nbsp; <button type="button" class="linkbtn" id="jobsHide">Hide list ▴</button>` : "");
+    if (jobsStale) html = `<div class="hint">Saved list from ${esc(when(jobsStale))} — no signal to refresh it.</div>` + html;
     box.innerHTML = html;
     box.querySelectorAll(".job").forEach(b => b.onclick = () => { $("#addr").value = b.dataset.addr; jobsOpen = false; update(); renderJobs(); });
     $("#jobsToggle").onclick = () => { showAll = !showAll; renderJobs(); };
@@ -381,9 +384,14 @@
         if (r.error === "bad_key") { ls.set("ea_key", ""); location.reload(); return; }
         throw new Error(r.error);
       }
-      jobs = parseJobs(r.jobs); sentList = r.sent || [];
+      jobs = parseJobs(r.jobs); sentList = r.sent || []; jobsStale = false;
+      ls.set("ea_jobs", JSON.stringify({ at: Date.now(), jobs: r.jobs, sent: sentList }));
       renderJobs(); renderCloud();
     } catch {
+      try {
+        const c = JSON.parse(ls.get("ea_jobs") || "null");
+        if (c && Date.now() - c.at < 7 * 86400000) { jobs = parseJobs(c.jobs); sentList = c.sent || []; jobsStale = c.at; renderJobs(); renderCloud(); return; }
+      } catch {}
       jobsErr = "Couldn't load recent jobs. Type the address instead.";
       $("#cloudList").textContent = "Couldn't reach Google Drive right now.";
       renderJobs();
@@ -558,12 +566,22 @@
     } catch (e) {
       if (!rec) { setStatus("Something went wrong before anything was saved: " + ((e && e.message) || "unknown"), "bad"); }
       else if (phoneOk) {
-        setStatus((rec.sent ? "Measurements sent ✓ but not every video finished." : "No signal right now.") + " It's saved on this phone and will send automatically when signal is back.", "warn");
+        setStatus((rec.sent ? "Measurements sent ✓ but not every video finished." : "No signal right now — saved on this phone.") + " It sends by itself next time this page is open with signal.", "warn");
       } else setStatus("Couldn't send and couldn't save on this phone: " + ((e && e.message) || "unknown"), "bad");
     } finally {
       sending = false; setTimeout(() => setProg(null), 1500); update(); loadPhone();
     }
   };
+
+  function netState(){
+    const off = !navigator.onLine;
+    const el = $("#offline"); if (el) el.style.display = off ? "block" : "none";
+    if (!off && jobsStale) loadJobs();
+  }
+  window.addEventListener("online", netState);
+  window.addEventListener("offline", netState);
+  netState();
+  if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/external-areas/sw.js", { scope: "/external-areas/" }).catch(() => {}); }
 
   boot();
 })();
