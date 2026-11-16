@@ -335,3 +335,10 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 - prep_day's straighten.py misses hazy horizons ("no-change") — 51 Trink went out 1–3° tilted. Now t12 also calls the editor's `__bae.autoStraight()` on every oblique (sky-colour horizon in 80 strips + RANSAC; levels if off by ≥0.15°). Log lines: `level <photo> <deg>` or `LEVEL? no clear horizon` → check that photo by eye and fix with the Straighten slider / Level tool.
 - QC: every oblique's horizon must sit parallel to the editor grid. Tilt is a defect, never publish it.
 - Editor Photo tab → Straighten is Lightroom-style: slider (−10…+10°, grid while dragging), Auto, Level tool (click two points along the horizon), ⟲/⟳ 0.1°, Reset. `"noAutoLevel": true` on a job skips the auto step.
+
+## Boundaries: draw from the land plan + title whenever provided (Jason, 17 Nov)
+- If the job folder has a title, deposited/strata plan, sketch or plot plan: ALWAYS add the lot boundary to the top-downs.
+- Shape = SLIP cadastre polygon (layer 2 query at the house point). Side lengths + area = the plan/title figures, never measured guesses. Cross-check every cadastre edge against the plan (±0.1 m); mismatch → stop and flag.
+- Arcs: if sagitta < 0.3 m, treat as one edge with the plan's arc length; otherwise keep the arc points and label one segment.
+- areaSource names the doc (e.g. "DP 37800 Lot 131 + title").
+- If a top-down can't contain the whole lot with margin (corner off-frame), leave that frame without a boundary and say so.
