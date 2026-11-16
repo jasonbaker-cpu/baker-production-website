@@ -780,6 +780,34 @@ body.g3 .footer { background: #070707; }
 .w.nw .w-l { display: none; }
 
 </style>
+<style>
+/* ===== Gallery v4 — uniform bento grid (16 Nov 2026) ===== */
+.g-grid, .g-grid.js { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: var(--rh, 300px);
+  grid-auto-flow: row dense; gap: 30px 16px; padding: clamp(28px, 4vw, 56px) 0 clamp(64px, 8vw, 120px); }
+.g-grid .w { display: flex; flex-direction: column; width: auto !important; height: auto; margin: 0 !important; min-width: 0; }
+.g-grid .w.big { grid-column: span 2; grid-row: span 2; }
+.g-grid .w.tall { grid-row: span 2; }
+.g-grid .w.wide { grid-column: span 2; }
+.g-grid .w-m, .g-grid.js .w-m { flex: 1 1 auto; height: auto !important; min-height: 0; aspect-ratio: auto; }
+.g-grid .w-m img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.g-grid figcaption { flex: none; height: 34px; min-height: 0; padding-top: 12px; }
+.w[data-cat="headshots"] .w-m img { object-position: 50% 22%; }
+.w[data-cat="floorplans"] .w-m { background: #f6f4f0; }
+.w[data-cat="floorplans"] .w-m img { object-fit: contain; padding: 6%; }
+.w-vid img { filter: brightness(.86); }
+.g-cta, .g-cta h2, .g-cta p, .g-cta .g-eyebrow { text-align: left !important; }
+.g-cta h2 { margin-left: 0 !important; }
+.g-cta-a { justify-content: flex-start; }
+.w-vid::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,.35)); pointer-events: none; }
+.g-grid .w-play { z-index: 1; }
+.g-grid .w-tour-in { z-index: 1; }
+@media (max-width: 1100px) { .g-grid, .g-grid.js { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) {
+  .g-grid, .g-grid.js { grid-template-columns: minmax(0, 1fr); gap: 22px 0; }
+  .g-grid .w.big { grid-column: auto; grid-row: auto; }
+  .g-grid figcaption { height: 30px; padding-top: 9px; }
+}
+</style>
 </head>
 <body class="g3">
 
@@ -956,60 +984,53 @@ body.g3 .footer { background: #070707; }
     navbar.classList.remove('menu-open'); document.body.style.overflow = '';
   };
 
-  // ---------- justified layout ----------
+  // ---------- bento layout: JS only sets the row height and spans ----------
   var grid = document.getElementById('gGrid');
   var all = [].slice.call(grid.querySelectorAll('.w'));
   grid.classList.add('js');
-  var GAP = 14;
-
-  function layout() {
-    var W = Math.floor(grid.getBoundingClientRect().width) - 1;
-    var mobile = W < 700;
-    var gap = mobile ? 10 : GAP;
-    var target = mobile ? 230 : (W > 1300 ? 470 : 400);
-    var capH = mobile ? 30 : 34;
-    var vis = all.filter(function (f) { return !f.classList.contains('off'); });
-    var row = [], sum = 0;
-    function flush(items, last) {
-      if (!items.length) return;
-      var ars = items.map(function (f) { return parseFloat(f.dataset.ar) || 1.5; });
-      var tot = ars.reduce(function (a, b) { return a + b; }, 0);
-      var avail = W - gap * (items.length - 1);
-      var h = avail / tot;
-      if (last && h > target * 1.15) h = target;           // don't blow up a short last row
-      var used = 0;
-      items.forEach(function (f, k) {
-        var w = (k === items.length - 1 && !(last && h === target)) ? (avail - used) : Math.floor(ars[k] * h);
-        used += w;
-        f.style.width = w + 'px'; f.classList.toggle('nw', w < 170);
-        f.style.marginRight = (k === items.length - 1) ? '0' : gap + 'px';
-        f.style.marginBottom = (mobile ? 18 : 30) + 'px';
-        f.querySelector('.w-m').style.height = Math.round(h) + 'px';
-      });
-    }
-    vis.forEach(function (f, i) {
-      var ar = parseFloat(f.dataset.ar) || 1.5;
-      if (f.dataset.feature && ar > 1 && !mobile && !row.length) {
-        var h = Math.min(W / ar, window.innerHeight * 0.82);
-        var w = Math.round(h * ar);
-        f.style.width = w + 'px'; f.style.marginRight = '0';
-        f.style.marginLeft = f.style.marginRight = ((W - w) / 2) + 'px';
-        f.style.marginBottom = '30px';
-        f.querySelector('.w-m').style.height = Math.round(h) + 'px';
-        return;
-      }
-      f.style.marginLeft = '0';
-      var hPrev = row.length ? (W - gap * (row.length - 1)) / sum : Infinity;
-      var hWith = (W - gap * row.length) / (sum + ar);
-      if (hWith > target) { row.push(f); sum += ar; return; }
-      // adding this item drops the row below target: keep whichever height is closer
-      if (row.length && hPrev <= target * 1.35 && hPrev / target < target / hWith) {
-        flush(row, false); row = [f]; sum = ar;
-      } else {
-        row.push(f); flush(row, false); row = []; sum = 0;
-      }
+  // YouTube: hq720 / oardefault don't exist for every upload — fall back to hqdefault
+  [].forEach.call(grid.querySelectorAll('.w-vid img'), function (im) {
+    im.addEventListener('error', function () {
+      var m = im.src.match(/\/vi\/([^/]+)\//);
+      if (m && !/hqdefault/.test(im.src)) im.src = 'https://i.ytimg.com/vi/' + m[1] + '/hqdefault.jpg';
+      else im.style.visibility = 'hidden';
     });
-    flush(row, true);
+  });
+  function layout() {
+    var cs = getComputedStyle(grid);
+    var cols = cs.gridTemplateColumns.split(' ').length;
+    var W = grid.clientWidth;
+    var colGap = parseFloat(cs.columnGap) || 16;
+    var colW = (W - colGap * (cols - 1)) / cols;
+    var cap = cols === 1 ? 30 : 34;
+    grid.style.setProperty('--rh', Math.round(colW / 1.5 + cap) + 'px');
+    var showingAll = all.every(function (f) { return !f.classList.contains('off'); });
+    all.forEach(function (f) {
+      var ar = parseFloat(f.dataset.ar) || 1.5;
+      f.classList.toggle('tall', ar < 0.9);
+      f.classList.toggle('big', showingAll && !!f.dataset.feature && ar >= 0.9 && cols > 1);
+      f.style.width = ''; f.style.marginLeft = ''; f.style.marginRight = ''; f.style.marginBottom = '';
+      var m = f.querySelector('.w-m'); if (m) m.style.height = '';
+      f.classList.remove('wide');
+    });
+    // close the last row: widen landscape tiles near the end until the cell count divides evenly
+    if (cols > 1) {
+      var vis = all.filter(function (f) { return !f.classList.contains('off'); });
+      var cells = vis.reduce(function (n, f) { return n + (f.classList.contains('big') ? 4 : f.classList.contains('tall') ? 2 : 1); }, 0);
+      var need = (cols - cells % cols) % cols;
+      var uniform = vis.every(function (f) { return !f.classList.contains('big') && !f.classList.contains('tall'); });
+      if (uniform && need) {
+        var n = vis.length, rem = n % cols;
+        var pick = rem === 1 && cols === 3 ? [n - 1, n - 3] : [n - 1];
+        pick.forEach(function (k) { if (vis[k]) vis[k].classList.add('wide'); });
+        need = 0;
+      }
+      for (var i = vis.length - 1; i >= 0 && need > 0; i--) {
+        var f = vis[i], ar = parseFloat(f.dataset.ar) || 1.5;
+        if (f.classList.contains('big') || ar < 1.3) continue;
+        f.classList.add('wide'); need--;
+      }
+    }
   }
 
   var rt;
