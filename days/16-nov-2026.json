@@ -1,0 +1,38 @@
+{
+ "label": "Mon 16 Nov 2026",
+ "jobs": [
+  {
+   "slug": "22_marybrook_rd",
+   "addr": "22 Marybrook Rd, Heathridge WA 6027",
+   "who": "Mikenzie Hutchison \u00b7 Professionals CPG",
+   "agency": "flags-p",
+   "photos": "batch/22_marybrook_rd/jpg",
+   "map": "batch/22_marybrook_rd/22_marybrook_rd_places.json",
+   "notes": "Entry Notes: -. Amenities to highlight: -. Boundaries/land features to mark: -. Strata: -. Land size: -. No edit notes for the drone photos. Title C/T 1681/141 (Lot 113 on P14764) + sketch + plot plan in Dropbox.",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/16-11-2026/22 Marybrook Rd, Heathridge WA 6027, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "Certificate of Title 1681-141.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/16-11-2026/22 Marybrook Rd, Heathridge WA 6027, Australia/Aerial - Drone Photography/Certificate of Title with Sketch 1681-141 22 Marybrook Road, HEATHRIDGE 6027 - Certificate of Title 1681-141.pdf"
+    },
+    {
+     "name": "Sketch for 1681-141.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/16-11-2026/22 Marybrook Rd, Heathridge WA 6027, Australia/Aerial - Drone Photography/Certificate of Title with Sketch 1681-141 22 Marybrook Road, HEATHRIDGE 6027 - Sketch for 1681-141.pdf"
+    },
+    {
+     "name": "22 Marybrook plot plan.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/16-11-2026/22 Marybrook Rd, Heathridge WA 6027, Australia/Aerial - Drone Photography/22 Marybrook plot plan.pdf"
+    }
+   ],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "0013",
+    "0016"
+   ],
+   "streetRot": {
+    "22_marybrook_rd__nadir": 0,
+    "22_marybrook_rd__nadir2": 0
+   }
+  }
+ ]
+}

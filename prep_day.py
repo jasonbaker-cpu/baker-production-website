@@ -54,7 +54,7 @@ for j in D['jobs']:
     # wrong removals in  "keep": {"<photo file name>": ["c1"]}  — then run prep_day again. "noClean": true skips a job.
     if not j.get('noClean') and not os.environ.get('NOCLEAN'):
         from clean_lot import clean as _clean, xmp_cam as _xcam
-        _lot = {'poly': j['poly']} if j.get('poly') else None
+        _lot = {'poly': j.get('poly')} if j.get('poly') else None
         if _lot is None and str(j.get('map', '')).endswith('.json'):
             try: _m = json.load(open(j['map'])); _lot = {'lat': _m['lat'], 'lng': _m['lng']}
             except Exception: _lot = None
@@ -97,7 +97,7 @@ for j in D['jobs']:
         if j.get(k): base[k] = j[k]
     if nad and (j.get('poly') or j.get('nadirSplit')):   # 2 Nov: nadirSplit = top-down gets its own job (street-at-bottom turn) even with no boundary (subdivided/strata lot)
         obl = [f for f in ph if f not in nad]
-        run.append(dict(base, slug=j['slug'], photos=obl, poly=j['poly'], cams={f: cams[f] for f in obl if f in cams}))
+        run.append(dict(base, slug=j['slug'], photos=obl, poly=j.get('poly'), cams={f: cams[f] for f in obl if f in cams}))
         alt = lambda f: float((re.search(r'RelativeAltitude="([-+\d.]+)"', open(f,'rb').read(400000).decode('latin1')) or [0,'0'])[1])
         # 29 Oct (Jason): shooters often take TWO top-downs — one turned so the road is at the bottom, one higher/wider.
         # Edit both. Highest first (whole lot in frame); then the best different one (yaw differs >25 deg or >8 m higher/lower). Max 2.
@@ -148,7 +148,7 @@ for j in D['jobs']:
                     r_, z_ = _sqn(r_, fine); c_['yaw'] = c_['yaw'] + fine; c_['f35'] = c_['f35'] * z_
                     print('squared top-down', v, round(fine, 2), 'deg')
                 r_.save(n1, quality=95, exif=ex_.tobytes(), xmp=im_.info.get('xmp')); cams[n1] = c_; n0 = n1
-            run.append(dict(base, slug=v, photos=[n0], poly=j['poly'], full=1,
+            run.append(dict(base, slug=v, photos=[n0], poly=j.get('poly'), full=1,
                             snap={'on': True, 'mode': 'ridge', 'sc': 0.0, 'R': 2.5, 'rot': 3},
                             edgeOff=(j.get('edgeOff', {}) if i == 0 else (j.get('edgeOffs') or {}).get(v, {})), cams={n0: cams[n0]} if n0 in cams else {}))
             if grid is not None and not hand: run[-1]['gridAng'] = round(grid, 3)   # editor squares the boundary to this
@@ -160,7 +160,7 @@ for j in D['jobs']:
                 try:
                     from fencefit import fit_ll
                     from clean_lot import xmp_cam as _xc
-                    ring = [q for q in j['poly']]; ring = ring[:-1] if ring[0] == ring[-1] else ring
+                    ring = [q for q in j.get('poly')]; ring = ring[:-1] if ring[0] == ring[-1] else ring
                     cam_ = dict(_xc(n0) or {}); cam_.update({k: v for k, v in (cams.get(n0) or {}).items() if k in ('lat', 'lng', 'h', 'yaw', 'pitch', 'roll', 'f35')})
                     px, inf = fit_ll(n0, cam_, ring, j.get('area')) if cam_.get('lat') is not None else (None, {'error': 'no camera'})
                     FF[v] = inf
