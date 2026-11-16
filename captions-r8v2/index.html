@@ -525,10 +525,10 @@ $('btnExp').onclick = async () => {
   if (!video.duration || exporting) return;
   const mime = pickMime(); if (!mime) { setStatus('expStatus', 'This browser can’t record video. Use Chrome on a computer.', 'err'); return; }
   outExt = mime.startsWith('video/mp4') ? 'mp4' : 'webm';
-  try { ensureAudio(); await actx.resume(); } catch(e){}
+  try { ensureAudio(); await Promise.race([actx.resume(), new Promise(r => setTimeout(r, 1500))]); } catch(e){}
   await document.fonts.load(`${S.weight} 60px "${S.font}"`).catch(()=>{});
   exporting = true; $('btnExp').disabled = true; $('btnTx').disabled = true;
-  video.pause(); video.currentTime = 0; await new Promise(r => video.addEventListener('seeked', r, {once:true}));
+  video.pause(); if (video.currentTime > 0) { const sk = new Promise(r => video.addEventListener('seeked', r, {once:true})); video.currentTime = 0; await Promise.race([sk, new Promise(r => setTimeout(r, 3000))]); }
   draw();
   const vs = cv.captureStream(30);
   const tracks = [...vs.getVideoTracks()]; if (recDest) tracks.push(...recDest.stream.getAudioTracks());
