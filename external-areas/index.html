@@ -63,6 +63,8 @@
   .linkbtn{background:none;border:0;padding:6px 0;color:var(--accent);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
   .viewer{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;z-index:11;overflow:auto}
   .vsheet{background:#fff;max-width:560px;margin:30px auto;border-radius:16px;padding:16px}
+  .vrow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .vrow small{color:var(--muted);display:block}
   #vMedia img,#vMedia video{width:100%;border-radius:8px;margin-top:10px;display:block}
   #vMedia p{margin:12px 0 0;font-weight:600}
   #stage{position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0}
@@ -99,8 +101,9 @@
 
   <div class="section">
     <label class="lbl">Video of external areas</label>
-    <label class="filebtn">🎥 <span id="vidLabel">Record or choose video</span><input type="file" id="vid" accept="video/*"></label>
-    <div class="vidinfo" id="vidInfo"></div>
+    <div id="vidList"></div>
+    <label class="filebtn">🎥 <span id="vidLabel">Record or choose videos</span><input type="file" id="vid" accept="video/*" multiple></label>
+    <div class="hint">You can pick several at once, or add more one by one.</div>
   </div>
 
   <div class="section">
@@ -148,7 +151,7 @@
   };
 
   let KEY = "";
-  let areas = [], video = null, videoDur = null, sending = false, uid = 0;
+  let areas = [], videos = [], sending = false, uid = 0;
   let jobs = null, jobsErr = "", showAll = false, jobsOpen = true, sentList = [];
 
   // ---------- helpers ----------
@@ -245,18 +248,24 @@
 
   // ---------- video ----------
   $("#vid").onchange = async e => {
-    const f = e.target.files && e.target.files[0]; if (!f) return;
-    video = f; videoDur = null; $("#vidLabel").textContent = "Change video";
-    $("#vidInfo").textContent = f.name + " · " + mb(f.size);
-    try {
-      videoDur = await probeDuration(f);
-      let note = mb(f.size) + " · " + fmtDur(videoDur);
-      if (f.size > VIDEO_TARGET) note += " · will be compressed before sending (keep this screen open)";
-      if (videoDur > 300) note += " · over 5 min — trim it first";
-      $("#vidInfo").textContent = note;
-    } catch {}
-    update();
+    const files = [...(e.target.files || [])]; e.target.value = "";
+    for (const f of files) {
+      const v = { id: ++uid, file: f, dur: null };
+      videos.push(v);
+      try { v.dur = await probeDuration(f); } catch {}
+    }
+    renderVideos(); update();
   };
+  function renderVideos(){
+    $("#vidLabel").textContent = videos.length ? "Add more videos" : "Record or choose videos";
+    $("#vidList").innerHTML = videos.map((v, i) => {
+      let note = mb(v.file.size) + (v.dur != null ? " · " + fmtDur(v.dur) : "");
+      if (v.file.size > VIDEO_TARGET) note += " · will be compressed";
+      if (v.dur > 300) note += " · over 5 min — trim it first";
+      return `<div class="vrow"><div>Video ${i + 1}<small>${esc(note)}</small></div><button class="x" type="button" data-i="${i}">Remove</button></div>`;
+    }).join("");
+    $("#vidList").querySelectorAll("button").forEach(b => b.onclick = () => { videos.splice(+b.dataset.i, 1); renderVideos(); update(); });
+  }
   function probeDuration(f){
     return new Promise((res, rej) => {
       const v = document.createElement("video"); v.preload = "metadata"; v.muted = true; v.playsInline = true;
@@ -316,7 +325,7 @@
   function update(){
     const t = messageText();
     $("#preview").textContent = t || "Add an address and at least one area.";
-    $("#send").disabled = sending || !t || (videoDur != null && videoDur > 300);
+    $("#send").disabled = sending || !t || videos.some(v => v.dur > 300);
   }
   $("#addr").oninput = () => { update(); if (jobs) renderJobs(); };
 
@@ -417,7 +426,7 @@
       const e = document.createElement("div"); e.className = "entry";
       const thumb = x.photos[0] ? `<img src="${mkUrl(x.photos[0].blob)}" alt="">` : '<span class="ph">🎥</span>';
       const left = Math.max(0, Math.ceil((x.at + KEEP_MS - Date.now()) / 86400000));
-      e.innerHTML = `${thumb}<div>${esc(x.addr)}<small>${when(x.at)} · ${x.photos.length} photo${x.photos.length===1?"":"s"}${x.video?" + video":""} · ${left} day${left===1?"":"s"} left · ${stateText(x)}</small></div>`;
+      e.innerHTML = `${thumb}<div>${esc(x.addr)}<small>${when(x.at)} · ${x.photos.length} photo${x.photos.length===1?"":"s"}${vids(x).length ? " + " + vids(x).length + " video" + (vids(x).length===1?"":"s") : ""} · ${left} day${left===1?"":"s"} left · ${stateText(x)}</small></div>`;
       e.onclick = () => openViewer(x);
       box.appendChild(e);
     });
@@ -426,7 +435,7 @@
   function openViewer(x){
     vItem = x; vArmed = false; $("#vDel").textContent = "Delete from phone";
     $("#vTitle").textContent = x.addr; $("#vText").textContent = x.text;
-    $("#vMedia").innerHTML = x.photos.map(p => `<p>${esc(p.label)}</p><img src="${mkUrl(p.blob)}" alt="">`).join("") + (x.video ? `<p>Video</p><video src="${mkUrl(x.video.blob)}" controls playsinline></video>` : "");
+    $("#vMedia").innerHTML = x.photos.map(p => `<p>${esc(p.label)}</p><img src="${mkUrl(p.blob)}" alt="">`).join("") + vids(x).map((v, i) => `<p>Video ${i + 1}</p><video src="${mkUrl(v.blob)}" controls playsinline></video>`).join("");
     $("#vSend").style.display = pending(x) ? "" : "none"; $("#vSend").disabled = false; $("#vMsg").textContent = "";
     $("#viewer").style.display = "block";
   }
@@ -445,10 +454,16 @@
   };
 
   // ---------- delivery (measurements + photos first, video second, retried until done) ----------
-  function pending(x){ return !x.sent || (x.video && !x.videoSent); }
+  // older saved jobs had a single "video"; newer ones have a "videos" list
+  function vids(x){
+    if (!x.videos) x.videos = x.video ? [{ name: x.video.name, blob: x.video.blob, sent: !!x.videoSent }] : [];
+    return x.videos;
+  }
+  function pending(x){ return !x.sent || vids(x).some(v => !v.sent); }
   function stateText(x){
     if (!x.sent) return "waiting for signal — will send automatically";
-    if (x.video && !x.videoSent) return "measurements sent · video still to upload";
+    const left = vids(x).filter(v => !v.sent).length;
+    if (left) return "measurements sent · " + left + " video" + (left === 1 ? "" : "s") + " still to upload";
     return "sent";
   }
   const busy = new Set();
@@ -468,13 +483,16 @@
       x.sent = true; x.folderId = r.folderId; x.emailed = r.emailed;
       await idbPut(x);
     }
-    if (x.video && !x.videoSent) {
-      say("Measurements sent ✓ · uploading video…");
-      const body = { k: KEY, action: "video", folderId: x.folderId, addr: x.addr,
-        video: { name: x.video.name, mime: x.video.blob.type || "video/mp4", b64: await blobToB64(x.video.blob) } };
-      const r = await apiPost(body, sec => say("Measurements sent ✓ · uploading video… " + Math.round(sec) + "s"));
+    const all = vids(x);
+    for (let i = 0; i < all.length; i++) {
+      const v = all[i]; if (v.sent) continue;
+      const tag = all.length > 1 ? "video " + (i + 1) + " of " + all.length : "video";
+      say("Measurements sent ✓ · uploading " + tag + "…");
+      const body = { k: KEY, action: "video", folderId: x.folderId, addr: x.addr, part: all.length > 1 ? (i + 1) + " of " + all.length : "",
+        video: { name: v.name, mime: v.blob.type || "video/mp4", b64: await blobToB64(v.blob) } };
+      const r = await apiPost(body, sec => say("Measurements sent ✓ · uploading " + tag + "… " + Math.round(sec) + "s"));
       if (!r.ok) throw new Error(r.error || "Server error");
-      x.videoSent = true;
+      v.sent = true;
       await idbPut(x);
     }
   }
@@ -509,37 +527,38 @@
         photos.push({ label: areaName(a), name: slug(addr) + "-" + areaName(a).replace(/[^A-Za-z0-9]+/g, "-") + ".jpg", blob });
       }
 
-      let vblob = null, vname = null;
-      if (video) {
-        vblob = video; vname = slug(addr) + "-external-areas." + ((video.name.split(".").pop() || "mov").toLowerCase());
-        if (video.size > VIDEO_TARGET) {
-          setStatus("Compressing video — keep this screen open…");
+      const vlist = [];
+      for (let i = 0; i < videos.length; i++) {
+        const src = videos[i].file, n = videos.length > 1 ? "-" + (i + 1) : "";
+        let blob = src, name = slug(addr) + "-external-areas" + n + "." + ((src.name.split(".").pop() || "mov").toLowerCase());
+        if (src.size > VIDEO_TARGET) {
+          setStatus("Compressing video " + (i + 1) + " of " + videos.length + " — keep this screen open…");
           try {
-            const out = await compressVideo(video, videoDur || await probeDuration(video), p => setProg(p * 0.9));
-            vblob = out.blob; vname = slug(addr) + "-external-areas." + out.ext;
-          } catch { vblob = null; vidNote = "Video couldn't be compressed on this phone, so it wasn't included."; }
-          if (vblob && vblob.size > 30 * 1024 * 1024) { vblob = null; vidNote = "Video still too big after compressing, so it wasn't included. Trim it and try again."; }
+            const out = await compressVideo(src, videos[i].dur || await probeDuration(src), p => setProg((i + p) / videos.length * 0.9));
+            blob = out.blob; name = slug(addr) + "-external-areas" + n + "." + out.ext;
+          } catch { blob = null; vidNote += " Video " + (i + 1) + " couldn't be compressed on this phone, so it wasn't included."; }
+          if (blob && blob.size > 30 * 1024 * 1024) { blob = null; vidNote += " Video " + (i + 1) + " was still too big after compressing — trim it."; }
         }
+        if (blob) vlist.push({ name, blob, sent: false });
       }
-
       rec = { id: Date.now() + "-" + Math.random().toString(36).slice(2, 6), addr, text, lines: listed.map(areaLine), at: Date.now(),
-        photos, video: vblob ? { name: vname, blob: vblob } : null, sent: false, videoSent: false, folderId: null };
+        photos, videos: vlist, sent: false, folderId: null };
       try { await idbPut(rec); phoneOk = true; } catch {}
 
       // the form is safe on the phone now — clear it for the next job
-      areas = [newArea("Alfresco")]; video = null; videoDur = null;
-      $("#addr").value = ""; $("#vid").value = ""; $("#vidLabel").textContent = "Record or choose video"; $("#vidInfo").textContent = "";
+      areas = [newArea("Alfresco")]; videos = []; renderVideos();
+      $("#addr").value = ""; $("#vid").value = "";
       renderAreas(); jobsOpen = true; renderJobs(); loadPhone();
 
       setProg(0.95);
       await deliver(rec, m => setStatus(m));
       setProg(1);
-      setStatus((rec.emailed === false ? "Saved to Drive but the email failed" : "Sent and saved to Google Drive") + (vidNote ? ". " + vidNote : ""), vidNote || rec.emailed === false ? "warn" : "ok");
+      setStatus((rec.emailed === false ? "Saved to Drive but the email failed" : "Sent and saved to Google Drive") + (vidNote ? "." + vidNote : ""), vidNote || rec.emailed === false ? "warn" : "ok");
       loadJobs();
     } catch (e) {
       if (!rec) { setStatus("Something went wrong before anything was saved: " + ((e && e.message) || "unknown"), "bad"); }
       else if (phoneOk) {
-        setStatus((rec.sent ? "Measurements sent ✓ but the video didn't finish." : "No signal right now.") + " It's saved on this phone and will send automatically when signal is back.", "warn");
+        setStatus((rec.sent ? "Measurements sent ✓ but not every video finished." : "No signal right now.") + " It's saved on this phone and will send automatically when signal is back.", "warn");
       } else setStatus("Couldn't send and couldn't save on this phone: " + ((e && e.message) || "unknown"), "bad");
     } finally {
       sending = false; setTimeout(() => setProg(null), 1500); update(); loadPhone();
