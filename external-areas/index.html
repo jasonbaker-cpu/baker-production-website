@@ -126,7 +126,7 @@
   </div>
 
   <div class="section">
-    <label class="lbl">Saved on this phone (cleared after 3 days)</label>
+    <label class="lbl">Saved on this phone (kept for 7 days)</label>
     <div id="phoneList" class="recent">Nothing yet.</div>
   </div>
 </div>
@@ -152,7 +152,7 @@
   const API = "https://script.google.com/macros/s/AKfycbwdHWh-wlfixqfTV0_XM3clqY1HJbK-AqFz2YNZ1Qam9IaM3LKb7NXYyyHCk1w60qNe/exec";
   const TYPES = ["Alfresco","Garage","Porch","Balcony","Carport","Patio","Deck","Shed","Other"];
   const VIDEO_TARGET = 14 * 1024 * 1024;
-  const KEEP_MS = 3 * 24 * 3600 * 1000;
+  const KEEP_MS = 7 * 24 * 3600 * 1000;
   const $ = s => document.querySelector(s);
   const ls = {
     get(k){ try { return localStorage.getItem(k); } catch { return null; } },
