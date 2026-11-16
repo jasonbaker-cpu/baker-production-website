@@ -5,7 +5,7 @@
 
   var navbar = document.getElementById('navbar');
   if (navbar) {
-    var onScroll = function () { navbar.classList.toggle('scrolled', window.pageYOffset > 80); };
+    var onScroll = function () { navbar.classList.toggle('scrolled', navbar.classList.contains('nav-solid') || window.pageYOffset > 80); };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   }
