@@ -151,7 +151,9 @@
   // Google Apps Script web app (runs as admin@bakerproduction.com)
   const API = "https://script.google.com/macros/s/AKfycbwdHWh-wlfixqfTV0_XM3clqY1HJbK-AqFz2YNZ1Qam9IaM3LKb7NXYyyHCk1w60qNe/exec";
   const TYPES = ["Alfresco","Garage","Porch","Balcony","Carport","Patio","Deck","Shed","Other"];
-  const VIDEO_TARGET = 14 * 1024 * 1024;
+  const COMPRESS_OVER = 150 * 1024 * 1024;   // only very big videos get shrunk on the phone (uploads are resumable, so size isn't a problem)
+  const VIDEO_TARGET = 60 * 1024 * 1024;     // target size when we do shrink one
+  const CHUNK = 8 * 262144;                  // 2 MB pieces — small enough to finish on weak signal
   const KEEP_MS = 7 * 24 * 3600 * 1000;
   const $ = s => document.querySelector(s);
   const ls = {
@@ -269,8 +271,7 @@
     $("#vidLabel").textContent = videos.length ? "Add more videos" : "Record or choose videos";
     $("#vidList").innerHTML = videos.map((v, i) => {
       let note = mb(v.file.size) + (v.dur != null ? " · " + fmtDur(v.dur) : "");
-      if (v.file.size > VIDEO_TARGET) note += " · will be compressed";
-      if (v.dur > 300) note += " · over 5 min — trim it first";
+      if (v.file.size > COMPRESS_OVER) note += " · big — will be shrunk first (keep screen open)";
       return `<div class="vrow"><div>Video ${i + 1}<small>${esc(note)}</small></div><button class="x" type="button" data-i="${i}">Remove</button></div>`;
     }).join("");
     $("#vidList").querySelectorAll("button").forEach(b => b.onclick = () => { videos.splice(+b.dataset.i, 1); renderVideos(); update(); });
@@ -334,7 +335,7 @@
   function update(){
     const t = messageText();
     $("#preview").textContent = t || "Add an address and at least one area.";
-    $("#send").disabled = sending || !t || videos.some(v => v.dur > 300);
+    $("#send").disabled = sending || !t;
   }
   $("#addr").oninput = () => { update(); if (jobs) renderJobs(); };
 
@@ -496,32 +497,74 @@
     say = say || (() => {});
     if (!x.sent) {
       say("Sending measurements and photos…");
-      const body = { k: KEY, addr: x.addr, text: x.text, lines: x.lines || x.text.split("\n").slice(1),
+      const body = { k: KEY, id: x.id, videoCount: vids(x).length, addr: x.addr, text: x.text, lines: x.lines || x.text.split("\n").slice(1),
         photos: await Promise.all(x.photos.map(async p => ({ label: p.label, name: p.name, b64: await blobToB64(p.blob) }))) };
       const r = await apiPost(body, sec => say("Sending measurements and photos… " + Math.round(sec) + "s"));
       if (!r.ok) throw new Error(r.error === "bad_key" ? "The team code is wrong — reopen the page." : (r.error || "Server error"));
       x.sent = true; x.folderId = r.folderId; x.emailed = r.emailed;
-      await idbPut(x);
+      await save(x);
     }
     const all = vids(x);
     for (let i = 0; i < all.length; i++) {
       const v = all[i]; if (v.sent) continue;
       const tag = all.length > 1 ? "video " + (i + 1) + " of " + all.length : "video";
-      say("Measurements sent ✓ · uploading " + tag + "…");
-      const body = { k: KEY, action: "video", folderId: x.folderId, addr: x.addr, part: all.length > 1 ? (i + 1) + " of " + all.length : "",
-        video: { name: v.name, mime: v.blob.type || "video/mp4", b64: await blobToB64(v.blob) } };
-      const r = await apiPost(body, sec => say("Measurements sent ✓ · uploading " + tag + "… " + Math.round(sec) + "s"));
+      const part = all.length > 1 ? (i + 1) + " of " + all.length : "";
+      if (!v.fileId) await uploadVideo(x, v, pct => say("Measurements sent ✓ · uploading " + tag + "… " + pct + "%"));
+      say("Measurements sent ✓ · finishing " + tag + "…");
+      const r = await apiPost({ k: KEY, action: "videoDone", folderId: x.folderId, fileId: v.fileId, addr: x.addr, part });
       if (!r.ok) throw new Error(r.error || "Server error");
       v.sent = true;
-      await idbPut(x);
+      await save(x);
     }
   }
+
+  // Uploads straight into Google Drive in 2 MB pieces. If signal drops, the next try
+  // asks Drive how much arrived and carries on from there — nothing is re-sent.
+  async function uploadVideo(x, v, onPct){
+    const size = v.blob.size;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      if (!v.uploadUrl) {
+        const r = await apiPost({ k: KEY, action: "videoStart", folderId: x.folderId, name: v.name, mime: v.blob.type || "video/mp4", size });
+        if (!r.ok) throw new Error(r.error || "Server error");
+        if (r.already) { v.fileId = r.fileId; await save(x); return; }
+        v.uploadUrl = r.uploadUrl; await save(x);
+      }
+      let res = await put(v.uploadUrl, null, "bytes */" + size);
+      if (res.status === 404 || res.status === 410) { v.uploadUrl = null; await save(x); continue; }   // session expired — start again
+      while (true) {
+        if (res.status === 200 || res.status === 201) { v.fileId = (await res.json()).id; v.uploadUrl = null; await save(x); return; }
+        if (res.status !== 308) throw new Error("Drive upload " + res.status);
+        const range = res.headers.get("Range");
+        const start = range ? +range.split("-")[1] + 1 : 0;
+        onPct(Math.floor(start / size * 100));
+        const end = Math.min(size, start + CHUNK);
+        res = await put(v.uploadUrl, v.blob.slice(start, end), "bytes " + start + "-" + (end - 1) + "/" + size);
+      }
+    }
+    throw new Error("Drive upload could not start");
+  }
+  async function put(url, body, range){
+    const ctl = new AbortController(); const kill = setTimeout(() => ctl.abort(), 3 * 60 * 1000);
+    try { return await fetch(url, { method: "PUT", headers: { "Content-Range": range }, body, signal: ctl.signal }); }
+    catch { throw new Error("network"); }
+    finally { clearTimeout(kill); }
+  }
+
+  // Jobs live on the phone (IndexedDB). If the phone refuses (storage full / private mode),
+  // keep them in memory so they still send while the page is open.
+  const memJobs = new Map();
+  async function save(x){
+    try { await idbPut(x); memJobs.delete(x.id); }
+    catch { memJobs.set(x.id, x); }
+  }
+
   let retrying = false;
   async function retryPending(){
     if (retrying || sending || !navigator.onLine) return;
     retrying = true;
     try {
-      const all = (await idbAll()).filter(pending).sort((a, b) => a.at - b.at);
+      let stored = []; try { stored = await idbAll(); } catch {}
+      const all = [...stored, ...memJobs.values()].filter(pending).sort((a, b) => a.at - b.at);
       for (const x of all) {
         try { await deliver(x); } catch { break; }   // still no signal — try again later
       }
@@ -551,19 +594,18 @@
       for (let i = 0; i < videos.length; i++) {
         const src = videos[i].file, n = videos.length > 1 ? "-" + (i + 1) : "";
         let blob = src, name = slug(addr) + "-external-areas" + n + "." + ((src.name.split(".").pop() || "mov").toLowerCase());
-        if (src.size > VIDEO_TARGET) {
-          setStatus("Compressing video " + (i + 1) + " of " + videos.length + " — keep this screen open…");
+        if (src.size > COMPRESS_OVER) {
+          setStatus("Shrinking video " + (i + 1) + " of " + videos.length + " — keep this screen open…");
           try {
             const out = await compressVideo(src, videos[i].dur || await probeDuration(src), p => setProg((i + p) / videos.length * 0.9));
-            blob = out.blob; name = slug(addr) + "-external-areas" + n + "." + out.ext;
-          } catch { blob = null; vidNote += " Video " + (i + 1) + " couldn't be compressed on this phone, so it wasn't included."; }
-          if (blob && blob.size > 30 * 1024 * 1024) { blob = null; vidNote += " Video " + (i + 1) + " was still too big after compressing — trim it."; }
+            if (out.blob.size > 0 && out.blob.size < src.size) { blob = out.blob; name = slug(addr) + "-external-areas" + n + "." + out.ext; }
+          } catch {}   // couldn't shrink it — send the original, it just takes longer
         }
-        if (blob) vlist.push({ name, blob, sent: false });
+        vlist.push({ name, blob, sent: false });
       }
       rec = { id: Date.now() + "-" + Math.random().toString(36).slice(2, 6), addr, text, lines: listed.map(areaLine), at: Date.now(),
         photos, videos: vlist, sent: false, folderId: null };
-      try { await idbPut(rec); phoneOk = true; } catch {}
+      try { await idbPut(rec); phoneOk = true; } catch { memJobs.set(rec.id, rec); vidNote += " This phone wouldn't save a copy (storage full?) — keep this page open until it says Sent."; }
 
       // the form is safe on the phone now — clear it for the next job
       areas = [newArea("Alfresco")]; videos = []; renderVideos();
@@ -579,7 +621,7 @@
       if (!rec) { setStatus("Something went wrong before anything was saved: " + ((e && e.message) || "unknown"), "bad"); }
       else if (phoneOk) {
         setStatus((rec.sent ? "Measurements sent ✓ but not every video finished." : "No signal right now — saved on this phone.") + " It sends by itself next time this page is open with signal.", "warn");
-      } else setStatus("Couldn't send and couldn't save on this phone: " + ((e && e.message) || "unknown"), "bad");
+      } else setStatus("Not sent yet, and this phone wouldn't save a copy — keep this page open, it keeps trying every minute.", "bad");
     } finally {
       sending = false; setTimeout(() => setProg(null), 1500); update(); loadPhone();
     }

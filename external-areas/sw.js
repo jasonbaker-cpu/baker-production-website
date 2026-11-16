@@ -1,6 +1,6 @@
 // External Areas — lets the page open with no signal.
 // The page itself: try the network first (so updates arrive), fall back to the saved copy.
-const CACHE = "external-areas-v1";
+const CACHE = "external-areas-v2";
 const PAGE = "/external-areas/";
 const ASSETS = [PAGE, "/favicon.png", "/apple-touch-icon.png"];
 
