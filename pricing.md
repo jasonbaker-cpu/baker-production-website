@@ -18,7 +18,7 @@ Book: https://portal.bakerproduction.com/book · Phone: +61 466 789 522 · Email
 | Signature | Sales photography + floor plan + 360° interior tour + drone + full listing video | 120 min | $750 |
 | Elite Listing | Sales photography + twilight, floor plan, drone, day-to-night video, 360° virtual tour (inside and out) and social reel | 150 min | $1,299 |
 
-Package prices cover homes up to 140m² of internal living area. Add $40 for 140–270m², $60 for 270–370m², and $60 plus $1 per m² above 370m² (a 450m² home adds $140). Billed on the measured area. If the measured area lands in a different size band from the one booked, we adjust the price once the plan is finished. Homes over 1,200m² are quoted individually — get in touch first.
+Package prices cover homes up to 140m² of internal living area. Add $40 for 140–270m², $60 for 270–370m², $100 for 370–470m², and $100 plus $1 per m² above 470m² (a 520m² home adds $150). Billed on the measured area. If the measured area lands in a different size band from the one booked, we adjust the price once the plan is finished. Homes over 1,200m² are quoted individually — get in touch first.
 
 ## Photography
 
@@ -49,7 +49,8 @@ Package prices cover homes up to 140m² of internal living area. Add $40 for 140
 | Floor Plan — Small | Internal area up to 140m². Includes a 360° interior virtual tour. | $159 |
 | Floor Plan — Medium | Internal area 140–270m². Includes a 360° interior virtual tour. | $199 |
 | Floor Plan — Large | Internal area 270–370m². Includes a 360° interior virtual tour. | $219 |
-| Floor Plan — Over 370m² | $219 plus $1 per m² above 370 (450m² = $299). Includes a 360° interior virtual tour. | $219 + $1/m² |
+| Floor Plan — Extra Large | Internal area 370–470m². Includes a 360° interior virtual tour. | $299 |
+| Floor Plan — Over 470m² | $299 plus $1 per m² above 470 (550m² = $379). Includes a 360° interior virtual tour. | $299 + $1/m² |
 | Floor Plan Redraw with Site Plan | Clean redraw from an existing plan, with site plan and property dimensions included. | $45 |
 | 3D Floor Plan | Add-on to a floor plan order, or produced from a supplied builder's plan. | $60 |
 
