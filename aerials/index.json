@@ -145,6 +145,36 @@
      "toEditor": true,
      "editorReason": "sea-facing aerials 0093/0094/0095/0101 have the new sky painted over the sea and dunes; 0098 horizon tilted ~3\u00b0 with a haze halo on the left; 0097 has no house pin (complex at the frame edge) \u2014 please re-edit sky/sea and level 0098",
      "lot": "strata unit \u2014 no survey-strata lot, pins only"
+    },
+    {
+     "slug": "3_spinaway_cres",
+     "addr": "3 Spinaway Cres, Brentwood WA 6153",
+     "who": "Raymond Chen \u00b7 Top Realty",
+     "agency": "orange",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261116170209_0155_D.jpg",
+      "DJI_20261116170158_0154_D_sq.jpg"
+     ],
+     "src": "16-nov-2026/3_spinaway_cres/src/",
+     "map": "3_spinaway_cres_brentwood_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261116170209_0155_D.jpg",
+      "DJI_20261116170158_0154_D_sq.jpg",
+      "DJI_20261116170231_0156_D.jpg",
+      "DJI_20261116170247_0157_D.jpg",
+      "DJI_20261116170254_0158_D.jpg",
+      "DJI_20261116170318_0159_D.jpg",
+      "DJI_20261116170332_0160_D.jpg",
+      "DJI_20261116170406_0161_D.jpg",
+      "DJI_20261116170427_0162_D.jpg",
+      "DJI_20261116170444_0163_D.jpg",
+      "DJI_20261116170455_0164_D.jpg",
+      "DJI_20261116170543_0165_D.jpg"
+     ],
+     "notes": "Boundary + area from deposited plan DP 37800 (Lot 131, 15 x 30, 450m2).",
+     "portrait": false
     }
    ]
   },
