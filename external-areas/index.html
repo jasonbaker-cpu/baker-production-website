@@ -59,7 +59,14 @@
   .job{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:6px;font:inherit;font-size:15px;color:var(--ink);cursor:pointer}
   .job small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
   .job.on{outline:2px solid var(--accent)}
-  .job .done{color:var(--ok);font-weight:700}
+  .job{position:relative}
+  .job.sent{background:#eef6f0;border-color:#b9dcc6}
+  .job.sent .addr{color:#55705f}
+  .job.wait{background:#fff8e6;border-color:#ecd9a0}
+  .job .badge{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:700;border-radius:999px;padding:4px 10px}
+  .job.sent .badge{background:var(--ok);color:#fff}
+  .job.wait .badge{background:#e8b84a;color:#3b2a00}
+  .job.sent small,.job.wait small{padding-right:92px}
   .linkbtn{background:none;border:0;padding:6px 0;color:var(--accent);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
   .viewer{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;z-index:11;overflow:auto}
   .vsheet{background:#fff;max-width:560px;margin:30px auto;border-radius:16px;padding:16px}
@@ -359,7 +366,10 @@
       $("#jobsOpen").onclick = () => { jobsOpen = true; renderJobs(); };
       return;
     }
+    // ticked = uploaded (Google Drive list, plus anything this phone has finished sending)
     const sent = new Set(sentList.map(d => normAddr(d.addr)));
+    const waiting = new Set();
+    (phoneItems || []).forEach(x => { if (pending(x)) waiting.add(normAddr(x.addr)); else sent.add(normAddr(x.addr)); });
     const list = showAll ? jobs : jobs.filter(j => j.fp);
     const cur = normAddr($("#addr").value);
     let html = "", last = "";
@@ -367,7 +377,8 @@
       const lab = dayLabel(j.start);
       if (lab !== last) { html += `<div class="day">${esc(lab)}</div>`; last = lab; }
       const done = sent.has(normAddr(j.addr));
-      html += `<button type="button" class="job${normAddr(j.addr)===cur?" on":""}" data-addr="${esc(j.addr)}">${done ? '<span class="done">✓ </span>' : ""}${esc(j.addr.replace(/,\s*(Australia|AU)$/,""))}<small>${[j.agent, j.shooter ? "shot by " + j.shooter : "", j.fp ? "floor plan" : "", done ? "already sent" : ""].filter(Boolean).map(esc).join(" · ")}</small></button>`;
+      const wait = !done && waiting.has(normAddr(j.addr));
+      html += `<button type="button" class="job${done ? " sent" : wait ? " wait" : ""}${normAddr(j.addr)===cur?" on":""}" data-addr="${esc(j.addr)}"><span class="addr">${esc(j.addr.replace(/,\s*(Australia|AU)$/,""))}</span><small>${[j.agent, j.shooter ? "shot by " + j.shooter : "", j.fp ? "floor plan" : ""].filter(Boolean).map(esc).join(" · ")}</small>${done ? '<span class="badge">✓ Sent</span>' : wait ? '<span class="badge">Waiting</span>' : ""}</button>`;
     });
     if (!list.length) html += `<div class="hint">${showAll ? "No shoots in the last few days." : "No floor plan jobs in the last few days."}</div>`;
     html += `<button type="button" class="linkbtn" id="jobsToggle">${showAll ? "Show floor plan jobs only" : "Show all jobs"}</button>` + ($("#addr").value.trim() ? ` &nbsp; <button type="button" class="linkbtn" id="jobsHide">Hide list ▴</button>` : "");
@@ -425,6 +436,7 @@
     renderPhone();
   }
   function renderPhone(){
+    if (jobs) renderJobs();
     const box = $("#phoneList");
     urls.splice(0).forEach(u => URL.revokeObjectURL(u));
     if (phoneItems === null) { box.textContent = "This browser won't let the page save on the phone (private browsing?)."; return; }
