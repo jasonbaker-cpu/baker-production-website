@@ -1,6 +1,6 @@
 # Baker Production — Perth property media price list
 
-Prices last checked: 22 October 2026, against the live booking system.
+Prices last checked: 17 November 2026, against the live booking system.
 All prices are in Australian dollars and **include GST**.
 Travel within 50 km of the Perth CBD is included — that covers the whole metro area (Alkimos to Rockingham, coast to the Perth Hills). Further out is quoted at booking.
 Every floor plan includes a free 360° interior virtual tour.
@@ -12,11 +12,11 @@ Book: https://portal.bakerproduction.com/book · Phone: +61 466 789 522 · Email
 
 | Package | Includes | Time on site | Price (inc. GST) |
 |---|---|---|---|
-| Essential | Sales photography + floor plan & 360° interior tour, or drone | 90 min | $299 |
-| Premium | Sales photography + floor plan + 360° interior tour + drone | 90 min | $375 |
-| Social Media Lite | Sales photography + floor plan + 360° interior tour + drone + social media walkthrough (agent on camera +$34) | 90 min | $439 |
-| Signature | Sales photography + floor plan + 360° interior tour + drone + full listing video | 120 min | $750 |
-| Elite Listing | Sales photography + twilight, floor plan, drone, day-to-night video, 360° virtual tour (inside and out) and social reel | 150 min | $1,299 |
+| Essential | Sales photography + floor plan & 360° interior tour, or drone | 90 min | $329 |
+| Premium | Sales photography + floor plan + 360° interior tour + drone | 90 min | $415 |
+| Social Media Lite | Sales photography + floor plan + 360° interior tour + drone + social media walkthrough (agent on camera +$34) | 90 min | $469 |
+| Signature | Sales photography + floor plan + 360° interior tour + drone + full listing video | 120 min | $780 |
+| Elite Listing | Sales photography + twilight, floor plan, drone, day-to-night video, 360° virtual tour (inside and out) and social reel | 150 min | $1,329 |
 
 Package prices cover homes up to 140m² of internal living area. Add $40 for 140–270m², $60 for 270–370m², $100 for 370–470m², and $100 plus $1 per m² above 470m² (a 520m² home adds $150). Billed on the measured area. If the measured area lands in a different size band from the one booked, we adjust the price once the plan is finished. Homes over 1,200m² are quoted individually — get in touch first.
 
