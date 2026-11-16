@@ -19,6 +19,7 @@ Disallow: /josh/
 Disallow: /aerials/
 Disallow: /tools/
 Disallow: /content-kit/
+Disallow: /external-areas/
 
 # --- AI answer engines: explicitly welcome (private paths still blocked —
 # a named group replaces the * group, so the disallows must be repeated here)
@@ -55,5 +56,6 @@ Disallow: /josh/
 Disallow: /aerials/
 Disallow: /tools/
 Disallow: /content-kit/
+Disallow: /external-areas/
 
 Sitemap: https://www.bakerproduction.com/sitemap.xml
