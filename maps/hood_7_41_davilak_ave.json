@@ -1,0 +1,85 @@
+{
+ "sat": "sat/davilak_loc",
+ "house": [
+  -32.083769991102,
+  115.768440047171
+ ],
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "photo": "e2e/7_41_davilak_ave/dji_fly_20261116_174302_0099_photo.jpg",
+ "places": [
+  {
+   "name": "Christ the King School",
+   "lat": -32.07235,
+   "lng": 115.77311,
+   "icon": "school"
+  },
+  {
+   "name": "Fremantle Public Golf Course",
+   "lat": -32.054231912854,
+   "lng": 115.772160103439,
+   "icon": "golf"
+  },
+  {
+   "name": "Davilak Park",
+   "lat": -32.08472,
+   "lng": 115.7719,
+   "icon": "park"
+  },
+  {
+   "name": "Kerry Street Community School",
+   "lat": -32.0825288,
+   "lng": 115.7738818,
+   "icon": "school"
+  },
+  {
+   "name": "Fremantle Christian College",
+   "lat": -32.08437,
+   "lng": 115.7752,
+   "icon": "school"
+  },
+  {
+   "name": "Port School",
+   "lat": -32.08301,
+   "lng": 115.77827,
+   "icon": "school"
+  },
+  {
+   "name": "Phoenix Shopping Centre",
+   "lat": -32.0979223,
+   "lng": 115.7829066,
+   "icon": "shop"
+  },
+  {
+   "name": "Manning Park",
+   "lat": -32.0924827,
+   "lng": 115.7695644,
+   "icon": "park"
+  },
+  {
+   "name": "Port Coogee Village Shopping Centre",
+   "lat": -32.1033548,
+   "lng": 115.7632927,
+   "icon": "shop"
+  },
+  {
+   "name": "C.Y. O'Connor Beach",
+   "lat": -32.089283,
+   "lng": 115.755203,
+   "icon": "beach"
+  },
+  {
+   "name": "South Beach",
+   "lat": -32.07462,
+   "lng": 115.75143,
+   "icon": "beach"
+  },
+  {
+   "name": "Fremantle Station",
+   "lat": -32.0521,
+   "lng": 115.7453,
+   "icon": "train"
+  }
+ ]
+}

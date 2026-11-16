@@ -25,6 +25,7 @@ run, meta = [], {}
 FF = {}   # fence-fit report per top-down
 for j in D['jobs']:
     ph = sorted(f for f in glob.glob(j['photos'].rstrip('/') + '/*') if f.lower().endswith(('.jpg', '.jpeg')))
+    ph = [f for f in ph if not re.search(r'_(sq|r\d+)\.jpe?g$', f, re.I)]   # 17 Nov: stale _sq/_rNN outputs from an earlier run were picked as extra top-downs (nadirPick matched 0079 and 0079_sq)
     if j.get('pick'): ph = [f for f in ph if pitch(f) < -75 or any(p in os.path.basename(f) for p in j['pick'])]   # pick only narrows the aerials; top-downs always stay   # 28 Oct: agent wants only these frames
     if not ph: print('no photos for', j['slug']); continue
     cams = {}

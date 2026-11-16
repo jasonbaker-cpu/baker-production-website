@@ -2,37 +2,115 @@
  "label": "Mon 16 Nov 2026",
  "jobs": [
   {
-   "slug": "22_marybrook_rd",
-   "addr": "22 Marybrook Rd, Heathridge WA 6027",
-   "who": "Mikenzie Hutchison \u00b7 Professionals CPG",
-   "agency": "flags-p",
-   "photos": "batch/22_marybrook_rd/jpg",
-   "map": "batch/22_marybrook_rd/22_marybrook_rd_places.json",
-   "notes": "Entry Notes: -. Amenities to highlight: -. Boundaries/land features to mark: -. Strata: -. Land size: -. No edit notes for the drone photos. Title C/T 1681/141 (Lot 113 on P14764) + sketch + plot plan in Dropbox.",
-   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/16-11-2026/22 Marybrook Rd, Heathridge WA 6027, Australia/Aerial - Drone Photography",
+   "slug": "18_bunyan_cl",
+   "addr": "18 Bunyan Cl, Spearwood WA 6163",
+   "who": "Oliver Norris \u00b7 Raspa",
+   "agency": "charcoal",
+   "photos": "batch/18_bunyan_cl/raw",
+   "map": "batch/18_bunyan_cl/18_bunyan_cl_map.html",
+   "poly": [
+    [
+     -32.11198510656962,
+     115.79192128790758
+    ],
+    [
+     -32.11222882505022,
+     115.79173516788617
+    ],
+    [
+     -32.11223013799264,
+     115.79139768402304
+    ],
+    [
+     -32.11208321729864,
+     115.79142964679788
+    ],
+    [
+     -32.111958172601874,
+     115.7917655374388
+    ]
+   ],
+   "area": 940,
+   "areaSource": "title (CT 1618/514, Lot 371 on Plan 13793)",
+   "lens": [
+    32.23,
+    31.85,
+    16.57,
+    34.6,
+    15
+   ],
+   "notes": "Entry Notes: meet oliver. Amenities to highlight: -. Strata: -. Land size: -. Boundaries/land features to mark: -. No edit notes for the drone photos.",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/16-11-2026/18 Bunyan Cl, Spearwood WA 6163, Australia/Aerial - Drone Photography",
    "docs": [
     {
-     "name": "Certificate of Title 1681-141.pdf",
-     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/16-11-2026/22 Marybrook Rd, Heathridge WA 6027, Australia/Aerial - Drone Photography/Certificate of Title with Sketch 1681-141 22 Marybrook Road, HEATHRIDGE 6027 - Certificate of Title 1681-141.pdf"
+     "name": "TitleDocs.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/16-11-2026/18 Bunyan Cl, Spearwood WA 6163, Australia/Aerial - Drone Photography/TitleDocs.pdf"
     },
     {
-     "name": "Sketch for 1681-141.pdf",
-     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/16-11-2026/22 Marybrook Rd, Heathridge WA 6027, Australia/Aerial - Drone Photography/Certificate of Title with Sketch 1681-141 22 Marybrook Road, HEATHRIDGE 6027 - Sketch for 1681-141.pdf"
+     "name": "18_bunyan_cl_spearwood_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/16-11-2026/18 Bunyan Cl, Spearwood WA 6163, Australia/Aerial - Drone Photography/18_bunyan_cl_spearwood_map.html"
     },
     {
-     "name": "22 Marybrook plot plan.pdf",
-     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/16-11-2026/22 Marybrook Rd, Heathridge WA 6027, Australia/Aerial - Drone Photography/22 Marybrook plot plan.pdf"
+     "name": "18_bunyan_cl_spearwood_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/16-11-2026/18 Bunyan Cl, Spearwood WA 6163, Australia/Aerial - Drone Photography/18_bunyan_cl_spearwood_qa.txt"
+    },
+    {
+     "name": "18_bunyan_cl_spearwood_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/16-11-2026/18 Bunyan Cl, Spearwood WA 6163, Australia/Aerial - Drone Photography/18_bunyan_cl_spearwood_directions.txt"
+    }
+   ],
+   "nadirPick": [
+    "0079",
+    "0080"
+   ],
+   "streetRot": {
+    "18_bunyan_cl__nadir": 0,
+    "18_bunyan_cl__nadir2": 0
+   },
+   "skyPlate": "C",
+   "edgeOffs": {
+    "18_bunyan_cl__nadir2": {
+     "3": -0.4
+    }
+   }
+  },
+  {
+   "slug": "7_41_davilak_ave",
+   "addr": "7/41 Davilak Ave, Hamilton Hill WA 6163",
+   "who": "Pyper Stark \u00b7 Raspa",
+   "agency": "charcoal",
+   "photos": "batch/7_41_davilak_ave/raw",
+   "map": "batch/7_41_davilak_ave/7_41_davilak_ave_map.html",
+   "notes": "Entry Notes: meet agent at the property. Amenities to highlight: -. Strata: -. Land size: -. Boundaries/land features to mark: -. No edit notes for the drone photos.",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/16-11-2026/7-41 Davilak Ave, Hamilton Hill WA 6163, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "7_41_davilak_ave_hamilton_hill_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/16-11-2026/7-41 Davilak Ave, Hamilton Hill WA 6163, Australia/Aerial - Drone Photography/7_41_davilak_ave_hamilton_hill_map.html"
+    },
+    {
+     "name": "7_41_davilak_ave_hamilton_hill_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/16-11-2026/7-41 Davilak Ave, Hamilton Hill WA 6163, Australia/Aerial - Drone Photography/7_41_davilak_ave_hamilton_hill_qa.txt"
+    },
+    {
+     "name": "7_41_davilak_ave_hamilton_hill_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/16-11-2026/7-41 Davilak Ave, Hamilton Hill WA 6163, Australia/Aerial - Drone Photography/7_41_davilak_ave_hamilton_hill_directions.txt"
+    },
+    {
+     "name": "7_41_davilak_ave_hamilton_hill_map_CHECK.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/16-11-2026/7-41 Davilak Ave, Hamilton Hill WA 6163, Australia/Aerial - Drone Photography/7_41_davilak_ave_hamilton_hill_map_CHECK.html"
     }
    ],
    "nadirSplit": 1,
    "nadirPick": [
-    "0013",
-    "0016"
+    "0092",
+    "0091"
    ],
    "streetRot": {
-    "22_marybrook_rd__nadir": 0,
-    "22_marybrook_rd__nadir2": 0
-   }
+    "7_41_davilak_ave__nadir": 0,
+    "7_41_davilak_ave__nadir2": 0
+   },
+   "skyPlate": "C"
   }
  ]
 }
