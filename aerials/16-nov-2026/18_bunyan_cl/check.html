@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 18 Bunyan Cl, Spearwood WA 6163</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary · 940 m²</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (13)</div></div></div>
+<script>const D={"lat": -32.112110002019, "lng": 115.791650039978, "poly": [[-32.11198510656962, 115.79192128790758], [-32.11222882505022, 115.79173516788617], [-32.11223013799264, 115.79139768402304], [-32.11208321729864, 115.79142964679788], [-32.111958172601874, 115.7917655374388]], "places": [{"name": "Cockburn Central Station", "lat": -32.125332, "lng": 115.858357, "d": "6.5 km"}, {"name": "Katich Park", "lat": -32.1134295, "lng": 115.790297, "d": "190 m"}, {"name": "Stargate Shopping Centre Spearwood", "lat": -32.1155959, "lng": 115.7828409, "d": "920 m"}, {"name": "St Jerome's Primary School", "lat": -32.1219031, "lng": 115.7825495, "d": "1.4 km"}, {"name": "Coogee Beach", "lat": -32.1185, "lng": 115.7617, "d": "2.9 km"}, {"name": "Bishop Park", "lat": -32.113615, "lng": 115.7865225, "d": "510 m"}, {"name": "Phoenix Shopping Centre", "lat": -32.0979223, "lng": 115.7829066, "d": "1.8 km"}, {"name": "Manning Park", "lat": -32.0924827, "lng": 115.7695644, "d": "3.0 km"}, {"name": "Edwardes Park Adventure Playground", "lat": -32.108588, "lng": 115.7861016, "d": "650 m"}, {"name": "Royal Fremantle Golf Club", "lat": -32.0538432, "lng": 115.7743255, "d": "6.7 km"}, {"name": "Bibra Lake Reserve", "lat": -32.0908, "lng": 115.8208, "d": "3.6 km"}, {"name": "Vela-Luka Park", "lat": -32.1090213, "lng": 115.7935888, "d": "390 m"}, {"name": "Interim Reserve", "lat": -32.1046302, "lng": 115.7943072, "d": "870 m"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[40,40],maxZoom:20});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[230,40]});
+</script></body></html>

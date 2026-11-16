@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>7/41 Davilak Ave, Hamilton Hill WA 6163, Australia — 360° Amenities | Baker Production</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;font-family:-apple-system,'Segoe UI',Arial,sans-serif}
+#bar{position:fixed;top:0;left:0;right:0;min-height:64px;background:linear-gradient(120deg,#0B1626,#13314A);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 18px;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+#bar .l{display:flex;align-items:center;gap:12px;min-width:0}#bar .home{font-size:24px}#bar .addr{font-weight:800;font-size:16px}
+#bar .meta{font-size:11.5px;color:#AFC6D6;margin-top:2px}#bar .br{text-align:right;font-size:11px;line-height:1.35;color:#CFE0EA;white-space:nowrap}
+#bar .br b{color:#fff;font-size:12.5px;letter-spacing:.4px}#map{position:absolute;top:64px;bottom:0;left:0;right:0}
+.home-pin{width:34px;height:34px;background:#D4537E;border-radius:50%;border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:17px}
+.am-pin{width:26px;height:26px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;color:#fff;font:700 8.5px/1 Arial}
+.pop b.dir{display:inline-block;background:#0E1B2A;color:#fff;font:700 10px/1 Arial;padding:3px 7px;border-radius:5px;letter-spacing:.5px;margin:0 4px 5px 0}
+.pop .nm{font-weight:800;font-size:14px;margin:2px 0 3px}.pop .nt{font-size:12px;color:#333}
+.pop .bd{display:inline-block;font:700 9.5px/1 Arial;padding:3px 6px;border-radius:4px;color:#fff}
+.legend{background:rgba(14,27,42,.92);color:#fff;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.9;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+.legend i{display:inline-block;width:13px;height:13px;border-radius:50%;border:2px solid #fff;vertical-align:-2px;margin-right:7px}
+@media(max-width:640px){#bar .br{display:none}#bar .meta{font-size:10.5px}}
+</style></head><body>
+<div id="bar"><div class="l"><span class="home">🏠</span><div><div class="addr">7/41 Davilak Ave, Hamilton Hill WA 6163, Australia</div><div class="meta">Unit 7 · 41 Davilak Ave (strata) · City of Cockburn · School zoning unverified</div></div></div>
+<div class="br"><b>Baker Production Pty Ltd</b><br>Real Estate Photography</div></div>
+<div id="map"></div>
+<script>
+var PROP=[-32.083769991102, 115.768440047171];
+var M=[{"name": "Wally Hagan Basketball Stadium", "lat": -32.08052, "lng": 115.76963, "dist": 379, "dir": "N", "color": "#185FA5", "badge": "", "cat": "recreation", "notes": "379 m N · basketball stadium, 5 Hurford St"}, {"name": "Dixon Park", "lat": -32.0797043, "lng": 115.7686028, "dist": 453, "dir": "N", "color": "#185FA5", "badge": "", "cat": "park", "notes": "453 m N · local park, Ommanney St area"}, {"name": "Christ the King School", "lat": -32.07235, "lng": 115.77311, "dist": 1345, "dir": "N", "color": "#185FA5", "badge": "private", "cat": "school", "notes": "1.3 km N · Catholic primary, 87 York St, Beaconsfield"}, {"name": "Fremantle Public Golf Course", "lat": -32.054231912854, "lng": 115.772160103439, "dist": 3307, "dir": "N", "color": "#185FA5", "badge": "", "cat": "golf", "notes": "3.3 km N · public course, 20 Montreal St, Fremantle (nearest course)"}, {"name": "Royal Fremantle Golf Club", "lat": -32.0538432, "lng": 115.7743255, "dist": 3377, "dir": "N", "color": "#185FA5", "badge": "", "cat": "golf", "notes": "3.4 km N · members&#x27; course, High St, Fremantle"}, {"name": "Baker Square", "lat": -32.0790997, "lng": 115.7761605, "dist": 895, "dir": "NE", "color": "#185FA5", "badge": "", "cat": "park", "notes": "895 m NE · local park, Ommanney St"}, {"name": "Our Lady of Mount Carmel School", "lat": -32.072987, "lng": 115.7883734, "dist": 2231, "dir": "NE", "color": "#185FA5", "badge": "private", "cat": "school", "notes": "2.2 km NE · Catholic primary, 82 Collick St, Hilton"}, {"name": "Seton Catholic College", "lat": -32.0731652, "lng": 115.7926956, "dist": 2574, "dir": "NE", "color": "#185FA5", "badge": "private", "cat": "school", "notes": "2.6 km NE · Catholic secondary college, Marchant Rd, Samson"}, {"name": "Davilak Park", "lat": -32.08472, "lng": 115.7719, "dist": 343, "dir": "E", "color": "#185FA5", "badge": "", "cat": "park", "notes": "343 m E · City of Cockburn reserve and oval off Lucius Rd"}, {"name": "Kerry Street Community School", "lat": -32.0825288, "lng": 115.7738818, "dist": 532, "dir": "E", "color": "#185FA5", "badge": "private", "cat": "school", "notes": "532 m E · independent school, 20 Forrest Rd"}, {"name": "Fremantle Christian College", "lat": -32.08437, "lng": 115.7752, "dist": 641, "dir": "E", "color": "#185FA5", "badge": "private", "cat": "school", "notes": "641 m E · independent K-12, 110 Rockingham Rd"}, {"name": "Port School", "lat": -32.08301, "lng": 115.77827, "dist": 931, "dir": "E", "color": "#185FA5", "badge": "private", "cat": "school", "notes": "931 m E · independent secondary school, 62 Wheeler Rd"}, {"name": "Phoenix Shopping Centre", "lat": -32.0979223, "lng": 115.7829066, "dist": 2084, "dir": "SE", "color": "#185FA5", "badge": "", "cat": "shopping", "notes": "2.1 km SE · Phoenix Park centre (Woolworths, Big W, Aldi), 254 Rockingham Rd, Spearwood"}, {"name": "Spearwood Library", "lat": -32.1002845, "lng": 115.7837785, "dist": 2339, "dir": "SE", "color": "#185FA5", "badge": "", "cat": "library", "notes": "2.3 km SE · City of Cockburn library, 9 Coleville Cres, Spearwood"}, {"name": "Manning Park", "lat": -32.0924827, "lng": 115.7695644, "dist": 976, "dir": "S", "color": "#185FA5", "badge": "", "cat": "regional_park", "notes": "976 m S · large reserve beside Manning Lake (Beeliar Regional Park), Azelia Rd"}, {"name": "Port Coogee Village Shopping Centre", "lat": -32.1033548, "lng": 115.7632927, "dist": 2234, "dir": "S", "color": "#185FA5", "badge": "", "cat": "shopping", "notes": "2.2 km S · neighbourhood centre, Orsino Blvd, North Coogee"}, {"name": "C.Y. O&#x27;Connor Beach", "lat": -32.089283, "lng": 115.755203, "dist": 1391, "dir": "SW", "color": "#185FA5", "badge": "", "cat": "beach", "notes": "1.4 km SW · beach and dog beach, Robb Rd, North Coogee"}, {"name": "Gage Park", "lat": -32.08508, "lng": 115.76026, "dist": 785, "dir": "W", "color": "#185FA5", "badge": "", "cat": "park", "notes": "785 m W · park, North Coogee"}, {"name": "Reinforcement Park", "lat": -32.08508, "lng": 115.75887, "dist": 914, "dir": "W", "color": "#185FA5", "badge": "", "cat": "park", "notes": "914 m W · park, North Coogee"}, {"name": "South Beach", "lat": -32.07462, "lng": 115.75143, "dist": 1900, "dir": "NW", "color": "#185FA5", "badge": "", "cat": "beach", "notes": "1.9 km NW · South Beach reserve, Ocean Dr, South Fremantle"}, {"name": "Fremantle Station", "lat": -32.0521, "lng": 115.7453, "dist": 4146, "dir": "NW", "color": "#185FA5", "badge": "", "cat": "train", "notes": "4.1 km NW · Fremantle line terminus, Phillimore St"}];
+var esri='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+var sat1=L.tileLayer(esri,{maxZoom:19,attribution:'Esri World Imagery'}),sat2=L.tileLayer(esri,{maxZoom:19,attribution:'Esri World Imagery'});
+var ref=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:19});
+var osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'});
+var labelled=L.layerGroup([sat1,ref]);
+var map=L.map('map',{layers:[labelled]}).setView(PROP,15);
+L.control.layers({'Satellite with labels':labelled,'Satellite clean':sat2,'Street (OSM)':osm},null,{position:'topright'}).addTo(map);
+L.marker(PROP,{icon:L.divIcon({className:'',html:'<div class="home-pin">🏠</div>',iconSize:[34,34],iconAnchor:[17,17],popupAnchor:[0,-16]}),zIndexOffset:1000}).addTo(map)
+ .bindPopup('<div class="pop"><b class="dir">SUBJECT</b><div class="nm">7/41 Davilak Ave, Hamilton Hill WA 6163, Australia</div><div class="nt">Unit 7 · 41 Davilak Ave (strata) · City of Cockburn · School zoning unverified</div></div>');
+var near=[PROP];
+M.forEach(function(m){
+  var close=m.dist<300;
+  var bd=m.badge?'<span class="bd" style="background:'+m.color+'">'+m.badge+'</span>':'';
+  if(close)L.polyline([PROP,[m.lat,m.lng]],{color:'#fff',weight:2,dashArray:'4 4',opacity:.9}).addTo(map);
+  L.marker([m.lat,m.lng],{zIndexOffset:close?2000:0,icon:L.divIcon({className:'',html:'<div class="am-pin" style="background:'+m.color+'">'+m.dir+'</div>',iconSize:[26,26],iconAnchor:[13,13],popupAnchor:[0,-12]})}).addTo(map)
+   .bindPopup('<div class="pop"><b class="dir">'+m.dir+'</b>'+bd+'<div class="nm">'+m.name+'</div><div class="nt">'+m.notes+'</div></div>')
+   .bindTooltip('['+m.dir+'] '+m.name+(close?' · '+m.dist+' m':''),{direction:close?(m.lng<PROP[1]?'left':'right'):'top',offset:close?[m.lng<PROP[1]?-12:12,0]:[0,-12],permanent:close});
+  if(m.dist<1500)near.push([m.lat,m.lng]);
+});
+if(near.length>1)map.fitBounds(near,{padding:[40,40],maxZoom:16});
+var lg=L.control({position:'bottomleft'});
+lg.onAdd=function(){var d=L.DomUtil.create('div','legend');d.innerHTML='<i style="background:#D4537E"></i>Property<br><i style="background:#185FA5"></i>Amenity / private school<br><i style="background:#0F6E56"></i>Zoned government school<br><i style="background:#B8860B"></i>Government school (zoning unverified)';return d;};
+lg.addTo(map);
+</script></body></html>
