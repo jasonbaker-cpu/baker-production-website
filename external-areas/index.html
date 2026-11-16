@@ -167,18 +167,15 @@
     const r = await fetch(u, { redirect: "follow" });
     return await r.json();
   }
-  function apiPost(body, onProg){
-    return new Promise((res, rej) => {
-      const x = new XMLHttpRequest();
-      x.open("POST", API);
-      x.setRequestHeader("Content-Type", "text/plain;charset=utf-8");
-      x.upload.onprogress = e => { if (e.lengthComputable) onProg(e.loaded / e.total); };
-      x.onload = () => { try { res(JSON.parse(x.responseText)); } catch { rej(new Error("bad_response")); } };
-      x.onerror = () => rej(new Error("network"));
-      x.ontimeout = () => rej(new Error("timeout"));
-      x.timeout = 6 * 60 * 1000;
-      x.send(JSON.stringify(body));
-    });
+  // NB: no upload-progress listener — it forces a CORS preflight that Apps Script rejects.
+  function apiPost(body, onTick){
+    const started = Date.now();
+    const t = onTick ? setInterval(() => onTick((Date.now() - started) / 1000), 500) : null;
+    const ctl = new AbortController(); const kill = setTimeout(() => ctl.abort(), 5 * 60 * 1000);
+    return fetch(API, { method: "POST", body: JSON.stringify(body), redirect: "follow", signal: ctl.signal })
+      .then(r => r.json())
+      .catch(e => { throw new Error(e instanceof SyntaxError ? "bad_response" : "network"); })
+      .finally(() => { if (t) clearInterval(t); clearTimeout(kill); });
   }
 
   // ---------- lock ----------
@@ -205,13 +202,13 @@
   function showApp(){
     $("#app").style.display = "block"; $("#bar").style.display = "block";
     areas = [newArea("Alfresco")];
-    renderAreas(); update(); loadPhone(); renderJobs(); loadJobs();
+    renderAreas(); update(); loadPhone(); renderJobs(); loadJobs(); setTimeout(retryPending, 3000);
   }
 
   // ---------- areas ----------
   function newArea(type){ return { id: ++uid, type: type || "Alfresco", label: "", w: "", l: "", photo: null, photoUrl: null }; }
   function areaName(a){ const lab = a.label.trim(); if (!lab) return a.type; if (/^\d+$/.test(lab)) return a.type + " " + lab; return a.type + " (" + lab + ")"; }
-  function areaLine(a){ const w = a.w.trim(), l = a.l.trim(); if (!w && !l) return null; return areaName(a) + ": " + (w && l ? w + " x " + l : (w || l)); }
+  function areaLine(a){ const w = a.w.trim(), l = a.l.trim(); if (!w && !l) return a.photo ? areaName(a) + ": no size entered (see photo)" : null; return areaName(a) + ": " + (w && l ? w + " x " + l : (w || l)); }
   function renderAreas(){
     const box = $("#areas"); box.innerHTML = "";
     areas.forEach((a, i) => {
@@ -227,7 +224,7 @@
         </div>
         <div class="hint">Length can be text, e.g. (9.08 small side, 12.68 long side)</div>
         <div class="photo">${a.photoUrl ? `<img src="${a.photoUrl}" alt="">` : ""}
-          <label class="filebtn">📷 ${a.photo ? "Retake photo" : "Photo of this area"}<input type="file" accept="image/*" capture="environment" data-f="photo"></label>
+          <label class="filebtn">📷 ${a.photo ? "Retake photo" : "Photo of this area"}<input type="file" accept="image/*" data-f="photo"></label>
         </div>`;
       c.querySelectorAll(".chip").forEach(b => b.onclick = () => { a.type = b.dataset.type; renderAreas(); update(); });
       c.querySelectorAll("input[type=text]").forEach(inp => inp.oninput = () => { a[inp.dataset.f] = inp.value; c.querySelector(".card-title").textContent = areaName(a); update(); });
@@ -405,8 +402,8 @@
   async function loadPhone(){
     try {
       const all = await idbAll(), now = Date.now();
-      for (const x of all) if (now - x.at > KEEP_MS) await idbDel(x.id);
-      phoneItems = all.filter(x => now - x.at <= KEEP_MS).sort((a, b) => b.at - a.at);
+      for (const x of all) if (now - x.at > KEEP_MS && !pending(x)) await idbDel(x.id);   // never drop something that hasn't gone yet
+      phoneItems = all.filter(x => now - x.at <= KEEP_MS || pending(x)).sort((a, b) => b.at - a.at);
     } catch { phoneItems = null; }
     renderPhone();
   }
@@ -420,7 +417,7 @@
       const e = document.createElement("div"); e.className = "entry";
       const thumb = x.photos[0] ? `<img src="${mkUrl(x.photos[0].blob)}" alt="">` : '<span class="ph">🎥</span>';
       const left = Math.max(0, Math.ceil((x.at + KEEP_MS - Date.now()) / 86400000));
-      e.innerHTML = `${thumb}<div>${esc(x.addr)}<small>${when(x.at)} · ${x.photos.length} photo${x.photos.length===1?"":"s"}${x.video?" + video":""} · ${left} day${left===1?"":"s"} left${x.sent ? "" : " · NOT SENT"}</small></div>`;
+      e.innerHTML = `${thumb}<div>${esc(x.addr)}<small>${when(x.at)} · ${x.photos.length} photo${x.photos.length===1?"":"s"}${x.video?" + video":""} · ${left} day${left===1?"":"s"} left · ${stateText(x)}</small></div>`;
       e.onclick = () => openViewer(x);
       box.appendChild(e);
     });
@@ -430,21 +427,16 @@
     vItem = x; vArmed = false; $("#vDel").textContent = "Delete from phone";
     $("#vTitle").textContent = x.addr; $("#vText").textContent = x.text;
     $("#vMedia").innerHTML = x.photos.map(p => `<p>${esc(p.label)}</p><img src="${mkUrl(p.blob)}" alt="">`).join("") + (x.video ? `<p>Video</p><video src="${mkUrl(x.video.blob)}" controls playsinline></video>` : "");
-    $("#vSend").style.display = x.sent ? "none" : ""; $("#vSend").disabled = false; $("#vMsg").textContent = "";
+    $("#vSend").style.display = pending(x) ? "" : "none"; $("#vSend").disabled = false; $("#vMsg").textContent = "";
     $("#viewer").style.display = "block";
   }
   $("#vSend").onclick = async () => {
-    const x = vItem; $("#vSend").disabled = true; $("#vMsg").className = "status"; $("#vMsg").textContent = "Uploading…";
+    const x = vItem; $("#vSend").disabled = true; $("#vMsg").className = "status";
     try {
-      const body = { k: KEY, addr: x.addr, text: x.text, lines: x.text.split("\n").slice(1),
-        photos: await Promise.all(x.photos.map(async p => ({ label: p.label, name: slug(x.addr) + "-" + p.label.replace(/[^A-Za-z0-9]+/g, "-") + ".jpg", b64: await blobToB64(p.blob) }))),
-        video: x.video ? { name: x.video.name, mime: x.video.blob.type || "video/mp4", b64: await blobToB64(x.video.blob) } : null };
-      const r = await apiPost(body, p => { $("#vMsg").textContent = "Uploading… " + Math.round(p * 100) + "%"; });
-      if (!r.ok) throw new Error(r.error || "Server error");
-      x.sent = true; await idbPut(x); loadPhone(); loadJobs();
-      $("#vMsg").className = "status ok"; $("#vMsg").textContent = r.emailed ? "Sent and saved to Drive." : "Saved to Drive, but the email failed.";
-      $("#vSend").style.display = "none";
-    } catch (e) { $("#vMsg").className = "status bad"; $("#vMsg").textContent = "Didn't go through — try again with better signal."; $("#vSend").disabled = false; }
+      await deliver(x, m => { $("#vMsg").textContent = m; });
+      $("#vMsg").className = "status ok"; $("#vMsg").textContent = "Sent and saved to Drive.";
+      $("#vSend").style.display = "none"; loadPhone(); loadJobs();
+    } catch (e) { $("#vMsg").className = "status bad"; $("#vMsg").textContent = "Didn't go through — it'll keep trying on its own when signal is better."; $("#vSend").disabled = false; }
   };
   $("#vClose").onclick = () => { $("#viewer").style.display = "none"; $("#vMedia").innerHTML = ""; };
   $("#vDel").onclick = async () => {
@@ -452,12 +444,59 @@
     try { await idbDel(vItem.id); $("#vClose").onclick(); loadPhone(); } catch { $("#vDel").textContent = "Couldn't delete"; }
   };
 
-  // ---------- send ----------
+  // ---------- delivery (measurements + photos first, video second, retried until done) ----------
+  function pending(x){ return !x.sent || (x.video && !x.videoSent); }
+  function stateText(x){
+    if (!x.sent) return "waiting for signal — will send automatically";
+    if (x.video && !x.videoSent) return "measurements sent · video still to upload";
+    return "sent";
+  }
+  const busy = new Set();
+  async function deliver(x, say){
+    if (busy.has(x.id)) throw new Error("already sending");
+    busy.add(x.id);
+    try { await deliver_(x, say); } finally { busy.delete(x.id); }
+  }
+  async function deliver_(x, say){
+    say = say || (() => {});
+    if (!x.sent) {
+      say("Sending measurements and photos…");
+      const body = { k: KEY, addr: x.addr, text: x.text, lines: x.lines || x.text.split("\n").slice(1),
+        photos: await Promise.all(x.photos.map(async p => ({ label: p.label, name: p.name, b64: await blobToB64(p.blob) }))) };
+      const r = await apiPost(body, sec => say("Sending measurements and photos… " + Math.round(sec) + "s"));
+      if (!r.ok) throw new Error(r.error === "bad_key" ? "The team code is wrong — reopen the page." : (r.error || "Server error"));
+      x.sent = true; x.folderId = r.folderId; x.emailed = r.emailed;
+      await idbPut(x);
+    }
+    if (x.video && !x.videoSent) {
+      say("Measurements sent ✓ · uploading video…");
+      const body = { k: KEY, action: "video", folderId: x.folderId, addr: x.addr,
+        video: { name: x.video.name, mime: x.video.blob.type || "video/mp4", b64: await blobToB64(x.video.blob) } };
+      const r = await apiPost(body, sec => say("Measurements sent ✓ · uploading video… " + Math.round(sec) + "s"));
+      if (!r.ok) throw new Error(r.error || "Server error");
+      x.videoSent = true;
+      await idbPut(x);
+    }
+  }
+  let retrying = false;
+  async function retryPending(){
+    if (retrying || sending || !navigator.onLine) return;
+    retrying = true;
+    try {
+      const all = (await idbAll()).filter(pending).sort((a, b) => a.at - b.at);
+      for (const x of all) {
+        try { await deliver(x); } catch { break; }   // still no signal — try again later
+      }
+    } catch {} finally { retrying = false; loadPhone(); }
+  }
+  window.addEventListener("online", () => retryPending());
+  setInterval(retryPending, 60000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) retryPending(); });
+
   $("#send").onclick = async () => {
     const text = messageText(); if (!text || sending) return;
     sending = true; update(); setStatus("Getting ready…"); setProg(0);
-    let vidNote = "", phoneOk = false;
-    const id = Date.now() + "-" + Math.random().toString(36).slice(2, 6);
+    let vidNote = "", rec = null, phoneOk = false;
     try {
       const addr = $("#addr").value.trim();
       const listed = areas.filter(a => areaLine(a));
@@ -466,7 +505,7 @@
       setStatus(withPhotos.length ? "Preparing photos…" : "Preparing…");
       const photos = [];
       for (const a of withPhotos) {
-        const blob = await shrinkPhoto(await loadImage(a.photo), 1800, .8);
+        const blob = await shrinkPhoto(await loadImage(a.photo), 1600, .78);
         photos.push({ label: areaName(a), name: slug(addr) + "-" + areaName(a).replace(/[^A-Za-z0-9]+/g, "-") + ".jpg", blob });
       }
 
@@ -476,41 +515,34 @@
         if (video.size > VIDEO_TARGET) {
           setStatus("Compressing video — keep this screen open…");
           try {
-            const out = await compressVideo(video, videoDur || await probeDuration(video), p => setProg(p * 0.6));
+            const out = await compressVideo(video, videoDur || await probeDuration(video), p => setProg(p * 0.9));
             vblob = out.blob; vname = slug(addr) + "-external-areas." + out.ext;
-          } catch { vblob = null; vidNote = "Video couldn't be compressed on this phone, so it wasn't sent."; }
-          if (vblob && vblob.size > 30 * 1024 * 1024) { vblob = null; vidNote = "Video still too big after compressing, so it wasn't sent. Trim it and try again."; }
+          } catch { vblob = null; vidNote = "Video couldn't be compressed on this phone, so it wasn't included."; }
+          if (vblob && vblob.size > 30 * 1024 * 1024) { vblob = null; vidNote = "Video still too big after compressing, so it wasn't included. Trim it and try again."; }
         }
       }
 
-      // save on phone first
-      try {
-        await idbPut({ id, addr, text, at: Date.now(), sent: false, photos: photos.map(p => ({ label: p.label, blob: p.blob })), video: vblob ? { name: vname, blob: vblob } : null });
-        phoneOk = true; loadPhone();
-      } catch {}
+      rec = { id: Date.now() + "-" + Math.random().toString(36).slice(2, 6), addr, text, lines: listed.map(areaLine), at: Date.now(),
+        photos, video: vblob ? { name: vname, blob: vblob } : null, sent: false, videoSent: false, folderId: null };
+      try { await idbPut(rec); phoneOk = true; } catch {}
 
-      setStatus("Uploading…"); setProg(0.62);
-      const body = {
-        k: KEY, addr, text, lines: listed.map(areaLine),
-        photos: await Promise.all(photos.map(async p => ({ label: p.label, name: p.name, b64: await blobToB64(p.blob) }))),
-        video: vblob ? { name: vname, mime: vblob.type || "video/mp4", b64: await blobToB64(vblob) } : null
-      };
-      const r = await apiPost(body, p => setProg(0.62 + p * 0.33));
-      if (!r.ok) throw new Error(r.error === "bad_key" ? "The team code is wrong — reopen the page." : (r.error || "Server error"));
-
-      if (phoneOk) { try { const all = await idbAll(); const me = all.find(x => x.id === id); if (me) { me.sent = true; await idbPut(me); } loadPhone(); } catch {} }
-      setProg(1);
-      const parts = [r.emailed ? "Emailed" : "NOT emailed (" + (r.emailError || "unknown") + ")", "saved to Google Drive", phoneOk ? "saved on phone" : "not saved on phone"];
-      setStatus(parts.join(" · ") + (vidNote ? ". " + vidNote : "."), r.emailed && !vidNote ? "ok" : "warn");
+      // the form is safe on the phone now — clear it for the next job
       areas = [newArea("Alfresco")]; video = null; videoDur = null;
       $("#addr").value = ""; $("#vid").value = ""; $("#vidLabel").textContent = "Record or choose video"; $("#vidInfo").textContent = "";
-      renderAreas(); jobsOpen = true; loadJobs();
+      renderAreas(); jobsOpen = true; renderJobs(); loadPhone();
+
+      setProg(0.95);
+      await deliver(rec, m => setStatus(m));
+      setProg(1);
+      setStatus((rec.emailed === false ? "Saved to Drive but the email failed" : "Sent and saved to Google Drive") + (vidNote ? ". " + vidNote : ""), vidNote || rec.emailed === false ? "warn" : "ok");
+      loadJobs();
     } catch (e) {
-      const m = e && e.message;
-      const msg = m === "network" || m === "timeout" ? "Upload failed — weak signal?" : (m || "Something went wrong.");
-      setStatus(msg + (phoneOk ? " It's saved on this phone — open it below and try again when you have signal." : " Nothing was sent."), "bad");
+      if (!rec) { setStatus("Something went wrong before anything was saved: " + ((e && e.message) || "unknown"), "bad"); }
+      else if (phoneOk) {
+        setStatus((rec.sent ? "Measurements sent ✓ but the video didn't finish." : "No signal right now.") + " It's saved on this phone and will send automatically when signal is back.", "warn");
+      } else setStatus("Couldn't send and couldn't save on this phone: " + ((e && e.message) || "unknown"), "bad");
     } finally {
-      sending = false; setTimeout(() => setProg(null), 1500); update();
+      sending = false; setTimeout(() => setProg(null), 1500); update(); loadPhone();
     }
   };
 
