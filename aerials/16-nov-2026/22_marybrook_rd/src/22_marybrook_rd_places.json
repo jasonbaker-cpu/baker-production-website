@@ -1,0 +1,97 @@
+{
+ "address": "22 Marybrook Rd, Heathridge WA 6027",
+ "lat": -31.769599999194,
+ "lng": 115.772269990189,
+ "pins": [
+  {
+   "name": "Joondalup Library",
+   "cat": "reserve",
+   "lat": -31.7440489,
+   "lng": 115.7734107
+  },
+  {
+   "name": "Lakeside Joondalup Shopping City",
+   "cat": "shopping",
+   "lat": -31.7438,
+   "lng": 115.76649
+  },
+  {
+   "name": "Mater Dei College",
+   "cat": "school",
+   "lat": -31.764659998829,
+   "lng": 115.776520034194
+  },
+  {
+   "name": "Edgewater Quarry Park",
+   "cat": "park",
+   "lat": -31.7615,
+   "lng": 115.7766
+  },
+  {
+   "name": "Emerald Park",
+   "cat": "park",
+   "lat": -31.7694627,
+   "lng": 115.7818768
+  },
+  {
+   "name": "Conidae Park",
+   "cat": "park",
+   "lat": -31.77189,
+   "lng": 115.77266
+  },
+  {
+   "name": "Sandalford Park",
+   "cat": "park",
+   "lat": -31.7737461,
+   "lng": 115.7703107
+  },
+  {
+   "name": "Adelaide Park",
+   "cat": "park",
+   "lat": -31.7778258,
+   "lng": 115.7717544
+  },
+  {
+   "name": "Craigie Leisure Centre",
+   "cat": "reserve",
+   "lat": -31.792616076671,
+   "lng": 115.776888837934
+  },
+  {
+   "name": "Littorina Park",
+   "cat": "park",
+   "lat": -31.7686063,
+   "lng": 115.7691503
+  },
+  {
+   "name": "Belridge Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.7691514,
+   "lng": 115.7649919
+  },
+  {
+   "name": "Mullaloo Beach",
+   "cat": "beach",
+   "lat": -31.7789,
+   "lng": 115.7326
+  },
+  {
+   "name": "Joondalup Resort Golf Course",
+   "cat": "golf",
+   "lat": -31.7497501,
+   "lng": 115.750047
+  },
+  {
+   "name": "Edgewater Station",
+   "cat": "train",
+   "lat": -31.771868,
+   "lng": 115.778868
+  },
+  {
+   "name": "Joondalup Station",
+   "cat": "train",
+   "lat": -31.745278,
+   "lng": 115.767222
+  }
+ ]
+}
