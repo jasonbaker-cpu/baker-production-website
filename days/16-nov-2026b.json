@@ -1,0 +1,48 @@
+{
+ "label": "Mon 16 Nov 2026",
+ "jobs": [
+  {
+   "slug": "3_spinaway_cres",
+   "addr": "3 Spinaway Cres, Brentwood WA 6153",
+   "who": "Raymond Chen \u00b7 Top Realty",
+   "agency": "orange",
+   "photos": "batch/3_spinaway_cres/jpg",
+   "map": "batch/3_spinaway_cres/raw/3_spinaway_cres_brentwood_map.html",
+   "poly": [
+    [
+     -32.0450426,
+     115.8575504
+    ],
+    [
+     -32.045045,
+     115.8577092
+    ],
+    [
+     -32.0453155,
+     115.8577036
+    ],
+    [
+     -32.0453131,
+     115.8575447
+    ]
+   ],
+   "area": 450,
+   "areaSource": "DP 37800 Lot 131 + title",
+   "lens": [
+    15,
+    30,
+    15,
+    30
+   ],
+   "notes": "Boundary + area from deposited plan DP 37800 (Lot 131, 15 x 30, 450m2).",
+   "nadirPick": [
+    "0155",
+    "0154"
+   ],
+   "streetRot": {
+    "3_spinaway_cres__nadir": 0,
+    "3_spinaway_cres__nadir2": 0
+   }
+  }
+ ]
+}
