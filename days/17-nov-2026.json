@@ -1,0 +1,87 @@
+{
+ "label": "Tue 17 Nov 2026",
+ "jobs": [
+  {
+   "slug": "34_croyden_rd",
+   "addr": "34 Croyden Rd, Roleystone WA 6111",
+   "who": "Jayden Cooke · Rodway",
+   "agency": "rodway",
+   "photos": "batch/34_croyden_rd/jpg",
+   "map": "batch/34_croyden_rd/34_croyden_rd_places.json",
+   "notes": "Entry Notes: -. Amenities to highlight: -. Strata: -. Land size: -. Boundaries/land features to mark: -. No edit notes for the drone photos.",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/17-11-2026/34 Croyden Rd, Roleystone WA 6111, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "34_croyden_rd_roleystone_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/17-11-2026/34 Croyden Rd, Roleystone WA 6111, Australia/Aerial - Drone Photography/34_croyden_rd_roleystone_map.html"
+    },
+    {
+     "name": "34_croyden_rd_roleystone_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/17-11-2026/34 Croyden Rd, Roleystone WA 6111, Australia/Aerial - Drone Photography/34_croyden_rd_roleystone_qa.txt"
+    },
+    {
+     "name": "34_croyden_rd_roleystone_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/17-11-2026/34 Croyden Rd, Roleystone WA 6111, Australia/Aerial - Drone Photography/34_croyden_rd_roleystone_directions.txt"
+    }
+   ],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "0236",
+    "0237"
+   ],
+   "streetRot": {
+    "34_croyden_rd__nadir": 0,
+    "34_croyden_rd__nadir2": 180
+   },
+   "pick": [
+    "0218",
+    "0220",
+    "0221",
+    "0223",
+    "0224",
+    "0225",
+    "0227",
+    "0229",
+    "0239",
+    "0240",
+    "0241"
+   ],
+   "tune": {
+    "noSolid": 1
+   }
+  },
+  {
+   "slug": "374_light_st",
+   "addr": "374 Light St, Dianella WA 6059",
+   "who": "Lucy Deng · Ausvision Realty",
+   "agency": "grey",
+   "photos": "batch/374_light_st/jpg",
+   "map": "batch/374_light_st/374_light_st_places.json",
+   "notes": "Entry Notes: meet tennant at the property. Amenities to highlight: -. Strata: -. Land size: -. Boundaries/land features to mark: -. No edit notes for the drone photos.",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/17-11-2026/374 Light St, Dianella WA 6059, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "374_light_st_dianella_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/17-11-2026/374 Light St, Dianella WA 6059, Australia/Aerial - Drone Photography/374_light_st_dianella_map.html"
+    },
+    {
+     "name": "374_light_st_dianella_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/17-11-2026/374 Light St, Dianella WA 6059, Australia/Aerial - Drone Photography/374_light_st_dianella_qa.txt"
+    },
+    {
+     "name": "374_light_st_dianella_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/17-11-2026/374 Light St, Dianella WA 6059, Australia/Aerial - Drone Photography/374_light_st_dianella_directions.txt"
+    }
+   ],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "0269",
+    "0267"
+   ],
+   "streetRot": {
+    "374_light_st__nadir": 180,
+    "374_light_st__nadir2": 0
+   }
+  }
+ ]
+}
