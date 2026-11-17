@@ -266,6 +266,12 @@
   .lp-table-compare td[data-label] + td[data-label] { margin-top: 10px; }
 }
 </style>
+<style id="nav-fix">
+.navbar .nav-links a,.navbar .nav-cta,.navbar .nav-logo,.navbar .nav-logo-text{white-space:nowrap}
+.navbar .nav-links{flex-wrap:nowrap}
+@media (min-width:1181px) and (max-width:1380px){.navbar{padding:0 28px}.navbar .nav-links{gap:22px}.navbar .nav-links a{letter-spacing:1.8px}.navbar .nav-cta{padding:12px 20px;letter-spacing:1.2px}}
+@media (max-width:1180px){.navbar .nav-links{display:none}.navbar .nav-cta.desktop-only{display:none}.navbar .nav-hamburger{display:block}}
+</style>
 </head>
 <body>
   <nav class="navbar">
