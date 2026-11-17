@@ -1,0 +1,151 @@
+{
+ "address": "43 William St, Armadale WA 6112",
+ "lat": -32.155549466682,
+ "lng": 116.014211613691,
+ "pins": [
+  {
+   "name": "Armadale Shopping City",
+   "cat": "shopping",
+   "lat": -32.1525933,
+   "lng": 116.0146789
+  },
+  {
+   "name": "Memorial Park",
+   "cat": "park",
+   "lat": -32.1515071,
+   "lng": 116.0157982
+  },
+  {
+   "name": "Armadale Library",
+   "cat": "library",
+   "lat": -32.1511,
+   "lng": 116.0143
+  },
+  {
+   "name": "Armadale Skate Park",
+   "cat": "recreation",
+   "lat": -32.1497068,
+   "lng": 116.0158764
+  },
+  {
+   "name": "Minnawarra Park",
+   "cat": "park",
+   "lat": -32.14889,
+   "lng": 116.0169
+  },
+  {
+   "name": "Sherwood Station",
+   "cat": "train",
+   "lat": -32.1376,
+   "lng": 116.0104
+  },
+  {
+   "name": "Armadale Health Service",
+   "cat": "hospital",
+   "lat": -32.1331543,
+   "lng": 116.0197193
+  },
+  {
+   "name": "Sowilo Community High School",
+   "cat": "school",
+   "lat": -32.13109,
+   "lng": 116.01032
+  },
+  {
+   "name": "Challis Station",
+   "cat": "train",
+   "lat": -32.126855,
+   "lng": 116.012547
+  },
+  {
+   "name": "Sanctuary Lake",
+   "cat": "lake",
+   "lat": -32.1488,
+   "lng": 116.0192
+  },
+  {
+   "name": "Errol Green Park",
+   "cat": "park",
+   "lat": -32.1548039,
+   "lng": 116.0196717
+  },
+  {
+   "name": "Armadale Settlers Common",
+   "cat": "regional_park",
+   "lat": -32.1526872,
+   "lng": 116.0375871
+  },
+  {
+   "name": "Tredale Park",
+   "cat": "park",
+   "lat": -32.1597289,
+   "lng": 116.0199315
+  },
+  {
+   "name": "Bungendore Park",
+   "cat": "regional_park",
+   "lat": -32.1747793,
+   "lng": 116.0356745
+  },
+  {
+   "name": "Alderson Park",
+   "cat": "park",
+   "lat": -32.15921,
+   "lng": 116.0154
+  },
+  {
+   "name": "Australian Christian College \u2013 Darling Downs",
+   "cat": "school",
+   "lat": -32.174680699676,
+   "lng": 116.004294564949
+  },
+  {
+   "name": "Gwynne Park",
+   "cat": "park",
+   "lat": -32.157164,
+   "lng": 116.0059368
+  },
+  {
+   "name": "Rotary Park",
+   "cat": "park",
+   "lat": -32.15326,
+   "lng": 116.00521
+  },
+  {
+   "name": "Dale Christian School",
+   "cat": "school",
+   "lat": -32.159329998381,
+   "lng": 115.998740045353
+  },
+  {
+   "name": "Xavier Catholic School",
+   "cat": "school",
+   "lat": -32.161224434227,
+   "lng": 115.991946261372
+  },
+  {
+   "name": "The Springs Club",
+   "cat": "golf",
+   "lat": -32.158407,
+   "lng": 115.959237
+  },
+  {
+   "name": "Armadale Station",
+   "cat": "train",
+   "lat": -32.153689,
+   "lng": 116.012962
+  },
+  {
+   "name": "John Calvin Christian College",
+   "cat": "school",
+   "lat": -32.14882,
+   "lng": 116.00733
+  },
+  {
+   "name": "Armadale Fitness and Aquatic Centre",
+   "cat": "aquatic",
+   "lat": -32.127329526528,
+   "lng": 115.997577643021
+  }
+ ]
+}

@@ -1,0 +1,211 @@
+{
+ "address": "79/1178 Hay St, West Perth WA 6005",
+ "lat": -31.948749475157,
+ "lng": 115.843829063626,
+ "pins": [
+  {
+   "name": "Bill Graden Reserve",
+   "cat": "park",
+   "lat": -31.9477453,
+   "lng": 115.8442253
+  },
+  {
+   "name": "Harold Boas Gardens",
+   "cat": "park",
+   "lat": -31.9458411,
+   "lng": 115.8445305
+  },
+  {
+   "name": "City West Station",
+   "cat": "train",
+   "lat": -31.9447,
+   "lng": 115.8451
+  },
+  {
+   "name": "Totterdell Park",
+   "cat": "park",
+   "lat": -31.9442041,
+   "lng": 115.842003
+  },
+  {
+   "name": "Leederville Station",
+   "cat": "train",
+   "lat": -31.938907,
+   "lng": 115.840273
+  },
+  {
+   "name": "Aranmore Catholic College",
+   "cat": "school",
+   "lat": -31.92776,
+   "lng": 115.84327
+  },
+  {
+   "name": "Aranmore Catholic Primary School",
+   "cat": "school",
+   "lat": -31.9279,
+   "lng": 115.83923
+  },
+  {
+   "name": "Watertown Brand Outlet Centre",
+   "cat": "shopping",
+   "lat": -31.946803,
+   "lng": 115.8474712
+  },
+  {
+   "name": "Sutherland Street Reserve",
+   "cat": "park",
+   "lat": -31.9454249,
+   "lng": 115.8472099
+  },
+  {
+   "name": "Piazza Nanni Park",
+   "cat": "park",
+   "lat": -31.944274,
+   "lng": 115.852211
+  },
+  {
+   "name": "Beatty Park Leisure Centre",
+   "cat": "aquatic",
+   "lat": -31.935716998733,
+   "lng": 115.850315734674
+  },
+  {
+   "name": "Hyde Park",
+   "cat": "park",
+   "lat": -31.93852,
+   "lng": 115.86471
+  },
+  {
+   "name": "Sacred Heart Primary School",
+   "cat": "school",
+   "lat": -31.9373202,
+   "lng": 115.8682173
+  },
+  {
+   "name": "Perth Underground Station",
+   "cat": "train",
+   "lat": -31.951939,
+   "lng": 115.858005
+  },
+  {
+   "name": "State Library of Western Australia",
+   "cat": "library",
+   "lat": -31.948996,
+   "lng": 115.86049
+  },
+  {
+   "name": "Perth Station",
+   "cat": "train",
+   "lat": -31.951428,
+   "lng": 115.860416
+  },
+  {
+   "name": "Forrest Chase",
+   "cat": "regional_shopping",
+   "lat": -31.95353,
+   "lng": 115.86079
+  },
+  {
+   "name": "Royal Perth Hospital",
+   "cat": "hospital",
+   "lat": -31.9547107,
+   "lng": 115.8660315
+  },
+  {
+   "name": "Mercedes College",
+   "cat": "school",
+   "lat": -31.9561235,
+   "lng": 115.8664365
+  },
+  {
+   "name": "Solidarity Park",
+   "cat": "park",
+   "lat": -31.9515368,
+   "lng": 115.846327
+  },
+  {
+   "name": "Eric Silbert Gardens",
+   "cat": "park",
+   "lat": -31.9525758,
+   "lng": 115.8495317
+  },
+  {
+   "name": "Florence Hummerston Reserve",
+   "cat": "park",
+   "lat": -31.952782,
+   "lng": 115.8501787
+  },
+  {
+   "name": "St George’s Anglican Grammar School",
+   "cat": "school",
+   "lat": -31.9541,
+   "lng": 115.8571
+  },
+  {
+   "name": "City of Perth Library",
+   "cat": "library",
+   "lat": -31.95514,
+   "lng": 115.86129
+  },
+  {
+   "name": "Langley Park",
+   "cat": "park",
+   "lat": -31.9603002,
+   "lng": 115.8672038
+  },
+  {
+   "name": "Mount Hospital",
+   "cat": "hospital",
+   "lat": -31.9585343,
+   "lng": 115.8455769
+  },
+  {
+   "name": "Royal Perth Golf Club",
+   "cat": "golf",
+   "lat": -31.97944,
+   "lng": 115.8531
+  },
+  {
+   "name": "Poolgarla Family Area",
+   "cat": "park",
+   "lat": -31.9541,
+   "lng": 115.8379
+  },
+  {
+   "name": "King Edward Memorial Hospital",
+   "cat": "hospital",
+   "lat": -31.9499526,
+   "lng": 115.8185618
+  },
+  {
+   "name": "Frank Baden Powell Park",
+   "cat": "park",
+   "lat": -31.94694,
+   "lng": 115.84195
+  },
+  {
+   "name": "Kitchener Park",
+   "cat": "park",
+   "lat": -31.94461,
+   "lng": 115.8348
+  },
+  {
+   "name": "St John of God Subiaco Hospital",
+   "cat": "hospital",
+   "lat": -31.9418931,
+   "lng": 115.8257085
+  },
+  {
+   "name": "Galup (Lake Monger)",
+   "cat": "lake",
+   "lat": -31.93401,
+   "lng": 115.82182
+  },
+  {
+   "name": "Kings Park",
+   "cat": "regional_park",
+   "lat": -31.96,
+   "lng": 115.842
+  }
+ ]
+}

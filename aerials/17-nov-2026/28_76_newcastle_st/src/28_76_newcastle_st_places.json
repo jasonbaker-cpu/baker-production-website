@@ -1,0 +1,229 @@
+{
+ "address": "28/76 Newcastle St, West Perth WA 6005",
+ "lat": -31.948171962028,
+ "lng": 115.866075137568,
+ "pins": [
+  {
+   "name": "Birdwood Square",
+   "cat": "park",
+   "lat": -31.9431244,
+   "lng": 115.8659013
+  },
+  {
+   "name": "Tu Do Park",
+   "cat": "park",
+   "lat": -31.94232,
+   "lng": 115.8636
+  },
+  {
+   "name": "Hyde Park",
+   "cat": "park",
+   "lat": -31.93852,
+   "lng": 115.86471
+  },
+  {
+   "name": "Sacred Heart Primary School",
+   "cat": "school",
+   "lat": -31.9373202,
+   "lng": 115.8682173
+  },
+  {
+   "name": "Brigatti Gardens",
+   "cat": "park",
+   "lat": -31.94126,
+   "lng": 115.87265
+  },
+  {
+   "name": "The Park Private Hospital",
+   "cat": "hospital",
+   "lat": -31.9341167,
+   "lng": 115.8742085
+  },
+  {
+   "name": "Perth College",
+   "cat": "school",
+   "lat": -31.9307972,
+   "lng": 115.8755419
+  },
+  {
+   "name": "St John of God Mt Lawley Hospital",
+   "cat": "hospital",
+   "lat": -31.9362331,
+   "lng": 115.8843446
+  },
+  {
+   "name": "Gladstone Street Reserve",
+   "cat": "park",
+   "lat": -31.9471,
+   "lng": 115.8723
+  },
+  {
+   "name": "Claisebrook Station",
+   "cat": "train",
+   "lat": -31.9494,
+   "lng": 115.8725
+  },
+  {
+   "name": "Norwood Park",
+   "cat": "park",
+   "lat": -31.94523,
+   "lng": 115.87552
+  },
+  {
+   "name": "Maylands Peninsula Public Golf Course",
+   "cat": "golf",
+   "lat": -31.94611,
+   "lng": 115.90056
+  },
+  {
+   "name": "Moort-ak Waadiny / Wellington Square",
+   "cat": "park",
+   "lat": -31.9544152,
+   "lng": 115.8719239
+  },
+  {
+   "name": "Trinity College",
+   "cat": "school",
+   "lat": -31.959929,
+   "lng": 115.883251
+  },
+  {
+   "name": "McIver Station",
+   "cat": "train",
+   "lat": -31.9518,
+   "lng": 115.8665
+  },
+  {
+   "name": "Royal Perth Hospital",
+   "cat": "hospital",
+   "lat": -31.9547107,
+   "lng": 115.8660315
+  },
+  {
+   "name": "Mercedes College",
+   "cat": "school",
+   "lat": -31.9561235,
+   "lng": 115.8664365
+  },
+  {
+   "name": "Langley Park",
+   "cat": "park",
+   "lat": -31.9603002,
+   "lng": 115.8672038
+  },
+  {
+   "name": "Urban Orchard",
+   "cat": "park",
+   "lat": -31.95037,
+   "lng": 115.860296
+  },
+  {
+   "name": "Perth Station",
+   "cat": "train",
+   "lat": -31.951428,
+   "lng": 115.860416
+  },
+  {
+   "name": "Forrest Chase",
+   "cat": "regional_shopping",
+   "lat": -31.95353,
+   "lng": 115.86079
+  },
+  {
+   "name": "Perth Underground Station",
+   "cat": "train",
+   "lat": -31.951939,
+   "lng": 115.858005
+  },
+  {
+   "name": "City of Perth Library",
+   "cat": "library",
+   "lat": -31.95514,
+   "lng": 115.86129
+  },
+  {
+   "name": "St George’s Anglican Grammar School",
+   "cat": "school",
+   "lat": -31.9541,
+   "lng": 115.8571
+  },
+  {
+   "name": "Mount Hospital",
+   "cat": "hospital",
+   "lat": -31.9585343,
+   "lng": 115.8455769
+  },
+  {
+   "name": "North Metropolitan TAFE Perth Campus",
+   "cat": "tafe",
+   "lat": -31.9480648,
+   "lng": 115.8610758
+  },
+  {
+   "name": "State Library of Western Australia",
+   "cat": "library",
+   "lat": -31.948996,
+   "lng": 115.86049
+  },
+  {
+   "name": "Plateia Hellas",
+   "cat": "park",
+   "lat": -31.9456605,
+   "lng": 115.8580586
+  },
+  {
+   "name": "Northbridge Piazza",
+   "cat": "park",
+   "lat": -31.9477001,
+   "lng": 115.857205
+  },
+  {
+   "name": "Manatj Park",
+   "cat": "park",
+   "lat": -31.9496,
+   "lng": 115.8559
+  },
+  {
+   "name": "Russell Square",
+   "cat": "park",
+   "lat": -31.9461228,
+   "lng": 115.8553733
+  },
+  {
+   "name": "Galup (Lake Monger)",
+   "cat": "lake",
+   "lat": -31.93401,
+   "lng": 115.82182
+  },
+  {
+   "name": "Weld Square",
+   "cat": "park",
+   "lat": -31.9468765,
+   "lng": 115.8649499
+  },
+  {
+   "name": "Tyne Square Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.9472303,
+   "lng": 115.8636771
+  },
+  {
+   "name": "Stuart Street Reserve",
+   "cat": "park",
+   "lat": -31.9431695,
+   "lng": 115.8583298
+  },
+  {
+   "name": "Beatty Park Leisure Centre",
+   "cat": "aquatic",
+   "lat": -31.935716998733,
+   "lng": 115.850315734674
+  },
+  {
+   "name": "Kings Park",
+   "cat": "regional_park",
+   "lat": -31.96,
+   "lng": 115.842
+  }
+ ]
+}
