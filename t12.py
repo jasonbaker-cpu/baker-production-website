@@ -124,7 +124,7 @@ async def main():
                 if 'house' in st:
                     await pg.click('text=Click the house'); await clickImg(pg,*st['house'])
                     if 'lm' in st: await pg.select_option('#lmSel', st['lm'][0]); await pg.click('#lmGo'); await clickImg(pg,*st['lm'][1])
-                elif not _clean and await pg.locator('#plHouse').count(): await pg.click('#plHouse'); await pg.wait_for_timeout(300)
+                if not _clean and await pg.locator('#plHouse').count() and not any(q['house'] for q in (await pg.evaluate("window.__bae.photo()"))['pins']): await pg.click('#plHouse'); await pg.wait_for_timeout(300)   # 18 Nov: a hand 'house' click re-aims the camera but never added the house pin (0121/0134/0138 went out pinless)
                 if 'housepin' in st:   # 29 Oct: move only the house pin (e.g. onto an apartment roof) without re-aiming the camera
                     await pg.evaluate(f"window.__bae.setHouse({st['housepin'][0]},{st['housepin'][1]})"); await pg.wait_for_timeout(200)
                 if _clean: pass

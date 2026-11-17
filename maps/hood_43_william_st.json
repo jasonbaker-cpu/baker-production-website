@@ -1,0 +1,85 @@
+{
+ "sat": "sat/armadale_loc",
+ "house": [
+  -32.155549466682,
+  116.014211613691
+ ],
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "photo": "e2e/43_william_st/dji_fly_20261117_102836_0109_1794923595154_photo.jpg",
+ "places": [
+  {
+   "name": "Bungendore Park",
+   "lat": -32.1747793,
+   "lng": 116.0356745,
+   "icon": "park"
+  },
+  {
+   "name": "Alderson Park",
+   "lat": -32.15921,
+   "lng": 116.0154,
+   "icon": "park"
+  },
+  {
+   "name": "Tredale Park",
+   "lat": -32.1597289,
+   "lng": 116.0199315,
+   "icon": "park"
+  },
+  {
+   "name": "Dale Christian School",
+   "lat": -32.159329998381,
+   "lng": 115.998740045353,
+   "icon": "school"
+  },
+  {
+   "name": "Armadale Station",
+   "lat": -32.153689,
+   "lng": 116.012962,
+   "icon": "train"
+  },
+  {
+   "name": "The Springs Club",
+   "lat": -32.158407,
+   "lng": 115.959237,
+   "icon": "golf"
+  },
+  {
+   "name": "Rotary Park",
+   "lat": -32.15326,
+   "lng": 116.00521,
+   "icon": "park"
+  },
+  {
+   "name": "John Calvin Christian College",
+   "lat": -32.14882,
+   "lng": 116.00733,
+   "icon": "school"
+  },
+  {
+   "name": "Armadale Shopping City",
+   "lat": -32.1525933,
+   "lng": 116.0146789,
+   "icon": "shop"
+  },
+  {
+   "name": "Sowilo Community High School",
+   "lat": -32.13109,
+   "lng": 116.01032,
+   "icon": "school"
+  },
+  {
+   "name": "Armadale Settlers Common",
+   "lat": -32.1526872,
+   "lng": 116.0375871,
+   "icon": "park"
+  },
+  {
+   "name": "Errol Green Park",
+   "lat": -32.1548039,
+   "lng": 116.0196717,
+   "icon": "park"
+  }
+ ]
+}

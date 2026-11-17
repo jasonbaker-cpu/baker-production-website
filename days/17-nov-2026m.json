@@ -1,0 +1,146 @@
+{
+ "label": "Tue 17 Nov 2026",
+ "jobs": [
+  {
+   "slug": "43_william_st",
+   "addr": "43 William St, Armadale WA 6112",
+   "who": "Jayden Cooke \u00b7 Rodway",
+   "agency": "rodway",
+   "photos": "batch/43_william_st/raw",
+   "map": "batch/43_william_st/43_william_st_places.json",
+   "poly": [
+    [
+     -32.155645,
+     116.0139476
+    ],
+    [
+     -32.1553246,
+     116.0143252
+    ],
+    [
+     -32.1554531,
+     116.0144758
+    ],
+    [
+     -32.1557735,
+     116.0140981
+    ]
+   ],
+   "notes": "Entry Notes: just photos of front and back maybe and make sure drone shots look good. Amenities to highlight: take photos of the front as well please thanks. Boundaries/land features to mark: -.",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/17-11-2026/43 william st, armadale wa 6112, australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "43_william_st_armadale_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/17-11-2026/43 william st, armadale wa 6112, australia/Aerial - Drone Photography/43_william_st_armadale_map.html"
+    },
+    {
+     "name": "43_william_st_armadale_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/17-11-2026/43 william st, armadale wa 6112, australia/Aerial - Drone Photography/43_william_st_armadale_qa.txt"
+    },
+    {
+     "name": "43_william_st_armadale_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/17-11-2026/43 william st, armadale wa 6112, australia/Aerial - Drone Photography/43_william_st_armadale_directions.txt"
+    }
+   ],
+   "nadirPick": [
+    "0102",
+    "0107"
+   ],
+   "streetRot": {
+    "43_william_st__nadir": 0,
+    "43_william_st__nadir2": 0
+   },
+   "skyPlate": "C",
+   "keep": {
+    "dji_fly_20261117_103016_0111_1794923592394_photo.JPG": [
+     "c1",
+     "c2",
+     "c4"
+    ],
+    "dji_fly_20261117_102836_0109_1794923595154_photo.JPG": [
+     "c5"
+    ],
+    "dji_fly_20261117_102734_0107_1794923598787_photo.JPG": [
+     "c1"
+    ]
+   }
+  },
+  {
+   "slug": "28_76_newcastle_st",
+   "addr": "28/76 Newcastle St, West Perth WA 6005",
+   "who": "Shane Garrett \u00b7 Belle Property",
+   "agency": "green-belle",
+   "photos": "batch/28_76_newcastle_st/raw",
+   "map": "batch/28_76_newcastle_st/28_76_newcastle_st_places.json",
+   "notes": "Entry Notes: Property is vacant and keys can be collected from the office make sure you check they are in the office first. Amenities to highlight: No. Strata: -Yes. Land size: -94. Title and land plan: -Yes. Boundaries/land features to mark: -. Client Preferences: No.",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/17-11-2026/newcastle st, west perth wa 6005, australia 28-76/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "Certificate of Title 2674-364 Apartment 28, 76 Newcastle Street, PERTH 6000.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/17-11-2026/newcastle st, west perth wa 6005, australia 28-76/Aerial - Drone Photography/Certificate of Title 2674-364 Apartment 28, 76 Newcastle Street, PERTH 6000.pdf"
+    },
+    {
+     "name": "Strata Plan.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/17-11-2026/newcastle st, west perth wa 6005, australia 28-76/Aerial - Drone Photography/Strata Plan.pdf"
+    },
+    {
+     "name": "28_76_newcastle_st_west_perth_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/17-11-2026/newcastle st, west perth wa 6005, australia 28-76/Aerial - Drone Photography/28_76_newcastle_st_west_perth_map.html"
+    },
+    {
+     "name": "28_76_newcastle_st_west_perth_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/17-11-2026/newcastle st, west perth wa 6005, australia 28-76/Aerial - Drone Photography/28_76_newcastle_st_west_perth_qa.txt"
+    },
+    {
+     "name": "28_76_newcastle_st_west_perth_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/17-11-2026/newcastle st, west perth wa 6005, australia 28-76/Aerial - Drone Photography/28_76_newcastle_st_west_perth_directions.txt"
+    }
+   ],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "0117",
+    "0116"
+   ],
+   "streetRot": {
+    "28_76_newcastle_st__nadir": 180,
+    "28_76_newcastle_st__nadir2": 0
+   },
+   "skyPlate": "D",
+   "perPhoto": 2
+  },
+  {
+   "slug": "79_1178_hay_st",
+   "addr": "79/1178 Hay St, West Perth WA 6005",
+   "who": "Megan Topham \u00b7 Belle Property",
+   "agency": "green-belle",
+   "photos": "batch/79_1178_hay_st/raw",
+   "map": "batch/79_1178_hay_st/79_1178_hay_st_places.json",
+   "notes": "Entry Notes: -. Amenities to highlight: -. Strata: -. Land size: -. Boundaries/land features to mark: -. Client Preferences: NO Edward Dunbar is the second agent.",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/17-11-2026/79-1178 Hay Street, West Perth, Western Australia 6005, AU/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "79_1178_hay_st_west_perth_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/17-11-2026/79-1178 Hay Street, West Perth, Western Australia 6005, AU/Aerial - Drone Photography/79_1178_hay_st_west_perth_map.html"
+    },
+    {
+     "name": "79_1178_hay_st_west_perth_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/17-11-2026/79-1178 Hay Street, West Perth, Western Australia 6005, AU/Aerial - Drone Photography/79_1178_hay_st_west_perth_qa.txt"
+    },
+    {
+     "name": "79_1178_hay_st_west_perth_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/17-11-2026/79-1178 Hay Street, West Perth, Western Australia 6005, AU/Aerial - Drone Photography/79_1178_hay_st_west_perth_directions.txt"
+    }
+   ],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "0129"
+   ],
+   "streetRot": {
+    "79_1178_hay_st__nadir": 270,
+    "79_1178_hay_st__nadir2": 0
+   },
+   "skyPlate": "D",
+   "perPhoto": 2
+  }
+ ]
+}

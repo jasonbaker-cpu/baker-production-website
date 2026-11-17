@@ -1,0 +1,91 @@
+{
+ "sat": "sat/wperth_loc",
+ "house": [
+  -31.948171962028,
+  115.866075137568
+ ],
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "photo": "e2e/28_76_newcastle_st/dji_fly_20261117_123610_0122_1794923578874_photo.jpg",
+ "places": [
+  {
+   "name": "Forrest Chase",
+   "lat": -31.95353,
+   "lng": 115.86079,
+   "icon": "shop"
+  },
+  {
+   "name": "Mercedes College",
+   "lat": -31.9561235,
+   "lng": 115.8664365,
+   "icon": "school"
+  },
+  {
+   "name": "Tyne Square Shopping Centre",
+   "lat": -31.9472303,
+   "lng": 115.8636771,
+   "icon": "shop"
+  },
+  {
+   "name": "Weld Square",
+   "lat": -31.9468765,
+   "lng": 115.8649499,
+   "icon": "park"
+  },
+  {
+   "name": "Sacred Heart Primary School",
+   "lat": -31.9373202,
+   "lng": 115.8682173,
+   "icon": "school"
+  },
+  {
+   "name": "Claisebrook Station",
+   "lat": -31.9494,
+   "lng": 115.8725,
+   "icon": "train"
+  },
+  {
+   "name": "Maylands Peninsula Public Golf Course",
+   "lat": -31.94611,
+   "lng": 115.90056,
+   "icon": "golf"
+  },
+  {
+   "name": "Trinity College",
+   "lat": -31.959929,
+   "lng": 115.883251,
+   "icon": "school"
+  },
+  {
+   "name": "Hyde Park",
+   "lat": -31.93852,
+   "lng": 115.86471,
+   "icon": "park"
+  },
+  {
+   "name": "Royal Perth Hospital",
+   "lat": -31.9547107,
+   "lng": 115.8660315,
+   "icon": "hospital"
+  },
+  {
+   "name": "McIver Station",
+   "lat": -31.9518,
+   "lng": 115.8665,
+   "icon": "train"
+  },
+  {
+   "name": "Perth Station",
+   "lat": -31.951428,
+   "lng": 115.860416,
+   "icon": "train"
+  },
+  {
+   "name": "Kings Park",
+   "lat": -31.96,
+   "lng": 115.842,
+   "icon": "park"
+  }
+ ]
+}

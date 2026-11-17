@@ -1,0 +1,91 @@
+{
+ "sat": "sat/wperth_loc",
+ "house": [
+  -31.948749475157,
+  115.843829063626
+ ],
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "photo": "e2e/79_1178_hay_st/dji_fly_20261117_160320_0131_1794923567548_photo.jpg",
+ "places": [
+  {
+   "name": "St John of God Subiaco Hospital",
+   "lat": -31.9418931,
+   "lng": 115.8257085,
+   "icon": "hospital"
+  },
+  {
+   "name": "King Edward Memorial Hospital",
+   "lat": -31.9499526,
+   "lng": 115.8185618,
+   "icon": "hospital"
+  },
+  {
+   "name": "Bill Graden Reserve",
+   "lat": -31.9477453,
+   "lng": 115.8442253,
+   "icon": "park"
+  },
+  {
+   "name": "Aranmore Catholic College",
+   "lat": -31.92776,
+   "lng": 115.84327,
+   "icon": "school"
+  },
+  {
+   "name": "Sacred Heart Primary School",
+   "lat": -31.9373202,
+   "lng": 115.8682173,
+   "icon": "school"
+  },
+  {
+   "name": "Forrest Chase",
+   "lat": -31.95353,
+   "lng": 115.86079,
+   "icon": "shop"
+  },
+  {
+   "name": "St George\u2019s Anglican Grammar School",
+   "lat": -31.9541,
+   "lng": 115.8571,
+   "icon": "school"
+  },
+  {
+   "name": "Royal Perth Golf Club",
+   "lat": -31.97944,
+   "lng": 115.8531,
+   "icon": "golf"
+  },
+  {
+   "name": "Kings Park",
+   "lat": -31.96,
+   "lng": 115.842,
+   "icon": "park"
+  },
+  {
+   "name": "Poolgarla Family Area",
+   "lat": -31.9541,
+   "lng": 115.8379,
+   "icon": "park"
+  },
+  {
+   "name": "City West Station",
+   "lat": -31.9447,
+   "lng": 115.8451,
+   "icon": "train"
+  },
+  {
+   "name": "Leederville Station",
+   "lat": -31.938907,
+   "lng": 115.840273,
+   "icon": "train"
+  },
+  {
+   "name": "Harold Boas Gardens",
+   "lat": -31.9458411,
+   "lng": 115.8445305,
+   "icon": "park"
+  }
+ ]
+}
