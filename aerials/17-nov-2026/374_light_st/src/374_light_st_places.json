@@ -1,0 +1,157 @@
+{
+ "address": "374 Light St, Dianella WA 6059",
+ "lat": -31.896343050476,
+ "lng": 115.889460898884,
+ "pins": [
+  {
+   "name": "Peters Place Reserve",
+   "cat": "park",
+   "lat": -31.8942795,
+   "lng": 115.8901412
+  },
+  {
+   "name": "Infant Jesus School",
+   "cat": "school",
+   "lat": -31.8932979,
+   "lng": 115.8895814
+  },
+  {
+   "name": "Morley West Reserve",
+   "cat": "park",
+   "lat": -31.88882,
+   "lng": 115.88601
+  },
+  {
+   "name": "Pat O'Hara Reserve",
+   "cat": "park",
+   "lat": -31.8933209,
+   "lng": 115.8978874
+  },
+  {
+   "name": "Lightning Swamp Bushland",
+   "cat": "park",
+   "lat": -31.8672151,
+   "lng": 115.9043718
+  },
+  {
+   "name": "Coventry Village",
+   "cat": "shopping",
+   "lat": -31.894796,
+   "lng": 115.894979
+  },
+  {
+   "name": "Progress Street Park",
+   "cat": "park",
+   "lat": -31.89587,
+   "lng": 115.89709
+  },
+  {
+   "name": "Galleria Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.897198,
+   "lng": 115.899901
+  },
+  {
+   "name": "Morley Station",
+   "cat": "train",
+   "lat": -31.896111,
+   "lng": 115.92
+  },
+  {
+   "name": "Rudloc Reserve",
+   "cat": "park",
+   "lat": -31.9029981,
+   "lng": 115.895704
+  },
+  {
+   "name": "Embleton Golf Course",
+   "cat": "golf",
+   "lat": -31.9053281,
+   "lng": 115.906808
+  },
+  {
+   "name": "Chisholm Catholic College",
+   "cat": "school",
+   "lat": -31.911509978544,
+   "lng": 115.900560047431
+  },
+  {
+   "name": "Bayswater Station",
+   "cat": "train",
+   "lat": -31.918401,
+   "lng": 115.91187
+  },
+  {
+   "name": "Eric Singleton Bird Sanctuary",
+   "cat": "reserve",
+   "lat": -31.9262483,
+   "lng": 115.921669
+  },
+  {
+   "name": "Gobba Lake",
+   "cat": "lake",
+   "lat": -31.92545,
+   "lng": 115.9276
+  },
+  {
+   "name": "R A Cook Reserve",
+   "cat": "park",
+   "lat": -31.9026762,
+   "lng": 115.8912051
+  },
+  {
+   "name": "St Peter's Primary School",
+   "cat": "school",
+   "lat": -31.9114421,
+   "lng": 115.8841859
+  },
+  {
+   "name": "Meltham Station",
+   "cat": "train",
+   "lat": -31.9225,
+   "lng": 115.9004
+  },
+  {
+   "name": "Croft Avenue Reserve",
+   "cat": "park",
+   "lat": -31.8987,
+   "lng": 115.8871
+  },
+  {
+   "name": "Australian Islamic College (Dianella)",
+   "cat": "school",
+   "lat": -31.9028851,
+   "lng": 115.8744189
+  },
+  {
+   "name": "Valentine North Reserve",
+   "cat": "park",
+   "lat": -31.89601,
+   "lng": 115.88647
+  },
+  {
+   "name": "Coode Croydon Reserve",
+   "cat": "park",
+   "lat": -31.89717,
+   "lng": 115.88611
+  },
+  {
+   "name": "Our Lady's Assumption School",
+   "cat": "school",
+   "lat": -31.8969369,
+   "lng": 115.8727037
+  },
+  {
+   "name": "Light Valentine Reserve",
+   "cat": "park",
+   "lat": -31.89421,
+   "lng": 115.88563
+  },
+  {
+   "name": "Dianella Open Space",
+   "cat": "park",
+   "lat": -31.886268,
+   "lng": 115.8745296
+  }
+ ]
+}

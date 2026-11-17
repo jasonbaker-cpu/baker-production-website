@@ -1,0 +1,61 @@
+{
+ "address": "34 Croyden Rd, Roleystone WA 6111",
+ "lat": -32.122926051786,
+ "lng": 116.072262160514,
+ "pins": [
+  {
+   "name": "Alice Reserve",
+   "cat": "reserve",
+   "lat": -32.1171594,
+   "lng": 116.0706681
+  },
+  {
+   "name": "Cross Park",
+   "cat": "park",
+   "lat": -32.1126874,
+   "lng": 116.0682144
+  },
+  {
+   "name": "Roleystone Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.1122069,
+   "lng": 116.0700417
+  },
+  {
+   "name": "Borrello Park",
+   "cat": "park",
+   "lat": -32.1153639,
+   "lng": 116.0803703
+  },
+  {
+   "name": "Araluen Botanic Park",
+   "cat": "park",
+   "lat": -32.12338,
+   "lng": 116.10141
+  },
+  {
+   "name": "Araluen Golf Resort",
+   "cat": "golf",
+   "lat": -32.1412086,
+   "lng": 116.0900821
+  },
+  {
+   "name": "Churchman Brook Dam",
+   "cat": "lake",
+   "lat": -32.14999,
+   "lng": 116.07799
+  },
+  {
+   "name": "Roley Pool Reserve",
+   "cat": "reserve",
+   "lat": -32.1282088,
+   "lng": 116.0691042
+  },
+  {
+   "name": "Challis Station",
+   "cat": "train",
+   "lat": -32.126855,
+   "lng": 116.012547
+  }
+ ]
+}
