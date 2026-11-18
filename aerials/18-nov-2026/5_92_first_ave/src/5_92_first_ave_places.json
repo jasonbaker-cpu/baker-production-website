@@ -1,0 +1,223 @@
+{
+ "address": "5/92 First Ave, Bassendean WA 6054",
+ "lat": -31.8969756,
+ "lng": 115.948458,
+ "pins": [
+  {
+   "name": "Anzac Terrace Reserve",
+   "cat": "park",
+   "lat": -31.898853999999996,
+   "lng": 115.94668750000001
+  },
+  {
+   "name": "Eden Hill Primary School",
+   "cat": "school",
+   "lat": -31.893177899999998,
+   "lng": 115.9455334
+  },
+  {
+   "name": "Bassendean Station",
+   "cat": "train",
+   "lat": -31.9035773,
+   "lng": 115.9471616
+  },
+  {
+   "name": "BIC Reserve",
+   "cat": "park",
+   "lat": -31.9037018,
+   "lng": 115.94970399999998
+  },
+  {
+   "name": "Casa Mia Montessori School",
+   "cat": "school",
+   "lat": -31.903089,
+   "lng": 115.95207099999999
+  },
+  {
+   "name": "Success Hill Station",
+   "cat": "train",
+   "lat": -31.900209999999998,
+   "lng": 115.95589
+  },
+  {
+   "name": "Success Hill Reserve",
+   "cat": "park",
+   "lat": -31.8966799,
+   "lng": 115.9568558
+  },
+  {
+   "name": "Ohio Reserve",
+   "cat": "park",
+   "lat": -31.891679999999997,
+   "lng": 115.954154
+  },
+  {
+   "name": "St Michael's School",
+   "cat": "school",
+   "lat": -31.904339399999998,
+   "lng": 115.9504992
+  },
+  {
+   "name": "Bassendean Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.905270999999995,
+   "lng": 115.95114760000001
+  },
+  {
+   "name": "Steel Blue Oval",
+   "cat": "park",
+   "lat": -31.903143699999998,
+   "lng": 115.95590030000001
+  },
+  {
+   "name": "Jubilee Reserve",
+   "cat": "park",
+   "lat": -31.890939699999997,
+   "lng": 115.93974929999999
+  },
+  {
+   "name": "Palmerston Square",
+   "cat": "park",
+   "lat": -31.906065199999997,
+   "lng": 115.95210829999999
+  },
+  {
+   "name": "Christie Park",
+   "cat": "park",
+   "lat": -31.904491999999994,
+   "lng": 115.9565336
+  },
+  {
+   "name": "Korbosky Park",
+   "cat": "park",
+   "lat": -31.8867661,
+   "lng": 115.94864749999999
+  },
+  {
+   "name": "Good Shepherd Catholic School",
+   "cat": "school",
+   "lat": -31.886060999999998,
+   "lng": 115.942744
+  },
+  {
+   "name": "Broadway Reserve",
+   "cat": "park",
+   "lat": -31.901757999999997,
+   "lng": 115.9346041
+  },
+  {
+   "name": "Colin Smith Reserve",
+   "cat": "park",
+   "lat": -31.8920244,
+   "lng": 115.9344193
+  },
+  {
+   "name": "Point Reserve",
+   "cat": "park",
+   "lat": -31.904381599999994,
+   "lng": 115.96200189999999
+  },
+  {
+   "name": "Guildford Station",
+   "cat": "train",
+   "lat": -31.898930699999998,
+   "lng": 115.96591780000001
+  },
+  {
+   "name": "Kings Meadow Reserve",
+   "cat": "park",
+   "lat": -31.9032965,
+   "lng": 115.96463800000001
+  },
+  {
+   "name": "Thorson Park",
+   "cat": "park",
+   "lat": -31.881844599999997,
+   "lng": 115.95335929999999
+  },
+  {
+   "name": "Tressider Park",
+   "cat": "park",
+   "lat": -31.882627499999998,
+   "lng": 115.95622320000001
+  },
+  {
+   "name": "Woolgar Park",
+   "cat": "park",
+   "lat": -31.8791902,
+   "lng": 115.9492018
+  },
+  {
+   "name": "Ashfield Station",
+   "cat": "train",
+   "lat": -31.9127765,
+   "lng": 115.93611220000001
+  },
+  {
+   "name": "Ashfield Flats",
+   "cat": "park",
+   "lat": -31.919590199999995,
+   "lng": 115.94599079999999
+  },
+  {
+   "name": "Morley Station",
+   "cat": "train",
+   "lat": -31.89598,
+   "lng": 115.91994000000001
+  },
+  {
+   "name": "Kiara College",
+   "cat": "school",
+   "lat": -31.876022199999998,
+   "lng": 115.93402820000001
+  },
+  {
+   "name": "Sandy Beach Reserve",
+   "cat": "park",
+   "lat": -31.921352000000002,
+   "lng": 115.9503105
+  },
+  {
+   "name": "Altone Park",
+   "cat": "park",
+   "lat": -31.873784299999997,
+   "lng": 115.9385068
+  },
+  {
+   "name": "Wotton Reserve",
+   "cat": "park",
+   "lat": -31.8971916,
+   "lng": 115.91908160000001
+  },
+  {
+   "name": "Noranda Station",
+   "cat": "train",
+   "lat": -31.8750158,
+   "lng": 115.91793310000001
+  },
+  {
+   "name": "Embleton Golf Course",
+   "cat": "golf",
+   "lat": -31.9052818,
+   "lng": 115.90681319999997
+  },
+  {
+   "name": "Redcliffe Station",
+   "cat": "train",
+   "lat": -31.93357,
+   "lng": 115.95007000000001
+  },
+  {
+   "name": "Galleria Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.8971626,
+   "lng": 115.8992309
+  },
+  {
+   "name": "Whiteman Park",
+   "cat": "park",
+   "lat": -31.834565299999994,
+   "lng": 115.9472754
+  }
+ ]
+}
