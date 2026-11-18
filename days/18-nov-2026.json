@@ -1,0 +1,42 @@
+{
+ "label": "Wed 18 Nov 2026",
+ "jobs": [
+  {
+   "slug": "5_92_first_ave",
+   "addr": "5/92 First Ave, Bassendean WA 6054",
+   "who": "Nic Pulvirenti \u00b7 Professionals",
+   "agency": "flags-p",
+   "photos": "batch/5_92_first_ave/jpg",
+   "map": "batch/5_92_first_ave/5_92_first_ave_places.json",
+   "notes": "Entry Notes: Keys at office 89 Old Perth Rd Bassendean. Amenities to highlight: -. Strata: -. Land size: -. Boundaries/land features to mark: -. No edit notes for the drone photos. (Survey-Strata Plan 61099 Lot 9 in Dropbox.)",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/18-11-2026/5-92 First Ave, Bassendean WA 6054, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "5_92_first_ave_bassendean_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/18-11-2026/5-92 First Ave, Bassendean WA 6054, Australia/Aerial - Drone Photography/5_92_first_ave_bassendean_map.html"
+    },
+    {
+     "name": "5_92_first_ave_bassendean_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/18-11-2026/5-92 First Ave, Bassendean WA 6054, Australia/Aerial - Drone Photography/5_92_first_ave_bassendean_qa.txt"
+    },
+    {
+     "name": "5_92_first_ave_bassendean_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/18-11-2026/5-92 First Ave, Bassendean WA 6054, Australia/Aerial - Drone Photography/5_92_first_ave_bassendean_directions.txt"
+    },
+    {
+     "name": "LOT 9 - Survey Strata Plan 61099.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/18-11-2026/5-92 First Ave, Bassendean WA 6054, Australia/Aerial - Drone Photography/LOT 9 - Survey Strata Plan 61099.pdf"
+    }
+   ],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "0041",
+    "0039"
+   ],
+   "streetRot": {
+    "5_92_first_ave__nadir": 180,
+    "5_92_first_ave__nadir2": 0
+   }
+  }
+ ]
+}
