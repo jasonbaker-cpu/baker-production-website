@@ -342,3 +342,9 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 - Arcs: if sagitta < 0.3 m, treat as one edge with the plan's arc length; otherwise keep the arc points and label one segment.
 - areaSource names the doc (e.g. "DP 37800 Lot 131 + title").
 - If a top-down can't contain the whole lot with margin (corner off-frame), leave that frame without a boundary and say so.
+
+## Boundary disputes from agents (18 Nov, 43 William St — I told Jason the wrong answer)
+1. Look at the EXACT image the agent has (editor/Profocus redo vs our gallery version can differ) before answering.
+2. Measure the lot on the drone photo: front edge = inner edge of the footpath (never on the footpath/road); scale from a known width (fence-to-fence = title width, or 2.5 m parking bays); the title/cadastre length must land on a real feature at the back.
+3. Never answer "it's outside the lot" from cadastre neighbour-parcel geometry alone. Cross-check with the photo; if they disagree, say so.
+4. Editor/Profocus redraws must be checked against our boundary before delivery.
