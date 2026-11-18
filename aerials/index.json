@@ -49,6 +49,41 @@
       }
      ],
      "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/18-11-2026/5-92 First Ave, Bassendean WA 6054, Australia/Aerial - Drone Photography"
+    },
+    {
+     "slug": "38a_pearl_rd",
+     "addr": "38A Pearl Rd, Cloverdale WA 6105",
+     "who": "Devon Kelly \u00b7 Laurie Kelly",
+     "agency": "black",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261118_135406_0143_photo.JPG",
+      "dji_fly_20261118_135350_0140_photo.JPG"
+     ],
+     "src": "18-nov-2026/38a_pearl_rd/src/",
+     "map": "38a_pearl_rd_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261118_135406_0143_photo.JPG",
+      "dji_fly_20261118_135350_0140_photo.JPG",
+      "dji_fly_20261118_135434_0144_photo.JPG",
+      "dji_fly_20261118_135446_0145_photo.JPG",
+      "dji_fly_20261118_135502_0146_photo.JPG",
+      "dji_fly_20261118_135514_0147_photo.JPG",
+      "dji_fly_20261118_135532_0148_photo.JPG",
+      "dji_fly_20261118_135544_0149_photo.JPG",
+      "dji_fly_20261118_135602_0150_photo.JPG",
+      "dji_fly_20261118_135612_0151_photo.JPG"
+     ],
+     "notes": "Entry Notes: meet agent at the property. Amenities or features to highlight: -. Strata/apartment/townhouse: -. Land size: -. Title and land plan: -. Any specific boundaries or land features to mark on the aerial photos: -. Client Preferences: no. (No edit notes for the drone photos.)",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "38a_pearl_rd_cloverdale_map.html",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/18-11-2026/38A Pearl Rd, Cloverdale WA 6105, Australia/Aerial - Drone Photography/38a_pearl_rd_cloverdale_map.html"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/18-11-2026/38A Pearl Rd, Cloverdale WA 6105, Australia/Aerial - Drone Photography"
     }
    ]
   },
