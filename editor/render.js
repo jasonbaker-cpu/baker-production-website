@@ -59,6 +59,7 @@ const AGENCIES = {
   "pill-r":      { name:"Navy labels + R pin (Mandie Cubeddu)",             kind:"pill", color:"#223454", house:{ type:"pin", w:82, h:104, stem:190, mark:"r", markR:.9 } },
   "realty-plus": { name:"Realty Plus — teal pins + board (Tracy Garbes, Leonie Adam)",     kind:"pin",  color:"#7ACCD6", scale:.88, house:{ type:"board", w:220, h:183, stem:170, mark:"realty" } },
   "peard":       { name:"Navy pins + Peard board (Wesley Majeks)",          kind:"pin",  color:"#0E2357", scale:.88, house:{ type:"board", w:285, h:111, stem:160, mark:"peard" } },
+  "ausvision":   { name:"Aus Vision Realty — red pins + Aus Vision logo pin (Lucy Deng, Heidi Yang, Martin Ma)", kind:"pin", color:"#B9232E", house:{ type:"pin", w:240, h:340, mark:"ausvision", markR:.74, ring:true } },   /* 18 Nov (Jason): red pins, white labels, logo house pin */
   "mallison":    { name:"Navy pins + Mallison logo (Oshi Thilakarathna)",   kind:"pin",  color:"#0B2A4F", scale:.88, house:{ type:"board", w:300, h:69, stem:180, mark:"mallison" } }
 };
 const HOUSE_STYLES = {
