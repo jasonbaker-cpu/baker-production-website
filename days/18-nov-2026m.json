@@ -1,0 +1,31 @@
+{
+ "label": "Wed 18 Nov 2026",
+ "jobs": [
+  {
+   "slug": "38a_pearl_rd",
+   "addr": "38A Pearl Rd, Cloverdale WA 6105",
+   "who": "Devon Kelly \u00b7 Laurie Kelly",
+   "agency": "black",
+   "photos": "batch/38a_pearl_rd/raw",
+   "map": "batch/38a_pearl_rd/38a_pearl_rd_places.json",
+   "notes": "Entry Notes: meet agent at the property. Amenities or features to highlight: -. Strata/apartment/townhouse: -. Land size: -. Title and land plan: -. Any specific boundaries or land features to mark on the aerial photos: -. Client Preferences: no. (No edit notes for the drone photos.)",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/18-11-2026/38A Pearl Rd, Cloverdale WA 6105, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "38a_pearl_rd_cloverdale_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/18-11-2026/38A Pearl Rd, Cloverdale WA 6105, Australia/Aerial - Drone Photography/38a_pearl_rd_cloverdale_map.html"
+    }
+   ],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "0143",
+    "0140"
+   ],
+   "streetRot": {
+    "38a_pearl_rd__nadir": 0,
+    "38a_pearl_rd__nadir2": 0
+   },
+   "skyPlate": "C"
+  }
+ ]
+}
