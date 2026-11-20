@@ -1,0 +1,39 @@
+{
+ "label": "Fri 20 Nov 2026",
+ "jobs": [
+  {
+   "slug": "54_2_tenth_ave",
+   "addr": "54/2 Tenth Ave, Maylands WA 6051",
+   "who": "Nic Pulvirenti \u00b7 Professionals",
+   "agency": "flags-p",
+   "photos": "batch/54_2_tenth_ave/jpg",
+   "map": "batch/54_2_tenth_ave/54_2_tenth_ave_places.json",
+   "notes": "Entry Notes: It's an apartment complex someone will need to open for u either owner or nic. Amenities to highlight: -. Strata: -. Land size: -. Boundaries/land features to mark: -. No edit notes for the drone photos. (Apartment \u2014 pins only, no boundary. Shooter took 8 obliques, no top-down.)",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/20-11-2026/54-2 Tenth Ave, Maylands WA 6051, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "54-2_tenth_ave_maylands_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/20-11-2026/54-2 Tenth Ave, Maylands WA 6051, Australia/Aerial - Drone Photography/54-2_tenth_ave_maylands_map.html"
+    },
+    {
+     "name": "54_2_tenth_ave_maylands_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/20-11-2026/54-2 Tenth Ave, Maylands WA 6051, Australia/Aerial - Drone Photography/54_2_tenth_ave_maylands_map.html"
+    },
+    {
+     "name": "54_2_tenth_ave_maylands_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/20-11-2026/54-2 Tenth Ave, Maylands WA 6051, Australia/Aerial - Drone Photography/54_2_tenth_ave_maylands_qa.txt"
+    },
+    {
+     "name": "54_2_tenth_ave_maylands_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/20-11-2026/54-2 Tenth Ave, Maylands WA 6051, Australia/Aerial - Drone Photography/54_2_tenth_ave_maylands_directions.txt"
+    }
+   ],
+   "must": [
+    "Maylands Station"
+   ],
+   "skip": [
+    "Optus Stadium"
+   ]
+  }
+ ]
+}
