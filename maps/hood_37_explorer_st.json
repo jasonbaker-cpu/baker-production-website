@@ -1,0 +1,75 @@
+{
+ "sat": "sat/37_explorer_st_loc",
+ "house": [
+  -31.537821,
+  115.62367
+ ],
+ "photo": "e2e/37_explorer_st__nadir2/dji_fly_20261120_131147_0152_photo_sq.jpg",
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "places": [
+  {
+   "name": "Yanchep Lagoon",
+   "lat": -31.549935,
+   "lng": 115.624177,
+   "icon": "beach"
+  },
+  {
+   "name": "Yanchep Beach",
+   "lat": -31.541153,
+   "lng": 115.616768,
+   "icon": "beach"
+  },
+  {
+   "name": "Yanchep Central",
+   "lat": -31.549408,
+   "lng": 115.638865,
+   "icon": "mall"
+  },
+  {
+   "name": "Yanchep Station",
+   "lat": -31.53229,
+   "lng": 115.64393,
+   "icon": "train"
+  },
+  {
+   "name": "Yanchep Beach Primary School",
+   "lat": -31.544071,
+   "lng": 115.631774,
+   "icon": "school"
+  },
+  {
+   "name": "Yanchep Secondary College",
+   "lat": -31.55108,
+   "lng": 115.642522,
+   "icon": "school"
+  },
+  {
+   "name": "Campground Adventure Park",
+   "lat": -31.538445,
+   "lng": 115.622664,
+   "icon": "park"
+  },
+  {
+   "name": "Splendid Park",
+   "lat": -31.541226,
+   "lng": 115.637169,
+   "icon": "park"
+  },
+  {
+   "name": "Mary Lindsay Park",
+   "lat": -31.544201,
+   "lng": 115.623293,
+   "icon": "park"
+  },
+  {
+   "name": "Spinifex Park",
+   "lat": -31.538656,
+   "lng": 115.629152,
+   "icon": "park"
+  }
+ ],
+ "houseY": 0.22,
+ "houseX": 0.42
+}

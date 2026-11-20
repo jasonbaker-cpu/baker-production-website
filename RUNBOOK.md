@@ -348,3 +348,9 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 2. Measure the lot on the drone photo: front edge = inner edge of the footpath (never on the footpath/road); scale from a known width (fence-to-fence = title width, or 2.5 m parking bays); the title/cadastre length must land on a real feature at the back.
 3. Never answer "it's outside the lot" from cadastre neighbour-parcel geometry alone. Cross-check with the photo; if they disagree, say so.
 4. Editor/Profocus redraws must be checked against our boundary before delivery.
+
+## 21 Nov 2026 (morning run) — satellite from the Browser pane without javascript_tool
+- browser_repl output is capped at 50k chars, so base64 chunks don't work. Instead draw the mosaic canvas in a bakerproduction.com tab, set the viewport to 768x768, shift the canvas by 0/768 px and take 4 `tab.screenshot()`s (each saved 1:1 as a tool-results blob jpg), then `python3 satquad.py <slug> <z> <x0> <y0> 6 q00 q10 q01 q11`. Max ~4 screenshots per browser_repl call (bridge size limit).
+- estpose: `HS=90,100,...` sets the height grid (DJI Fly obliques were 110–160 m); `HR=<row>` forces the horizon row when the sea haze fools the finder (37 Explorer 0156/0157: hz 1800).
+- clean_lot: a tight detector box makes LaMa paint a ghost car — pass a generous plain box (original px) covering the whole vehicle + shadow.
+- northerncoast.com.au = Professionals Northern Coast → flags-p.

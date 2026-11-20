@@ -1,0 +1,67 @@
+{
+ "sat": "sat/8_118_mounts_bay_rd_loc",
+ "house": [
+  -31.9551977,
+  115.847875
+ ],
+ "photo": "e2e/8_118_mounts_bay_rd__nadir2/dji_fly_20261120_174948_0171_photo_sq.jpg",
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "places": [
+  {
+   "name": "Kings Park and Botanic Garden",
+   "lat": -31.960911,
+   "lng": 115.832193,
+   "icon": "pine"
+  },
+  {
+   "name": "Elizabeth Quay",
+   "lat": -31.957576,
+   "lng": 115.856987,
+   "icon": "park"
+  },
+  {
+   "name": "Elizabeth Quay Station",
+   "lat": -31.956854,
+   "lng": 115.855325,
+   "icon": "train"
+  },
+  {
+   "name": "City West Station",
+   "lat": -31.944528,
+   "lng": 115.844849,
+   "icon": "train"
+  },
+  {
+   "name": "Perth Station",
+   "lat": -31.951109,
+   "lng": 115.859961,
+   "icon": "train"
+  },
+  {
+   "name": "Raine Square",
+   "lat": -31.951022,
+   "lng": 115.857071,
+   "icon": "mall"
+  },
+  {
+   "name": "RAC Arena",
+   "lat": -31.948434,
+   "lng": 115.85211,
+   "icon": "stadium"
+  },
+  {
+   "name": "Mount Hospital",
+   "lat": -31.958209,
+   "lng": 115.845429,
+   "icon": "hospital"
+  },
+  {
+   "name": "State War Memorial",
+   "lat": -31.960874,
+   "lng": 115.844661,
+   "icon": "park"
+  }
+ ]
+}

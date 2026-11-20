@@ -40,13 +40,13 @@ for f in photos:
     ex = (hg-lng)*111320*math.cos(lat*D); ny = (hl-lat)*111320; brg = math.degrees(math.atan2(ex, ny))
     r = R(f); best = (-2, None)
     if hr is None:   # top-down
-        for h in range(55, 100, 5):
+        for h in (list(map(int, __import__('os').environ['HS'].split(','))) if __import__('os').environ.get('HS') else range(55, 100, 5)):
             for y in range(0, 360, 4):
                 c = dict(lat=lat, lng=lng, h=h, yaw=y, pitch=-90, roll=0, f35=24); v = r.score(c)
                 if v > best[0]: best = (v, c)
     else:
         pitch = -math.degrees(math.atan((H/2-hr)/fp)) - 0.3
-        for h in (100, 110, 120):
+        for h in (list(map(int, __import__('os').environ['HS'].split(','))) if __import__('os').environ.get('HS') else (100, 110, 120)):
             for dy in range(-60, 61, 3):
                 for dp in (-2, 0, 2):
                     c = dict(lat=lat, lng=lng, h=h, yaw=brg+dy, pitch=pitch+dp, roll=0, f35=24); v = r.score(c)

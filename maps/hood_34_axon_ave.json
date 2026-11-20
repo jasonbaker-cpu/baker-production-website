@@ -1,0 +1,79 @@
+{
+ "sat": "sat/34_axon_ave_loc",
+ "house": [
+  -31.973631,
+  115.903395
+ ],
+ "photo": "e2e/34_axon_ave__nadir2/dji_fly_20261120_152230_0160_photo_sq.jpg",
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "places": [
+  {
+   "name": "Victoria Park Station",
+   "lat": -31.971655,
+   "lng": 115.90222,
+   "icon": "train"
+  },
+  {
+   "name": "Carlisle Station",
+   "lat": -31.980935,
+   "lng": 115.911258,
+   "icon": "train"
+  },
+  {
+   "name": "Burswood Station",
+   "lat": -31.960186,
+   "lng": 115.899958,
+   "icon": "train"
+  },
+  {
+   "name": "Victoria Park Central",
+   "lat": -31.973922,
+   "lng": 115.897265,
+   "icon": "mall"
+  },
+  {
+   "name": "Albany Hwy Caf\u00e9 Strip",
+   "lat": -31.97265,
+   "lng": 115.89617,
+   "icon": "mall"
+  },
+  {
+   "name": "Hawaiian's Park Centre",
+   "lat": -31.984486,
+   "lng": 115.901714,
+   "icon": "mall"
+  },
+  {
+   "name": "Ursula Frayne Catholic College",
+   "lat": -31.973039,
+   "lng": 115.899627,
+   "icon": "school"
+  },
+  {
+   "name": "St Clare's School",
+   "lat": -31.971218,
+   "lng": 115.908711,
+   "icon": "school"
+  },
+  {
+   "name": "East Victoria Park Primary School",
+   "lat": -31.979306,
+   "lng": 115.907941,
+   "icon": "school"
+  },
+  {
+   "name": "Lathlain Park",
+   "lat": -31.972724,
+   "lng": 115.908004,
+   "icon": "stadium"
+  },
+  {
+   "name": "Optus Stadium",
+   "lat": -31.950749,
+   "lng": 115.888799,
+   "icon": "stadium"
+  }
+ ]
+}

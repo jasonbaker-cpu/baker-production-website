@@ -1,0 +1,191 @@
+{
+ "label": "Fri 20 Nov 2026",
+ "jobs": [
+  {
+   "slug": "37_explorer_st",
+   "addr": "37 Explorer St, Yanchep WA 6035",
+   "who": "Brodie Morris \u00b7 Professionals Northern Coast",
+   "agency": "flags-p",
+   "photos": "batch/37_explorer_st/raw",
+   "map": "batch/37_explorer_st/37_explorer_st_places.json",
+   "poly": [
+    [
+     -31.537711779355515,
+     115.62378474321704
+    ],
+    [
+     -31.5378136623485,
+     115.62384111096765
+    ],
+    [
+     -31.53792952744212,
+     115.62355563785232
+    ],
+    [
+     -31.537827631448867,
+     115.62349927010598
+    ]
+   ],
+   "area": 375,
+   "areaSource": "title 2890/617 + DP 405421 Lot 2093",
+   "lens": [
+    12.5,
+    30,
+    12.5,
+    30
+   ],
+   "notes": "Entry Notes: i will be at the property. Amenities or features to highlight: not really. Strata/apartment/townhouse: -No. Land size: -375. Title and land plan: Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line. Any specific boundaries or land features to mark on the aerial photos: -. Client Preferences: no. (No edit notes for the drone photos.)",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/37 Explorer St, Yanchep WA 6035, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "Certificate of Title 2890-617 37 Explorer Street, YANCHEP 6035.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/37 Explorer St, Yanchep WA 6035, Australia/Aerial - Drone Photography/Certificate of Title 2890-617 37 Explorer Street, YANCHEP 6035.pdf"
+    },
+    {
+     "name": "Deposited Plan 405421.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/37 Explorer St, Yanchep WA 6035, Australia/Aerial - Drone Photography/Deposited Plan 405421.pdf"
+    },
+    {
+     "name": "37_explorer_st_yanchep_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/37 Explorer St, Yanchep WA 6035, Australia/Aerial - Drone Photography/37_explorer_st_yanchep_map.html"
+    },
+    {
+     "name": "37_explorer_st_yanchep_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/37 Explorer St, Yanchep WA 6035, Australia/Aerial - Drone Photography/37_explorer_st_yanchep_qa.txt"
+    },
+    {
+     "name": "37_explorer_st_yanchep_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/37 Explorer St, Yanchep WA 6035, Australia/Aerial - Drone Photography/37_explorer_st_yanchep_directions.txt"
+    }
+   ],
+   "nadirPick": [
+    "0155",
+    "0152"
+   ],
+   "streetRot": {
+    "37_explorer_st__nadir": 0,
+    "37_explorer_st__nadir2": 0
+   },
+   "skyPlate": "C",
+   "tune": {
+    "noSolid": 1
+   },
+   "edgeOff": {
+    "0": 0.35
+   }
+  },
+  {
+   "slug": "34_axon_ave",
+   "addr": "34 Axon Ave, Victoria Park WA 6100",
+   "who": "Cooper Winter \u00b7 Laurie Kelly",
+   "agency": "black",
+   "photos": "batch/34_axon_ave/raw",
+   "map": "batch/34_axon_ave/34_axon_ave_places.json",
+   "poly": [
+    [
+     -31.973526909431303,
+     115.90337556086779
+    ],
+    [
+     -31.973666605572795,
+     115.9035113627982
+    ],
+    [
+     -31.97373563163248,
+     115.90341362995215
+    ],
+    [
+     -31.97359593449052,
+     115.90327784202083
+    ]
+   ],
+   "area": 241,
+   "areaSource": "agent (booking form land size)",
+   "notes": "Entry Notes: Agent. Amenities or features to highlight: This is a block of land, i would like to get a good shot of the block then the rest at surrounding amenities. with 1 or 2 shots with a concept design for a 2 story house. Strata/apartment/townhouse: -Yes. Land size: -241. Title and land plan: Yes \u2014 I'll email them to admin@bakerproduction.com with the property address in the subject line. Any specific boundaries or land features to mark on the aerial photos: -All Amenties around. vic park strip, lathlain and all other close by",
+   "must": [
+    "Albany Hwy Caf\u00e9 Strip",
+    "Lathlain Park"
+   ],
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/34 Axon Ave, Victoria Park WA 6100, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "34_axon_ave_victoria_park_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/34 Axon Ave, Victoria Park WA 6100, Australia/Aerial - Drone Photography/34_axon_ave_victoria_park_map.html"
+    },
+    {
+     "name": "34_axon_ave_victoria_park_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/34 Axon Ave, Victoria Park WA 6100, Australia/Aerial - Drone Photography/34_axon_ave_victoria_park_qa.txt"
+    },
+    {
+     "name": "34_axon_ave_victoria_park_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/34 Axon Ave, Victoria Park WA 6100, Australia/Aerial - Drone Photography/34_axon_ave_victoria_park_directions.txt"
+    }
+   ],
+   "nadirPick": [
+    "0161",
+    "0160"
+   ],
+   "streetRot": {
+    "34_axon_ave__nadir": 0,
+    "34_axon_ave__nadir2": 0
+   },
+   "skyPlate": "C",
+   "remove": {
+    "dji_fly_20261120_152234_0161_photo.JPG": [
+     [
+      4420,
+      4100,
+      5100,
+      5100
+     ]
+    ],
+    "dji_fly_20261120_152230_0160_photo.JPG": [
+     "c3",
+     [
+      1800,
+      3300,
+      2900,
+      3800
+     ]
+    ]
+   }
+  },
+  {
+   "slug": "8_118_mounts_bay_rd",
+   "addr": "8/118 Mounts Bay Rd, Perth WA 6000",
+   "who": "Jordan London \u00b7 Raspa",
+   "agency": "charcoal",
+   "photos": "batch/8_118_mounts_bay_rd/raw",
+   "map": "batch/8_118_mounts_bay_rd/8_118_mounts_bay_rd_places.json",
+   "notes": "Entry Notes: -. Amenities or features to highlight: -. Strata/apartment/townhouse: -. Land size: -. Title and land plan: -. Any specific boundaries or land features to mark on the aerial photos: -. (Booked: Floorplan or Drone - Drone + Twilight Add-On. No edit notes for the drone photos. Apartment \u2014 pins only, no boundary. Drone flown 5:49\u20135:53pm in daylight.)",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/8-118 Mounts Bay Rd, Perth WA 6000, Australia/Floorplan or Drone",
+   "docs": [
+    {
+     "name": "8_118_mounts_bay_rd_perth_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/8-118 Mounts Bay Rd, Perth WA 6000, Australia/Floorplan or Drone/8_118_mounts_bay_rd_perth_map.html"
+    },
+    {
+     "name": "8_118_mounts_bay_rd_perth_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/8-118 Mounts Bay Rd, Perth WA 6000, Australia/Floorplan or Drone/8_118_mounts_bay_rd_perth_qa.txt"
+    },
+    {
+     "name": "8_118_mounts_bay_rd_perth_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/20-11-2026/8-118 Mounts Bay Rd, Perth WA 6000, Australia/Floorplan or Drone/8_118_mounts_bay_rd_perth_directions.txt"
+    }
+   ],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "0172",
+    "0171"
+   ],
+   "streetRot": {
+    "8_118_mounts_bay_rd__nadir": 180,
+    "8_118_mounts_bay_rd__nadir2": 0
+   },
+   "skyPlate": "C",
+   "skip": [
+    "St George's Anglican Grammar School"
+   ]
+  }
+ ]
+}
