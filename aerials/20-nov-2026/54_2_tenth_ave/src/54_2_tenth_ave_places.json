@@ -1,0 +1,151 @@
+{
+ "address": "54/2 Tenth Ave, Maylands WA 6051",
+ "lat": -31.92622626,
+ "lng": 115.89325236,
+ "pins": [
+  {
+   "name": "Maylands Station",
+   "cat": "train",
+   "lat": -31.9282855,
+   "lng": 115.8917529
+  },
+  {
+   "name": "Plowman Reserve",
+   "cat": "park",
+   "lat": -31.926762999999998,
+   "lng": 115.89632669999997
+  },
+  {
+   "name": "Bold Park Community School, Maylands Campus",
+   "cat": "school",
+   "lat": -31.9295847,
+   "lng": 115.89164249999999
+  },
+  {
+   "name": "Maylands Park Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.929920199999994,
+   "lng": 115.89632739999999
+  },
+  {
+   "name": "Shearn Memorial Park",
+   "cat": "park",
+   "lat": -31.928135599999997,
+   "lng": 115.88655519999998
+  },
+  {
+   "name": "Charles St Reserve",
+   "cat": "reserve",
+   "lat": -31.9270817,
+   "lng": 115.9006501
+  },
+  {
+   "name": "Meltham Station",
+   "cat": "train",
+   "lat": -31.922461700000003,
+   "lng": 115.90029489999999
+  },
+  {
+   "name": "Stuart Reserve",
+   "cat": "reserve",
+   "lat": -31.919140000000002,
+   "lng": 115.89075000000001
+  },
+  {
+   "name": "Faull Park",
+   "cat": "park",
+   "lat": -31.926567,
+   "lng": 115.88308459999999
+  },
+  {
+   "name": "Bardon Park",
+   "cat": "park",
+   "lat": -31.9354137,
+   "lng": 115.88805579999999
+  },
+  {
+   "name": "Gibbney Reserve",
+   "cat": "park",
+   "lat": -31.931235700000002,
+   "lng": 115.90577580000001
+  },
+  {
+   "name": "Mount Lawley Hospital",
+   "cat": "hospital",
+   "lat": -31.936713299999997,
+   "lng": 115.88488790000001
+  },
+  {
+   "name": "Mount Lawley Station",
+   "cat": "train",
+   "lat": -31.9347732,
+   "lng": 115.88084409999999
+  },
+  {
+   "name": "Macaulay Park",
+   "cat": "park",
+   "lat": -31.9151383,
+   "lng": 115.8803799
+  },
+  {
+   "name": "Perth College",
+   "cat": "school",
+   "lat": -31.931178499999994,
+   "lng": 115.87548089999999
+  },
+  {
+   "name": "Chisholm Catholic College",
+   "cat": "school",
+   "lat": -31.910858899999994,
+   "lng": 115.90015580000001
+  },
+  {
+   "name": "St Peter's Primary School",
+   "cat": "school",
+   "lat": -31.911650599999998,
+   "lng": 115.88382139999997
+  },
+  {
+   "name": "Maylands Peninsula Public Golf Course",
+   "cat": "golf",
+   "lat": -31.9419503,
+   "lng": 115.9024031
+  },
+  {
+   "name": "Bayswater Station",
+   "cat": "train",
+   "lat": -31.918095599999997,
+   "lng": 115.91254239999998
+  },
+  {
+   "name": "Optus Stadium",
+   "cat": "stadium",
+   "lat": -31.950749199999997,
+   "lng": 115.88879879999998
+  },
+  {
+   "name": "Riverside Gardens",
+   "cat": "park",
+   "lat": -31.9300858,
+   "lng": 115.9230949
+  },
+  {
+   "name": "Galleria Shopping Centre",
+   "cat": "regional_shopping",
+   "lat": -31.8971626,
+   "lng": 115.8992309
+  },
+  {
+   "name": "Bayswater Waves",
+   "cat": "aquatic",
+   "lat": -31.897845900000004,
+   "lng": 115.9103646
+  },
+  {
+   "name": "Edith Cowan University Mount Lawley Campus",
+   "cat": "school",
+   "lat": -31.919325899999997,
+   "lng": 115.86915259999999
+  }
+ ]
+}
