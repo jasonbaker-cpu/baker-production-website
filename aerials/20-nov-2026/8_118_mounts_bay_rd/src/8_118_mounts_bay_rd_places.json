@@ -1,0 +1,127 @@
+{
+ "address": "8/118 Mounts Bay Rd, Perth WA 6000",
+ "lat": -31.9551977,
+ "lng": 115.847875,
+ "pins": [
+  {
+   "name": "Kings Park and Botanic Garden",
+   "cat": "regional park",
+   "lat": -31.960911,
+   "lng": 115.832193
+  },
+  {
+   "name": "Elizabeth Quay",
+   "cat": "park",
+   "lat": -31.957576,
+   "lng": 115.856987
+  },
+  {
+   "name": "Elizabeth Quay Station",
+   "cat": "train",
+   "lat": -31.956854,
+   "lng": 115.855325
+  },
+  {
+   "name": "City West Station",
+   "cat": "train",
+   "lat": -31.944528,
+   "lng": 115.844849
+  },
+  {
+   "name": "Perth Station",
+   "cat": "train",
+   "lat": -31.951109,
+   "lng": 115.859961
+  },
+  {
+   "name": "Raine Square",
+   "cat": "shopping",
+   "lat": -31.951022,
+   "lng": 115.857071
+  },
+  {
+   "name": "Watertown Brand Outlet Centre",
+   "cat": "shopping",
+   "lat": -31.946841,
+   "lng": 115.847404
+  },
+  {
+   "name": "RAC Arena",
+   "cat": "sport",
+   "lat": -31.948434,
+   "lng": 115.85211
+  },
+  {
+   "name": "Royal Perth Hospital",
+   "cat": "hospital",
+   "lat": -31.953756,
+   "lng": 115.866352
+  },
+  {
+   "name": "Mount Hospital",
+   "cat": "hospital",
+   "lat": -31.958209,
+   "lng": 115.845429
+  },
+  {
+   "name": "St George's Anglican Grammar School",
+   "cat": "school",
+   "lat": -31.95407,
+   "lng": 115.85709
+  },
+  {
+   "name": "Mercedes College",
+   "cat": "school",
+   "lat": -31.956857,
+   "lng": 115.867544
+  },
+  {
+   "name": "Sir James Mitchell Park",
+   "cat": "regional park",
+   "lat": -31.975862,
+   "lng": 115.863716
+  },
+  {
+   "name": "Perth Zoo",
+   "cat": "park",
+   "lat": -31.975531,
+   "lng": 115.852256
+  },
+  {
+   "name": "Royal Perth Golf Club",
+   "cat": "golf",
+   "lat": -31.979476,
+   "lng": 115.853199
+  },
+  {
+   "name": "Matilda Bay Reserve",
+   "cat": "regional park",
+   "lat": -31.977621,
+   "lng": 115.821345
+  },
+  {
+   "name": "Langley Park",
+   "cat": "park",
+   "lat": -31.95947,
+   "lng": 115.86512
+  },
+  {
+   "name": "State War Memorial",
+   "cat": "park",
+   "lat": -31.960874,
+   "lng": 115.844661
+  },
+  {
+   "name": "Beatty Park Leisure Centre",
+   "cat": "aquatic",
+   "lat": -31.935678,
+   "lng": 115.849586
+  },
+  {
+   "name": "State Library of WA",
+   "cat": "library",
+   "lat": -31.949011,
+   "lng": 115.860506
+  }
+ ]
+}

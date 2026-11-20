@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Check · 34 Axon Ave, Victoria Park WA 6100</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>html,body{margin:0;height:100%;font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif;background:#111;color:#eee}
+.w{display:grid;grid-template-columns:1fr 1.4fr;gap:6px;height:100%}@media(max-width:700px){.w{grid-template-columns:1fr;grid-auto-rows:300px}}
+.p{position:relative}.m{position:absolute;inset:0}.h{position:absolute;z-index:500;left:8px;top:8px;background:rgba(0,0,0,.72);padding:4px 9px;border-radius:5px;font-weight:600}
+.leaflet-tooltip.t{background:rgba(30,32,36,.9);color:#fff;border:0;font-weight:600;box-shadow:none;padding:2px 6px}.leaflet-tooltip.t:before{display:none}</style></head>
+<body><div class="w"><div class="p"><div id="b" class="m"></div><div class="h">Boundary · 241 m²</div></div><div class="p"><div id="a" class="m"></div><div class="h">Pinned places (16)</div></div></div>
+<script>const D={"lat": -31.973631, "lng": 115.903395, "poly": [[-31.973526909431303, 115.90337556086779], [-31.973666605572795, 115.9035113627982], [-31.97373563163248, 115.90341362995215], [-31.97359593449052, 115.90327784202083]], "places": [{"name": "East Victoria Park Primary School", "lat": -31.979306, "lng": 115.907941, "d": "760 m"}, {"name": "Carlisle Station", "lat": -31.980935, "lng": 115.911258, "d": "1.1 km"}, {"name": "Koolbardi Park", "lat": -31.974672, "lng": 115.909559, "d": "590 m"}, {"name": "Victoria Park Library", "lat": -31.984312, "lng": 115.900011, "d": "1.2 km"}, {"name": "Victoria Park Central", "lat": -31.973922, "lng": 115.897265, "d": "580 m"}, {"name": "Kent Street Senior High School", "lat": -31.984557, "lng": 115.892413, "d": "1.6 km"}, {"name": "Albany Hwy Caf\u00e9 Strip", "lat": -31.97265, "lng": 115.89617, "d": "690 m"}, {"name": "Read Park", "lat": -31.97681, "lng": 115.89914, "d": "540 m"}, {"name": "Ursula Frayne Catholic College", "lat": -31.973039, "lng": 115.899627, "d": "360 m"}, {"name": "Perth Montessori", "lat": -31.965528, "lng": 115.897829, "d": "1.0 km"}, {"name": "Victoria Park Station", "lat": -31.971655, "lng": 115.90222, "d": "250 m"}, {"name": "Burswood Station", "lat": -31.960186, "lng": 115.899958, "d": "1.5 km"}, {"name": "Lathlain Park", "lat": -31.972724, "lng": 115.908004, "d": "450 m"}, {"name": "Belmont Forum", "lat": -31.964962, "lng": 115.934914, "d": "3.1 km"}, {"name": "St Clare's School", "lat": -31.971218, "lng": 115.908711, "d": "570 m"}, {"name": "Tomato Lake", "lat": -31.975106, "lng": 115.932387, "d": "2.7 km"}]};
+const T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', O={maxZoom:21,maxNativeZoom:19,attribution:'Esri World Imagery'};
+const H=[D.lat,D.lng];
+const b=L.map('b',{zoomControl:false,attributionControl:false}); L.tileLayer(T,O).addTo(b);
+if(D.poly&&D.poly.length){const pg=L.polygon(D.poly,{color:'#ffd400',weight:3,fill:false}).addTo(b); b.fitBounds(pg.getBounds(),{padding:[40,40],maxZoom:20});}
+else{b.setView(H,19); L.marker(H).addTo(b).bindTooltip('No boundary (strata / pins only)',{permanent:true,className:'t'});}
+L.circleMarker(H,{radius:5,color:'#fff',weight:2,fillColor:'#e33',fillOpacity:1}).addTo(b);
+const a=L.map('a',{attributionControl:false}); L.tileLayer(T,O).addTo(a);
+L.circleMarker(H,{radius:8,color:'#fff',weight:3,fillColor:'#e33',fillOpacity:1}).addTo(a).bindTooltip('House',{permanent:true,direction:'top',className:'t'});
+const pts=[H]; D.places.forEach(q=>{pts.push([q.lat,q.lng]); L.polyline([H,[q.lat,q.lng]],{color:'#fff',weight:1.5,dashArray:'6 6',opacity:.7}).addTo(a);
+ L.circleMarker([q.lat,q.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f5fbf',fillOpacity:1}).addTo(a).bindTooltip(q.name+' · '+q.d,{permanent:true,direction:'right',className:'t'});});
+a.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,50],paddingBottomRight:[230,40]});
+</script></body></html>

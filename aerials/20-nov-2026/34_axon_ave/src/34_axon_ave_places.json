@@ -1,0 +1,139 @@
+{
+ "address": "34 Axon Ave, Victoria Park WA 6100",
+ "lat": -31.973631,
+ "lng": 115.903395,
+ "pins": [
+  {
+   "name": "Victoria Park Station",
+   "cat": "train",
+   "lat": -31.971655,
+   "lng": 115.90222
+  },
+  {
+   "name": "Carlisle Station",
+   "cat": "train",
+   "lat": -31.980935,
+   "lng": 115.911258
+  },
+  {
+   "name": "Burswood Station",
+   "cat": "train",
+   "lat": -31.960186,
+   "lng": 115.899958
+  },
+  {
+   "name": "Victoria Park Central",
+   "cat": "shopping",
+   "lat": -31.973922,
+   "lng": 115.897265
+  },
+  {
+   "name": "Albany Hwy Caf\u00e9 Strip",
+   "cat": "shopping",
+   "lat": -31.97265,
+   "lng": 115.89617
+  },
+  {
+   "name": "Hawaiian's Park Centre",
+   "cat": "shopping",
+   "lat": -31.984486,
+   "lng": 115.901714
+  },
+  {
+   "name": "Belmont Forum",
+   "cat": "regional shopping",
+   "lat": -31.964962,
+   "lng": 115.934914
+  },
+  {
+   "name": "Ursula Frayne Catholic College",
+   "cat": "school",
+   "lat": -31.973039,
+   "lng": 115.899627
+  },
+  {
+   "name": "St Clare's School",
+   "cat": "school",
+   "lat": -31.971218,
+   "lng": 115.908711
+  },
+  {
+   "name": "Perth Montessori",
+   "cat": "school",
+   "lat": -31.965528,
+   "lng": 115.897829
+  },
+  {
+   "name": "East Victoria Park Primary School",
+   "cat": "school",
+   "lat": -31.979306,
+   "lng": 115.907941
+  },
+  {
+   "name": "Kent Street Senior High School",
+   "cat": "school",
+   "lat": -31.984557,
+   "lng": 115.892413
+  },
+  {
+   "name": "Lathlain Park",
+   "cat": "sport",
+   "lat": -31.972724,
+   "lng": 115.908004
+  },
+  {
+   "name": "Optus Stadium",
+   "cat": "sport",
+   "lat": -31.950749,
+   "lng": 115.888799
+  },
+  {
+   "name": "Burswood Park",
+   "cat": "regional park",
+   "lat": -31.963639,
+   "lng": 115.89152
+  },
+  {
+   "name": "Aqualife Centre",
+   "cat": "aquatic",
+   "lat": -31.987808,
+   "lng": 115.91295
+  },
+  {
+   "name": "Tomato Lake",
+   "cat": "lake",
+   "lat": -31.975106,
+   "lng": 115.932387
+  },
+  {
+   "name": "Maylands Peninsula Golf Course",
+   "cat": "golf",
+   "lat": -31.94195,
+   "lng": 115.902403
+  },
+  {
+   "name": "Koolbardi Park",
+   "cat": "park",
+   "lat": -31.974672,
+   "lng": 115.909559
+  },
+  {
+   "name": "Rayment Park",
+   "cat": "park",
+   "lat": -31.970417,
+   "lng": 115.90943
+  },
+  {
+   "name": "Read Park",
+   "cat": "park",
+   "lat": -31.97681,
+   "lng": 115.89914
+  },
+  {
+   "name": "Victoria Park Library",
+   "cat": "library",
+   "lat": -31.984312,
+   "lng": 115.900011
+  }
+ ]
+}

@@ -1,0 +1,91 @@
+{
+ "address": "37 Explorer St, Yanchep WA 6035",
+ "lat": -31.537821,
+ "lng": 115.62367,
+ "pins": [
+  {
+   "name": "Yanchep Lagoon",
+   "cat": "beach",
+   "lat": -31.549935,
+   "lng": 115.624177
+  },
+  {
+   "name": "Yanchep Beach",
+   "cat": "beach",
+   "lat": -31.541153,
+   "lng": 115.616768
+  },
+  {
+   "name": "Yanchep Central",
+   "cat": "shopping",
+   "lat": -31.549408,
+   "lng": 115.638865
+  },
+  {
+   "name": "Yanchep Station",
+   "cat": "train",
+   "lat": -31.53229,
+   "lng": 115.64393
+  },
+  {
+   "name": "Yanchep Beach Primary School",
+   "cat": "school",
+   "lat": -31.544071,
+   "lng": 115.631774
+  },
+  {
+   "name": "Yanchep Secondary College",
+   "cat": "school",
+   "lat": -31.55108,
+   "lng": 115.642522
+  },
+  {
+   "name": "Sun City Country Club",
+   "cat": "golf",
+   "lat": -31.535294,
+   "lng": 115.651569
+  },
+  {
+   "name": "Yanchep National Park",
+   "cat": "regional park",
+   "lat": -31.548696,
+   "lng": 115.685331
+  },
+  {
+   "name": "Campground Adventure Park",
+   "cat": "park",
+   "lat": -31.538445,
+   "lng": 115.622664
+  },
+  {
+   "name": "Spinifex Park",
+   "cat": "park",
+   "lat": -31.538656,
+   "lng": 115.629152
+  },
+  {
+   "name": "Splendid Park",
+   "cat": "park",
+   "lat": -31.541226,
+   "lng": 115.637169
+  },
+  {
+   "name": "Mary Lindsay Park",
+   "cat": "park",
+   "lat": -31.544201,
+   "lng": 115.623293
+  },
+  {
+   "name": "Yanchep Beach Park",
+   "cat": "park",
+   "lat": -31.548093,
+   "lng": 115.624324
+  },
+  {
+   "name": "Capricorn Beach",
+   "cat": "beach",
+   "lat": -31.539575,
+   "lng": 115.6179
+  }
+ ]
+}
