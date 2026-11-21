@@ -1,6 +1,49 @@
 {
  "days": [
   {
+   "id": "21-nov-2026",
+   "label": "Sat 21 Nov 2026",
+   "gallery": "21-nov-2026/",
+   "jobs": [
+    {
+     "slug": "39b_pepler_ave",
+     "addr": "39B Pepler Ave, Salter Point WA 6152",
+     "who": "James \u00b7 private (gmail)",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261121_104424_0006_photo.JPG",
+      "dji_fly_20261121_104456_0008_photo.JPG"
+     ],
+     "src": "21-nov-2026/39b_pepler_ave/src/",
+     "map": "39b_pepler_ave_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261121_104424_0006_photo.JPG",
+      "dji_fly_20261121_104456_0008_photo.JPG",
+      "dji_fly_20261121_104523_0009_photo.JPG",
+      "dji_fly_20261121_104536_0010_photo.JPG",
+      "dji_fly_20261121_104543_0011_photo.JPG",
+      "dji_fly_20261121_105221_0012_photo.JPG",
+      "dji_fly_20261121_105230_0013_photo.JPG",
+      "dji_fly_20261121_105247_0014_photo.JPG",
+      "dji_fly_20261121_105341_0015_photo.JPG",
+      "dji_fly_20261121_105418_0016_photo.JPG",
+      "dji_fly_20261121_105500_0017_photo.JPG",
+      "dji_fly_20261121_105510_0018_photo.JPG",
+      "dji_fly_20261121_105524_0019_photo.JPG",
+      "dji_fly_20261121_105538_0020_photo.JPG"
+     ],
+     "notes": "Entry Notes: meet james. Amenities or features to highlight: -. Land size: -. Title and land plan: -. Any specific boundaries or land features to mark on the aerial photos: -. Client Preferences: -. (No edit notes for the drone photos. Survey-strata 'B' lot \u2014 cadastre only has the shared parent lot and no strata plan in Dropbox, so pins only, no boundary.)",
+     "portrait": false,
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/21-11-2026/39B Pepler Avenue, Salter Point, Western Australia 6152, AU/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "CBD towers ghosted and white haze band along the skyline on 0009, 0010, 0019 (also 0011, 0020); possible ~1\u00b0 tilt on 0016, 0017 \u2014 please replace sky",
+     "lot": "Survey-strata rear lot (no strata plan) \u2014 no boundary, pins only"
+    }
+   ]
+  },
+  {
    "id": "20-nov-2026",
    "label": "Fri 20 Nov 2026",
    "gallery": "20-nov-2026/",

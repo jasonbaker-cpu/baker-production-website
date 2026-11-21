@@ -1,0 +1,119 @@
+{
+ "address": "39B Pepler Ave, Salter Point WA 6152",
+ "lat": -32.02501,
+ "lng": 115.87015,
+ "P": [
+  -32.02501,
+  115.87015
+ ],
+ "pins": [
+  {
+   "name": "Aquinas College",
+   "cat": "school",
+   "lat": -32.024066,
+   "lng": 115.863207
+  },
+  {
+   "name": "St Pius X Catholic Primary School",
+   "cat": "school",
+   "lat": -32.016479,
+   "lng": 115.863979
+  },
+  {
+   "name": "Clontarf Aboriginal College",
+   "cat": "school",
+   "lat": -32.01444,
+   "lng": 115.8969
+  },
+  {
+   "name": "Waterford Plaza",
+   "cat": "shopping",
+   "lat": -32.011101,
+   "lng": 115.88593
+  },
+  {
+   "name": "Stockland Riverton Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.03866,
+   "lng": 115.897685
+  },
+  {
+   "name": "Westfield Booragoon",
+   "cat": "shopping",
+   "lat": -32.033944,
+   "lng": 115.835788
+  },
+  {
+   "name": "Canning Bridge Station",
+   "cat": "train",
+   "lat": -32.0089,
+   "lng": 115.8541
+  },
+  {
+   "name": "Bull Creek Station",
+   "cat": "train",
+   "lat": -32.04712,
+   "lng": 115.854068
+  },
+  {
+   "name": "Shelley Beach",
+   "cat": "beach",
+   "lat": -32.02642,
+   "lng": 115.88428
+  },
+  {
+   "name": "Como Beach",
+   "cat": "beach",
+   "lat": -31.992,
+   "lng": 115.8544
+  },
+  {
+   "name": "Curtin University",
+   "cat": "school",
+   "lat": -32.005479,
+   "lng": 115.89205
+  },
+  {
+   "name": "Salter Point Reserve",
+   "cat": "park",
+   "lat": -32.02865,
+   "lng": 115.87371
+  },
+  {
+   "name": "The Lagoon Conservation Area",
+   "cat": "reserve",
+   "lat": -32.028298,
+   "lng": 115.871633
+  },
+  {
+   "name": "Sandon Park",
+   "cat": "park",
+   "lat": -32.021228,
+   "lng": 115.875645
+  },
+  {
+   "name": "Redmond Reserve",
+   "cat": "park",
+   "lat": -32.026676,
+   "lng": 115.868542
+  },
+  {
+   "name": "Clery Park",
+   "cat": "park",
+   "lat": -32.022207,
+   "lng": 115.865726
+  },
+  {
+   "name": "Royal Perth Golf Club",
+   "cat": "golf",
+   "lat": -31.983923,
+   "lng": 115.855208
+  },
+  {
+   "name": "Manning Library",
+   "cat": "library",
+   "lat": -32.0153,
+   "lng": 115.8674
+  }
+ ]
+}
