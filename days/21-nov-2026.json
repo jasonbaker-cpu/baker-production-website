@@ -1,0 +1,26 @@
+{
+ "label": "Sat 21 Nov 2026",
+ "jobs": [
+  {
+   "slug": "39b_pepler_ave",
+   "addr": "39B Pepler Ave, Salter Point WA 6152",
+   "who": "James \u00b7 private (gmail)",
+   "agency": "grey",
+   "photos": "batch/39b_pepler_ave/raw",
+   "map": "batch/39b_pepler_ave/39b_pepler_ave_places.json",
+   "notes": "Entry Notes: meet james. Amenities or features to highlight: -. Land size: -. Title and land plan: -. Any specific boundaries or land features to mark on the aerial photos: -. Client Preferences: -. (No edit notes for the drone photos. Survey-strata 'B' lot \u2014 cadastre only has the shared parent lot and no strata plan in Dropbox, so pins only, no boundary.)",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/21-11-2026/39B Pepler Avenue, Salter Point, Western Australia 6152, AU/Aerial - Drone Photography",
+   "docs": [],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "0006",
+    "0008"
+   ],
+   "streetRot": {
+    "39b_pepler_ave__nadir": 0,
+    "39b_pepler_ave__nadir2": 0
+   },
+   "skyPlate": "C"
+  }
+ ]
+}

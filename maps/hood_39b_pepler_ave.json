@@ -1,0 +1,111 @@
+{
+ "sat": "sat/39b_pepler_ave_loc",
+ "house": [
+  -32.02501,
+  115.87015
+ ],
+ "photo": "e2e/39b_pepler_ave__nadir/dji_fly_20261121_104424_0006_photo.jpg",
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "places": [
+  {
+   "name": "Aquinas College",
+   "lat": -32.024066,
+   "lng": 115.863207,
+   "icon": "school"
+  },
+  {
+   "name": "St Pius X Catholic Primary School",
+   "lat": -32.016479,
+   "lng": 115.863979,
+   "icon": "school"
+  },
+  {
+   "name": "Clontarf Aboriginal College",
+   "lat": -32.01444,
+   "lng": 115.8969,
+   "icon": "school"
+  },
+  {
+   "name": "Waterford Plaza",
+   "lat": -32.011101,
+   "lng": 115.88593,
+   "icon": "mall"
+  },
+  {
+   "name": "Stockland Riverton Shopping Centre",
+   "lat": -32.03866,
+   "lng": 115.897685,
+   "icon": "mall"
+  },
+  {
+   "name": "Westfield Booragoon",
+   "lat": -32.033944,
+   "lng": 115.835788,
+   "icon": "mall"
+  },
+  {
+   "name": "Canning Bridge Station",
+   "lat": -32.0089,
+   "lng": 115.8541,
+   "icon": "train"
+  },
+  {
+   "name": "Bull Creek Station",
+   "lat": -32.04712,
+   "lng": 115.854068,
+   "icon": "train"
+  },
+  {
+   "name": "Shelley Beach",
+   "lat": -32.02642,
+   "lng": 115.88428,
+   "icon": "beach"
+  },
+  {
+   "name": "Como Beach",
+   "lat": -31.992,
+   "lng": 115.8544,
+   "icon": "beach"
+  },
+  {
+   "name": "Salter Point Reserve",
+   "lat": -32.02865,
+   "lng": 115.87371,
+   "icon": "park"
+  },
+  {
+   "name": "The Lagoon Conservation Area",
+   "lat": -32.028298,
+   "lng": 115.871633,
+   "icon": "park"
+  },
+  {
+   "name": "Sandon Park",
+   "lat": -32.021228,
+   "lng": 115.875645,
+   "icon": "park"
+  },
+  {
+   "name": "Redmond Reserve",
+   "lat": -32.026676,
+   "lng": 115.868542,
+   "icon": "park"
+  },
+  {
+   "name": "Royal Perth Golf Club",
+   "lat": -31.983923,
+   "lng": 115.855208,
+   "icon": "golf"
+  },
+  {
+   "name": "Manning Library",
+   "lat": -32.0153,
+   "lng": 115.8674,
+   "icon": "library"
+  }
+ ],
+ "houseX": 0.5,
+ "houseY": 0.45
+}
