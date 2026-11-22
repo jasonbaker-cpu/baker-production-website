@@ -3,7 +3,8 @@
    then checks per scene: camera level / verticals, sharpness, darkest-frame window blowout,
    brightest-frame black shadows, bracket count + spread, ISO / aperture / focal length,
    duplicate angles, coverage against the package minimum, and (v2, 22 Nov 2026) the colour set-up:
-   a flash frame on every interior scene, fixed white balance, flash-frame shutter / exposure. */
+   a flash frame on every interior scene and flash-frame shutter / ISO / exposure.
+   White balance is reported but not scored (brackets stay on Auto; the camera fixes the flash frame). */
 (function () {
   var T = { roll: 1.0, keystone: 1.5, isoMax: 400, fLo: 5.6, fHi: 13, focLo: 14.5, focHi: 30, sharpRel: 0.45,
             blown: 0.6, blownExt: 2.5, crushed: 4, evSpread: 3.5, dupe: 9,
@@ -325,8 +326,6 @@
     });
     var jobNotes = [];
     if (isoHi.length) { jobNotes.push("ISO " + Math.max.apply(null, isoHi) + " on " + isoHi.length + " of " + scenes.length + " scenes. Set ISO 400 manually (turn Auto ISO off) so the flash frame and brackets match."); ded.set += 0.4; }
-    if (wbAuto) { jobNotes.push("White balance on Auto on " + wbAuto + " of " + scenes.length + " scenes. Set it to 5600K (colour temperature) and leave it there all job. Auto turns cream walls white."); ded.set += 0.5; }
-    if (kOff.length) { jobNotes.push("White balance set to " + kOff[0] + "K. Use 5600K to match the flash."); ded.set += 0.2; }
     if (apOff.length) { jobNotes.push("Aperture f/" + apOff[0].toFixed(1) + " on " + apOff.length + " scenes. Use around f/8."); ded.set += 0.3; }
     var need = (window.COVERAGE || {})[pkg.value] || 0, real = scenes.length - dupes.length;
     if (need && real < need) ded.cov = Math.min(2.5, (need - real) * 0.12);
