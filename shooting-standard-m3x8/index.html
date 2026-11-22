@@ -107,6 +107,9 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
 .prog{height:6px;background:var(--sunk);border-radius:99px;overflow:hidden;margin:10px 0 2px}
 .prog i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
 .empty{color:var(--muted);font-size:14px}
+.rr{width:100%;border-collapse:collapse;font-size:14px}.rr th{text-align:left;font-weight:600;color:var(--muted);font-size:12.5px;padding:0 10px 8px 0;border-bottom:1px solid var(--line)}.rr td{padding:9px 10px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}.rr tr:last-child td{border-bottom:0}.rr td:first-child{font-weight:600;white-space:nowrap}.rr .no{color:var(--bad)}
+.checks{list-style:none;padding:0;margin:0}.checks li{padding:7px 0 7px 30px;position:relative;border-bottom:1px solid var(--line)}.checks li:last-child{border-bottom:0}.checks li:before{content:"";position:absolute;left:0;top:9px;width:18px;height:18px;border:2px solid var(--faint);border-radius:5px}
+@media (max-width:640px){.rr thead{display:none}.rr tr{display:block;padding:10px 0;border-bottom:1px solid var(--line)}.rr td{display:block;border:0;padding:2px 0}}
 </style>
 </head>
 <body>
@@ -120,7 +123,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   </header>
 
   <nav>
-    <a href="#settings">Settings</a><a href="#selfcheck">Self-check my shoot</a><a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#good">Good framing</a>
+    <a href="#settings">Settings</a><a href="#selfcheck">Self-check my shoot</a><a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#rooms">Room by room</a><a href="#delivery">What to deliver</a><a href="#check60">60-second check</a><a href="#good">Good framing</a>
   </nav>
 
   <div class="callout"><b>The goal:</b> give the editor nothing to fix that should have been fixed on site. Level camera, straight verticals, full brackets, every room covered with a wide hero shot, and a flash frame the editor can trust for colour.</div>
@@ -226,6 +229,71 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
         <li><b>Same day:</b> upload to Raw Files/your name/date/address and check the file count before wiping the card.</li>
       </ul>
     </div>
+  </div>
+
+  <h2 id="rooms">Room by room</h2>
+  <div class="card">
+    <p style="margin:0 0 12px"><b>Every room:</b> stand in the corner with your back to the wall. Nothing gets cut off by the bottom edge of the frame. If the closest thing to the camera is a sofa back or a chair, move until it isn't.</p>
+    <table class="rr">
+      <thead><tr><th>Room</th><th>Do</th><th>Don't</th></tr></thead>
+      <tbody>
+        <tr><td>Living</td><td>Corner shot, whole sofa and coffee table in frame</td><td class="no">Sofa back or armchair cut off at the bottom or side</td></tr>
+        <tr><td>Kitchen</td><td>One wide from the best corner, one along the bench or island</td><td class="no">Bar stools or island cut off in the foreground</td></tr>
+        <tr><td>Dining</td><td>Whole table and all chairs in frame</td><td class="no">Chairs chopped off by the bottom edge</td></tr>
+        <tr><td>Bedrooms</td><td>Whole bed, or at least three corners of it</td><td class="no">Bed cut off at the bottom of the frame</td></tr>
+        <tr><td>Bathrooms</td><td>One frame showing vanity and shower together</td><td class="no">Shower screen or open door filling the frame; three near-identical partial shots</td></tr>
+        <tr><td>Front (hero)</td><td>House fills at least 60% of the frame width; move until no trunk, pole or sign crosses the house</td><td class="no">Half the frame road or driveway; For Sale sign as the main subject</td></tr>
+        <tr><td>Alfresco and yard</td><td>One wide that shows how big it is</td><td class="no">Side passages, bins, hoses</td></tr>
+        <tr><td>Windows</td><td>Bracket dark enough that the view outside can be pulled</td><td class="no">Blown-out windows with no darker frame to recover them</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="delivery">What to deliver</h2>
+  <div class="rules">
+    <div class="card">
+      <h3>How many photos</h3>
+      <table class="set">
+        <tr><th>Unit or apartment</th><td>15 to 20</td></tr>
+        <tr><th>Standard home (3 to 4 bed)</th><td>20 to 25</td></tr>
+        <tr><th>Large home or Signature</th><td>30 to 35</td></tr>
+      </table>
+      <ul style="margin-top:10px">
+        <li><b>These are the default.</b> If the booking notes or the agent's preferences ask for more angles, give them more: a genuinely different angle every time, never a near-copy. Extra angles are fine. Duplicates are not.</li>
+        <li><b>One hero and one alternate per main room</b> by default.</li>
+        <li><b>Fronts: three at most</b> (straight on, left three-quarter, right three-quarter).</li>
+        <li><b>Cull on the camera before you upload.</b> If two frames are near the same, delete the weaker one on site.</li>
+        <li>Decluttered copies don't count toward the number, but only shoot a room twice if it genuinely shows something new.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Never deliver</h3>
+      <ul>
+        <li>Shots through a door frame</li>
+        <li>Hallways, unless it's a real feature (gallery hall, wide entry)</li>
+        <li>Inside wardrobes or linen cupboards</li>
+        <li>Laundry, unless it's a feature (butler's pantry style)</li>
+        <li>Blank walls, side passages, meter boxes</li>
+        <li>A near-copy of an angle already in the set</li>
+        <li>Any frame with you, your tripod or your car in it (the flash frame is the only exception: it's just for colour)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 id="check60">60-second check before you leave</h2>
+  <div class="card">
+    <p style="margin:0 0 8px;color:var(--muted)">Run through this on the camera screen before you leave the property.</p>
+    <ul class="checks">
+      <li>Photo count is in the range for this job type</li>
+      <li>No two frames of a room are near-copies</li>
+      <li>Nothing cut off by the bottom edge in any interior</li>
+      <li>Every bed shows at least three corners</li>
+      <li>No shot through a doorway, no hallway or wardrobe frames</li>
+      <li>Bathrooms: one frame each, vanity and shower both in it</li>
+      <li>Fronts: three max, house at least 60% of the width, nothing crossing it</li>
+      <li>Brackets complete for every frame, plus a flash frame on every interior</li>
+    </ul>
+    <p style="margin:12px 0 0">Tricky house? Message Jason before you leave, not after.</p>
   </div>
 
   <h2 id="good">Good framing: do this</h2>

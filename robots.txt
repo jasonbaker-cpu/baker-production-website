@@ -20,6 +20,8 @@ Disallow: /aerials/
 Disallow: /tools/
 Disallow: /content-kit/
 Disallow: /external-areas/
+Disallow: /shooters/
+Disallow: /shooting-standard-m3x8/
 
 # --- AI answer engines: explicitly welcome (private paths still blocked —
 # a named group replaces the * group, so the disallows must be repeated here)
@@ -57,5 +59,7 @@ Disallow: /aerials/
 Disallow: /tools/
 Disallow: /content-kit/
 Disallow: /external-areas/
+Disallow: /shooters/
+Disallow: /shooting-standard-m3x8/
 
 Sitemap: https://www.bakerproduction.com/sitemap.xml
