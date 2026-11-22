@@ -31,6 +31,7 @@ nav a{font-size:13.5px;font-weight:600;text-decoration:none;color:var(--ink);bac
 .rules ul{margin:0;padding-left:18px}
 .rules li{margin:4px 0}
 .rules li b{font-weight:600}
+.set{width:100%;border-collapse:collapse;font-size:14px}.set th{text-align:left;font-weight:500;color:var(--muted);padding:6px 10px 6px 0;vertical-align:top;white-space:nowrap;width:1%}.set td{padding:6px 0;border-bottom:1px solid var(--line)}.set th{border-bottom:1px solid var(--line)}.set tr:last-child th,.set tr:last-child td{border-bottom:0}
 .callout{border-left:4px solid var(--accent);padding:14px 16px;background:var(--panel);border-radius:12px;box-shadow:var(--shadow);margin-top:14px}
 .links{display:grid;gap:10px}
 .links a{display:block;text-decoration:none;color:var(--ink);background:var(--panel);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px}
@@ -119,10 +120,48 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   </header>
 
   <nav>
-    <a href="#selfcheck">Self-check my shoot</a><a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#good">Good framing</a>
+    <a href="#settings">Settings</a><a href="#selfcheck">Self-check my shoot</a><a href="#reviews">Job reviews</a><a href="#rules">Rules</a><a href="#good">Good framing</a>
   </nav>
 
-  <div class="callout"><b>The goal:</b> give the editor nothing to fix that should have been fixed on site. Level camera, straight verticals, full brackets, every room covered with a wide hero shot.</div>
+  <div class="callout"><b>The goal:</b> give the editor nothing to fix that should have been fixed on site. Level camera, straight verticals, full brackets, every room covered with a wide hero shot, and a flash frame the editor can trust for colour.</div>
+
+  <h2 id="settings">Settings: lock these in (from 22 Nov 2026)</h2>
+  <p class="sub" style="margin:-4px 0 12px">Same on every camera, every job. This is what keeps wall, floor and cabinet colour true to the house.</p>
+  <div class="rules">
+    <div class="card">
+      <h3>Camera</h3>
+      <table class="set">
+        <tr><th>Mode</th><td>Manual</td></tr>
+        <tr><th>Aperture</th><td>f/8</td></tr>
+        <tr><th>ISO</th><td>400, Auto ISO off</td></tr>
+        <tr><th>White balance</th><td><b>5600K</b> (colour temperature). Never Auto.</td></tr>
+        <tr><th>Brackets</th><td>5 frames, 2 stops apart</td></tr>
+        <tr><th>Flash frame</th><td>1/160, same f/8 and ISO 400</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Flash (Godox V860 III)</h3>
+      <table class="set">
+        <tr><th>Mode</th><td><b>M</b>, not TTL</td></tr>
+        <tr><th>Power</th><td>Start at 1/4. Small rooms 1/8. Big living areas 1/2 to 1/1.</td></tr>
+        <tr><th>Zoom</th><td>Manual 24mm</td></tr>
+        <tr><th>Head</th><td>At the ceiling, tilted slightly back behind the camera</td></tr>
+        <tr><th>HSS</th><td>Off</td></tr>
+        <tr><th>Panel, card</th><td>Wide panel and bounce card both pushed in</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Colour: every interior</h3>
+      <ul>
+        <li><b>One flash frame per scene,</b> straight after the bracket, tripod not moved. It is the editor's colour reference.</li>
+        <li><b>Bounce off the ceiling, never a wall.</b> A cream or timber wall tints the light.</li>
+        <li><b>Check it on the screen:</b> the room should look properly lit on its own. Far end dark = one stop more power. Ceiling blown = one stop less.</li>
+        <li><b>Full power needs about 1.5 seconds.</b> Wait for the ready light.</li>
+        <li><b>Grey card:</b> hold it in one flash frame in the main living area, and in any room with coloured walls. Then shoot the scene again without it.</li>
+        <li><b>You in the mirror in the flash frame is fine.</b> It is only used for colour.</li>
+      </ul>
+    </div>
+  </div>
 
   <h2 id="selfcheck">Self-check my shoot</h2>
   <p class="sub" style="margin:-4px 0 12px">Drop the whole job's raws (Sony .ARW) or camera JPGs here before you upload. You get a score, the shots to fix next time and why. <b>Files stay on your computer and are not uploaded.</b></p>
@@ -153,7 +192,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
         <li><b>Verticals straight in camera.</b> Door frames and wall corners should stand straight on the screen.</li>
         <li><b>Height:</b> about benchtop to chest height (1.1-1.4m). Lower in small rooms. Never eye height looking down.</li>
         <li><b>Lens:</b> 16-24mm on full frame (10-16mm on APS-C). Not wider: rooms stretch and look fake.</li>
-        <li><b>Settings:</b> f/8, ISO 100-200, 2s timer, same bracket set on every shot.</li>
+        <li><b>Settings:</b> f/8, ISO 400, white balance 5600K, 2s timer, same bracket set on every shot.</li>
       </ul>
     </div>
     <div class="card">
@@ -164,6 +203,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
         <li><b>Brightest frame must show detail in the dark corners.</b></li>
         <li><b>Don't touch the tripod</b> until the last frame is done.</li>
         <li><b>Every scene bracketed,</b> exteriors included.</li>
+        <li><b>Then one flash frame</b> on every interior (1/160). See Settings above.</li>
       </ul>
     </div>
     <div class="card">
@@ -196,8 +236,8 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
 </div>
 <div id="lb"><img alt=""></div>
 
-<script src="data.js?v=2"></script>
-<script src="selfcheck.js?v=1" defer></script>
+<script src="data.js?v=3"></script>
+<script src="selfcheck.js?v=2" defer></script>
 <script>
 (function(){
   var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})};

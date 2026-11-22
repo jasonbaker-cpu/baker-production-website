@@ -3,7 +3,7 @@
    REVIEWS: newest first. Add a block at the top when Jason says to post a shooter review.
      kind: "bad" = fix next time, "good" = keep doing this. */
 
-window.UPDATED = "6 Nov 2026";
+window.UPDATED = "22 Nov 2026";
 
 window.SHOOTERS = ["Jason", "Lee", "Yan", "Andrew"];
 

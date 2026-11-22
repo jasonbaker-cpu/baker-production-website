@@ -2,10 +2,12 @@
    Reads EXIF + the embedded preview from Sony .ARW (or camera .JPG), groups brackets into scenes,
    then checks per scene: camera level / verticals, sharpness, darkest-frame window blowout,
    brightest-frame black shadows, bracket count + spread, ISO / aperture / focal length,
-   duplicate angles, and coverage against the package minimum. */
+   duplicate angles, coverage against the package minimum, and (v2, 22 Nov 2026) the colour set-up:
+   a flash frame on every interior scene, fixed white balance, flash-frame shutter / exposure. */
 (function () {
   var T = { roll: 1.0, keystone: 1.5, isoMax: 400, fLo: 5.6, fHi: 13, focLo: 14.5, focHi: 30, sharpRel: 0.45,
-            blown: 0.6, blownExt: 2.5, crushed: 4, evSpread: 3.5, dupe: 9 };
+            blown: 0.6, blownExt: 2.5, crushed: 4, evSpread: 3.5, dupe: 9,
+            flashGap: 120, flashExp: 1 / 100, flashDark: 70, flashHot: 12, kLo: 5300, kHi: 5900 };
   var $ = function (id) { return document.getElementById(id); };
   var drop = $("scDrop"), input = $("scInput"), out = $("scOut");
   if (!drop) return;
@@ -58,6 +60,7 @@
       for (var i = 0; i < n; i++) {
         var e = off + 2 + i * 12, tag = u16(e), type = u16(e + 2), count = u32(e + 4);
         var v = val(e, type, count); loc[tag] = v; if (!(tag in tags)) tags[tag] = v;
+        if (tag === 0x927C && count > 12) tags.mnOff = u32(e + 8);
       }
       if (loc[0x0201] && loc[0x0202]) jpegs.push({ off: base + loc[0x0201], len: loc[0x0202] });
       if (loc[0x8769]) ifd(loc[0x8769], depth + 1);
@@ -66,6 +69,15 @@
       if (nx) ifd(nx, depth);
     }
     ifd(u32(4), 0);
+    /* Sony MakerNote: 0xB021 = colour temperature in K (0 when white balance is Auto) */
+    try {
+      var mo = tags.mnOff;
+      if (mo && base + mo + 14 < len) {
+        if (dv.getUint32(base + mo) === 0x534F4E59) mo += 12; // "SONY DSC \0\0\0" header
+        var mn = u16(mo);
+        if (mn < 400 && base + mo + 2 + mn * 12 <= len) for (var q = 0; q < mn; q++) { var me = mo + 2 + q * 12; if (u16(me) === 0xB021) { tags.kelvin = u32(me + 8); break; } }
+      }
+    } catch (e) {}
     return { tags: tags, jpegs: jpegs };
   }
   function readExif(file) {
@@ -98,6 +110,7 @@
       var big = js.filter(function (j) { return j.len < 1500000; })[0] || js[js.length - 1]; // ~1600px preview decodes fast
       return { ms: ms, make: make, model: model, exp: exp, fn: fn, iso: iso, foc: foc, foc35: foc35,
         bias: t[0x9204] == null ? null : +t[0x9204], orient: +t[0x0112] || 1, preview: big || null,
+        flash: t[0x9209] != null && (+t[0x9209] & 1) === 1, wbAuto: t[0xA403] == null ? null : +t[0xA403] === 0, kelvin: +t.kelvin || 0,
         ev: exp && fn ? Math.log2(exp * (iso || 100) / 100 / (fn * fn)) : null };
     }).catch(function () { return null; });
   }
@@ -175,14 +188,15 @@
     return s2 / n - (s / n) * (s / n);
   }
   function tones(G) {
-    var d = G.d, n = d.length / 4, hi = 0, lo = 0, blue = 0, top = 0, rows = Math.floor(G.h / 3) * G.w * 4;
+    var d = G.d, n = d.length / 4, hi = 0, lo = 0, blue = 0, top = 0, sum = 0, rows = Math.floor(G.h / 3) * G.w * 4;
     for (var i = 0; i < d.length; i += 4) {
       var r = d[i], gg = d[i + 1], b = d[i + 2];
       if (Math.min(r, gg, b) >= 250) hi++;
       if ((r + gg + b) / 3 < 6) lo++;
+      sum += (r + gg + b) / 3;
       if (i < rows) { top++; if (b > r + 15 && b > 120) blue++; }
     }
-    return { hi: hi / n * 100, lo: lo / n * 100, blue: blue / top };
+    return { hi: hi / n * 100, lo: lo / n * 100, blue: blue / top, mean: sum / n };
   }
   function dhash(c) {
     var s = document.createElement("canvas"); s.width = 9; s.height = 8; var sx = s.getContext("2d"); sx.drawImage(c, 0, 0, 9, 8);
@@ -201,6 +215,9 @@
       var m = it.meta, brk = !cur;
       if (cur && prev) {
         var gap = (m.ms - prev.meta.ms) / 1000;
+        var onlyFlash = cur.every(function (c) { return c.meta.flash; });
+        /* the flash frame is shot a few seconds after (or before) the bracket: keep it in the same scene */
+        if (m.ms && prev.meta.ms && gap >= 0 && gap <= T.flashGap && ((m.flash && !prev.meta.flash) || (onlyFlash && !m.flash))) { cur.push(it); prev = it; return; }
         if (!m.ms || !prev.meta.ms) brk = true;
         else if (gap > (prev.meta.exp || 0) + 3.5) brk = true;
         else if (m.ev != null && cur.some(function (c) { return c.meta.ev != null && Math.abs(c.meta.ev - m.ev) < 0.3; })) brk = true;
@@ -208,13 +225,15 @@
       if (brk) { cur = []; scenes.push(cur); }
       cur.push(it); prev = it;
     });
-    return scenes.map(function (fr) {
+    return scenes.map(function (all) {
+      var fl = all.filter(function (f) { return f.meta.flash; }), fr = all.filter(function (f) { return !f.meta.flash; });
+      if (!fr.length) { fr = all; fl = []; }
       var withEv = fr.filter(function (f) { return f.meta.ev != null; });
       var byEv = withEv.slice().sort(function (a, b) { return a.meta.ev - b.meta.ev; });
       var base = fr[0];
       if (fr.some(function (f) { return f.meta.bias != null; })) base = fr.slice().sort(function (a, b) { return Math.abs(a.meta.bias || 0) - Math.abs(b.meta.bias || 0); })[0];
       else if (byEv.length) base = byEv[Math.floor(byEv.length / 2)];
-      return { frames: fr, base: base, dark: byEv[0] || base, bright: byEv[byEv.length - 1] || base,
+      return { frames: fr, flash: fl, base: base, dark: byEv[0] || base, bright: byEv[byEv.length - 1] || base,
                spread: byEv.length > 1 ? byEv[byEv.length - 1].meta.ev - byEv[0].meta.ev : 0 };
     });
   }
@@ -251,7 +270,9 @@
           return s.dark === s.base ? s.tone : draw(s.dark, 480).then(function (cc) { return tones(gray(cc)); });
         }).then(function (td) { s.darkTone = td;
           return s.bright === s.base ? s.tone : draw(s.bright, 480).then(function (cc) { return tones(gray(cc)); });
-        }).then(function (tb) { s.brightTone = tb; }).catch(function () { s.err = true; }).then(nextScene);
+        }).then(function (tb) { s.brightTone = tb;
+          return s.flash.length ? draw(s.flash[0], 480).then(function (cc) { return tones(gray(cc)); }).catch(function () { return null; }) : null;
+        }).then(function (tf) { s.flashTone = tf; }).catch(function () { s.err = true; }).then(nextScene);
       }
       return nextScene().then(function () { report(scenes, { skipped: skipped, noMeta: noMeta, files: files.length }); });
     });
@@ -267,8 +288,8 @@
     var medInt = med(ok.filter(function (s) { return !s.ext; }).map(function (s) { return s.sharp; })), medExt = med(ok.filter(function (s) { return s.ext; }).map(function (s) { return s.sharp; }));
     var nInt = ok.filter(function (s) { return !s.ext; }).length, nExt = ok.length - nInt;
     var refSharp = function (s) { return s.ext ? medExt : medInt; }, enough = function (s) { return (s.ext ? nExt : nInt) >= 3; };
-    var isoHi = [], apOff = [];
-    var ded = { level: 0, sharp: 0, blown: 0, crushed: 0, brk: 0, set: 0, dupe: 0, cov: 0 };
+    var isoHi = [], apOff = [], wbAuto = 0, kOff = [], noFlash = 0, flashOk = 0;
+    var ded = { level: 0, sharp: 0, blown: 0, crushed: 0, brk: 0, set: 0, dupe: 0, cov: 0, col: 0 };
     var dupes = [];
     scenes.forEach(function (s, idx) {
       s.n = idx + 1; s.f = []; var b = s.base.meta;
@@ -286,16 +307,30 @@
       else if (s.frames.length !== mode) { s.f.push(s.frames.length + " frames, rest of job is " + mode + ". Keep the bracket set the same."); ded.brk += 0.15; }
       if (s.frames.length > 2 && s.spread && s.spread < T.evSpread) { s.f.push("Brackets only cover " + s.spread.toFixed(1) + " stops. Spread them wider (2 stops apart)."); ded.brk += 0.1; }
       if (b.iso > T.isoMax) isoHi.push(b.iso);
+      if (b.wbAuto === true) wbAuto++; else if (b.wbAuto === false && b.kelvin && (b.kelvin < T.kLo || b.kelvin > T.kHi)) kOff.push(b.kelvin);
+      if (!s.ext) {
+        if (!s.flash.length) { noFlash++; s.f.push("No flash frame. Fire one flash frame after the bracket: it is the editor's colour reference for walls, floors and cabinets."); ded.col += 0.12; }
+        else {
+          var fm = s.flash[0].meta, ft = s.flashTone, fbad = false;
+          if (fm.exp && fm.exp > T.flashExp) { s.f.push("Flash frame shutter is 1/" + Math.round(1 / fm.exp) + ". Use 1/160 so the room lights don't tint the colour reference."); ded.col += 0.1; fbad = true; }
+          if (fm.iso && b.iso && fm.iso !== b.iso) { s.f.push("Flash frame ISO " + fm.iso + " but brackets ISO " + b.iso + ". Keep them the same (ISO 400)."); ded.col += 0.05; fbad = true; }
+          if (ft && ft.mean < T.flashDark) { s.f.push("Flash frame too dark. Raise flash power one stop (1/8 → 1/4 → 1/2)."); ded.col += 0.1; fbad = true; }
+          else if (ft && ft.hi > T.flashHot) { s.f.push("Flash frame too hot (" + ft.hi.toFixed(0) + "% pure white). Lower flash power one stop or tilt the head further back."); ded.col += 0.1; fbad = true; }
+          if (!fbad) flashOk++;
+        }
+      }
       if (b.fn && (b.fn < T.fLo || b.fn > T.fHi)) apOff.push(b.fn);
       if (!s.ext && b.foc35 && b.foc35 < T.focLo) { s.f.push("Very wide (" + Math.round(b.foc35) + "mm full-frame). Room will stretch. Use 16mm or tighter."); ded.set += 0.1; }
       for (var j = 0; j < idx; j++) { var o = scenes[j]; if (!o.err && o.hash && s.hash && ham(o.hash, s.hash) <= T.dupe) { dupes.push([o, s]); s.f.push("Same angle as scene " + o.n + " (" + o.name + "). Move the tripod for a new angle."); ded.dupe += 0.15; break; } }
     });
     var jobNotes = [];
-    if (isoHi.length) { jobNotes.push("ISO " + Math.max.apply(null, isoHi) + " on " + isoHi.length + " of " + scenes.length + " scenes. Set ISO 100-200 manually (turn Auto ISO off); you're on a tripod."); ded.set += 0.4; }
+    if (isoHi.length) { jobNotes.push("ISO " + Math.max.apply(null, isoHi) + " on " + isoHi.length + " of " + scenes.length + " scenes. Set ISO 400 manually (turn Auto ISO off) so the flash frame and brackets match."); ded.set += 0.4; }
+    if (wbAuto) { jobNotes.push("White balance on Auto on " + wbAuto + " of " + scenes.length + " scenes. Set it to 5600K (colour temperature) and leave it there all job. Auto turns cream walls white."); ded.set += 0.5; }
+    if (kOff.length) { jobNotes.push("White balance set to " + kOff[0] + "K. Use 5600K to match the flash."); ded.set += 0.2; }
     if (apOff.length) { jobNotes.push("Aperture f/" + apOff[0].toFixed(1) + " on " + apOff.length + " scenes. Use around f/8."); ded.set += 0.3; }
     var need = (window.COVERAGE || {})[pkg.value] || 0, real = scenes.length - dupes.length;
     if (need && real < need) ded.cov = Math.min(2.5, (need - real) * 0.12);
-    var cap = { level: 2.5, sharp: 1.5, blown: 1.5, crushed: 0.8, brk: 1.2, set: 0.8, dupe: 1, cov: 2.5 }, tot = 0;
+    var cap = { level: 2.5, sharp: 1.5, blown: 1.5, crushed: 0.8, brk: 1.2, set: 1, dupe: 1, cov: 2.5, col: 2 }, tot = 0;
     Object.keys(ded).forEach(function (k) { tot += Math.min(cap[k], ded[k]); });
     var score = Math.max(1, Math.round((10 - tot) * 2) / 2);
     var verdict = score >= 8.5 ? "Great shoot. Upload it." : score >= 7.5 ? "Good. A few things to tighten next time." : score >= 6 ? "Below standard. Read the fixes before your next job." : "Well below standard. Talk to Jason before your next job.";
@@ -308,7 +343,7 @@
     var job = $("scJob").value.trim() || "Untitled job", name = who.value || "Photographer";
     var cam = (scenes[0] && scenes[0].base.meta.model) || "";
 
-    var checks = ["Lights on (premium: off) and all globes working", "Blinds open evenly, TVs off, toilet lids down", "Checked mirrors and glass for me / the tripod", "Wide hero shot of every main room from the corner", "Second angle of living, kitchen, meals and master", "Front straight-on + 3/4, rear, alfresco, pool", "Cars, bins, hoses out of the front shots", "Followed the booking notes", "File count checked after upload, before wiping card"];
+    var checks = ["Flash on M (not TTL), zoom 24mm, bounced off the ceiling", "Grey card in one flash frame in the main living area", "Lights on (premium: off) and all globes working", "Blinds open evenly, TVs off, toilet lids down", "Checked mirrors and glass for me / the tripod", "Wide hero shot of every main room from the corner", "Second angle of living, kitchen, meals and master", "Front straight-on + 3/4, rear, alfresco, pool", "Cars, bins, hoses out of the front shots", "Followed the booking notes", "File count checked after upload, before wiping card"];
     var h = '<div class="scr"><div class="scr-head"><span class="job">' + esc(job) + '</span><span class="score ' + cls + '">' + score + '/10</span></div>' +
       '<div class="meta">' + esc(name) + ' · ' + esc(pkg.value) + (cam ? ' · ' + esc(cam) : '') + ' · ' + new Date().toLocaleDateString("en-AU") + '</div>' +
       '<p class="vd">' + esc(verdict) + '</p><div class="scr-stats">' +
@@ -317,7 +352,9 @@
       '<div><b>' + mode + '</b><span>frames per bracket</span></div>' +
       '<div><b>' + levelBad + '</b><span>scenes not level / straight</span></div>' +
       '<div><b>' + avgRoll.toFixed(1) + '°</b><span>average tilt</span></div>' +
-      '<div><b>' + dupes.length + '</b><span>repeat angles</span></div></div>';
+      '<div><b>' + dupes.length + '</b><span>repeat angles</span></div>' +
+      '<div><b>' + (ints - noFlash) + '/' + ints + '</b><span>interiors with a flash frame</span></div>' +
+      '<div><b>' + (wbAuto ? 'Auto' : 'Fixed') + '</b><span>white balance</span></div></div>';
     if (jobNotes.length) h += '<h4>Camera settings</h4><ul>' + jobNotes.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join("") + '</ul>';
     if (need && real < need) h += '<h4>Coverage</h4><ul><li>Only ' + real + ' unique scenes for a ' + esc(pkg.value.toLowerCase()) + ' job (minimum ' + need + '). Missing rooms or second angles.</li></ul>';
     if (flagged.length) {
@@ -327,15 +364,15 @@
     } else h += '<h4>No problems found in the files.</h4>';
     h += '<h4>Can\'t be measured, tick it off yourself</h4><div class="chk">' + checks.map(function (c, i) { return '<label><input type="checkbox" data-i="' + i + '"> ' + esc(c) + '</label>'; }).join("") + '</div>';
     h += '<p class="meta" style="margin-top:12px">Camera height, room choice and styling still need Jason\'s eye.' + (info.skipped ? ' ' + info.skipped + ' drone files skipped.' : '') + (info.noMeta ? ' ' + info.noMeta + ' files couldn\'t be read.' : '') + '</p>';
-    h += '<details class="scr-all"><summary>All scenes</summary><table><tr><th>#</th><th>First file</th><th>Frames</th><th>Stops</th><th>Tilt°</th><th>Lean°</th><th>Sharp</th><th>Dark-frame white %</th><th>ISO</th><th>f/</th><th>mm (FF)</th></tr>' +
+    h += '<details class="scr-all"><summary>All scenes</summary><table><tr><th>#</th><th>First file</th><th>Frames</th><th>Stops</th><th>Tilt°</th><th>Lean°</th><th>Sharp</th><th>Dark-frame white %</th><th>ISO</th><th>f/</th><th>mm (FF)</th><th>Flash</th><th>WB</th></tr>' +
       scenes.map(function (s) { var m = s.base.meta, v = s.vert || {};
-        return '<tr' + (s.f.length ? ' class="flag"' : '') + '><td>' + s.n + '</td><td>' + esc(s.frames[0].file.name) + '</td><td>' + s.frames.length + '</td><td>' + (s.spread ? s.spread.toFixed(1) : '–') + '</td><td>' + (v.n >= 2 ? v.roll.toFixed(1) : '–') + '</td><td>' + (v.n >= 4 ? v.key.toFixed(1) : '–') + '</td><td>' + (s.sharp ? Math.round(s.sharp / refSharp(s) * 100) + '%' : '–') + '</td><td>' + (s.darkTone ? s.darkTone.hi.toFixed(1) : '–') + '</td><td>' + (m.iso || '–') + '</td><td>' + (m.fn ? m.fn.toFixed(1) : '–') + '</td><td>' + (m.foc35 ? Math.round(m.foc35) : '–') + '</td></tr>'; }).join("") + '</table></details>';
+        return '<tr' + (s.f.length ? ' class="flag"' : '') + '><td>' + s.n + '</td><td>' + esc(s.frames[0].file.name) + '</td><td>' + s.frames.length + '</td><td>' + (s.spread ? s.spread.toFixed(1) : '–') + '</td><td>' + (v.n >= 2 ? v.roll.toFixed(1) : '–') + '</td><td>' + (v.n >= 4 ? v.key.toFixed(1) : '–') + '</td><td>' + (s.sharp ? Math.round(s.sharp / refSharp(s) * 100) + '%' : '–') + '</td><td>' + (s.darkTone ? s.darkTone.hi.toFixed(1) : '–') + '</td><td>' + (m.iso || '–') + '</td><td>' + (m.fn ? m.fn.toFixed(1) : '–') + '</td><td>' + (m.foc35 ? Math.round(m.foc35) : '–') + '</td><td>' + (s.flash && s.flash.length ? 'yes' : (s.ext ? 'n/a' : 'NO')) + '</td><td>' + (m.wbAuto === true ? 'Auto' : (m.kelvin ? m.kelvin + 'K' : (m.wbAuto === false ? 'fixed' : '–'))) + '</td></tr>'; }).join("") + '</table></details>';
     h += '<div class="scr-btns"><button type="button" id="scCopy">Copy report</button><button type="button" id="scPdf">Save as PDF</button></div></div>';
     out.innerHTML = h;
 
     var txt = function () {
       var t = ["SHOOT SELF-CHECK: " + job, name + " · " + pkg.value + " · " + new Date().toLocaleDateString("en-AU"), "Score " + score + "/10 · " + verdict, "",
-        scenes.length + " scenes (" + ints + " int / " + exts + " ext), " + real + " unique" + (need ? " vs " + need + " minimum" : "") + ", " + mode + " frames per bracket, " + levelBad + " not level/straight, " + dupes.length + " repeat angles", ""];
+        scenes.length + " scenes (" + ints + " int / " + exts + " ext), " + real + " unique" + (need ? " vs " + need + " minimum" : "") + ", " + mode + " frames per bracket, " + levelBad + " not level/straight, " + dupes.length + " repeat angles, " + (ints - noFlash) + "/" + ints + " interiors with a flash frame, white balance " + (wbAuto ? "AUTO" : "fixed"), ""];
       jobNotes.forEach(function (x) { t.push("Settings: " + x); }); if (need && real < need) t.push("Coverage: only " + real + " unique scenes (minimum " + need + ")");
       flagged.forEach(function (s) { t.push("Scene " + s.n + " (" + s.name + "):"); s.f.forEach(function (x) { t.push("  - " + x); }); });
       var ticked = [].slice.call(out.querySelectorAll(".chk input")).map(function (c, i) { return (c.checked ? "[x] " : "[ ] ") + checks[i]; });
