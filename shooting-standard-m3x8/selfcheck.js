@@ -326,7 +326,7 @@
     });
     var jobNotes = [];
     if (isoHi.length) { jobNotes.push("ISO " + Math.max.apply(null, isoHi) + " on " + isoHi.length + " of " + scenes.length + " scenes. Set ISO 400 manually (turn Auto ISO off) so the flash frame and brackets match."); ded.set += 0.4; }
-    if (apOff.length) { jobNotes.push("Aperture f/" + apOff[0].toFixed(1) + " on " + apOff.length + " scenes. Use around f/8."); ded.set += 0.3; }
+    if (apOff.length) { jobNotes.push("Aperture f/" + apOff[0].toFixed(1) + " on " + apOff.length + " scenes. Use f/9."); ded.set += 0.3; }
     var need = (window.COVERAGE || {})[pkg.value] || 0, real = scenes.length - dupes.length;
     if (need && real < need) ded.cov = Math.min(2.5, (need - real) * 0.12);
     var cap = { level: 2.5, sharp: 1.5, blown: 1.5, crushed: 0.8, brk: 1.2, set: 1, dupe: 1, cov: 2.5, col: 2 }, tot = 0;
