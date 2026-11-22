@@ -343,7 +343,7 @@
     var job = $("scJob").value.trim() || "Untitled job", name = who.value || "Photographer";
     var cam = (scenes[0] && scenes[0].base.meta.model) || "";
 
-    var checks = ["Flash on M (not TTL), zoom 24mm, bounced off the ceiling", "Grey card in one flash frame in the main living area", "Lights on (premium: off) and all globes working", "Blinds open evenly, TVs off, toilet lids down", "Checked mirrors and glass for me / the tripod", "Wide hero shot of every main room from the corner", "Second angle of living, kitchen, meals and master", "Front straight-on + 3/4, rear, alfresco, pool", "Cars, bins, hoses out of the front shots", "Followed the booking notes", "File count checked after upload, before wiping card"];
+    var checks = ["Flash on M (not TTL), zoom 24mm, bounced off the ceiling", "Lights on (premium: off) and all globes working", "Blinds open evenly, TVs off, toilet lids down", "Checked mirrors and glass for me / the tripod", "Wide hero shot of every main room from the corner", "Second angle of living, kitchen, meals and master", "Front straight-on + 3/4, rear, alfresco, pool", "Cars, bins, hoses out of the front shots", "Followed the booking notes", "File count checked after upload, before wiping card"];
     var h = '<div class="scr"><div class="scr-head"><span class="job">' + esc(job) + '</span><span class="score ' + cls + '">' + score + '/10</span></div>' +
       '<div class="meta">' + esc(name) + ' · ' + esc(pkg.value) + (cam ? ' · ' + esc(cam) : '') + ' · ' + new Date().toLocaleDateString("en-AU") + '</div>' +
       '<p class="vd">' + esc(verdict) + '</p><div class="scr-stats">' +
