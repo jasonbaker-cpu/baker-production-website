@@ -1208,6 +1208,7 @@
 .lp-crumbs a { color: var(--color-text-light); text-decoration: none; }
 .lp-crumbs a:hover { color: var(--color-accent); }
 .lp-crumbs span { margin: 0 8px; opacity: .5; }
+.lp-crumbs span.lp-crumb-current { margin: 0; opacity: 1; color: var(--color-text-light); }
 
 /* generic section */
 .lp-sec { padding: 92px 48px; }
