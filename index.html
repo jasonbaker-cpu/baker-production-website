@@ -1315,7 +1315,7 @@
           <a href="/real-estate-videography-perth" class="service-cta-link"><span class="cta-desktop">Property video in Perth</span><span class="cta-mobile">More info</span> <span class="arrow">→</span></a>
         </div>
         <div class="service-image" style="aspect-ratio:16/10; overflow:hidden; background: url('img/service-videography-poster.webp') center/cover no-repeat #14130f;">
-          <iframe data-src="https://www.youtube.com/embed/DYrn3EM0LXY?autoplay=1&mute=1&loop=1&playlist=DYrn3EM0LXY&controls=1&modestbranding=1&rel=0&playsinline=1" style="width:100%; height:100%; border:0; display:block;" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen title="Baker Production property video sample"></iframe>
+          <video data-src="vid/burswood-loop.mp4" poster="img/gal-vid-burswood-poster-960.webp" muted loop playsinline preload="none" aria-label="Baker Production property video — 45/153 Burswood Road, Burswood" style="width:100%; height:100%; object-fit:cover; border:0; display:block;"></video>
         </div>
       </div>
 
@@ -1858,9 +1858,9 @@
 
   </script>
 <script>
-/* Load the YouTube player only when its panel nears the screen — keeps ~1MB of YouTube JS off the first paint */
-(function(){var fs=[].slice.call(document.querySelectorAll('iframe[data-src]'));if(!fs.length)return;
-function go(f){if(!f.src||f.src==='about:blank'){f.src=f.getAttribute('data-src');}}
+/* Load embedded video only when its panel nears the screen — keeps it off the first paint */
+(function(){var fs=[].slice.call(document.querySelectorAll('iframe[data-src],video[data-src]'));if(!fs.length)return;
+function go(f){if(!f.getAttribute('src')){f.src=f.getAttribute('data-src');if(f.tagName==='VIDEO'){f.muted=true;var p=f.play();if(p&&p.catch)p.catch(function(){});}}}
 if(!('IntersectionObserver' in window)){fs.forEach(go);return;}
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){go(e.target);io.unobserve(e.target);}});},{rootMargin:'250px 0px'});
 fs.forEach(function(f){io.observe(f);});})();
