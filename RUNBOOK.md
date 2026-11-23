@@ -354,3 +354,8 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 - estpose: `HS=90,100,...` sets the height grid (DJI Fly obliques were 110–160 m); `HR=<row>` forces the horizon row when the sea haze fools the finder (37 Explorer 0156/0157: hz 1800).
 - clean_lot: a tight detector box makes LaMa paint a ghost car — pass a generous plain box (original px) covering the whole vehicle + shadow.
 - northerncoast.com.au = Professionals Northern Coast → flags-p.
+
+## Realmark (Jason 24 Nov 2026, "Realmark Guide - Aerial Images.pdf" in /Jason Baker)
+- realmark.com.au → `pill-r` (navy text-box labels with dotted markers + navy 'R' house pin with dotted marker). Already in agency_map.
+- Three-quarter aerials ONLY: no top-downs / bird's-eye for Realmark (overrides "both top-downs"). Drop the `__nadir` jobs from the run file before mkday.
+- Where there is a lot boundary, the guide wants an Azure Blue lot overlay on the obliques (#4E7FFF, 100%) — not built yet; flag it on boundary jobs.
