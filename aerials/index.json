@@ -76,6 +76,46 @@
      "toEditor": true,
      "editorReason": "CBD towers ghosted / sky painted over towers on 0256, 0257; glare/haze band along the horizon on several frames \u2014 please replace sky and finish, no graphics (One Residential)",
      "lot": "Vacant block \u2014 no title/plan supplied, plain job (no boundary/pins)"
+    },
+    {
+     "slug": "20_15_tanunda_dr",
+     "addr": "20/15 Tanunda Dr, Rivervale WA 6103",
+     "who": "Cooper Winter \u00b7 Laurie Kelly",
+     "agency": "black",
+     "full": false,
+     "fullPhotos": [],
+     "src": "23-nov-2026/20_15_tanunda_dr/src/",
+     "map": "20_15_tanunda_dr_rivervale_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261123190941_0229_D.jpg",
+      "DJI_20261123190951_0230_D.jpg",
+      "DJI_20261123191011_0231_D.jpg",
+      "DJI_20261123191037_0232_D.jpg",
+      "DJI_20261123191056_0233_D.jpg",
+      "DJI_20261123191110_0234_D.jpg",
+      "DJI_20261123191142_0235_D.jpg"
+     ],
+     "notes": "Signature Package. Unit 20, floor 3. Amenities to highlight / features to mark: Pool, River, sauna, common room, gym, lifestyle around iFLY, river trails, food places around. Belmont Forum, the Bilya Kard Boodja Lookout. Strata: Yes. Land size: -. (Apartment \u2014 pins only, no boundary. Shooter took 7 obliques, no top-down. Pool/sauna/gym/common room are inside the complex \u2014 not pinnable.)",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "20_15_tanunda_dr_rivervale_map.html",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/23-11-2026/20-15 Tanunda Dr, Rivervale WA 6103, Australia Unit-20-Floor-3/Aerial - Drone Photography/20_15_tanunda_dr_rivervale_map.html"
+      },
+      {
+       "name": "20_15_tanunda_dr_rivervale_qa.txt",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/23-11-2026/20-15 Tanunda Dr, Rivervale WA 6103, Australia Unit-20-Floor-3/Aerial - Drone Photography/20_15_tanunda_dr_rivervale_qa.txt"
+      },
+      {
+       "name": "20_15_tanunda_dr_rivervale_directions.txt",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/23-11-2026/20-15 Tanunda Dr, Rivervale WA 6103, Australia Unit-20-Floor-3/Aerial - Drone Photography/20_15_tanunda_dr_rivervale_directions.txt"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/23-11-2026/20-15 Tanunda Dr, Rivervale WA 6103, Australia Unit-20-Floor-3/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "0235: sky painted over the distant suburbs (foggy top band) + oversaturated; 0229: CBD towers washed out by the sky blend \u2014 please replace sky/finish on those (VA: 0235 house pin sits on the tower, others on the low-rise block \u2014 confirm unit 20)",
+     "lot": "Apartment (strata, unit 20 floor 3) \u2014 no boundary, pins only"
     }
    ]
   },
