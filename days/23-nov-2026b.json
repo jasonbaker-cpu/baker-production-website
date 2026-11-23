@@ -1,0 +1,60 @@
+{
+ "label": "Mon 23 Nov 2026",
+ "jobs": [
+  {
+   "slug": "9_st_michael_tce",
+   "addr": "9 St Michael Terrace, Mount Pleasant WA 6153",
+   "who": "Drew Dwyer · One Residential",
+   "agency": "plain",
+   "photos": "batch/9_st_michael_tce/jpg",
+   "map": "batch/9_st_michael_tce/9_st_michael_tce_places.json",
+   "notes": "(a la carte) Aerial / Drone Photography only. Entry Notes: -. Amenities: -. Land size: -. Title: -. Boundaries/land features to mark: -. One Residential = clean photos, NO graphics (no pins, no boundary, no text). Vacant (cleared) block.",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/23-11-2026/9 St Michael Terrace, Mount Pleasant WA 6153, Australia (1)/Aerial - Drone Photography",
+   "nadirSplit": 1,
+   "nadirPick": [
+    "_0245_",
+    "_0243_"
+   ],
+   "streetRot": {
+    "9_st_michael_tce__nadir": 0,
+    "9_st_michael_tce__nadir2": 0
+   }
+  },
+  {
+   "slug": "20_15_tanunda_dr",
+   "addr": "20/15 Tanunda Dr, Rivervale WA 6103",
+   "who": "Cooper Winter · Laurie Kelly",
+   "agency": "black",
+   "photos": "batch/20_15_tanunda_dr/jpg",
+   "map": "batch/20_15_tanunda_dr/raw/20_15_tanunda_dr_rivervale_map.html",
+   "notes": "Signature Package. Unit 20, floor 3. Amenities to highlight / features to mark: Pool, River, sauna, common room, gym, lifestyle around iFLY, river trails, food places around. Belmont Forum, the Bilya Kard Boodja Lookout. Strata: Yes. Land size: -. (Apartment — pins only, no boundary. Shooter took 7 obliques, no top-down. Pool/sauna/gym/common room are inside the complex — not pinnable.)",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/23-11-2026/20-15 Tanunda Dr, Rivervale WA 6103, Australia Unit-20-Floor-3/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "20_15_tanunda_dr_rivervale_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/23-11-2026/20-15 Tanunda Dr, Rivervale WA 6103, Australia Unit-20-Floor-3/Aerial - Drone Photography/20_15_tanunda_dr_rivervale_map.html"
+    },
+    {
+     "name": "20_15_tanunda_dr_rivervale_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/23-11-2026/20-15 Tanunda Dr, Rivervale WA 6103, Australia Unit-20-Floor-3/Aerial - Drone Photography/20_15_tanunda_dr_rivervale_qa.txt"
+    },
+    {
+     "name": "20_15_tanunda_dr_rivervale_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/23-11-2026/20-15 Tanunda Dr, Rivervale WA 6103, Australia Unit-20-Floor-3/Aerial - Drone Photography/20_15_tanunda_dr_rivervale_directions.txt"
+    }
+   ],
+   "must": [
+    "Belmont Forum",
+    "Bilya Kard Boodja Lookout",
+    "iFLY Perth",
+    "Swan Canning River Park"
+   ],
+   "skip": [
+    "Rivervale Primary School",
+    "Ruth Faulkner Library",
+    "Perth Station",
+    "Perth Underground Station"
+   ]
+  }
+ ]
+}
