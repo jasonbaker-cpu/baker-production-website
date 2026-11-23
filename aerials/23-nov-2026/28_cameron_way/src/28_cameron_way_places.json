@@ -1,0 +1,249 @@
+{
+ "address": "28 Cameron Way, Kardinya WA 6163",
+ "lat": -32.074024561827,
+ "lng": 115.817709293132,
+ "pins": [
+  {
+   "name": "Jack O'Keefe Reserve",
+   "cat": "reserve",
+   "lat": -32.07028,
+   "lng": 115.8167,
+   "desc": "428 m N · reserve off Dixon Pl"
+  },
+  {
+   "name": "Kardinya Park Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.0684043,
+   "lng": 115.81658,
+   "desc": "635 m N · South St; Stage 2 redevelopment opened Dec 2025"
+  },
+  {
+   "name": "Jack Martin Reserve",
+   "cat": "reserve",
+   "lat": -32.06611,
+   "lng": 115.8178,
+   "desc": "881 m N · bushland reserve"
+  },
+  {
+   "name": "Leach Highway",
+   "cat": "other",
+   "lat": -32.046155781507,
+   "lng": 115.815664527852,
+   "desc": "3.1 km N · Leach Hwy access via North Lake Rd"
+  },
+  {
+   "name": "Westfield Booragoon",
+   "cat": "regional_shopping",
+   "lat": -32.0339445,
+   "lng": 115.8357877,
+   "desc": "4.8 km N · regional centre, 125 Riseley St"
+  },
+  {
+   "name": "Harry Patterson Park",
+   "cat": "park",
+   "lat": -32.0705267,
+   "lng": 115.8205957,
+   "desc": "475 m NE · park, Stanbury Pl"
+  },
+  {
+   "name": "Emma George Park",
+   "cat": "park",
+   "lat": -32.0717948,
+   "lng": 115.8223111,
+   "desc": "500 m NE · park, Barclay Rd"
+  },
+  {
+   "name": "Hodgson Place Park",
+   "cat": "park",
+   "lat": -32.0671,
+   "lng": 115.8217,
+   "desc": "858 m NE · pocket park, Hodgson Pl"
+  },
+  {
+   "name": "Murdoch University",
+   "cat": "university",
+   "lat": -32.067047,
+   "lng": 115.835014,
+   "desc": "1.8 km NE · main campus, Murdoch"
+  },
+  {
+   "name": "Red Gum Park",
+   "cat": "park",
+   "lat": -32.07472,
+   "lng": 115.8203,
+   "desc": "256 m E · local park"
+  },
+  {
+   "name": "Norm Godfrey Reserve",
+   "cat": "reserve",
+   "lat": -32.0733854,
+   "lng": 115.824588,
+   "desc": "653 m E · reserve, Botany Way S, Murdoch"
+  },
+  {
+   "name": "Kennedy Baptist College",
+   "cat": "school",
+   "lat": -32.071568664197,
+   "lng": 115.83463688187,
+   "desc": "1.6 km E · independent Yr 7-12, 325 Farrington Rd, Murdoch",
+   "school": "private"
+  },
+  {
+   "name": "Fiona Stanley Hospital",
+   "cat": "hospital",
+   "lat": -32.0706559,
+   "lng": 115.8443592,
+   "desc": "2.5 km E · major public hospital + ED, Robin Warren Dr"
+  },
+  {
+   "name": "St John of God Murdoch Hospital",
+   "cat": "hospital",
+   "lat": -32.06766,
+   "lng": 115.84521,
+   "desc": "2.7 km E · private hospital + ED, Murdoch Dr"
+  },
+  {
+   "name": "Murdoch Station",
+   "cat": "train",
+   "lat": -32.066208,
+   "lng": 115.850571,
+   "desc": "3.2 km E · Mandurah line; bus interchange; beside South St / Kwinana Fwy interchange"
+  },
+  {
+   "name": "North Lake",
+   "cat": "lake",
+   "lat": -32.07767,
+   "lng": 115.8251,
+   "desc": "807 m SE · wetland lake, Beeliar Regional Park"
+  },
+  {
+   "name": "Blue Gum Montessori School",
+   "cat": "school",
+   "lat": -32.085195417556,
+   "lng": 115.838553074672,
+   "desc": "2.3 km SE · independent, 11 Hope Rd",
+   "school": "private"
+  },
+  {
+   "name": "Richard Angeloni Park",
+   "cat": "park",
+   "lat": -32.07444,
+   "lng": 115.8178,
+   "desc": "47 m S · local park beside Cameron Way"
+  },
+  {
+   "name": "Monaco Park",
+   "cat": "park",
+   "lat": -32.0778872,
+   "lng": 115.8194326,
+   "desc": "460 m S · park + dog off-leash area, Yates Ct, North Lake"
+  },
+  {
+   "name": "De Marchi Reserve",
+   "cat": "reserve",
+   "lat": -32.0789565,
+   "lng": 115.8161139,
+   "desc": "569 m S · reserve, Waverley Rd, Coolbellup"
+  },
+  {
+   "name": "Bibra Lake Reserve",
+   "cat": "regional_park",
+   "lat": -32.0908,
+   "lng": 115.8208,
+   "desc": "1.9 km S · Bibra Lake, Beeliar Regional Park (Progress Dr)"
+  },
+  {
+   "name": "Perth Waldorf School",
+   "cat": "school",
+   "lat": -32.092190451032,
+   "lng": 115.817658414979,
+   "desc": "2.0 km S · independent K-12, 14 Gwilliam Dr, Bibra Lake",
+   "school": "private"
+  },
+  {
+   "name": "Doherty Reserve",
+   "cat": "reserve",
+   "lat": -32.0759,
+   "lng": 115.8156,
+   "desc": "288 m SW · reserve off Quince Way (basketball court)"
+  },
+  {
+   "name": "Mamillius Park",
+   "cat": "park",
+   "lat": -32.078544,
+   "lng": 115.809464,
+   "desc": "926 m SW · park, Mamillius St, Coolbellup"
+  },
+  {
+   "name": "Coolbellup Library",
+   "cat": "library",
+   "lat": -32.082961388902,
+   "lng": 115.808788768858,
+   "desc": "1.3 km SW · City of Cockburn library, 90 Cordelia Ave"
+  },
+  {
+   "name": "Jack Jeffery Park",
+   "cat": "park",
+   "lat": -32.0744618,
+   "lng": 115.8090664,
+   "desc": "817 m W · park, Winterfold Rd"
+  },
+  {
+   "name": "Alison Harris Park",
+   "cat": "park",
+   "lat": -32.0730148,
+   "lng": 115.8087187,
+   "desc": "855 m W · park, Weston Way"
+  },
+  {
+   "name": "Seton Catholic College",
+   "cat": "school",
+   "lat": -32.0731652,
+   "lng": 115.7926956,
+   "desc": "2.4 km W · Catholic Yr 7-12, Marchant Rd, Samson",
+   "school": "private"
+  },
+  {
+   "name": "Ted Neesham Reserve",
+   "cat": "reserve",
+   "lat": -32.07333,
+   "lng": 115.8172,
+   "desc": "91 m NW · bushland reserve"
+  },
+  {
+   "name": "Alan Edwards Reserve",
+   "cat": "reserve",
+   "lat": -32.0697021,
+   "lng": 115.8146847,
+   "desc": "559 m NW · sports reserve, North Lake Rd / Gillett Dr"
+  },
+  {
+   "name": "Ralph Trotter Park",
+   "cat": "park",
+   "lat": -32.0681576,
+   "lng": 115.8141639,
+   "desc": "734 m NW · park, Townsing Rd"
+  },
+  {
+   "name": "Royal Fremantle Golf Club",
+   "cat": "golf",
+   "lat": -32.0538432,
+   "lng": 115.7743255,
+   "desc": "4.7 km NW · 18-hole members' course, High St"
+  },
+  {
+   "name": "Kardinya Primary School",
+   "cat": "school",
+   "lat": -32.06231,
+   "lng": 115.82373,
+   "school": "zoned"
+  },
+  {
+   "name": "Coolbellup Community School",
+   "cat": "school",
+   "lat": -32.081854,
+   "lng": 115.808805,
+   "school": "zoned"
+  }
+ ]
+}

@@ -1,0 +1,126 @@
+{
+ "address": "17C Ringmer Way, Westminster WA 6061",
+ "lat": -31.869872,
+ "lng": 115.842838,
+ "pins": [
+  {
+   "name": "Mirrabooka Square Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.872019,
+   "lng": 115.859413
+  },
+  {
+   "name": "Westminster Centre",
+   "cat": "shopping",
+   "lat": -31.86981,
+   "lng": 115.83714
+  },
+  {
+   "name": "Northlands Centre",
+   "cat": "shopping",
+   "lat": -31.873345,
+   "lng": 115.83283
+  },
+  {
+   "name": "Stirling Central Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.863029,
+   "lng": 115.827767
+  },
+  {
+   "name": "Nollamara Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.88122,
+   "lng": 115.841228
+  },
+  {
+   "name": "Balga Plaza",
+   "cat": "shopping",
+   "lat": -31.856175,
+   "lng": 115.838127
+  },
+  {
+   "name": "St Gerard's Catholic Primary School",
+   "cat": "school",
+   "lat": -31.869729,
+   "lng": 115.848544,
+   "school": "private"
+  },
+  {
+   "name": "Majella Catholic Primary School",
+   "cat": "school",
+   "lat": -31.856176,
+   "lng": 115.84796,
+   "school": "private"
+  },
+  {
+   "name": "Stirling Station",
+   "cat": "train",
+   "lat": -31.89417,
+   "lng": 115.8047
+  },
+  {
+   "name": "Western Australian Golf Club",
+   "cat": "golf",
+   "lat": -31.896608,
+   "lng": 115.852565
+  },
+  {
+   "name": "Marangaroo Golf Course",
+   "cat": "golf",
+   "lat": -31.827041,
+   "lng": 115.827923
+  },
+  {
+   "name": "Stirling Leisure Balga",
+   "cat": "aquatic",
+   "lat": -31.854353,
+   "lng": 115.838478
+  },
+  {
+   "name": "Osborne Park Hospital",
+   "cat": "hospital",
+   "lat": -31.886111,
+   "lng": 115.805407
+  },
+  {
+   "name": "Matt Williams Reserve",
+   "cat": "park",
+   "lat": -31.870987,
+   "lng": 115.837138
+  },
+  {
+   "name": "Des Penman Memorial Reserve",
+   "cat": "park",
+   "lat": -31.876385,
+   "lng": 115.839496
+  },
+  {
+   "name": "Pycombe Worthing Reserve",
+   "cat": "park",
+   "lat": -31.867319,
+   "lng": 115.842779
+  },
+  {
+   "name": "Westminster Primary School",
+   "cat": "school",
+   "lat": -31.870189,
+   "lng": 115.838727,
+   "school": "zoned"
+  },
+  {
+   "name": "Balga Primary School",
+   "cat": "school",
+   "lat": -31.860577,
+   "lng": 115.844811,
+   "school": "zoned"
+  },
+  {
+   "name": "Balga Senior High School",
+   "cat": "school",
+   "lat": -31.850696,
+   "lng": 115.846875,
+   "school": "zoned"
+  }
+ ]
+}

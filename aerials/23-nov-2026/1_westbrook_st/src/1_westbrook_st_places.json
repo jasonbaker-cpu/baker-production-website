@@ -1,0 +1,152 @@
+{
+ "address": "1 Westbrook St, Calista WA 6167",
+ "lat": -32.241709983089,
+ "lng": 115.802750026715,
+ "pins": [
+  {
+   "name": "Medina Primary School",
+   "cat": "school",
+   "lat": -32.235823037213,
+   "lng": 115.803710928095,
+   "desc": "662 m N · government primary, 2 Westcott Rd — local-intake zoning not verified",
+   "school": "zoned"
+  },
+  {
+   "name": "Harry McGuigan Park",
+   "cat": "park",
+   "lat": -32.2324256,
+   "lng": 115.8058622,
+   "desc": "1.1 km N · park and playground, Hoyle Rd, Medina"
+  },
+  {
+   "name": "Mitzi Park",
+   "cat": "park",
+   "lat": -32.2395,
+   "lng": 115.8041,
+   "desc": "277 m NE · local park, Oakley Rd N, Medina"
+  },
+  {
+   "name": "Kwinana Adventure Park",
+   "cat": "playground",
+   "lat": -32.24193,
+   "lng": 115.81002,
+   "desc": "685 m E · City of Kwinana adventure playground / splash pad"
+  },
+  {
+   "name": "Calista Oval",
+   "cat": "park",
+   "lat": -32.2422334,
+   "lng": 115.8107718,
+   "desc": "758 m E · sports oval, Walgreen Cres (Kwinana Tennis Club alongside)"
+  },
+  {
+   "name": "Peter Carnley Anglican Community School – Calista Campus",
+   "cat": "school",
+   "lat": -32.2404,
+   "lng": 115.8115,
+   "desc": "837 m E · independent Anglican school, junior campus, Summerton Rd",
+   "school": "private"
+  },
+  {
+   "name": "Apex Rotary Park",
+   "cat": "park",
+   "lat": -32.23968,
+   "lng": 115.81142,
+   "desc": "847 m E · park, Leasham Way, Medina"
+  },
+  {
+   "name": "Kwinana Recquatic",
+   "cat": "aquatic",
+   "lat": -32.2428,
+   "lng": 115.8134,
+   "desc": "1.0 km E · City of Kwinana aquatic & recreation centre, Robbos Way (staged redevelopment under way; first pool reopened)"
+  },
+  {
+   "name": "Darius Wells Library & Resource Centre",
+   "cat": "library",
+   "lat": -32.2433754,
+   "lng": 115.8138729,
+   "desc": "1.1 km E · Kwinana Public Library, Chisham Ave & Robbos Way, Kwinana Town Centre"
+  },
+  {
+   "name": "Kwinana Marketplace",
+   "cat": "shopping",
+   "lat": -32.2451,
+   "lng": 115.8146,
+   "desc": "1.2 km E · Kwinana town centre shopping centre, 4 Chisham Ave (agent request: Kwinana town centre)"
+  },
+  {
+   "name": "Kwinana Station",
+   "cat": "train",
+   "lat": -32.234936,
+   "lng": 115.842664,
+   "desc": "3.8 km E · Mandurah line"
+  },
+  {
+   "name": "Calista Primary School",
+   "cat": "school",
+   "lat": -32.2451483655,
+   "lng": 115.810604792,
+   "desc": "833 m SE · government primary, 1 Chilcott St — local-intake zoning not verified",
+   "school": "zoned"
+  },
+  {
+   "name": "Peter Carnley Anglican Community School – Wellard Campus",
+   "cat": "school",
+   "lat": -32.2571034,
+   "lng": 115.8149145,
+   "desc": "2.1 km SE · independent Anglican school, 386 Wellard Rd",
+   "school": "private"
+  },
+  {
+   "name": "St Vincent's School",
+   "cat": "school",
+   "lat": -32.252751715599,
+   "lng": 115.826039479964,
+   "desc": "2.5 km SE · Catholic primary, 114 Parmelia Ave, Parmelia (PointAddress; school POI 6 m away)",
+   "school": "private"
+  },
+  {
+   "name": "Wellard Square",
+   "cat": "shopping",
+   "lat": -32.2628,
+   "lng": 115.8165,
+   "desc": "2.7 km SE · neighbourhood shopping centre, 1 The Strand, Wellard"
+  },
+  {
+   "name": "Wellard Station",
+   "cat": "train",
+   "lat": -32.2639,
+   "lng": 115.8174,
+   "desc": "2.8 km SE · Mandurah line — nearest train station"
+  },
+  {
+   "name": "Sloans Reserve",
+   "cat": "reserve",
+   "lat": -32.2505289,
+   "lng": 115.7988401,
+   "desc": "1.0 km S · reserve, Wellard Rd"
+  },
+  {
+   "name": "Kwinana Golf Club",
+   "cat": "golf",
+   "lat": -32.24604,
+   "lng": 115.79748,
+   "desc": "692 m SW · public 18-hole course, 2 Summerton Rd — fairways run to within ~250 m of the property (agent request: golf course)"
+  },
+  {
+   "name": "Rockingham Beach",
+   "cat": "beach",
+   "lat": -32.2761,
+   "lng": 115.72939,
+   "desc": "7.9 km SW · Rockingham foreshore beach (agent request)"
+  },
+  {
+   "name": "Thomas Oval Playground",
+   "cat": "playground",
+   "lat": -32.2337806,
+   "lng": 115.7983403,
+   "desc": "975 m NW · oval and playground, Tucker St, Medina"
+  }
+ ]
+}

@@ -1,0 +1,244 @@
+{
+ "address": "10/218 York St, Subiaco WA 6008",
+ "lat": -31.946041072694,
+ "lng": 115.827916104266,
+ "pins": [
+  {
+   "name": "Subiaco Oval",
+   "cat": "park",
+   "lat": -31.944191,
+   "lng": 115.8286402,
+   "desc": "217 m N · retained oval, community open space shared with Bob Hawke College"
+  },
+  {
+   "name": "Bold Park Community School",
+   "cat": "school",
+   "lat": -31.9238406,
+   "lng": 115.8231847,
+   "desc": "2.5 km N · independent school, Wembley campus",
+   "school": "private"
+  },
+  {
+   "name": "West Leederville Station",
+   "cat": "train",
+   "lat": -31.9426,
+   "lng": 115.8338,
+   "desc": "675 m NE · Fremantle and Airport lines"
+  },
+  {
+   "name": "West Leederville Primary School",
+   "cat": "school",
+   "lat": -31.939019,
+   "lng": 115.832573,
+   "desc": "897 m NE · government primary, 58 Northwood St",
+   "school": "zoned"
+  },
+  {
+   "name": "Leederville Station",
+   "cat": "train",
+   "lat": -31.938907,
+   "lng": 115.840273,
+   "desc": "1.4 km NE · Yanchep line (nearest)"
+  },
+  {
+   "name": "Galup (Lake Monger)",
+   "cat": "lake",
+   "lat": -31.9343135,
+   "lng": 115.835272,
+   "desc": "1.5 km NE · lake and reserve"
+  },
+  {
+   "name": "Aranmore Catholic Primary School",
+   "cat": "school",
+   "lat": -31.9279,
+   "lng": 115.83923,
+   "desc": "2.3 km NE · Catholic primary, Leederville",
+   "school": "private"
+  },
+  {
+   "name": "Beatty Park Leisure Centre",
+   "cat": "aquatic",
+   "lat": -31.935716998733,
+   "lng": 115.850315734674,
+   "desc": "2.4 km NE · public aquatic and leisure centre, 220 Vincent St"
+  },
+  {
+   "name": "Aranmore Catholic College",
+   "cat": "school",
+   "lat": -31.927701258998,
+   "lng": 115.843455733659,
+   "desc": "2.5 km NE · Catholic secondary, 35 Franklin St Leederville",
+   "school": "private"
+  },
+  {
+   "name": "Mueller Park",
+   "cat": "park",
+   "lat": -31.9444906,
+   "lng": 115.833588,
+   "desc": "563 m E · park on Subiaco Rd"
+  },
+  {
+   "name": "St George's Anglican Grammar School",
+   "cat": "school",
+   "lat": -31.9541,
+   "lng": 115.8571,
+   "desc": "2.9 km E · independent school, Perth CBD",
+   "school": "private"
+  },
+  {
+   "name": "Perth Station",
+   "cat": "train",
+   "lat": -31.951428,
+   "lng": 115.860416,
+   "desc": "3.1 km E · Midland, Armadale/Byford, Thornlie-Cockburn, Ellenbrook (nearest); also Fremantle/Airport"
+  },
+  {
+   "name": "Forrest Chase",
+   "cat": "regional_shopping",
+   "lat": -31.95353,
+   "lng": 115.86079,
+   "desc": "3.2 km E · CBD shopping centre"
+  },
+  {
+   "name": "Park Street Mini Park",
+   "cat": "park",
+   "lat": -31.9497,
+   "lng": 115.83132,
+   "desc": "519 m SE · pocket park, Bedford Ave"
+  },
+  {
+   "name": "Mount Hospital",
+   "cat": "hospital",
+   "lat": -31.9585343,
+   "lng": 115.8455769,
+   "desc": "2.2 km SE · private hospital, Mounts Bay Rd"
+  },
+  {
+   "name": "Elizabeth Quay Station",
+   "cat": "train",
+   "lat": -31.9569,
+   "lng": 115.8553,
+   "desc": "2.9 km SE · Mandurah line (nearest); Yanchep line"
+  },
+  {
+   "name": "Royal Perth Golf Club",
+   "cat": "golf",
+   "lat": -31.97944,
+   "lng": 115.8531,
+   "desc": "4.4 km SE · 18-hole course, South Perth"
+  },
+  {
+   "name": "Richard Diggins Park",
+   "cat": "park",
+   "lat": -31.94917,
+   "lng": 115.8278,
+   "desc": "348 m S · local park"
+  },
+  {
+   "name": "Kings Park Botanic Garden",
+   "cat": "regional_park",
+   "lat": -31.960897,
+   "lng": 115.832191,
+   "desc": "1.7 km S · Kings Park and Botanic Garden"
+  },
+  {
+   "name": "Subiaco Library",
+   "cat": "library",
+   "lat": -31.950905719749,
+   "lng": 115.823672095232,
+   "desc": "674 m SW · City of Subiaco library, 237 Rokeby Rd (Evelyn H Parker Library building)"
+  },
+  {
+   "name": "Rankin Gardens",
+   "cat": "park",
+   "lat": -31.9514139,
+   "lng": 115.8238409,
+   "desc": "711 m SW · gardens on Rokeby Rd"
+  },
+  {
+   "name": "Subiaco Primary School",
+   "cat": "school",
+   "lat": -31.951339986153,
+   "lng": 115.82252000264,
+   "desc": "780 m SW · government primary, 271 Bagot Rd",
+   "school": "zoned"
+  },
+  {
+   "name": "Theatre Gardens",
+   "cat": "park",
+   "lat": -31.9515006,
+   "lng": 115.8201759,
+   "desc": "951 m SW · gardens on Hensman Rd"
+  },
+  {
+   "name": "King Edward Memorial Hospital",
+   "cat": "hospital",
+   "lat": -31.9499526,
+   "lng": 115.8185618,
+   "desc": "985 m SW · public women's and maternity hospital"
+  },
+  {
+   "name": "Perth Children's Hospital",
+   "cat": "hospital",
+   "lat": -31.9681854,
+   "lng": 115.8163366,
+   "desc": "2.7 km SW · children's hospital (ED entrance), QEII campus"
+  },
+  {
+   "name": "Sir Charles Gairdner Hospital",
+   "cat": "hospital",
+   "lat": -31.967976,
+   "lng": 115.81577,
+   "desc": "2.7 km SW · major public hospital, QEII campus"
+  },
+  {
+   "name": "Subiaco Station",
+   "cat": "train",
+   "lat": -31.9447,
+   "lng": 115.8239,
+   "desc": "408 m W · Fremantle and Airport lines"
+  },
+  {
+   "name": "Bold Park",
+   "cat": "regional_park",
+   "lat": -31.9363383,
+   "lng": 115.7784277,
+   "desc": "4.8 km W · bushland regional park"
+  },
+  {
+   "name": "Market Square Park",
+   "cat": "park",
+   "lat": -31.9444217,
+   "lng": 115.826816,
+   "desc": "208 m NW · park at Rokeby Rd & Roberts Rd"
+  },
+  {
+   "name": "Subiaco Private Hospital",
+   "cat": "hospital",
+   "lat": -31.9429759,
+   "lng": 115.8255947,
+   "desc": "406 m NW · private hospital, 1 Salvado Rd"
+  },
+  {
+   "name": "Subiaco Square Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.9438753,
+   "lng": 115.8235579,
+   "desc": "477 m NW · shopping centre, Station St"
+  },
+  {
+   "name": "St John of God Subiaco Hospital",
+   "cat": "hospital",
+   "lat": -31.9418931,
+   "lng": 115.8257085,
+   "desc": "507 m NW · major private hospital, 12 Salvado Rd"
+  },
+  {
+   "name": "Shenton College",
+   "cat": "school",
+   "lat": -31.959738,
+   "lng": 115.802827,
+   "school": "zoned"
+  }
+ ]
+}
