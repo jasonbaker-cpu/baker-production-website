@@ -37,6 +37,45 @@
      "toEditor": true,
      "editorReason": "dusk/twilight drone (Twilight add-on, flown after sunset, flat light) \u2014 please edit sky + colour, level 0263/0264/0266, no graphics (One Residential)",
      "lot": "Villa unit (strata) \u2014 no boundary; plain job (no pins/graphics)"
+    },
+    {
+     "slug": "9_st_michael_tce",
+     "addr": "9 St Michael Terrace, Mount Pleasant WA 6153",
+     "who": "Drew Dwyer \u00b7 One Residential",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261123200744_0245_D.jpg",
+      "DJI_20261123200723_0243_D.jpg"
+     ],
+     "src": "23-nov-2026/9_st_michael_tce/src/",
+     "map": "9_st_michael_tce_places.json",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261123200744_0245_D.jpg",
+      "DJI_20261123200723_0243_D.jpg",
+      "DJI_20261123200808_0246_D.jpg",
+      "DJI_20261123200825_0247_D.jpg",
+      "DJI_20261123200842_0248_D.jpg",
+      "DJI_20261123200858_0249_D.jpg",
+      "DJI_20261123200912_0250_D.jpg",
+      "DJI_20261123200934_0251_D.jpg",
+      "DJI_20261123200948_0252_D.jpg",
+      "DJI_20261123201001_0253_D.jpg",
+      "DJI_20261123201015_0254_D.jpg",
+      "DJI_20261123201028_0255_D.jpg",
+      "DJI_20261123201137_0256_D.jpg",
+      "DJI_20261123201143_0257_D.jpg",
+      "DJI_20261123201206_0258_D.jpg",
+      "DJI_20261123201221_0259_D.jpg",
+      "DJI_20261123201236_0260_D.jpg"
+     ],
+     "notes": "(a la carte) Aerial / Drone Photography only. Entry Notes: -. Amenities: -. Land size: -. Title: -. Boundaries/land features to mark: -. One Residential = clean photos, NO graphics (no pins, no boundary, no text). Vacant (cleared) block.",
+     "portrait": false,
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/23-11-2026/9 St Michael Terrace, Mount Pleasant WA 6153, Australia (1)/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "CBD towers ghosted / sky painted over towers on 0256, 0257; glare/haze band along the horizon on several frames \u2014 please replace sky and finish, no graphics (One Residential)",
+     "lot": "Vacant block \u2014 no title/plan supplied, plain job (no boundary/pins)"
     }
    ]
   },
