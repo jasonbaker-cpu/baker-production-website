@@ -1,0 +1,85 @@
+{
+ "sat": "sat/1_westbrook_st_loc",
+ "house": [
+  -32.241709983089,
+  115.802750026715
+ ],
+ "photo": "e2e/1_westbrook_st__nadir2/DJI_20261123131749_0056_D_r90_sq.jpg",
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "places": [
+  {
+   "name": "Calista Primary School",
+   "lat": -32.2451483655,
+   "lng": 115.810604792,
+   "icon": "school"
+  },
+  {
+   "name": "Harry McGuigan Park",
+   "lat": -32.2324256,
+   "lng": 115.8058622,
+   "icon": "park"
+  },
+  {
+   "name": "Kwinana Golf Club",
+   "lat": -32.24604,
+   "lng": 115.79748,
+   "icon": "golf"
+  },
+  {
+   "name": "Kwinana Marketplace",
+   "lat": -32.2451,
+   "lng": 115.8146,
+   "icon": "mall"
+  },
+  {
+   "name": "Kwinana Station",
+   "lat": -32.234936,
+   "lng": 115.842664,
+   "icon": "train"
+  },
+  {
+   "name": "Medina Primary School",
+   "lat": -32.235823037213,
+   "lng": 115.803710928095,
+   "icon": "school"
+  },
+  {
+   "name": "Mitzi Park",
+   "lat": -32.2395,
+   "lng": 115.8041,
+   "icon": "park"
+  },
+  {
+   "name": "Peter Carnley Anglican Community School \u2013 Calista Campus",
+   "lat": -32.2404,
+   "lng": 115.8115,
+   "icon": "school"
+  },
+  {
+   "name": "Rockingham Beach",
+   "lat": -32.2761,
+   "lng": 115.72939,
+   "icon": "beach"
+  },
+  {
+   "name": "Sloans Reserve",
+   "lat": -32.2505289,
+   "lng": 115.7988401,
+   "icon": "pine"
+  },
+  {
+   "name": "Thomas Oval Playground",
+   "lat": -32.2337806,
+   "lng": 115.7983403,
+   "icon": "park"
+  },
+  {
+   "name": "Wellard Square",
+   "lat": -32.2628,
+   "lng": 115.8165,
+   "icon": "mall"
+  }
+ ]
+}

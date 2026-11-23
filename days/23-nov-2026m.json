@@ -1,0 +1,249 @@
+{
+ "label": "Mon 23 Nov 2026",
+ "jobs": [
+  {
+   "slug": "10_218_york_st",
+   "addr": "10/218 York St, Subiaco WA 6008",
+   "who": "Shane Garrett · Belle Property",
+   "agency": "green-belle",
+   "photos": "batch/10_218_york_st/raw",
+   "map": "batch/10_218_york_st/10_218_york_st_places.json",
+   "notes": "Core Listing Package. Amenities or features to highlight: No. Strata: Yes. Land size: 97. Title and land plan: yes. Any specific boundaries or land features to mark on the aerial photos: -. Client Preferences: No. (Built strata — Lot 10 on Strata Plan 5436, title 1489/495; cadastre has only the shared parent lot, so pins only, no boundary.)",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/10-218 york st, subiaco wa 6008, australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "Certificate of Title 1489-495 Unit 10, 218 York Street, SUBIACO 6008.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/10-218 york st, subiaco wa 6008, australia/Aerial - Drone Photography/Certificate of Title 1489-495 Unit 10, 218 York Street, SUBIACO 6008.pdf"
+    },
+    {
+     "name": "Strata Plan 5436.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/10-218 york st, subiaco wa 6008, australia/Aerial - Drone Photography/Strata Plan 5436.pdf"
+    },
+    {
+     "name": "10_218_york_st_subiaco_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/10-218 york st, subiaco wa 6008, australia/Aerial - Drone Photography/10_218_york_st_subiaco_map.html"
+    },
+    {
+     "name": "10_218_york_st_subiaco_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/10-218 york st, subiaco wa 6008, australia/Aerial - Drone Photography/10_218_york_st_subiaco_qa.txt"
+    },
+    {
+     "name": "10_218_york_st_subiaco_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/10-218 york st, subiaco wa 6008, australia/Aerial - Drone Photography/10_218_york_st_subiaco_directions.txt"
+    }
+   ],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "_0241_",
+    "_0240_"
+   ],
+   "streetRot": {
+    "10_218_york_st__nadir": 90,
+    "10_218_york_st__nadir2": 90
+   }
+  },
+  {
+   "slug": "28_cameron_way",
+   "addr": "28 Cameron Way, Kardinya WA 6163",
+   "who": "Raymond Chen · Top Realty",
+   "agency": "orange",
+   "photos": "batch/28_cameron_way/raw",
+   "map": "batch/28_cameron_way/28_cameron_way_places.json",
+   "poly": [
+    [
+     -32.07422565442452,
+     115.81775885019022
+    ],
+    [
+     -32.073918362536254,
+     115.81755624508536
+    ],
+    [
+     -32.07384320360149,
+     115.8176121238759
+    ],
+    [
+     -32.07383839848651,
+     115.81764341587945
+    ],
+    [
+     -32.07390948972674,
+     115.81775331717404
+    ],
+    [
+     -32.073944540507775,
+     115.81777132529696
+    ],
+    [
+     -32.073998212316866,
+     115.81776523446524
+    ],
+    [
+     -32.074110613567974,
+     115.81783416086401
+    ],
+    [
+     -32.07422566811029,
+     115.81783256923036
+    ]
+   ],
+   "area": 568,
+   "areaSource": "DP 67559 Lot 14 + title 2804/786",
+   "must": [
+    "Kardinya Park Shopping Centre",
+    "Westfield Booragoon",
+    "Fiona Stanley Hospital",
+    "St John of God Murdoch Hospital",
+    "Kardinya Primary School",
+    "Kennedy Baptist College",
+    "Leach Highway"
+   ],
+   "notes": "Social Media Lite Package. Amenities or features to highlight: Need virtual staging for some photos. Please advise. Strata: No. Land size: -. Title and land plan: -. Any specific boundaries or land features to mark on the aerial photos: schools, shopping ctr, hospitals, highway.",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/28 Cameron Way, Kardinya WA 6163, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "Certificate of Title 2804-786 28 Cameron Way, KARDINYA 6163.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/28 Cameron Way, Kardinya WA 6163, Australia/Aerial - Drone Photography/Certificate of Title 2804-786 28 Cameron Way, KARDINYA 6163.pdf"
+    },
+    {
+     "name": "Deposited Plan 67559.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/28 Cameron Way, Kardinya WA 6163, Australia/Aerial - Drone Photography/Deposited Plan 67559.pdf"
+    },
+    {
+     "name": "28_cameron_way_kardinya_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/28 Cameron Way, Kardinya WA 6163, Australia/Aerial - Drone Photography/28_cameron_way_kardinya_map.html"
+    },
+    {
+     "name": "28_cameron_way_kardinya_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/28 Cameron Way, Kardinya WA 6163, Australia/Aerial - Drone Photography/28_cameron_way_kardinya_qa.txt"
+    },
+    {
+     "name": "28_cameron_way_kardinya_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/28 Cameron Way, Kardinya WA 6163, Australia/Aerial - Drone Photography/28_cameron_way_kardinya_directions.txt"
+    }
+   ],
+   "nadirPick": [
+    "_0252_",
+    "_0253_"
+   ],
+   "streetRot": {
+    "28_cameron_way__nadir": 0,
+    "28_cameron_way__nadir2": 0
+   }
+  },
+  {
+   "slug": "1_westbrook_st",
+   "addr": "1 Westbrook St, Calista WA 6167",
+   "who": "Sally Bulpitt · Rodway Group",
+   "agency": "rodway",
+   "photos": "batch/1_westbrook_st/raw",
+   "map": "batch/1_westbrook_st/1_westbrook_st_places.json",
+   "poly": [
+    [
+     -32.24180272158974,
+     115.80253286670174
+    ],
+    [
+     -32.24167678466638,
+     115.80255559565451
+    ],
+    [
+     -32.24161468876008,
+     115.80262858954492
+    ],
+    [
+     -32.24157882802311,
+     115.80290207615906
+    ],
+    [
+     -32.24181189996329,
+     115.8029444321167
+    ]
+   ],
+   "area": 792,
+   "areaSource": "title 475/58A (Lot 91 D41343, sketch 31.3 perches) + agent",
+   "must": [
+    "Kwinana Marketplace",
+    "Kwinana Golf Club",
+    "Calista Primary School",
+    "Medina Primary School",
+    "Peter Carnley Anglican Community School – Calista Campus",
+    "Rockingham Beach"
+   ],
+   "notes": "Social Media Lite Package. Amenities or features to highlight: no. Strata: No. Land size: 792. Title and land plan: yes title. Any specific boundaries or land features to mark on the aerial photos: Kwinana town centre, gold course, schools, tonkin, rockingham beach if thats not too far.",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/23-11-2026/1 Westbrook St, Calista WA 6167, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "Certificate of Title - 1 Westbrook Street, Calista.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/23-11-2026/1 Westbrook St, Calista WA 6167, Australia/Aerial - Drone Photography/Certificate of Title - 1 Westbrook Street, Calista.pdf"
+    },
+    {
+     "name": "certificate-of-title-with-sketch-475-58a-sketch-for-475-58a.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/23-11-2026/1 Westbrook St, Calista WA 6167, Australia/Aerial - Drone Photography/certificate-of-title-with-sketch-475-58a-sketch-for-475-58a.pdf"
+    },
+    {
+     "name": "1_westbrook_st_calista_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/23-11-2026/1 Westbrook St, Calista WA 6167, Australia/Aerial - Drone Photography/1_westbrook_st_calista_map.html"
+    },
+    {
+     "name": "1_westbrook_st_calista_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/23-11-2026/1 Westbrook St, Calista WA 6167, Australia/Aerial - Drone Photography/1_westbrook_st_calista_qa.txt"
+    },
+    {
+     "name": "1_westbrook_st_calista_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Lee/23-11-2026/1 Westbrook St, Calista WA 6167, Australia/Aerial - Drone Photography/1_westbrook_st_calista_directions.txt"
+    }
+   ],
+   "nadirPick": [
+    "_0053_",
+    "_0056_"
+   ],
+   "streetRot": {
+    "1_westbrook_st__nadir": 180,
+    "1_westbrook_st__nadir2": 90
+   }
+  },
+  {
+   "slug": "17c_ringmer_way",
+   "addr": "17C Ringmer Way, Westminster WA 6061",
+   "who": "Mandie Cubeddu · Realmark",
+   "agency": "grey",
+   "photos": "batch/17c_ringmer_way/raw",
+   "map": "batch/17c_ringmer_way/17c_ringmer_way_places.json",
+   "notes": "Essential Package (Floorplan or Drone - Drone). Amenities or features to highlight: -. Strata: -. Land size: -. Title and land plan: -. Any specific boundaries or land features to mark on the aerial photos: -. (Survey-strata C lot — cadastre has only the shared parent lot and no strata plan in Dropbox, so pins only, no boundary.)",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/17C Ringmer Way, Westminster, Western Australia 6061, AU/Aerial - Drone Photography",
+   "docs": [],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "_0262_",
+    "_0263_"
+   ],
+   "streetRot": {
+    "17c_ringmer_way__nadir": 0,
+    "17c_ringmer_way__nadir2": 0
+   },
+   "remove": {
+    "dji_fly_20261123_151332_0263_1795435519639_photo.JPG": [
+     {
+      "sheet": [
+       590,
+       328,
+       745,
+       402
+      ]
+     }
+    ],
+    "dji_fly_20261123_151326_0262_1795435521003_photo.JPG": [
+     {
+      "sheet": [
+       583,
+       700,
+       680,
+       848
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

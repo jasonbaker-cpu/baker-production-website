@@ -1,0 +1,91 @@
+{
+ "sat": "sat/28_cameron_way_loc",
+ "house": [
+  -32.074024561827,
+  115.817709293132
+ ],
+ "photo": "e2e/28_cameron_way__nadir2/dji_fly_20261123_140156_0253_1795435533597_photo_sq.jpg",
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "places": [
+  {
+   "name": "Bibra Lake Reserve",
+   "lat": -32.0908,
+   "lng": 115.8208,
+   "icon": "pine"
+  },
+  {
+   "name": "Coolbellup Community School",
+   "lat": -32.081854,
+   "lng": 115.808805,
+   "icon": "school"
+  },
+  {
+   "name": "Kardinya Park Shopping Centre",
+   "lat": -32.0684043,
+   "lng": 115.81658,
+   "icon": "mall"
+  },
+  {
+   "name": "Kennedy Baptist College",
+   "lat": -32.071568664197,
+   "lng": 115.83463688187,
+   "icon": "school"
+  },
+  {
+   "name": "Leach Highway",
+   "lat": -32.046155781507,
+   "lng": 115.815664527852,
+   "icon": "civic"
+  },
+  {
+   "name": "North Lake",
+   "lat": -32.07767,
+   "lng": 115.8251,
+   "icon": "lake"
+  },
+  {
+   "name": "Perth Waldorf School",
+   "lat": -32.092190451032,
+   "lng": 115.817658414979,
+   "icon": "school"
+  },
+  {
+   "name": "Red Gum Park",
+   "lat": -32.07472,
+   "lng": 115.8203,
+   "icon": "park"
+  },
+  {
+   "name": "Richard Angeloni Park",
+   "lat": -32.07444,
+   "lng": 115.8178,
+   "icon": "park"
+  },
+  {
+   "name": "Royal Fremantle Golf Club",
+   "lat": -32.0538432,
+   "lng": 115.7743255,
+   "icon": "golf"
+  },
+  {
+   "name": "Seton Catholic College",
+   "lat": -32.0731652,
+   "lng": 115.7926956,
+   "icon": "school"
+  },
+  {
+   "name": "Ted Neesham Reserve",
+   "lat": -32.07333,
+   "lng": 115.8172,
+   "icon": "pine"
+  },
+  {
+   "name": "Westfield Booragoon",
+   "lat": -32.0339445,
+   "lng": 115.8357877,
+   "icon": "mall"
+  }
+ ]
+}

@@ -1,0 +1,47 @@
+{
+ "label": "Mon 23 Nov 2026",
+ "jobs": [
+  {
+   "slug": "17c_ringmer_way",
+   "addr": "17C Ringmer Way, Westminster WA 6061",
+   "who": "Mandie Cubeddu · Realmark",
+   "agency": "grey",
+   "photos": "batch/17c_ringmer_way/raw",
+   "map": "batch/17c_ringmer_way/17c_ringmer_way_places.json",
+   "notes": "Essential Package (Floorplan or Drone - Drone). Amenities or features to highlight: -. Strata: -. Land size: -. Title and land plan: -. Any specific boundaries or land features to mark on the aerial photos: -. (Survey-strata C lot — cadastre has only the shared parent lot and no strata plan in Dropbox, so pins only, no boundary.)",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/17C Ringmer Way, Westminster, Western Australia 6061, AU/Aerial - Drone Photography",
+   "docs": [],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "_0262_",
+    "_0263_"
+   ],
+   "streetRot": {
+    "17c_ringmer_way__nadir": 0,
+    "17c_ringmer_way__nadir2": 0
+   },
+   "remove": {
+    "dji_fly_20261123_151332_0263_1795435519639_photo.JPG": [
+     {
+      "sheet": [
+       590,
+       328,
+       745,
+       402
+      ]
+     }
+    ],
+    "dji_fly_20261123_151326_0262_1795435521003_photo.JPG": [
+     {
+      "sheet": [
+       583,
+       700,
+       680,
+       848
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

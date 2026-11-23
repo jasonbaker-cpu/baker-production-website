@@ -1,0 +1,79 @@
+{
+ "sat": "sat/17c_ringmer_way_loc",
+ "house": [
+  -31.869872,
+  115.842838
+ ],
+ "photo": "e2e/17c_ringmer_way__nadir2/dji_fly_20261123_151332_0263_1795435519639_photo_sq.jpg",
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "places": [
+  {
+   "name": "Balga Plaza",
+   "lat": -31.856175,
+   "lng": 115.838127,
+   "icon": "mall"
+  },
+  {
+   "name": "Balga Primary School",
+   "lat": -31.860577,
+   "lng": 115.844811,
+   "icon": "school"
+  },
+  {
+   "name": "Majella Catholic Primary School",
+   "lat": -31.856176,
+   "lng": 115.84796,
+   "icon": "school"
+  },
+  {
+   "name": "Matt Williams Reserve",
+   "lat": -31.870987,
+   "lng": 115.837138,
+   "icon": "park"
+  },
+  {
+   "name": "Mirrabooka Square Shopping Centre",
+   "lat": -31.872019,
+   "lng": 115.859413,
+   "icon": "mall"
+  },
+  {
+   "name": "Osborne Park Hospital",
+   "lat": -31.886111,
+   "lng": 115.805407,
+   "icon": "hospital"
+  },
+  {
+   "name": "Pycombe Worthing Reserve",
+   "lat": -31.867319,
+   "lng": 115.842779,
+   "icon": "park"
+  },
+  {
+   "name": "St Gerard's Catholic Primary School",
+   "lat": -31.869729,
+   "lng": 115.848544,
+   "icon": "school"
+  },
+  {
+   "name": "Stirling Central Shopping Centre",
+   "lat": -31.863029,
+   "lng": 115.827767,
+   "icon": "mall"
+  },
+  {
+   "name": "Stirling Station",
+   "lat": -31.89417,
+   "lng": 115.8047,
+   "icon": "train"
+  },
+  {
+   "name": "Westminster Primary School",
+   "lat": -31.870189,
+   "lng": 115.838727,
+   "icon": "school"
+  }
+ ]
+}

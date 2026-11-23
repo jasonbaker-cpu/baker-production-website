@@ -1,0 +1,109 @@
+{
+ "sat": "sat/10_218_york_st_loc",
+ "house": [
+  -31.946041072694,
+  115.827916104266
+ ],
+ "photo": "e2e/10_218_york_st__nadir2/dji_fly_20261123_100006_0240_1795435551090_photo_r90_sq.jpg",
+ "W": 3000,
+ "aspect": 1.6,
+ "photoCorner": "auto",
+ "places": [
+  {
+   "name": "Aranmore Catholic College",
+   "lat": -31.927701258998,
+   "lng": 115.843455733659,
+   "icon": "school"
+  },
+  {
+   "name": "Bold Park",
+   "lat": -31.9363383,
+   "lng": 115.7784277,
+   "icon": "pine"
+  },
+  {
+   "name": "Bold Park Community School",
+   "lat": -31.9238406,
+   "lng": 115.8231847,
+   "icon": "school"
+  },
+  {
+   "name": "Elizabeth Quay Station",
+   "lat": -31.9569,
+   "lng": 115.8553,
+   "icon": "train"
+  },
+  {
+   "name": "Forrest Chase",
+   "lat": -31.95353,
+   "lng": 115.86079,
+   "icon": "mall"
+  },
+  {
+   "name": "Kings Park Botanic Garden",
+   "lat": -31.960897,
+   "lng": 115.832191,
+   "icon": "pine"
+  },
+  {
+   "name": "Perth Children's Hospital",
+   "lat": -31.9681854,
+   "lng": 115.8163366,
+   "icon": "hospital"
+  },
+  {
+   "name": "Royal Perth Golf Club",
+   "lat": -31.97944,
+   "lng": 115.8531,
+   "icon": "golf"
+  },
+  {
+   "name": "Shenton College",
+   "lat": -31.959738,
+   "lng": 115.802827,
+   "icon": "school"
+  },
+  {
+   "name": "St John of God Subiaco Hospital",
+   "lat": -31.9418931,
+   "lng": 115.8257085,
+   "icon": "hospital"
+  },
+  {
+   "name": "Subiaco Library",
+   "lat": -31.950905719749,
+   "lng": 115.823672095232,
+   "icon": "library"
+  },
+  {
+   "name": "Subiaco Primary School",
+   "lat": -31.951339986153,
+   "lng": 115.82252000264,
+   "icon": "school"
+  },
+  {
+   "name": "Subiaco Private Hospital",
+   "lat": -31.9429759,
+   "lng": 115.8255947,
+   "icon": "hospital"
+  },
+  {
+   "name": "Subiaco Square Shopping Centre",
+   "lat": -31.9438753,
+   "lng": 115.8235579,
+   "icon": "mall"
+  },
+  {
+   "name": "West Leederville Primary School",
+   "lat": -31.939019,
+   "lng": 115.832573,
+   "icon": "school"
+  },
+  {
+   "name": "West Leederville Station",
+   "lat": -31.9426,
+   "lng": 115.8338,
+   "icon": "train"
+  }
+ ]
+}
