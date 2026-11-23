@@ -283,18 +283,13 @@
      "slug": "17c_ringmer_way",
      "addr": "17C Ringmer Way, Westminster WA 6061",
      "who": "Mandie Cubeddu · Realmark",
-     "agency": "grey",
+     "agency": "pill-r",
      "full": false,
-     "fullPhotos": [
-      "dji_fly_20261123_151326_0262_1795435521003_photo.JPG",
-      "dji_fly_20261123_151332_0263_1795435519639_photo_sq.JPG"
-     ],
+     "fullPhotos": [],
      "src": "23-nov-2026/17c_ringmer_way/src/",
      "map": "17c_ringmer_way_places.json",
      "project": "project.json",
      "photos": [
-      "dji_fly_20261123_151326_0262_1795435521003_photo.JPG",
-      "dji_fly_20261123_151332_0263_1795435519639_photo_sq.JPG",
       "dji_fly_20261123_151418_0264_1795435518247_photo.JPG",
       "dji_fly_20261123_151432_0265_1795435516508_photo.JPG",
       "dji_fly_20261123_151514_0266_1795435513122_photo.JPG",
@@ -303,11 +298,11 @@
       "dji_fly_20261123_151634_0269_1795435508015_photo.JPG",
       "dji_fly_20261123_151706_0270_1795435506651_photo.JPG"
      ],
-     "notes": "Essential Package (Floorplan or Drone - Drone). Amenities or features to highlight: -. Strata: -. Land size: -. Title and land plan: -. Any specific boundaries or land features to mark on the aerial photos: -. (Survey-strata C lot — cadastre has only the shared parent lot and no strata plan in Dropbox, so pins only, no boundary.)",
+     "notes": "Essential Package (Floorplan or Drone - Drone). Amenities or features to highlight: -. Strata: -. Land size: -. Title and land plan: -. Any specific boundaries or land features to mark on the aerial photos: -. (Survey-strata C lot — cadastre has only the shared parent lot and no strata plan in Dropbox, so pins only, no boundary.) (Realmark guide: navy R pin + navy text-box labels with dotted markers; three-quarter aerials only — no top-downs.)",
      "portrait": false,
      "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/23-11-2026/17C Ringmer Way, Westminster, Western Australia 6061, AU/Aerial - Drone Photography",
      "toEditor": true,
-     "editorReason": "car removal left smears on top-downs 0262/0263; haze smear along the horizon on 0269/0270 — please clean",
+     "editorReason": "haze smear along the horizon on 0269/0270 — please clean (Realmark style: navy R pin + navy labels; no top-downs per Realmark guide)",
      "lot": "Survey-strata C lot — no strata plan, pins only (no boundary)"
     }
    ]
