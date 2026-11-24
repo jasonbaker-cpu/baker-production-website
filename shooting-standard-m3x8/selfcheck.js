@@ -6,7 +6,7 @@
    a flash frame on every interior scene and flash-frame shutter / ISO / exposure.
    White balance is reported but not scored (brackets stay on Auto; the camera fixes the flash frame). */
 (function () {
-  var T = { roll: 1.0, keystone: 1.5, isoMax: 400, fLo: 5.6, fHi: 13, focLo: 14.5, focHi: 30, sharpRel: 0.45,
+  var T = { roll: 1.0, keystone: 1.5, isoMax: 640, fLo: 5.6, fHi: 13, focLo: 14.5, focHi: 30, sharpRel: 0.45,
             blown: 0.6, blownExt: 2.5, crushed: 4, evSpread: 3.5, dupe: 9,
             flashGap: 120, flashExp: 1 / 100, flashDark: 70, flashHot: 12, kLo: 5300, kHi: 5900 };
   var $ = function (id) { return document.getElementById(id); };
@@ -314,8 +314,8 @@
         else {
           var fm = s.flash[0].meta, ft = s.flashTone, fbad = false;
           if (fm.exp && fm.exp > T.flashExp) { s.f.push("Flash frame shutter is 1/" + Math.round(1 / fm.exp) + ". Use 1/160 so the room lights don't tint the colour reference."); ded.col += 0.1; fbad = true; }
-          if (fm.iso && b.iso && fm.iso !== b.iso) { s.f.push("Flash frame ISO " + fm.iso + " but brackets ISO " + b.iso + ". Keep them the same (ISO 400)."); ded.col += 0.05; fbad = true; }
-          if (ft && ft.mean < T.flashDark) { s.f.push("Flash frame too dark. Raise flash power one stop (1/8 → 1/4 → 1/2)."); ded.col += 0.1; fbad = true; }
+          if (fm.iso && b.iso && fm.iso !== b.iso) { s.f.push("Flash frame ISO " + fm.iso + " but brackets ISO " + b.iso + ". Keep them the same."); ded.col += 0.05; fbad = true; }
+          if (ft && ft.mean < T.flashDark) { s.f.push("Flash frame too dark. Turn the flash up (TTL +1, or one stop more power), check the far wall and shoot it again."); ded.col += 0.1; fbad = true; }
           else if (ft && ft.hi > T.flashHot) { s.f.push("Flash frame too hot (" + ft.hi.toFixed(0) + "% pure white). Lower flash power one stop or tilt the head further back."); ded.col += 0.1; fbad = true; }
           if (!fbad) flashOk++;
         }
@@ -325,7 +325,7 @@
       for (var j = 0; j < idx; j++) { var o = scenes[j]; if (!o.err && o.hash && s.hash && ham(o.hash, s.hash) <= T.dupe) { dupes.push([o, s]); s.f.push("Same angle as scene " + o.n + " (" + o.name + "). Move the tripod for a new angle."); ded.dupe += 0.15; break; } }
     });
     var jobNotes = [];
-    if (isoHi.length) { jobNotes.push("ISO " + Math.max.apply(null, isoHi) + " on " + isoHi.length + " of " + scenes.length + " scenes. Set ISO 400 manually (turn Auto ISO off) so the flash frame and brackets match."); ded.set += 0.4; }
+    if (isoHi.length) { jobNotes.push("ISO " + Math.max.apply(null, isoHi) + " on " + isoHi.length + " of " + scenes.length + " scenes. Set ISO 640 manually (turn Auto ISO off) so the flash frame and brackets match."); ded.set += 0.4; }
     if (apOff.length) { jobNotes.push("Aperture f/" + apOff[0].toFixed(1) + " on " + apOff.length + " scenes. Use f/9."); ded.set += 0.3; }
     var need = (window.COVERAGE || {})[pkg.value] || 0, real = scenes.length - dupes.length;
     if (need && real < need) ded.cov = Math.min(2.5, (need - real) * 0.12);
@@ -342,7 +342,7 @@
     var job = $("scJob").value.trim() || "Untitled job", name = who.value || "Photographer";
     var cam = (scenes[0] && scenes[0].base.meta.model) || "";
 
-    var checks = ["Flash on M (not TTL), zoom 24mm, bounced off the ceiling", "Lights on (premium: off) and all globes working", "Blinds open evenly, TVs off, toilet lids down", "Checked mirrors and glass for me / the tripod", "Wide hero shot of every main room from the corner", "Second angle of living, kitchen, meals and master", "Front straight-on + 3/4, rear, alfresco, pool", "Cars, bins, hoses out of the front shots", "Followed the booking notes", "File count checked after upload, before wiping card"];
+    var checks = ["Flash zoom 24mm, bounced off the ceiling, far wall checked after every flash frame", "Lights on (premium: off) and all globes working", "Blinds open evenly, TVs off, toilet lids down", "Checked mirrors and glass for me / the tripod", "Wide hero shot of every main room from the corner", "Second angle of living, kitchen, meals and master", "Front straight-on + 3/4, rear, alfresco, pool", "Cars, bins, hoses out of the front shots", "Followed the booking notes", "File count checked after upload, before wiping card"];
     var h = '<div class="scr"><div class="scr-head"><span class="job">' + esc(job) + '</span><span class="score ' + cls + '">' + score + '/10</span></div>' +
       '<div class="meta">' + esc(name) + ' · ' + esc(pkg.value) + (cam ? ' · ' + esc(cam) : '') + ' · ' + new Date().toLocaleDateString("en-AU") + '</div>' +
       '<p class="vd">' + esc(verdict) + '</p><div class="scr-stats">' +

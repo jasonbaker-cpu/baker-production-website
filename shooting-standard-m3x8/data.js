@@ -3,7 +3,7 @@
    REVIEWS: newest first. Add a block at the top when Jason says to post a shooter review.
      kind: "bad" = fix next time, "good" = keep doing this. */
 
-window.UPDATED = "22 Nov 2026";
+window.UPDATED = "24 Nov 2026";
 
 window.SHOOTERS = ["Jason", "Lee", "Yan", "Andrew"];
 
@@ -19,7 +19,7 @@ window.GOOD = [
 
 window.REVIEWS = [
   { date: "6 Nov 2026", shoot: "4 Nov", shooter: "Lee", job: "4 Camelot Grove, Carramar", score: 7.5,
-    verdict: "Good coverage and level camera. Tighten the framing in small rooms, don't repeat the front angle, and set ISO 100-200.",
+    verdict: "Good coverage and level camera. Tighten the framing in small rooms and don't repeat the front angle.",
     notes: [
       { img: "img/reviews/camelot-09852.webp", file: "DSC09852", kind: "good", text: "Kitchen shot from the corner: benchtop, appliances and the flow to the family room in one frame. Three different kitchen angles. Keep doing this." },
       { img: "img/reviews/camelot-09889.webp", file: "DSC09889", kind: "good", text: "Wide hero of the family/meals area, camera level, verticals straight. Every interior on this job was level." },
@@ -29,6 +29,6 @@ window.REVIEWS = [
       { img: "img/reviews/camelot-09961-66.webp", file: "DSC09961 / DSC09966", kind: "bad", text: "Two fronts from almost the same spot, and the house sits in the top half with a big lawn below. Make the second one a different angle (3/4 from the driveway) and step closer so the house fills the frame." },
       { img: "img/reviews/camelot-09926.webp", file: "DSC09926", kind: "bad", text: "Rear patio pointed at the fence and bench in patchy tree shadow. Low-value frame. Shoot from the fence corner back toward the house and alfresco instead." },
       { img: "img/reviews/camelot-09931.webp", file: "DSC09931", kind: "bad", text: "Basketball hoop poking in at the top edge. Reframe so it's either fully in or fully out." },
-      { file: "Camera settings (raws)", kind: "bad", text: "5 brackets over 8 stops at 16mm f/9: good. But ISO 640 on every frame. You're on a tripod, so set ISO 100-200 (turn Auto ISO off)." }
+      { file: "Camera settings (raws)", kind: "good", text: "5 brackets over 8 stops at 16mm f/9, ISO 640 fixed: good." }
     ] }
 ];
