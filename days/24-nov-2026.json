@@ -1,0 +1,142 @@
+{
+ "label": "Tue 24 Nov 2026",
+ "jobs": [
+  {
+   "slug": "11_manito_ct",
+   "addr": "11 Manito Ct, Joondalup WA 6027",
+   "who": "Tandin Das \u00b7 Peard",
+   "agency": "peard",
+   "photos": "batch/11_manito_ct/raw",
+   "map": "batch/11_manito_ct/11_manito_ct_places.json",
+   "notes": "Social Media Lite Package. Entry Notes: -. Amenities or features to highlight: -. Strata: -. Land size: -. Title and land plan: -. Any specific boundaries or land features to mark on the aerial photos: -. Client Preferences: (blank).",
+   "poly": [
+    [
+     -31.72228315206614,
+     115.75615714047858
+    ],
+    [
+     -31.722106125345213,
+     115.75644936228528
+    ],
+    [
+     -31.722251494144498,
+     115.75657430703741
+    ],
+    [
+     -31.722430783876018,
+     115.75627834322592
+    ]
+   ],
+   "lens": [
+    33.94,
+    20,
+    34.37,
+    20
+   ],
+   "area": 683,
+   "areaSource": "P 17123 Lot 242 + title 1855/937",
+   "skyPlate": "C",
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/24-11-2026/11 Manito Ct, Joondalup WA 6027, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "plan-17123.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/24-11-2026/11 Manito Ct, Joondalup WA 6027, Australia/Aerial - Drone Photography/plan-17123.pdf"
+    },
+    {
+     "name": "certificate-of-title-with-sketch-1855-937-certificate-of-title-1855-937.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/24-11-2026/11 Manito Ct, Joondalup WA 6027, Australia/Aerial - Drone Photography/certificate-of-title-with-sketch-1855-937-certificate-of-title-1855-937.pdf"
+    },
+    {
+     "name": "11_manito_ct_joondalup_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/24-11-2026/11 Manito Ct, Joondalup WA 6027, Australia/Aerial - Drone Photography/11_manito_ct_joondalup_map.html"
+    },
+    {
+     "name": "11_manito_ct_joondalup_map_CHECK.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/24-11-2026/11 Manito Ct, Joondalup WA 6027, Australia/Aerial - Drone Photography/11_manito_ct_joondalup_map_CHECK.html"
+    },
+    {
+     "name": "11_manito_ct_joondalup_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/24-11-2026/11 Manito Ct, Joondalup WA 6027, Australia/Aerial - Drone Photography/11_manito_ct_joondalup_qa.txt"
+    }
+   ],
+   "nadirPick": [
+    "_0274_",
+    "_0273_"
+   ],
+   "streetRot": {
+    "11_manito_ct__nadir": 0,
+    "11_manito_ct__nadir2": 0
+   },
+   "remove": {
+    "dji_fly_20261124_142302_0273_1795501623124_photo.JPG": [
+     {
+      "sheet": [
+       240,
+       315,
+       400,
+       400
+      ]
+     }
+    ],
+    "dji_fly_20261124_142308_0274_1795501621728_photo.JPG": [
+     {
+      "sheet": [
+       312,
+       1200,
+       408,
+       1365
+      ]
+     }
+    ],
+    "dji_fly_20261124_142336_0275_1795501620391_photo.JPG": [
+     {
+      "sheet": [
+       240,
+       1005,
+       335,
+       1130
+      ]
+     }
+    ],
+    "dji_fly_20261124_142348_0276_1795501619112_photo.JPG": [
+     {
+      "sheet": [
+       760,
+       835,
+       895,
+       995
+      ]
+     }
+    ],
+    "dji_fly_20261124_142506_0279_1795501614959_photo.JPG": [
+     {
+      "sheet": [
+       1145,
+       350,
+       1225,
+       415
+      ]
+     }
+    ]
+   },
+   "pxpoly": [
+    [
+     5200,
+     990
+    ],
+    [
+     5130,
+     4560
+    ],
+    [
+     3075,
+     4545
+    ],
+    [
+     3145,
+     985
+    ]
+   ]
+  }
+ ]
+}
