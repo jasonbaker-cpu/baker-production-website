@@ -1,0 +1,175 @@
+{
+ "address": "11 Manito Ct, Joondalup WA 6027",
+ "lat": -31.72225661,
+ "lng": 115.7563707,
+ "pins": [
+  {
+   "name": "Neerabup National Park",
+   "cat": "reserve",
+   "lat": -31.6793874,
+   "lng": 115.7408376
+  },
+  {
+   "name": "Joondalup Primary School",
+   "cat": "school",
+   "lat": -31.7231696,
+   "lng": 115.7619012
+  },
+  {
+   "name": "Windermere Park",
+   "cat": "park",
+   "lat": -31.722378,
+   "lng": 115.7634149
+  },
+  {
+   "name": "Wanneroo Pines",
+   "cat": "park",
+   "lat": -31.72773,
+   "lng": 115.788
+  },
+  {
+   "name": "Manapouri Park",
+   "cat": "park",
+   "lat": -31.7231246,
+   "lng": 115.758814
+  },
+  {
+   "name": "Piccadilly Park",
+   "cat": "park",
+   "lat": -31.7353651,
+   "lng": 115.7675009
+  },
+  {
+   "name": "Lakeside Joondalup",
+   "cat": "shopping",
+   "lat": -31.7435966,
+   "lng": 115.7673963
+  },
+  {
+   "name": "Neil Hawkins Park",
+   "cat": "park",
+   "lat": -31.7435924,
+   "lng": 115.7782794
+  },
+  {
+   "name": "Lake Joondalup",
+   "cat": "lake",
+   "lat": -31.741066,
+   "lng": 115.7841452
+  },
+  {
+   "name": "Blue Lake Park",
+   "cat": "park",
+   "lat": -31.7252505,
+   "lng": 115.7561911
+  },
+  {
+   "name": "Nanika Park",
+   "cat": "park",
+   "lat": -31.7277358,
+   "lng": 115.7543761
+  },
+  {
+   "name": "Arena Joondalup",
+   "cat": "park",
+   "lat": -31.7346458,
+   "lng": 115.760704
+  },
+  {
+   "name": "Lake Joondalup Baptist College",
+   "cat": "school",
+   "lat": -31.7372067,
+   "lng": 115.7615547
+  },
+  {
+   "name": "Joondalup Station",
+   "cat": "train",
+   "lat": -31.7451588,
+   "lng": 115.7674679
+  },
+  {
+   "name": "Joondalup Resort Golf Course",
+   "cat": "golf",
+   "lat": -31.750034,
+   "lng": 115.7498154
+  },
+  {
+   "name": "Currambine Station",
+   "cat": "train",
+   "lat": -31.7249643,
+   "lng": 115.7505793
+  },
+  {
+   "name": "Doncaster Park",
+   "cat": "park",
+   "lat": -31.72632,
+   "lng": 115.74749
+  },
+  {
+   "name": "Negresco Park",
+   "cat": "park",
+   "lat": -31.7299272,
+   "lng": 115.7515287
+  },
+  {
+   "name": "Francis Jordan Catholic School",
+   "cat": "school",
+   "lat": -31.7309184,
+   "lng": 115.7386011
+  },
+  {
+   "name": "Delamere Park",
+   "cat": "park",
+   "lat": -31.7385248,
+   "lng": 115.7401173
+  },
+  {
+   "name": "Currambine Central",
+   "cat": "shopping",
+   "lat": -31.7411833,
+   "lng": 115.7387678
+  },
+  {
+   "name": "Sir James McCusker Park",
+   "cat": "park",
+   "lat": -31.7371258,
+   "lng": 115.7316311
+  },
+  {
+   "name": "Iluka Beach",
+   "cat": "beach",
+   "lat": -31.7427544,
+   "lng": 115.7232424
+  },
+  {
+   "name": "Kinross Central",
+   "cat": "shopping",
+   "lat": -31.7183843,
+   "lng": 115.7412957
+  },
+  {
+   "name": "Burns Beach Foreshore Park",
+   "cat": "park",
+   "lat": -31.7301407,
+   "lng": 115.7199097
+  },
+  {
+   "name": "Stonehaven Park",
+   "cat": "park",
+   "lat": -31.7181323,
+   "lng": 115.7458163
+  },
+  {
+   "name": "Clarkson Station",
+   "cat": "train",
+   "lat": -31.6907461,
+   "lng": 115.7372241
+  },
+  {
+   "name": "Ocean Keys Shopping Centre",
+   "cat": "shopping",
+   "lat": -31.6905353,
+   "lng": 115.7167562
+  }
+ ]
+}
