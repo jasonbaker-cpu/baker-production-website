@@ -1,0 +1,61 @@
+{
+ "address": "8B Doney St, Alfred Cove WA 6154",
+ "lat": -32.032329,
+ "lng": 115.817493,
+ "pins": [
+  {
+   "name": "Perth CBD",
+   "cat": "city",
+   "lat": -31.952854,
+   "lng": 115.857314
+  },
+  {
+   "name": "Swan River",
+   "cat": "river",
+   "lat": -32.0195,
+   "lng": 115.819
+  },
+  {
+   "name": "Kings Park",
+   "cat": "park",
+   "lat": -31.960345,
+   "lng": 115.838966
+  },
+  {
+   "name": "University of Western Australia",
+   "cat": "university",
+   "lat": -31.984309,
+   "lng": 115.81798
+  },
+  {
+   "name": "Matilda Bay Reserve",
+   "cat": "park",
+   "lat": -31.97751,
+   "lng": 115.82104
+  },
+  {
+   "name": "Tompkins Park",
+   "cat": "park",
+   "lat": -32.02711,
+   "lng": 115.82099
+  },
+  {
+   "name": "Alfred Cove Nature Reserve",
+   "cat": "reserve",
+   "lat": -32.026091,
+   "lng": 115.813171
+  },
+  {
+   "name": "Point Heathcote Reserve",
+   "cat": "reserve",
+   "lat": -32.00306,
+   "lng": 115.8411
+  },
+  {
+   "name": "Garden City Shopping Centre",
+   "cat": "shopping",
+   "lat": -32.034035,
+   "lng": 115.835477
+  }
+ ]
+}

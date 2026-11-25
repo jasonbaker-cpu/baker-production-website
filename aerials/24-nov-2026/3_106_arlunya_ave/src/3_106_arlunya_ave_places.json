@@ -1,0 +1,223 @@
+{
+ "address": "3/106 Arlunya Ave, Cloverdale WA 6105",
+ "lat": -31.95992366,
+ "lng": 115.93921211,
+ "pins": [
+  {
+   "name": "Norlin Park",
+   "cat": "park",
+   "lat": -31.960696,
+   "lng": 115.939187
+  },
+  {
+   "name": "Miles Park",
+   "cat": "park",
+   "lat": -31.9585688,
+   "lng": 115.9411386
+  },
+  {
+   "name": "Cloverdale Primary School",
+   "cat": "school",
+   "lat": -31.9593146,
+   "lng": 115.93641869999999
+  },
+  {
+   "name": "Arlunya Park",
+   "cat": "park",
+   "lat": -31.963257499999994,
+   "lng": 115.9422802
+  },
+  {
+   "name": "Notre Dame Catholic Primary School",
+   "cat": "school",
+   "lat": -31.9559979,
+   "lng": 115.9412308
+  },
+  {
+   "name": "Belmont City College",
+   "cat": "school",
+   "lat": -31.958040199999996,
+   "lng": 115.93414299999999
+  },
+  {
+   "name": "Ruth Faulkner Library",
+   "cat": "library",
+   "lat": -31.9628782,
+   "lng": 115.9341921
+  },
+  {
+   "name": "Faulkner Park",
+   "cat": "park",
+   "lat": -31.961585,
+   "lng": 115.93338530000001
+  },
+  {
+   "name": "Volcano Playground",
+   "cat": "park",
+   "lat": -31.9606712,
+   "lng": 115.9326173
+  },
+  {
+   "name": "Belmont Forum",
+   "cat": "shopping",
+   "lat": -31.964962,
+   "lng": 115.93491360000002
+  },
+  {
+   "name": "Belmont Skate Park",
+   "cat": "park",
+   "lat": -31.959019599999998,
+   "lng": 115.93141500000002
+  },
+  {
+   "name": "Belmont Oasis Leisure Centre",
+   "cat": "aquatic",
+   "lat": -31.960246199999997,
+   "lng": 115.9313455
+  },
+  {
+   "name": "Rosedale Gardens",
+   "cat": "park",
+   "lat": -31.9564893,
+   "lng": 115.94693830000001
+  },
+  {
+   "name": "Hoffman Park",
+   "cat": "park",
+   "lat": -31.960747999999995,
+   "lng": 115.9503161
+  },
+  {
+   "name": "Forster Park",
+   "cat": "park",
+   "lat": -31.9683195,
+   "lng": 115.94528210000001
+  },
+  {
+   "name": "Hoskin Park",
+   "cat": "park",
+   "lat": -31.9595248,
+   "lng": 115.9514192
+  },
+  {
+   "name": "Wicca Reserve",
+   "cat": "park",
+   "lat": -31.9680977,
+   "lng": 115.9314629
+  },
+  {
+   "name": "Middleton Park",
+   "cat": "park",
+   "lat": -31.9551162,
+   "lng": 115.9519816
+  },
+  {
+   "name": "Gerry Archer Sports & Recreation Facility",
+   "cat": "park",
+   "lat": -31.973095999999998,
+   "lng": 115.94735039999999
+  },
+  {
+   "name": "Peet Park",
+   "cat": "park",
+   "lat": -31.969436299999998,
+   "lng": 115.924995
+  },
+  {
+   "name": "Redcliffe Park",
+   "cat": "park",
+   "lat": -31.9460945,
+   "lng": 115.9482803
+  },
+  {
+   "name": "Peachey Park",
+   "cat": "park",
+   "lat": -31.9768565,
+   "lng": 115.9407181
+  },
+  {
+   "name": "Centenary Park",
+   "cat": "park",
+   "lat": -31.9448007,
+   "lng": 115.9293141
+  },
+  {
+   "name": "Tomato Lake",
+   "cat": "lake",
+   "lat": -31.976892600000003,
+   "lng": 115.9335065
+  },
+  {
+   "name": "Adachi Park",
+   "cat": "park",
+   "lat": -31.9489584,
+   "lng": 115.91809180000001
+  },
+  {
+   "name": "DFO Perth",
+   "cat": "shopping",
+   "lat": -31.938440699999997,
+   "lng": 115.94864749999999
+  },
+  {
+   "name": "Ascot Racecourse",
+   "cat": "landmark",
+   "lat": -31.936662,
+   "lng": 115.92143890000001
+  },
+  {
+   "name": "Redcliffe Station",
+   "cat": "train",
+   "lat": -31.93357,
+   "lng": 115.95007000000001
+  },
+  {
+   "name": "Carlisle Station",
+   "cat": "train",
+   "lat": -31.980934599999998,
+   "lng": 115.91125760000001
+  },
+  {
+   "name": "Airport Central Station",
+   "cat": "train",
+   "lat": -31.944109999999995,
+   "lng": 115.97483
+  },
+  {
+   "name": "Maylands Peninsula Public Golf Course",
+   "cat": "golf",
+   "lat": -31.9419503,
+   "lng": 115.9024031
+  },
+  {
+   "name": "Garvey Park",
+   "cat": "park",
+   "lat": -31.922023900000003,
+   "lng": 115.94429439999999
+  },
+  {
+   "name": "Bunnings Belmont",
+   "cat": "shopping",
+   "lat": -31.9571,
+   "lng": 115.93139
+  },
+  {
+   "name": "Belmont Tavern",
+   "cat": "landmark",
+   "lat": -31.96654,
+   "lng": 115.93155
+  },
+  {
+   "name": "Reading Cinemas Belmont",
+   "cat": "landmark",
+   "lat": -31.967377,
+   "lng": 115.933482
+  },
+  {
+   "name": "Perth CBD",
+   "cat": "city",
+   "lat": -31.952854,
+   "lng": 115.857314
+  }
+ ]
+}
