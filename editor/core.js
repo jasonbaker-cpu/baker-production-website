@@ -55,9 +55,9 @@ function fmtDist(d){ return d < 1000 ? `${Math.max(10, Math.round(d/10)*10)} m` 
 // ================= camera =================
 // Projection works in ORIGINAL photo pixels (ow × oh); p.k / p.x0 / p.y0 map to the working image.
 // cam: {lat,lng,h (m above ground), yaw (° from north), pitch (°, -90 = straight down), roll (°), f35}
-function projectOrig(cam, W, H, lat, lng){
+function projectOrig(cam, W, H, lat, lng, alt){   /* 25 Nov: alt = metres above ground (roof pins, CBD towers) */
   const c0 = Math.cos(cam.lat*DEG);
-  const vx = (lng-cam.lng)*111320*c0, vy = (lat-cam.lat)*111320, vz = -cam.h;
+  const vx = (lng-cam.lng)*111320*c0, vy = (lat-cam.lat)*111320, vz = (alt||0) - cam.h;
   const yw = cam.yaw*DEG, pt = cam.pitch*DEG;
   const f = [Math.sin(yw)*Math.cos(pt), Math.cos(yw)*Math.cos(pt), Math.sin(pt)];
   const r = [Math.cos(yw), -Math.sin(yw), 0];
@@ -230,7 +230,17 @@ function analyseSky(img, w, h){
   if (Math.abs(m) > 0.06){ m = 0; b = med; }                          // implausible tilt: treat as level
   // horizon in working px: y = m*x + b*s  (slope unchanged by subsampling)
   const cloud = new Uint8Array(sw*sh); for (let i=0;i<d.length;i++){ const mn=Math.min(R[i],G[i],B[i]), mx=Math.max(R[i],G[i],B[i]); cloud[i] = (skyc[i] || (mn>105 && mx-mn<45 && B[i]>=R[i]-4 && Y[i] > topY*0.8)) ? 1 : 0; }
-  return { m, b:b*s, s, sw, sh, skyc, tex, cloud };
+  // 25 Nov (Jason: "Perth CBD … not covering the city"): texture horizon. Distant suburbs and the CBD go pale and sky-coloured in haze,
+  // so the colour test above can stop far below the real skyline (0279 Arlunya lost the whole city band). Sky — even with clouds — has
+  // almost no fine texture; land does. Per strip: first rows (scanning down) where most of the strip is textured.
+  const tp = [];
+  for (let k=0;k<strips;k++){ const xa = Math.floor(k*sw/strips), xb = Math.floor((k+1)*sw/strips); let run=0;
+    for (let y=0;y<sh-2;y++){ let n=0; for (let x=xa;x<xb;x++) if (tex[y*sw+x] > 2.4) n++; if (n/(xb-xa) > 0.5){ if (++run >= 3){ tp.push([(xa+xb)/2, y-2]); break; } } else run=0; } }
+  let tm = null, tb = null;
+  if (tp.length >= 4){ const tys = tp.map(q=>q[1]).sort((a,b)=>a-b), tmed = tys[tys.length>>1], tg = tp.filter(q=>Math.abs(q[1]-tmed) < sh*0.03);
+    if (tg.length >= 3){ let n2=tg.length, ax=0, ay=0, axx=0, axy=0; tg.forEach(([x,y])=>{ ax+=x; ay+=y; axx+=x*x; axy+=x*y; });
+      tm = (n2*axy-ax*ay)/((n2*axx-ax*ax)||1); if (Math.abs(tm) > 0.06) tm = 0; tb = ((ay - tm*ax)/n2)*s; } }
+  return { m, b:b*s, s, sw, sh, skyc, tex, cloud, tm, tb };
 }
 const LOOK0 = { y:114, rg:1.075, bg:0.876, sat:0.29, lo:24, hi:210 }, LOOK = LOOK0;
 // 31 Oct 2026 (Jason): DAY look matched to the Holdsworth / REIWA reference (23 Karabil Way): bright (land median ~145),
@@ -411,6 +421,12 @@ function finishImage0(base, p){
           const k = 1 - 0.3*t; px[i]*=k*(1-0.03*t); px[i+1]*=k; px[i+2]*=k*(1+0.02*t); } } }
     }
   }
+  // 25 Nov: hazy distant land read as sky (colour line well below the texture line) -> trust the texture line, as long as the drone's own
+  // tilt agrees it is near the real horizon. Sky is never pasted over textured land.
+  if (sky && sky.tb != null && !p.skyLineUser){ const xc = w/2, yC = sky.m*xc + sky.b, yT = sky.tm*xc + sky.tb;
+    const geoOk = (p._geoH == null) || (yT > p._geoH - 0.045*h && yT < p._geoH + 0.03*h);
+    window.__skyDbg=(window.__skyDbg||[]); window.__skyDbg.push({yC:Math.round(yC), yT:Math.round(yT), geo:p._geoH!=null?Math.round(p._geoH):null, geoOk});
+    if (yT < yC - 0.008*h && geoOk){ sky.m = sky.tm; sky.b = sky.tb; p.skyTexFix = Math.round(yC - yT); } }
   // 5 Nov (Jason): a horizon line drawn by hand wins — the sky is swapped only above it (fixes ocean shots: no swapped sea, no ghost towers)
   if (p.skyLineUser && p.skyLineUser.length === 2 && p.skyOn !== false && !straightDown){
     const [[ax,ay],[bx,by]] = p.skyLineUser, sx = w/p.w, sy = h/p.h, m = (by-ay)/((bx-ax)||1);
@@ -534,6 +550,7 @@ function finishImage0(base, p){
     for (let y=0;y<h;y++){ let a=0,b=0,c=0,n=0; for (let x=0;x<w;x+=3){ const j=y*w+x; if (wSky[j]>0.6){ const i=j*4; a+=px[i]; b+=px[i+1]; c+=px[i+2]; n++; } } if (n>20) last=[a/n,b/n,c/n]; realRM.push(last); }
     for (let it=0; it<3; it++){ const R=realRM.map((v,i)=>{ const lo=Math.max(0,i-40), hi=Math.min(h-1,i+40); let a=0,b=0,c=0,n=0; for (let k=lo;k<=hi;k++){ a+=realRM[k][0]; b+=realRM[k][1]; c+=realRM[k][2]; n++; } return [a/n,b/n,c/n]; }); realRM=R; }
   }
+  const _cbdB = (sky && SKYP && SKYP.direct && typeof cbdBox === "function" && p.cam && p.cam.ready) ? cbdBox(p) : null, _orig = _cbdB ? Uint8ClampedArray.from(px) : null;   /* 25 Nov: CBD halo pass below */
   for (let y=0;y<h;y++){
     const hz = sky ? line(0) : 0;
     for (let x=0;x<w;x++){
@@ -595,6 +612,20 @@ function finishImage0(base, p){
       px[i]=r; px[i+1]=g; px[i+2]=b;   // Uint8ClampedArray clamps
     }
   }
+  // 25 Nov 2026 (Jason: Perth CBD): inside the city box, anything that was smooth old sky (not tower) gets the new sky, sampled from the same row
+  // just outside the box, so no pale box of old sky is left around the skyline. Towers (darker/brighter than the old sky, or textured) stay.
+  if (_cbdB){ const k = w/(p.w||w), X0 = Math.max(2, Math.floor(_cbdB[0]*k)), X1 = Math.min(w-3, Math.ceil(_cbdB[2]*k)), Y0 = Math.max(1, Math.floor(_cbdB[1]*k));
+    const OY = new Float32Array(w*h); for (let j=0;j<OY.length;j++){ const i=j*4; OY[j]=(_orig[i]+_orig[i+1]+_orig[i+2])/3; }
+    const ob = gaussBlur(OY, w, h, 1.2*scale+0.3), tx = new Float32Array(w*h); for (let j=0;j<tx.length;j++) tx[j]=Math.abs(OY[j]-ob[j]); const txb = gaussBlur(tx, w, h, 1.5*scale+0.3);
+    const K = new Float32Array(w*h);
+    const L = Math.max(0, X0-6), R = Math.min(w-1, X1+6);
+    for (let x=X0; x<=X1; x++){ const yB = Math.min(h-2, Math.floor(line(x) - 0.002*h)), t = (x-L)/Math.max(1,(R-L)); if (yB <= Y0) continue;
+      for (let y=Y0; y<yB; y++){ const j=y*w+x, ref = ob[y*w+L]*(1-t) + ob[y*w+R]*t, dY = Math.abs(ob[j] - ref); K[j] = Math.min(1, Math.max(0, (dY-7)/8, (txb[j]-2.2)/2.5)); } }   /* old sky at the same row just outside the box = reference */
+    const Kb = gaussBlur(K, w, h, 1.0*scale+0.3);
+    for (let x=X0; x<=X1; x++){ const yB = Math.min(h-2, Math.floor(line(x) - 0.002*h)), t = (x-L)/Math.max(1,(R-L));
+      for (let y=Y0; y<yB; y++){ const j=y*w+x, i=j*4, kk = Math.max(K[j], Kb[j]); if (kk >= 0.98) continue; const iL=(y*w+L)*4, iR=(y*w+R)*4, a = 1-kk;
+        const nr = px[iL]*(1-t)+px[iR]*t, ng = px[iL+1]*(1-t)+px[iR+1]*t, nb = px[iL+2]*(1-t)+px[iR+2]*t;
+        px[i] = px[i]*(1-a) + nr*a; px[i+1] = px[i+1]*(1-a) + ng*a; px[i+2] = px[i+2]*(1-a) + nb*a; } } }
   // soften the sky/land join: a short vertical blend across the horizon removes hard white lines
   if (sky && line && !(SKYP && SKYP.direct) && !(Object.assign({},TUNE,window.__TUNE||{}).noJoin)){ const r = Math.max(2, Math.round((Object.assign({},TUNE,window.__TUNE||{}).joinR||0.0025)*h)), col = new Float32Array((4*r+2)*3);
     for (let x=0; x<w; x++){ const cLim = (sky.colLim && !(SKYP && SKYP.direct)) ? sky.colLim[Math.min(sky.sw-1, (x/sky.s)|0)]*sky.s : 1e9, yb = Math.round(Math.min(line(x), cLim)), y0 = Math.max(1, yb-2*r), y1 = Math.min(h-2, yb+r); if (y1<=y0) continue; const n=y1-y0+1;

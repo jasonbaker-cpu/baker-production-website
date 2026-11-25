@@ -128,9 +128,9 @@ function fmtDist(d){ return d < 1000 ? `${Math.max(10, Math.round(d/10)*10)} m` 
 // ================= camera =================
 // Projection works in ORIGINAL photo pixels (ow × oh); p.k / p.x0 / p.y0 map to the working image.
 // cam: {lat,lng,h (m above ground), yaw (° from north), pitch (°, -90 = straight down), roll (°), f35}
-function projectOrig(cam, W, H, lat, lng){
+function projectOrig(cam, W, H, lat, lng, alt){   /* 25 Nov: alt = metres above ground (roof pins, CBD towers) */
   const c0 = Math.cos(cam.lat*DEG);
-  const vx = (lng-cam.lng)*111320*c0, vy = (lat-cam.lat)*111320, vz = -cam.h;
+  const vx = (lng-cam.lng)*111320*c0, vy = (lat-cam.lat)*111320, vz = (alt||0) - cam.h;
   const yw = cam.yaw*DEG, pt = cam.pitch*DEG;
   const f = [Math.sin(yw)*Math.cos(pt), Math.cos(yw)*Math.cos(pt), Math.sin(pt)];
   const r = [Math.cos(yw), -Math.sin(yw), 0];
@@ -303,7 +303,17 @@ function analyseSky(img, w, h){
   if (Math.abs(m) > 0.06){ m = 0; b = med; }                          // implausible tilt: treat as level
   // horizon in working px: y = m*x + b*s  (slope unchanged by subsampling)
   const cloud = new Uint8Array(sw*sh); for (let i=0;i<d.length;i++){ const mn=Math.min(R[i],G[i],B[i]), mx=Math.max(R[i],G[i],B[i]); cloud[i] = (skyc[i] || (mn>105 && mx-mn<45 && B[i]>=R[i]-4 && Y[i] > topY*0.8)) ? 1 : 0; }
-  return { m, b:b*s, s, sw, sh, skyc, tex, cloud };
+  // 25 Nov (Jason: "Perth CBD … not covering the city"): texture horizon. Distant suburbs and the CBD go pale and sky-coloured in haze,
+  // so the colour test above can stop far below the real skyline (0279 Arlunya lost the whole city band). Sky — even with clouds — has
+  // almost no fine texture; land does. Per strip: first rows (scanning down) where most of the strip is textured.
+  const tp = [];
+  for (let k=0;k<strips;k++){ const xa = Math.floor(k*sw/strips), xb = Math.floor((k+1)*sw/strips); let run=0;
+    for (let y=0;y<sh-2;y++){ let n=0; for (let x=xa;x<xb;x++) if (tex[y*sw+x] > 2.4) n++; if (n/(xb-xa) > 0.5){ if (++run >= 3){ tp.push([(xa+xb)/2, y-2]); break; } } else run=0; } }
+  let tm = null, tb = null;
+  if (tp.length >= 4){ const tys = tp.map(q=>q[1]).sort((a,b)=>a-b), tmed = tys[tys.length>>1], tg = tp.filter(q=>Math.abs(q[1]-tmed) < sh*0.03);
+    if (tg.length >= 3){ let n2=tg.length, ax=0, ay=0, axx=0, axy=0; tg.forEach(([x,y])=>{ ax+=x; ay+=y; axx+=x*x; axy+=x*y; });
+      tm = (n2*axy-ax*ay)/((n2*axx-ax*ax)||1); if (Math.abs(tm) > 0.06) tm = 0; tb = ((ay - tm*ax)/n2)*s; } }
+  return { m, b:b*s, s, sw, sh, skyc, tex, cloud, tm, tb };
 }
 const LOOK0 = { y:114, rg:1.075, bg:0.876, sat:0.29, lo:24, hi:210 }, LOOK = LOOK0;
 // 31 Oct 2026 (Jason): DAY look matched to the Holdsworth / REIWA reference (23 Karabil Way): bright (land median ~145),
@@ -484,6 +494,12 @@ function finishImage0(base, p){
           const k = 1 - 0.3*t; px[i]*=k*(1-0.03*t); px[i+1]*=k; px[i+2]*=k*(1+0.02*t); } } }
     }
   }
+  // 25 Nov: hazy distant land read as sky (colour line well below the texture line) -> trust the texture line, as long as the drone's own
+  // tilt agrees it is near the real horizon. Sky is never pasted over textured land.
+  if (sky && sky.tb != null && !p.skyLineUser){ const xc = w/2, yC = sky.m*xc + sky.b, yT = sky.tm*xc + sky.tb;
+    const geoOk = (p._geoH == null) || (yT > p._geoH - 0.045*h && yT < p._geoH + 0.03*h);
+    window.__skyDbg=(window.__skyDbg||[]); window.__skyDbg.push({yC:Math.round(yC), yT:Math.round(yT), geo:p._geoH!=null?Math.round(p._geoH):null, geoOk});
+    if (yT < yC - 0.008*h && geoOk){ sky.m = sky.tm; sky.b = sky.tb; p.skyTexFix = Math.round(yC - yT); } }
   // 5 Nov (Jason): a horizon line drawn by hand wins — the sky is swapped only above it (fixes ocean shots: no swapped sea, no ghost towers)
   if (p.skyLineUser && p.skyLineUser.length === 2 && p.skyOn !== false && !straightDown){
     const [[ax,ay],[bx,by]] = p.skyLineUser, sx = w/p.w, sy = h/p.h, m = (by-ay)/((bx-ax)||1);
@@ -607,6 +623,7 @@ function finishImage0(base, p){
     for (let y=0;y<h;y++){ let a=0,b=0,c=0,n=0; for (let x=0;x<w;x+=3){ const j=y*w+x; if (wSky[j]>0.6){ const i=j*4; a+=px[i]; b+=px[i+1]; c+=px[i+2]; n++; } } if (n>20) last=[a/n,b/n,c/n]; realRM.push(last); }
     for (let it=0; it<3; it++){ const R=realRM.map((v,i)=>{ const lo=Math.max(0,i-40), hi=Math.min(h-1,i+40); let a=0,b=0,c=0,n=0; for (let k=lo;k<=hi;k++){ a+=realRM[k][0]; b+=realRM[k][1]; c+=realRM[k][2]; n++; } return [a/n,b/n,c/n]; }); realRM=R; }
   }
+  const _cbdB = (sky && SKYP && SKYP.direct && typeof cbdBox === "function" && p.cam && p.cam.ready) ? cbdBox(p) : null, _orig = _cbdB ? Uint8ClampedArray.from(px) : null;   /* 25 Nov: CBD halo pass below */
   for (let y=0;y<h;y++){
     const hz = sky ? line(0) : 0;
     for (let x=0;x<w;x++){
@@ -668,6 +685,20 @@ function finishImage0(base, p){
       px[i]=r; px[i+1]=g; px[i+2]=b;   // Uint8ClampedArray clamps
     }
   }
+  // 25 Nov 2026 (Jason: Perth CBD): inside the city box, anything that was smooth old sky (not tower) gets the new sky, sampled from the same row
+  // just outside the box, so no pale box of old sky is left around the skyline. Towers (darker/brighter than the old sky, or textured) stay.
+  if (_cbdB){ const k = w/(p.w||w), X0 = Math.max(2, Math.floor(_cbdB[0]*k)), X1 = Math.min(w-3, Math.ceil(_cbdB[2]*k)), Y0 = Math.max(1, Math.floor(_cbdB[1]*k));
+    const OY = new Float32Array(w*h); for (let j=0;j<OY.length;j++){ const i=j*4; OY[j]=(_orig[i]+_orig[i+1]+_orig[i+2])/3; }
+    const ob = gaussBlur(OY, w, h, 1.2*scale+0.3), tx = new Float32Array(w*h); for (let j=0;j<tx.length;j++) tx[j]=Math.abs(OY[j]-ob[j]); const txb = gaussBlur(tx, w, h, 1.5*scale+0.3);
+    const K = new Float32Array(w*h);
+    const L = Math.max(0, X0-6), R = Math.min(w-1, X1+6);
+    for (let x=X0; x<=X1; x++){ const yB = Math.min(h-2, Math.floor(line(x) - 0.002*h)), t = (x-L)/Math.max(1,(R-L)); if (yB <= Y0) continue;
+      for (let y=Y0; y<yB; y++){ const j=y*w+x, ref = ob[y*w+L]*(1-t) + ob[y*w+R]*t, dY = Math.abs(ob[j] - ref); K[j] = Math.min(1, Math.max(0, (dY-7)/8, (txb[j]-2.2)/2.5)); } }   /* old sky at the same row just outside the box = reference */
+    const Kb = gaussBlur(K, w, h, 1.0*scale+0.3);
+    for (let x=X0; x<=X1; x++){ const yB = Math.min(h-2, Math.floor(line(x) - 0.002*h)), t = (x-L)/Math.max(1,(R-L));
+      for (let y=Y0; y<yB; y++){ const j=y*w+x, i=j*4, kk = Math.max(K[j], Kb[j]); if (kk >= 0.98) continue; const iL=(y*w+L)*4, iR=(y*w+R)*4, a = 1-kk;
+        const nr = px[iL]*(1-t)+px[iR]*t, ng = px[iL+1]*(1-t)+px[iR+1]*t, nb = px[iL+2]*(1-t)+px[iR+2]*t;
+        px[i] = px[i]*(1-a) + nr*a; px[i+1] = px[i+1]*(1-a) + ng*a; px[i+2] = px[i+2]*(1-a) + nb*a; } } }
   // soften the sky/land join: a short vertical blend across the horizon removes hard white lines
   if (sky && line && !(SKYP && SKYP.direct) && !(Object.assign({},TUNE,window.__TUNE||{}).noJoin)){ const r = Math.max(2, Math.round((Object.assign({},TUNE,window.__TUNE||{}).joinR||0.0025)*h)), col = new Float32Array((4*r+2)*3);
     for (let x=0; x<w; x++){ const cLim = (sky.colLim && !(SKYP && SKYP.direct)) ? sky.colLim[Math.min(sky.sw-1, (x/sky.s)|0)]*sky.s : 1e9, yb = Math.round(Math.min(line(x), cLim)), y0 = Math.max(1, yb-2*r), y1 = Math.min(h-2, yb+r); if (y1<=y0) continue; const n=y1-y0+1;
@@ -973,6 +1004,16 @@ function pinParts(p, pin){ // marker+label box, plus the stem as a thin box
   if (g.lift > 1 || Math.abs(pin.ey-g.tipY) > 4) parts.push([pin.ex-10*g.s, Math.min(pin.ey,g.tipY), pin.ex+10*g.s, Math.max(pin.ey,g.tipY)]);
   return parts;
 }
+// 25 Nov 2026 (Jason): "Perth CBD … not covering the city". Box around the projected CBD towers (core blocks, up to 250 m tall).
+function cbdBox(p){ if (!p.cam || !p.cam.ready || p.cam.pitch < -60) return null;
+  const key = JSON.stringify(p.cam)+p.w+"x"+p.h+(p.x0||0)+"/"+(p.k||1); if (p._cbdKey === key) return p._cbd; p._cbdKey = key; p._cbd = null;
+  const C = [[-31.9505,115.8505],[-31.9505,115.8655],[-31.9590,115.8655],[-31.9590,115.8505],[-31.9545,115.8580]], pts = [];
+  for (const q of C) for (const a of [0, 250]){ const o = projectOrig(p.cam, p.ow, p.oh, q[0], q[1], a); if (!o) return null; pts.push(toWork(p, o)); }
+  const xs = pts.map(q=>q[0]), ys = pts.map(q=>q[1]); let r = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+  const m = 0.01*p.w; r = [r[0]-m, r[1]-m, r[2]+m, r[3]+0.004*p.h];
+  if (r[2] < 0 || r[0] > p.w || r[3] < 0 || r[1] > p.h || r[2]-r[0] > 0.6*p.w) return null;   // out of frame, or so close the "city" fills the photo
+  p._cbd = [Math.max(0,r[0]), Math.max(0,r[1]), Math.min(p.w,r[2]), Math.min(p.h,r[3])]; return p._cbd; }
+const isCbdPin = q => /perth cbd|city of perth|perth city/i.test((q && (q.name||q.key)) || "");
 function tidySides(p){
   const A = agency(), s = p.w/3000*(prefs.pinScale/100)*(A.scale||1), step = 115*s, gap = 12*s, boxed = A.kind !== "pin";
   const house = p.pins.find(x=>x.house);
@@ -987,6 +1028,7 @@ function tidySides(p){
       const parts = pinParts(p,pin), r = parts[0];
       const mg = 10*s, off = Math.max(0, mg-r[0]) + Math.max(0, r[2]-(p.w-mg)) + Math.max(0, mg-r[1]) + Math.max(0, r[3]-(p.h-mg));
       let o = 0; for (const q of others) for (const a of parts) for (const b of q) o += ov(a,b);
+      { const cb = cbdBox(p); if (cb && !isCbdPin(pin)) for (const a of parts) o += 3*ov(a, cb); }   /* 25 Nov: keep the city skyline clear */
       const score = off*20000 + o*8 + ((A.kind==="cream" ? Math.abs(k-3) : k)*(boxed?3000:9000) + (flip?5000:0))*s*s + (side==="top"||side==="bottom"?2500*s*s:0) + (!boxed && side!==(pin.ex > p.w*0.68 ? "left" : "right") ? 6000*s*s : 0) + (boxed && side!==.5 ? 4000*s*s : 0);
       if (!best || score < best.score) best = { side, flip, lift:pin.lift, score };
     }
@@ -997,7 +1039,8 @@ function tidySides(p){
   for (const pin of list){ if (!pin.layoutLocked) place(pin, done.map(q=>pinParts(p,q))); done.push(pin); }
   for (let it=0; it<2; it++) for (const pin of list){ if (pin.layoutLocked) continue; place(pin, p.pins.filter(q=>q!==pin).map(q=>pinParts(p,q))); }
   // flag anything still overlapping so the editor can drop a place (the finals never have overlapping labels)
-  p.pins.forEach(a=>{ a.clash = false; if (!a.house){ const m = 0.012*p.h; for (const r of pinParts(p,a)) if (r[0] < m || r[2] > p.w-m || r[1] < 1.6*m) a.clash = true; } });   // any part touching the frame edge counts as a clash   // label hanging off the frame counts as a clash too
+  p.pins.forEach(a=>{ a.clash = false; if (!a.house){ const m = 0.012*p.h; for (const r of pinParts(p,a)) if (r[0] < m || r[2] > p.w-m || r[1] < 1.6*m) a.clash = true; } });
+  { const cb = cbdBox(p); if (cb) p.pins.forEach(a=>{ if (a.house || isCbdPin(a)) return; for (const r of pinParts(p,a)){ const ox = Math.min(r[2],cb[2])-Math.max(r[0],cb[0]), oy = Math.min(r[3],cb[3])-Math.max(r[1],cb[1]); if (ox > 0 && oy > 0) a.clash = true; } }); }   /* 25 Nov: a label over the CBD counts as a clash */   // any part touching the frame edge counts as a clash   // label hanging off the frame counts as a clash too
   for (const a of p.pins) for (const b of p.pins){ if (a===b) continue; let o=0; for (const x of pinParts(p,a)) for (const y of pinParts(p,b)) { const ox = Math.min(x[2],y[2])-Math.max(x[0],y[0]), oy = Math.min(x[3],y[3])-Math.max(x[1],y[1]); if (A.kind==="simple" ? (ox > 2*s && oy > 2*s) : (ox > -30*s && oy > -30*s)) o++;   /* simple: thin lines may pass close to other labels, as in the reference; only real overlaps count */ } if (o){ a.clash = b.clash = true; } }
 }
 
@@ -1076,12 +1119,47 @@ function adjustedCanvas(src, a){
   x.putImageData(id,0,0); return c;
 }
 function photoImage(p, before){
+  const r0 = photoImage0(p, before);
+  if (before || !p.match || p.editorPhoto || p.extraEdited) return r0;
+  const key = JSON.stringify(p.match) + "|" + (p._adjKey||"") + (r0===p.fin ? "f"+(p.finKey||"") : "b");
+  if (!p._mt || p._mtKey !== key){ p._mt = matchedCanvas(r0, p, p.match); p._mtKey = key; }
+  return p._mt;
+}
+function photoImage0(p, before){
   const src = (!before && p.finishOn && p.fin) ? p.fin : p.base;
   if (before || !adjActive(p.adj)) return src;
   const key = JSON.stringify(p.adj) + (window.__showMask?"M":"") + (src===p.fin ? "f"+(p.finKey||"") : "b");
   if (!p._adj || p._adjKey !== key){ p._adj = adjustedCanvas(src, p.adj); p._adjKey = key; }
   return p._adj;
 }
+// ---- 25 Nov 2026 (Jason): "every frame in a job matches" — Lab helpers, ground stats, Reinhard transfer below the horizon
+const _lin = v => { v/=255; return v <= 0.04045 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); };
+const _LIN = new Float32Array(256).map((_,i)=>_lin(i));
+const _fLab = t => t > 0.008856 ? Math.cbrt(t) : 7.787*t + 16/116;
+function rgb2lab(r,g,b){ const R=_LIN[r], G=_LIN[g], B=_LIN[b];
+  const X=(0.4124*R+0.3576*G+0.1805*B)/0.95047, Y=0.2126*R+0.7152*G+0.0722*B, Z=(0.0193*R+0.1192*G+0.9505*B)/1.08883;
+  const fx=_fLab(X), fy=_fLab(Y), fz=_fLab(Z); return [116*fy-16, 500*(fx-fy), 200*(fy-fz)]; }
+function lab2rgb(L,a,b){ const fy=(L+16)/116, fx=fy+a/500, fz=fy-b/200, iv = t => { const t3=t*t*t; return t3 > 0.008856 ? t3 : (t-16/116)/7.787; };
+  const X=iv(fx)*0.95047, Y=iv(fy), Z=iv(fz)*1.08883;
+  const R=3.2406*X-1.5372*Y-0.4986*Z, G=-0.9689*X+1.8758*Y+0.0415*Z, B=0.0557*X-0.2040*Y+1.0570*Z, gm = v => 255*(v <= 0.0031308 ? 12.92*v : 1.055*Math.pow(Math.max(0,v),1/2.4)-0.055);
+  return [gm(R), gm(G), gm(B)]; }
+function hzAt(p, c){ const L = p.skyLine; if (!L) return null; const s = c.height/(L.h||c.height); return x => (L.m*x + L.b)*s; }
+function groundStats(p, after){ const c = after ? photoImage(p, false) : photoImage0(p, false); if (!c) return null; const w=c.width, h=c.height, d=c.getContext("2d").getImageData(0,0,w,h).data;
+  const hz = hzAt(p, c), st = Math.max(2, Math.round(Math.sqrt(w*h/90000))); let n=0; const S=[0,0,0], Q=[0,0,0]; let sn=0; const SK=[0,0,0];
+  for (let y=0; y<h; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, yh = hz ? hz(x) : -1;
+    if (hz && y < yh - 0.03*h){ const l = rgb2lab(d[i],d[i+1],d[i+2]); SK[0]+=l[0]; SK[1]+=l[1]; SK[2]+=l[2]; sn++; continue; }
+    if (y < (hz ? Math.max(yh + 0.04*h, 0.3*h) : 0)) continue;
+    const l = rgb2lab(d[i],d[i+1],d[i+2]); for (let k=0;k<3;k++){ S[k]+=l[k]; Q[k]+=l[k]*l[k]; } n++; }
+  if (n < 50) return null; const m = S.map(v=>v/n), sd = Q.map((v,k)=>Math.sqrt(Math.max(1e-6, v/n - m[k]*m[k])));
+  return { m, sd, sky: sn > 50 ? SK.map(v=>v/sn) : null, hz: hz ? Math.round(hz(w/2)*(p.h/h)) : null }; }
+function matchedCanvas(src, p, M){ const w=src.width, h=src.height, c=document.createElement("canvas"); c.width=w; c.height=h; const x=c.getContext("2d"); x.drawImage(src,0,0);
+  const id = x.getImageData(0,0,w,h), d = id.data, hz = hzAt(p, src), k = Math.max(0, Math.min(1, M.k ?? 0.9)), rampH = 0.06*h;
+  const cl = v => v < 0 ? 0 : v > 255 ? 255 : v;
+  for (let y=0;y<h;y++){ for (let xx=0; xx<w; xx++){ let wgt = k; if (hz){ const t = (y - hz(xx))/rampH; if (t <= 0) continue; if (t < 1) wgt *= t*t*(3-2*t); }
+      const i=(y*w+xx)*4, l = rgb2lab(d[i],d[i+1],d[i+2]);
+      const L2 = (l[0]-M.src.m[0])*(M.tgt.sd[0]/M.src.sd[0]) + M.tgt.m[0], A2 = (l[1]-M.src.m[1])*(M.tgt.sd[1]/M.src.sd[1]) + M.tgt.m[1], B2 = (l[2]-M.src.m[2])*(M.tgt.sd[2]/M.src.sd[2]) + M.tgt.m[2];
+      const o = lab2rgb(l[0]+(L2-l[0])*wgt, l[1]+(A2-l[1])*wgt, l[2]+(B2-l[2])*wgt); d[i]=cl(o[0]); d[i+1]=cl(o[1]); d[i+2]=cl(o[2]); } }
+  x.putImageData(id,0,0); return c; }
 function blurredCopy(img, w, h, amt, sigma){
   if (sigma){ try{ const pad=Math.ceil(sigma*3), c=document.createElement("canvas"); c.width=w; c.height=h; const x=c.getContext("2d");
       if ("filter" in x){ const t=document.createElement("canvas"); t.width=w+2*pad; t.height=h+2*pad; const tx=t.getContext("2d");
@@ -1229,7 +1307,7 @@ function newPhoto(name, base, meta, sample){
     disc:{ on:prefs.discOn, text:prefs.discText }, adj:Object.assign({}, ADJ0, (!sample && prefs.skyPlate !== "S") ? { con:10 } : {}), undo:[], redo:[] };
   return p;
 }
-const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet","skyForce","skyLineUser","straight","tune"];
+const SNAP_KEYS = ["pins","shapes","texts","cam","anchors","finishOn","skyOn","skyKeepReal","outside","blurAmt","darkAmt","disc","adj","crop","brightSet","skyForce","skyLineUser","straight","tune","match"];
 function snapshotOf(p){ const o={}; SNAP_KEYS.forEach(k=>o[k]=p[k]); return JSON.stringify(o); }
 function commit(){ const p=P(); if(!p) return; p.undo.push(snapshotOf(p)); if(p.undo.length>120) p.undo.shift(); p.redo.length=0; updateUndo(); }
 function restore(p, s){ const o=JSON.parse(s); SNAP_KEYS.forEach(k=>p[k]=o[k]); if ((p.straight||0)!==(p._straightBuilt||0)) buildStraightBase(p); ensureFinish(p); }
@@ -1333,6 +1411,33 @@ function landY(p, x){ const L = p.skyLine; if (!L) return -1e9; return L.m*x + L
 // A place beyond the horizon still gets its pin tip on land, never in the sky
 function clampPinsToLand(p){ let ch=false; (p.pins||[]).forEach(pin=>{ if (pin.house || pin.moved) return; const y = landY(p, pin.ex); if (pin.ey < y){ pin.ey = y; ch=true; } }); if (ch) tidySides(p); }
 function autoPoint(p, lat, lng){ const q = projectW(p, lat, lng); if (!inFrame(p, q, 2)) return null; const y = landY(p, q[0]); if (q[1] < y) q[1] = y; return q; }
+// 25 Nov 2026 (Jason): the house pin's tip sits ON the roof, never on the facade or the ground in front.
+// Point = middle of the lot (cadastre) when known, else the address point, lifted to roof height:
+// house ~4.5 m, or 3.2 m per storey (apartments: window.__roof.storeys / job.storeys), or an exact roofH.
+// Then the tip is walked up the roof to just under its top edge (region grow on the roof colour), capped at +2 storeys.
+function houseLL(){ const L = window.__lotLL; if (L && L.length > 2){ let a=0,b=0; L.forEach(q=>{ a+=q[0]; b+=q[1]; }); return [a/L.length, b/L.length]; } return job ? [job.lat, job.lng] : null; }
+function housePoint(p){
+  const ll = houseLL(); if (!ll) return null;
+  const g = autoPoint(p, ll[0], ll[1]); if (!g) return null;
+  if (!p.cam || !p.cam.ready || p.cam.pitch < -70) return g;   // top-downs: the point is already on the roof
+  const R = Object.assign({}, (job && job.roof) || {}, window.__roof || {}), st = +R.storeys || 0;
+  const H = +R.roofH || (st ? 3.2*st + 0.6 : (window.__lotLL ? 4.5 : 3));   // no lot outline: the address point may sit on the driveway/garden, so lift it less
+  const at = h => { const q = projectOrig(p.cam, p.ow, p.oh, ll[0], ll[1], h); return q && toWork(p, q); };
+  let q = at(H); if (!q || !inFrame(p, q, 2)) return g;
+  if (!st && !R.roofH) return q;   // houses: the lot middle lifted to roof height already lands on the roof (Arlunya/Tenth Ave tests, 25 Nov)
+  try {   // multi-storey: roofline = the strongest horizontal edge in a short window around the estimate; the tip goes just under it, onto the roof
+    const c = p.fin || p.base; if (!c) return q; const sc = c.width/(p.w||c.width), x2 = c.getContext("2d");
+    const hi = at(H + (st ? 3.5 : 2.5)), lo = at(Math.max(1.5, H - (st ? 5 : 2.5))); if (!hi || !lo) return q;
+    const W = Math.max(8, Math.round(0.012*p.w*sc)), y0 = Math.max(2, Math.round(hi[1]*sc) - 2), y1 = Math.min(c.height-3, Math.round(lo[1]*sc) + 2), xc = Math.round(q[0]*sc);
+    if (y1 - y0 < 8) return q;
+    const xa = Math.max(0, xc-W), ww = Math.min(c.width, xc+W+1) - xa, d = x2.getImageData(xa, y0-2, ww, y1-y0+5).data;
+    const row = y => { let r=0,gg=0,b=0; for (let x=0;x<ww;x++){ const i=((y-y0+2)*ww+x)*4; r+=d[i]; gg+=d[i+1]; b+=d[i+2]; } return [r/ww,gg/ww,b/ww]; };
+    const M = []; for (let y=y0-2; y<=y1+2; y++) M.push(row(y));
+    let best = -1, by = null; for (let y=y0; y<=y1; y++){ const u = M[y-y0], v = M[y-y0+4], e = Math.hypot(u[0]-v[0], u[1]-v[1], u[2]-v[2]); if (e > best){ best = e; by = y+2; } }
+    if (best < 12) return q;
+    return [q[0], by/sc + 0.005*p.h];
+  } catch(e){ return q; }
+}
 // Beach pins (26 Oct): beach points are often charted offshore. If the tip lands on water, walk it toward the house
 // until it reaches sand/land, so the pin stands on the beach rather than in the sea.
 function shoreSnap(p, q){ try{ const c = p.base; if (!c) return q; const x = c.getContext("2d"), W = c.width, H = c.height, sc = W/(p.w||W);
@@ -1349,7 +1454,7 @@ function placePins(p, onlyAuto){
     const ha = pin.house && p.anchors.find(a=>a.key==="__house");
     if (ha){ const q = toWork(p,[ha.ox,ha.oy]); pin.ex = q[0]; pin.ey = q[1]; pin.moved = false; return; }
     const ll = pin.house ? job : placeForKey(pin.key); if (!ll) return;
-    let q = autoPoint(p, ll.lat, ll.lng); if (!q) return;
+    let q = pin.house ? housePoint(p) : autoPoint(p, ll.lat, ll.lng); if (!q) return;
     if (!pin.house && (/beach/i.test(ll.name||pin.name||"") || ll.cat==="beach")) q = shoreSnap(p, q);
     pin.ex = q[0]; pin.ey = q[1]; pin.moved = false;
   });
@@ -1367,7 +1472,7 @@ function togglePlace(key){
 }
 function addHousePin(){
   const p = P(); if (!p) return;
-  const at = job ? autoPoint(p, job.lat, job.lng) : null;
+  const at = job ? housePoint(p) : null;
   if (!at){ armed = { kind:"housepin" }; setHint(); refreshPinsTab(); toast("Click the house roof to drop the house pin"); return; }
   commit(); p.pins = p.pins.filter(x=>!x.house); addPin(p, { house:true, name:"House" }, at); refreshAll();
 }
@@ -1946,7 +2051,7 @@ function pinPanel(p, pin){
   }
   selSec.appendChild(el(`<p class="note">Drag the pin so its point sits on the place. Crowded pins rise on a stem; the dot marks the exact spot.</p>`));
   const br = el(`<div class="row"><button class="btn wide" id="pnSnap">Back to auto spot</button><button class="btn wide" id="pnDel" style="color:var(--danger)">Delete pin</button></div>`);
-  const ll = pin.house ? job : q; const at = ll ? autoPoint(p, ll.lat, ll.lng) : null;
+  const ll = pin.house ? job : q; const at = ll ? (pin.house ? housePoint(p) : autoPoint(p, ll.lat, ll.lng)) : null;
   br.querySelector("#pnSnap").disabled = !at;
   br.querySelector("#pnSnap").onclick=()=>{ commit(); pin.ex=at[0]; pin.ey=at[1]; pin.moved=false; requestDraw(); };
   br.querySelector("#pnDel").onclick=deleteSelection;
@@ -2376,7 +2481,7 @@ function setStraight(p, deg, quiet){ deg = Math.max(-10, Math.min(10, Math.round
   if (p.cam){ const d=deg-old, nad=(p.cam.pitch||0) < -75; if (nad) p.cam.yaw=(p.cam.yaw||0)+d; else p.cam.roll=(p.cam.roll||0)-d; p.cam.f35=(p.cam.f35||24)*s; }
   p.straight=deg; buildStraightBase(p); ensureFinish(p); if (quiet) requestDraw(); else refreshAll(); }
 function shadeHex(h,k){ const n=parseInt(h.slice(1),16); const f=v=>Math.round(v*k).toString(16).padStart(2,"0"); return "#"+f(n>>16&255)+f(n>>8&255)+f(n&255); }
-window.__bae = { project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) return false; commit(); p.pins=[]; p.shapes=[]; p.texts=[]; p.outside='none'; refreshAll(); return true; },   /* 30 Oct: clean photo, no graphics (agent asked) */ setFinish:(on)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.finishOn=!!on; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return true; }, setHorizon:(fa,fb)=>{ const p=P(); if(!p) return false; p.skyLineUser = fa==null ? null : [[0,fa*p.h],[p.w,fb*p.h]]; p.skyOn=true; p.skyForce = fa!=null; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return [p.w,p.h]; }, setSky:(on,force)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.skyOn=!!on; if (force!==undefined) p.skyForce=!!force; p.finKey=null; ensureFinish(p); refreshAll(); return true; }, setAdj:(o)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.adj=Object.assign({}, ADJ0, o); refreshAll(); return true; }, setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, autoStraight:()=>{ const p=P(); if (!p) return null; const r=autoHorizon(p); if (!r) return { none:true }; if (Math.abs(r.deg) >= 0.15) setStraight(p, (p.straight||0) - r.deg); return Object.assign({ applied: Math.abs(r.deg) >= 0.15, straight: p.straight||0 }, r); }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt, pxo)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts= pxo ? pxo.map(q=>toWork(p, q)) : ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); /* pxo: boundary hand-traced on the fences (original-photo pixels) */ if (pts.some(q=>!q)) return false; commit();
+window.__bae = { groundStats:(after)=>{ const p=P(); return p ? groundStats(p, after) : null; }, setMatch:(M)=>{ const p=P(); if(!p) return false; p.match = M || null; p._mt = null; refreshAll(); return true; }, cbd:()=>{ const p=P(); return p ? cbdBox(p) : null; }, project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) return false; commit(); p.pins=[]; p.shapes=[]; p.texts=[]; p.outside='none'; refreshAll(); return true; },   /* 30 Oct: clean photo, no graphics (agent asked) */ setFinish:(on)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.finishOn=!!on; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return true; }, setHorizon:(fa,fb)=>{ const p=P(); if(!p) return false; p.skyLineUser = fa==null ? null : [[0,fa*p.h],[p.w,fb*p.h]]; p.skyOn=true; p.skyForce = fa!=null; p.finKey=null; p.fin=null; ensureFinish(p); refreshAll(); return [p.w,p.h]; }, setSky:(on,force)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.skyOn=!!on; if (force!==undefined) p.skyForce=!!force; p.finKey=null; ensureFinish(p); refreshAll(); return true; }, setAdj:(o)=>{ const p=P(); if(!p || p.editorPhoto || p.extraEdited) return false; p.adj=Object.assign({}, ADJ0, o); refreshAll(); return true; }, setHouse:(x,y)=>{ const p=P(); const hp=p&&p.pins.find(q=>q.house); if(!hp) return false; hp.ex=x; hp.ey=y; hp.moved=true; tidySides(p); refreshAll(); return true; }, setCam:(o)=>{ const p=P(); if (!p||!p.cam) return false; Object.assign(p.cam, o, { ready:true, fromGimbal:true }); refreshAll(); return true; }, addPolyLL:(ll, dyaw, dp)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts=ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); if (pts.some(q=>!q)) return false; commit(); p.shapes.push({ id:nid(), type:"poly", pts, color:"#FFFFFF", width:prefs.lineWidth, dashed:new Array(pts.length).fill(false), lens:new Array(pts.length).fill(""), showLens:false }); p.outside='none'; const hp=p.pins.find(q=>q.house); if (hp){ let ax=0, ay=0; pts.forEach(q=>{ ax+=q[0]; ay+=q[1]; }); hp.ex=ax/pts.length; hp.ey=ay/pts.length; hp.moved=true; } tidySides(p); refreshAll(); return true; }, autoStraight:()=>{ const p=P(); if (!p) return null; const r=autoHorizon(p); if (!r) return { none:true }; if (Math.abs(r.deg) >= 0.15) setStraight(p, (p.straight||0) - r.deg); return Object.assign({ applied: Math.abs(r.deg) >= 0.15, straight: p.straight||0 }, r); }, retidy:()=>{ const p=P(); if(!p) return false; p.pins.forEach(x=>{ x.layoutLocked=false; x.sideLocked=false; }); tidySides(p); refreshAll(); return true; }, setPref:(k,v)=>{ prefs[k]=v; return true; }, addLot:(ll, dyaw, dp, lens, area, wt, pxo)=>{ const p=P(); if (!p||!p.cam||!p.cam.ready) return false; const c=Object.assign({}, p.cam, { yaw:p.cam.yaw+(dyaw||0), pitch:p.cam.pitch+(dp||0) }); const pts= pxo ? pxo.map(q=>toWork(p, q)) : ll.map(q=>toWork(p, projectOrig(c, p.ow, p.oh, q[0], q[1]))); /* pxo: boundary hand-traced on the fences (original-photo pixels) */ if (pts.some(q=>!q)) return false; commit();
     /* 10 Nov 2026 (Jason, 10 Spotted Wy): on a squared top-down the lot must line up with the houses. DJI Fly drones report a
        heading several degrees out, which turns AND shifts the cadastre outline. If the box-shaped lot is up to 20 deg off the
        houses' grid (window.__gridAng), the camera heading is corrected by that amount and the lot re-projected (fixes the turn
@@ -2429,7 +2534,7 @@ window.__bae = { project:()=>projectJSON(), plain:()=>{ const p=P(); if(!p) retu
     let cx=(x0+x1)/2-cw/2, cy=(y0+y1)/2-chh/2; cx=Math.max(0,Math.min(p.w-cw,cx)); cy=Math.max(0,Math.min(p.h-chh,cy)); { const lc=lotCrop(p); if (lc){ [cx,cy,cw]=lc; chh=lc[3]; } } const zf=p.w/cw;
     const col = prefs.agency==="grey-s" ? "#FFFFFF" : (agency().line || shadeHex(agency().color, 0.75)); const sh={ id:nid(), type:"poly", pts, color:col, width:(agency().lotWidth||17)/(3*zf), dashed:new Array(pts.length).fill(false), lens:lens.slice(0,pts.length), showLens:true, lensScale:1.5*72/(62*zf)*(agency().lensK||1), lensWeight:agency().lensWeight||400, lensInside:!!agency().lensInside };   /* 11 Nov: Laurie Kelly top-down = thin white line, bold white lengths inside the lot, no blur (their reference) */ p.shapes.push(sh); p.outside=agency().lotOutside||'blur'; p.blurAmt=45; p._blur=null; p.pins.length=0;
     if (area){ p.texts.push({ id:nid(), link:sh.id, style:"area", color:"#ffffff", size:200, x:0, y:0, autoSize:true, lot:area, text:area+"m2", weight:wt||700, fitW:agency().areaFit||0.62, fitH:(agency().areaFit||0.62)*0.88 }); }
-    refreshAll(); return { crop:[cx,cy,cw,chh], w:p.w, h:p.h, snap:window.__lotSnap }; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { skyWater:p.skyWater, needsEditor:p.needsEditor, skyOn:p.skyOn, w:p.w, h:p.h, cam:p.cam, shapes:p.shapes.map(s=>s.pts.map(q=>q.map(Math.round))), snap:window.__lotSnap||null, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
+    refreshAll(); return { crop:[cx,cy,cw,chh], w:p.w, h:p.h, snap:window.__lotSnap }; }, imgToScreen:(x,y)=>{ const r=cv.getBoundingClientRect(); return [r.left + x*view.s+view.tx, r.top + y*view.s+view.ty]; }, photo:()=>{ const p=P(); return p && { skyWater:p.skyWater, needsEditor:p.needsEditor, skyOn:p.skyOn, skyLine:p.skyLine, geoH:p._geoH, skyKept:!!p.skyKept, skyWarm:!!p.skyWarm, skyTexFix:p.skyTexFix||0, finishOn:!!p.finishOn, w:p.w, h:p.h, cam:p.cam, shapes:p.shapes.map(s=>s.pts.map(q=>q.map(Math.round))), snap:window.__lotSnap||null, horizon:p.horizon, anchors:p.anchors.length, pins:p.pins.map(q=>({ name:q.name, ex:Math.round(q.ex), ey:Math.round(q.ey), side:q.side, flip:!!q.flip, lift:Math.round(q.lift||0), rect:pinRect(p,q).map(Math.round), house:!!q.house, clash:!!q.clash })) }; } };
 
 // ---- Previous days: open any published job (original photos + saved edits + map) in one click
 const DAYS_ROOT = /^https?:$/.test(location.protocol) ? "/aerials/" : "https://bakerproduction.com/aerials/";

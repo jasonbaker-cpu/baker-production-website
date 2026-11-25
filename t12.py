@@ -25,6 +25,46 @@ async def export(pg,name):
     async with pg.expect_download() as d: await pg.click('#exportBtn')
     dl=await d.value; await dl.save_as(OUT+name)
 async def busy(pg): await pg.wait_for_function("document.getElementById('busy').hidden===true", timeout=400000)
+# ---- 25 Nov 2026 (Jason): every frame in a job matches (ground colour/exposure + the same replaced sky) ----
+import statistics as _st
+def _clampM(src, tgt):
+    m=[src['m'][i]+max(-L,min(L,tgt['m'][i]-src['m'][i])) for i,L in enumerate((9,5,6))]
+    sd=[src['sd'][i]*max(0.85,min(1.15,tgt['sd'][i]/max(1e-3,src['sd'][i]))) for i in range(3)]
+    return {'m':m,'sd':sd}
+def _dE(a,b): return sum((a['m'][i]-b['m'][i])**2 for i in range(3))**0.5
+def _look_path(job): return OUT+job.get('slug','x').split('__')[0]+'/job_look.json'
+async def set_match(pg, job, obl, report):
+    good=[o for o in obl if o[3]]
+    if len(good) < 3 or job.get('noMatch') or job.get('noFinish'): return
+    tgt={'m':[_st.median(o[3]['m'][i] for o in good) for i in range(3)], 'sd':[_st.median(o[3]['sd'][i] for o in good) for i in range(3)]}
+    skies=[o[3]['sky'] for o in good if o[3].get('sky')]; skyT=[_st.median(s[i] for s in skies) for i in range(3)] if len(skies)>=2 else None
+    swapped=[o for o in good if o[4] and o[4].get('skyLine') and not o[4].get('skyKept') and not o[4].get('skyWarm')]
+    json.dump({'tgt':tgt,'sky':skyT}, open(_look_path(job),'w'))
+    flags=[]
+    for job_, ph, idx, st, stt in good:
+        dE=_dE(st,tgt); sky_off = (skyT and st.get('sky')) and sum((st['sky'][i]-skyT[i])**2 for i in range(3))**0.5
+        fix_sky = (not job.get('noSky')) and stt and stt.get('geoH') and len(swapped) >= max(2, len(good)//2) and stt not in [o[4] for o in swapped] and stt.get('finishOn')
+        if dE < 2.5 and not fix_sky and not (sky_off and sky_off > 10): continue
+        await pg.locator('.thumb').nth(idx).click(); await busy(pg); await pg.wait_for_timeout(300)
+        if fix_sky:   # sky left unswapped while the rest of the job got the new sky: swap it above the drone's true horizon
+            fr = stt['geoH']/stt['h']; await pg.evaluate(f"window.__bae.setSky(true,true)"); await pg.evaluate(f"window.__bae.setHorizon({fr:.4f},{fr:.4f})"); await busy(pg); await pg.wait_for_timeout(300)
+        st2 = await pg.evaluate("window.__bae.groundStats()") or st
+        if _dE(st2,tgt) >= 2.5:
+            await pg.evaluate("M=>window.__bae.setMatch(M)", {'src':st2,'tgt':_clampM(st2,tgt),'k':0.85}); await pg.wait_for_timeout(400)
+        await export(pg, job.get('slug','x')+'/'+os.path.basename(ph).rsplit('.',1)[0]+'.jpg')
+        report[ph]=await pg.evaluate("window.__bae.photo()")
+        st3 = await pg.evaluate("window.__bae.groundStats(true)")
+        msg=f"  match {os.path.basename(ph)} dE {dE:.1f} -> {_dE(st3,tgt) if st3 else -1:.1f}" + (" +sky(geo)" if fix_sky else "") + (f" skyOff {sky_off:.0f}" if sky_off else "")
+        print(msg); flags.append(msg)
+        if st3 and st3.get('sky') and skyT and sum((st3['sky'][i]-skyT[i])**2 for i in range(3))**0.5 > 10: open('SETMATCH_FLAGS.txt','a').write(f"{job.get('slug')}: {os.path.basename(ph)} sky still differs from the job - check by eye\n")
+async def apply_job_look(pg, job, ph):
+    try: L=json.load(open(_look_path(job)))
+    except Exception: return
+    if job.get('noMatch') or job.get('noFinish'): return
+    st = await pg.evaluate("window.__bae.groundStats()")
+    if st and _dE(st, L['tgt']) >= 2.5:
+        await pg.evaluate("M=>window.__bae.setMatch(M)", {'src':st,'tgt':_clampM(st,L['tgt']),'k':0.8}); await pg.wait_for_timeout(400)
+        print(f"  match top-down {os.path.basename(ph)} dE {_dE(st,L['tgt']):.1f}")
 async def main():
     async with async_playwright() as p:
         b = await p.chromium.launch()
@@ -35,7 +75,7 @@ async def main():
         await pg.goto('http://127.0.0.1:8765/e2e/page.html')
         await pg.evaluate("Promise.all([document.fonts.load('400 40px \"Source Sans 3\"'),document.fonts.load('400 40px \"Open Sans\"'),document.fonts.load('700 40px \"Open Sans\"')])"); await pg.wait_for_timeout(800)
         if JOBS and JOBS[0].get('tune'): await pg.evaluate('t=>{window.__TUNE=t}', JOBS[0]['tune'])
-        report={}
+        report={}; OBL=[]
         for job in JOBS:
             os.environ['PLAIN_JOB'] = '1' if job.get('plain') else ''
             await pg.click('#tabBtnPins')
@@ -46,6 +86,8 @@ async def main():
             await pg.evaluate("k=>window.__bae.setPref('skyPlate',k)", job.get('skyPlate','C')); await pg.wait_for_timeout(300)
             if job.get('full'): await pg.evaluate("window.__bae.setPref('outMode','full')")
             await pg.evaluate("p=>{window.__portrait=!!p}", bool(job.get('portrait')))   # 29 Oct: booking asked for vertical drone photos
+            _roof = job.get('roof') or {k: job[k] for k in ('storeys','roofH') if job.get(k)}   # 25 Nov: house pin on the roof (storeys for apartments)
+            await pg.evaluate("([r,l])=>{window.__roof=r||{}; window.__lotLL=l||null}", [_roof, job.get('poly')])
             await drag(pg, [job['map']]+job['photos']); await pg.wait_for_timeout(1500); await busy(pg)
             if job.get('agency'): await pg.select_option('#agSel', job['agency']); await pg.wait_for_timeout(300)
             th = pg.locator('.thumb'); n = await th.count(); base = n-len(job['photos'])
@@ -101,7 +143,9 @@ async def main():
                     wt=700   # Jason (25 Oct): bold Open Sans lot size with a real ² (like his 195m² example)
                     rg = job.get('reg',{}).get(ph,[0,0])
                     ok = await pg.evaluate("([ll,a,b,l,ar,w,px])=>window.__bae.addLot(ll,a,b,l,ar,w,px)", [ll, rg[0], rg[1], lens, area, wt, job.get('pxpoly')]); print('  lot', ph, ok, area, lens, 'squared', await pg.evaluate("[window.__yawFix, window.__squared]"))
-                    await pg.wait_for_timeout(500); report[ph]=await pg.evaluate("window.__bae.photo()")
+                    await pg.wait_for_timeout(500)
+                    await apply_job_look(pg, job, ph)   # 25 Nov: top-down gets the same ground look as the job's aerials
+                    report[ph]=await pg.evaluate("window.__bae.photo()")
                     os.makedirs(OUT+job.get('slug','x'),exist_ok=True); fn=OUT+job.get('slug','x')+'/'+os.path.basename(ph).rsplit('.',1)[0]+'.jpg'; await export(pg, job.get('slug','x')+'/'+os.path.basename(ph).rsplit('.',1)[0]+'.jpg')
                     if ok and ok.get('crop'): report[ph]['cropbox']=ok['crop']
                     if ok and ok.get('crop'):
@@ -226,14 +270,31 @@ async def main():
                 report[ph]=stt
                 pass
                 os.makedirs(OUT+job.get('slug','x'),exist_ok=True); await export(pg, job.get('slug','x')+'/'+os.path.basename(ph).rsplit('.',1)[0]+'.jpg')
+                OBL.append((job, ph, base+k, await pg.evaluate("window.__bae.groundStats()"), stt))
+            await set_match(pg, job, [o for o in OBL if o[0] is job], report)
         try:
-            if os.environ.get("DBG"): print("SKY", await pg.evaluate("JSON.stringify(window.__ltDbg||[])"))
+            if os.environ.get("DBG"): print("SKY", await pg.evaluate("JSON.stringify(window.__ltDbg||[])"), await pg.evaluate("JSON.stringify(window.__skyDbg||[])"))
             pj = await pg.evaluate("window.__bae.project()"); s_=JOBS[0]['slug'] if JOBS else 'x'; os.makedirs(OUT+s_,exist_ok=True); open(OUT+s_+'/'+s_+'.baker.json','w').write(pj)
         except Exception as e: print('project save failed', e)
         ne = [os.path.basename(k) for k,v in report.items() if isinstance(v,dict) and v.get('needsEditor')]
         if ne: print('NEEDS EDITOR (ocean shot with a bad sky, can not swap):', ne); json.dump(ne, open(OUT+'needs_editor_'+(JOBS[0]['slug'] if JOBS else 'x')+'.json','w'))   # 5 Nov (Jason)
         json.dump(report, open(OUT+'report.json','w')); json.dump(report, open(OUT+'report_'+(JOBS[0]['slug'] if JOBS else 'x')+'.json','w'))
         for k,v in report.items(): print(k, v['cam'] and {kk:round(vv,1) for kk,vv in v['cam'].items() if isinstance(vv,(int,float))}, [(q['name'],q['ex'],q['ey'],q['side']) for q in v['pins']])
+        try:   # 25 Nov: house-pin check sheet - the tip must sit on the roof (Jason). Look at it before publishing.
+            from PIL import Image, ImageDraw
+            tiles=[]
+            for k,v in report.items():
+                if not isinstance(v,dict): continue
+                hp=[q for q in v.get('pins',[]) if q.get('house')]
+                fn=OUT+(JOBS[0]['slug'] if JOBS else 'x')+'/'+os.path.basename(k).rsplit('.',1)[0]+'.jpg'
+                if not hp or not os.path.exists(fn): continue
+                im=Image.open(fn).convert('RGB'); s=im.width/v['w']; x,y=hp[0]['ex']*s, hp[0]['ey']*s
+                c=im.crop((int(x-260*s),int(y-330*s),int(x+260*s),int(y+170*s))).resize((520,500)); ImageDraw.Draw(c).text((6,4),os.path.basename(k)[-12:],fill='yellow'); tiles.append(c)
+            if tiles:
+                sh_=Image.new('RGB',(520*min(4,len(tiles)),500*((len(tiles)+3)//4)),'white')
+                for i,c in enumerate(tiles): sh_.paste(c,((i%4)*520,(i//4)*500))
+                os.makedirs(SP+'qc',exist_ok=True); sh_.save(SP+'qc/housepins_'+(JOBS[0]['slug'] if JOBS else 'x')+'.jpg',quality=85)
+        except Exception as e: print('housepin sheet failed', e)
         print('errors', errs)
         await ctx.close(); await b.close()
 asyncio.run(main()); srv.terminate()

@@ -81,7 +81,7 @@ for j in D['jobs']:
     nad = [f for f in ph if pitch(f) < -75]
     base = {'map': j['map'], 'agency': j.get('agency', 'grey')}
     if j.get('must'): base['must'] = j['must']
-    for k in ('skip', 'perPhoto', 'tune'):   # 8 Nov: tune = editor TUNE overrides per job (e.g. noSolid)
+    for k in ('skip', 'perPhoto', 'tune', 'storeys', 'roofH', 'roof', 'noMatch'):   # 25 Nov: storeys/roofH = house pin on the roof; noMatch = skip set-match   # 8 Nov: tune = editor TUNE overrides per job (e.g. noSolid)
         if j.get(k): base[k] = j[k]
     if base['agency'] == 'green-belle':   # 29 Oct (Jason): every Belle Property office matches their listing look
         base.setdefault('skyPlate', 'B')   # 5 Nov (Jason): soft plain sky like 23 Karabil Way, every job; base.setdefault('perPhoto', 2)

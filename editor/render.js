@@ -278,6 +278,16 @@ function pinParts(p, pin){ // marker+label box, plus the stem as a thin box
   if (g.lift > 1 || Math.abs(pin.ey-g.tipY) > 4) parts.push([pin.ex-10*g.s, Math.min(pin.ey,g.tipY), pin.ex+10*g.s, Math.max(pin.ey,g.tipY)]);
   return parts;
 }
+// 25 Nov 2026 (Jason): "Perth CBD … not covering the city". Box around the projected CBD towers (core blocks, up to 250 m tall).
+function cbdBox(p){ if (!p.cam || !p.cam.ready || p.cam.pitch < -60) return null;
+  const key = JSON.stringify(p.cam)+p.w+"x"+p.h+(p.x0||0)+"/"+(p.k||1); if (p._cbdKey === key) return p._cbd; p._cbdKey = key; p._cbd = null;
+  const C = [[-31.9505,115.8505],[-31.9505,115.8655],[-31.9590,115.8655],[-31.9590,115.8505],[-31.9545,115.8580]], pts = [];
+  for (const q of C) for (const a of [0, 250]){ const o = projectOrig(p.cam, p.ow, p.oh, q[0], q[1], a); if (!o) return null; pts.push(toWork(p, o)); }
+  const xs = pts.map(q=>q[0]), ys = pts.map(q=>q[1]); let r = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+  const m = 0.01*p.w; r = [r[0]-m, r[1]-m, r[2]+m, r[3]+0.004*p.h];
+  if (r[2] < 0 || r[0] > p.w || r[3] < 0 || r[1] > p.h || r[2]-r[0] > 0.6*p.w) return null;   // out of frame, or so close the "city" fills the photo
+  p._cbd = [Math.max(0,r[0]), Math.max(0,r[1]), Math.min(p.w,r[2]), Math.min(p.h,r[3])]; return p._cbd; }
+const isCbdPin = q => /perth cbd|city of perth|perth city/i.test((q && (q.name||q.key)) || "");
 function tidySides(p){
   const A = agency(), s = p.w/3000*(prefs.pinScale/100)*(A.scale||1), step = 115*s, gap = 12*s, boxed = A.kind !== "pin";
   const house = p.pins.find(x=>x.house);
@@ -292,6 +302,7 @@ function tidySides(p){
       const parts = pinParts(p,pin), r = parts[0];
       const mg = 10*s, off = Math.max(0, mg-r[0]) + Math.max(0, r[2]-(p.w-mg)) + Math.max(0, mg-r[1]) + Math.max(0, r[3]-(p.h-mg));
       let o = 0; for (const q of others) for (const a of parts) for (const b of q) o += ov(a,b);
+      { const cb = cbdBox(p); if (cb && !isCbdPin(pin)) for (const a of parts) o += 3*ov(a, cb); }   /* 25 Nov: keep the city skyline clear */
       const score = off*20000 + o*8 + ((A.kind==="cream" ? Math.abs(k-3) : k)*(boxed?3000:9000) + (flip?5000:0))*s*s + (side==="top"||side==="bottom"?2500*s*s:0) + (!boxed && side!==(pin.ex > p.w*0.68 ? "left" : "right") ? 6000*s*s : 0) + (boxed && side!==.5 ? 4000*s*s : 0);
       if (!best || score < best.score) best = { side, flip, lift:pin.lift, score };
     }
@@ -302,7 +313,8 @@ function tidySides(p){
   for (const pin of list){ if (!pin.layoutLocked) place(pin, done.map(q=>pinParts(p,q))); done.push(pin); }
   for (let it=0; it<2; it++) for (const pin of list){ if (pin.layoutLocked) continue; place(pin, p.pins.filter(q=>q!==pin).map(q=>pinParts(p,q))); }
   // flag anything still overlapping so the editor can drop a place (the finals never have overlapping labels)
-  p.pins.forEach(a=>{ a.clash = false; if (!a.house){ const m = 0.012*p.h; for (const r of pinParts(p,a)) if (r[0] < m || r[2] > p.w-m || r[1] < 1.6*m) a.clash = true; } });   // any part touching the frame edge counts as a clash   // label hanging off the frame counts as a clash too
+  p.pins.forEach(a=>{ a.clash = false; if (!a.house){ const m = 0.012*p.h; for (const r of pinParts(p,a)) if (r[0] < m || r[2] > p.w-m || r[1] < 1.6*m) a.clash = true; } });
+  { const cb = cbdBox(p); if (cb) p.pins.forEach(a=>{ if (a.house || isCbdPin(a)) return; for (const r of pinParts(p,a)){ const ox = Math.min(r[2],cb[2])-Math.max(r[0],cb[0]), oy = Math.min(r[3],cb[3])-Math.max(r[1],cb[1]); if (ox > 0 && oy > 0) a.clash = true; } }); }   /* 25 Nov: a label over the CBD counts as a clash */   // any part touching the frame edge counts as a clash   // label hanging off the frame counts as a clash too
   for (const a of p.pins) for (const b of p.pins){ if (a===b) continue; let o=0; for (const x of pinParts(p,a)) for (const y of pinParts(p,b)) { const ox = Math.min(x[2],y[2])-Math.max(x[0],y[0]), oy = Math.min(x[3],y[3])-Math.max(x[1],y[1]); if (A.kind==="simple" ? (ox > 2*s && oy > 2*s) : (ox > -30*s && oy > -30*s)) o++;   /* simple: thin lines may pass close to other labels, as in the reference; only real overlaps count */ } if (o){ a.clash = b.clash = true; } }
 }
 
@@ -381,12 +393,47 @@ function adjustedCanvas(src, a){
   x.putImageData(id,0,0); return c;
 }
 function photoImage(p, before){
+  const r0 = photoImage0(p, before);
+  if (before || !p.match || p.editorPhoto || p.extraEdited) return r0;
+  const key = JSON.stringify(p.match) + "|" + (p._adjKey||"") + (r0===p.fin ? "f"+(p.finKey||"") : "b");
+  if (!p._mt || p._mtKey !== key){ p._mt = matchedCanvas(r0, p, p.match); p._mtKey = key; }
+  return p._mt;
+}
+function photoImage0(p, before){
   const src = (!before && p.finishOn && p.fin) ? p.fin : p.base;
   if (before || !adjActive(p.adj)) return src;
   const key = JSON.stringify(p.adj) + (window.__showMask?"M":"") + (src===p.fin ? "f"+(p.finKey||"") : "b");
   if (!p._adj || p._adjKey !== key){ p._adj = adjustedCanvas(src, p.adj); p._adjKey = key; }
   return p._adj;
 }
+// ---- 25 Nov 2026 (Jason): "every frame in a job matches" — Lab helpers, ground stats, Reinhard transfer below the horizon
+const _lin = v => { v/=255; return v <= 0.04045 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); };
+const _LIN = new Float32Array(256).map((_,i)=>_lin(i));
+const _fLab = t => t > 0.008856 ? Math.cbrt(t) : 7.787*t + 16/116;
+function rgb2lab(r,g,b){ const R=_LIN[r], G=_LIN[g], B=_LIN[b];
+  const X=(0.4124*R+0.3576*G+0.1805*B)/0.95047, Y=0.2126*R+0.7152*G+0.0722*B, Z=(0.0193*R+0.1192*G+0.9505*B)/1.08883;
+  const fx=_fLab(X), fy=_fLab(Y), fz=_fLab(Z); return [116*fy-16, 500*(fx-fy), 200*(fy-fz)]; }
+function lab2rgb(L,a,b){ const fy=(L+16)/116, fx=fy+a/500, fz=fy-b/200, iv = t => { const t3=t*t*t; return t3 > 0.008856 ? t3 : (t-16/116)/7.787; };
+  const X=iv(fx)*0.95047, Y=iv(fy), Z=iv(fz)*1.08883;
+  const R=3.2406*X-1.5372*Y-0.4986*Z, G=-0.9689*X+1.8758*Y+0.0415*Z, B=0.0557*X-0.2040*Y+1.0570*Z, gm = v => 255*(v <= 0.0031308 ? 12.92*v : 1.055*Math.pow(Math.max(0,v),1/2.4)-0.055);
+  return [gm(R), gm(G), gm(B)]; }
+function hzAt(p, c){ const L = p.skyLine; if (!L) return null; const s = c.height/(L.h||c.height); return x => (L.m*x + L.b)*s; }
+function groundStats(p, after){ const c = after ? photoImage(p, false) : photoImage0(p, false); if (!c) return null; const w=c.width, h=c.height, d=c.getContext("2d").getImageData(0,0,w,h).data;
+  const hz = hzAt(p, c), st = Math.max(2, Math.round(Math.sqrt(w*h/90000))); let n=0; const S=[0,0,0], Q=[0,0,0]; let sn=0; const SK=[0,0,0];
+  for (let y=0; y<h; y+=st) for (let x=0; x<w; x+=st){ const i=(y*w+x)*4, yh = hz ? hz(x) : -1;
+    if (hz && y < yh - 0.03*h){ const l = rgb2lab(d[i],d[i+1],d[i+2]); SK[0]+=l[0]; SK[1]+=l[1]; SK[2]+=l[2]; sn++; continue; }
+    if (y < (hz ? Math.max(yh + 0.04*h, 0.3*h) : 0)) continue;
+    const l = rgb2lab(d[i],d[i+1],d[i+2]); for (let k=0;k<3;k++){ S[k]+=l[k]; Q[k]+=l[k]*l[k]; } n++; }
+  if (n < 50) return null; const m = S.map(v=>v/n), sd = Q.map((v,k)=>Math.sqrt(Math.max(1e-6, v/n - m[k]*m[k])));
+  return { m, sd, sky: sn > 50 ? SK.map(v=>v/sn) : null, hz: hz ? Math.round(hz(w/2)*(p.h/h)) : null }; }
+function matchedCanvas(src, p, M){ const w=src.width, h=src.height, c=document.createElement("canvas"); c.width=w; c.height=h; const x=c.getContext("2d"); x.drawImage(src,0,0);
+  const id = x.getImageData(0,0,w,h), d = id.data, hz = hzAt(p, src), k = Math.max(0, Math.min(1, M.k ?? 0.9)), rampH = 0.06*h;
+  const cl = v => v < 0 ? 0 : v > 255 ? 255 : v;
+  for (let y=0;y<h;y++){ for (let xx=0; xx<w; xx++){ let wgt = k; if (hz){ const t = (y - hz(xx))/rampH; if (t <= 0) continue; if (t < 1) wgt *= t*t*(3-2*t); }
+      const i=(y*w+xx)*4, l = rgb2lab(d[i],d[i+1],d[i+2]);
+      const L2 = (l[0]-M.src.m[0])*(M.tgt.sd[0]/M.src.sd[0]) + M.tgt.m[0], A2 = (l[1]-M.src.m[1])*(M.tgt.sd[1]/M.src.sd[1]) + M.tgt.m[1], B2 = (l[2]-M.src.m[2])*(M.tgt.sd[2]/M.src.sd[2]) + M.tgt.m[2];
+      const o = lab2rgb(l[0]+(L2-l[0])*wgt, l[1]+(A2-l[1])*wgt, l[2]+(B2-l[2])*wgt); d[i]=cl(o[0]); d[i+1]=cl(o[1]); d[i+2]=cl(o[2]); } }
+  x.putImageData(id,0,0); return c; }
 function blurredCopy(img, w, h, amt, sigma){
   if (sigma){ try{ const pad=Math.ceil(sigma*3), c=document.createElement("canvas"); c.width=w; c.height=h; const x=c.getContext("2d");
       if ("filter" in x){ const t=document.createElement("canvas"); t.width=w+2*pad; t.height=h+2*pad; const tx=t.getContext("2d");
