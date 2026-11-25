@@ -1,0 +1,8 @@
+{
+ "_how": "Land size comes from the council's IntraMaps 'Legal Area' (Jason 25 Nov 2026). Open the url in the Browser pane, accept the disclaimer, Address Search tab -> House Number + Street (pick from the list) -> Search -> read 'Legal Area' (and PIPARCEL / Lot / Description) in the PROPERTY BOUNDARY panel. Put it in the day file as \"area\": <number>, \"areaSource\": \"IntraMaps <council> Legal Area\". Side lengths still come only from the land plan. When you use a council not marked verified, find its IntraMaps link from 'maps' below, test it, and update this file (url, verified).",
+ "melville": {"url": "https://melville.spatial.t1cloud.com/spatial/intramaps/?configId=3f105b05-d2ee-419c-8265-1ab592559a33&project=78ad3422-3dd6-4540-b318-782d4d1313a0", "verified": "25 Nov 2026 - 28 Cameron Way Kardinya: Legal Area 568m2 (= DP 67559 Lot 14)", "suburbs": ["Alfred Cove","Applecross","Ardross","Attadale","Bateman","Bicton","Bull Creek","Kardinya","Leeming","Melville","Mount Pleasant","Murdoch","Myaree","Palmyra","Willagee","Winthrop"]},
+ "wanneroo": {"maps": "https://www.wanneroo.wa.gov.au/info/20017/planning_and_building/80/online_mapping", "verified": false},
+ "gosnells": {"maps": "https://www.gosnells.wa.gov.au/Building_and_development/Maps_Online", "verified": false},
+ "armadale": {"maps": "https://my.armadale.wa.gov.au/service/planning-and-building/maps-and-zoning/", "verified": false},
+ "cockburn": {"maps": "https://www.cockburn.wa.gov.au/maptoolguide", "verified": false, "note": "Cockburn Mapping Hub, may not be IntraMaps"}
+}

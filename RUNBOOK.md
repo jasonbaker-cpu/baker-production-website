@@ -376,3 +376,8 @@ Filler: little parks/reserves more than 1.5 km away are never used just to reach
 - Car check on top-downs: the detector can't see cars from straight above. Look at every `*_review.jpg` (now has a labelled 100 px grid) and box anything missed with `remove: [{"sheet": [x0,y0,x1,y1]}]`.
 - Unit/strata with no boundary: put the unit's own cadastre lot in `"pinPoly"` so the house pin goes on that unit, not the complex centre. `STOREYS_FLAGS.txt` lists unit-type jobs with no `storeys`.
 - Never fewer than 2 place pins (nearest named park ≤3 km as a last resort). The "Perth CBD" label sits above the towers.
+
+## Land size from the council's IntraMaps (25 Nov 2026, Jason)
+- Land size on every top-down = the council IntraMaps "Legal Area" for the lot (`council_maps.json` has the links + steps; Melville verified: 28 Cameron Way = 568 m², same as the plan). Day file: `"area": 568, "areaSource": "IntraMaps Melville Legal Area"`.
+- Side lengths: only from the land plan (above). If the plan's area and IntraMaps disagree, stop and flag — don't pick one.
+- Council not set up yet in council_maps.json: find its IntraMaps from the council "online maps" page, test it on the job, and add it (url + verified line + suburbs). No IntraMaps for that council → plan/title area, noted in areaSource.
