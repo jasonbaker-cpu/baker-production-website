@@ -191,7 +191,7 @@ async def main():
                         km=_kmS(s) if s else None
                         if c=='landmark':   # 25 Nov: the city skyline reads from far away; other landmarks only while they're still recognisable
                             if _re.search(r'perth cbd|elizabeth quay', nm, _re.I): return 0 if (km is not None and km<=7) else 99   # 25 Nov (Jason): only pin the CBD / Elizabeth Quay within ~7 km
-                            if _re.search(r'kings park|optus stadium|matagarup|crown perth|rac arena|swan river|perth zoo|university|perth airport|racecourse|fremantle|hillarys', nm, _re.I): return 0.5 if (km is not None and km<=8) else 99
+                            if _re.search(r'kings park|optus stadium|matagarup|crown perth|rac arena|swan river|perth zoo|university|perth airport|racecourse|fremantle|hillarys', nm, _re.I): return 0.5 if (km is not None and km<=5) else 99   # 25 Nov (Jason): these landmarks only within 5 km
                             return PRI.index('sport') if (km is not None and km<=5) else 99   # other landmarks (cinema, tavern, small attractions) rank below stations/shopping/schools
                         if c in SMALL: return -0.5 if (km is not None and km<=0.2) else (14 if (km is not None and km<=0.5) else 50)
                         if c=='beach' and _re.search(r'\bdog\b', nm, _re.I): return 51   # dog beaches are minor
