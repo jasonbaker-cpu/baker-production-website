@@ -56,6 +56,60 @@
      "toEditor": true,
      "editorReason": "twilight drone (Twilight add-on, flown 7:27-7:32pm after sunset) \u2014 please edit sky + colour on every frame; remove cars/people/washing on the property",
      "lot": "Lot 813 split into townhouse units (working drawings only, no survey-strata plan) \u2014 no boundary, pins only"
+    },
+    {
+     "slug": "6_pinewood_pl",
+     "addr": "6 Pinewood Pl, Beechboro WA 6063",
+     "who": "Tina Ho \u00b7 Ray White",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [
+      "DJI_20261125181854_0312_D_r180.JPG",
+      "DJI_20261125181819_0308_D.JPG"
+     ],
+     "src": "25-nov-2026/6_pinewood_pl/src/",
+     "map": "6_pinewood_pl_beechboro_map.html",
+     "project": "project.json",
+     "photos": [
+      "DJI_20261125181854_0312_D_r180.JPG",
+      "DJI_20261125181819_0308_D.JPG",
+      "DJI_20261125181132_0293_D.JPG",
+      "DJI_20261125181208_0294_D.JPG",
+      "DJI_20261125181322_0298_D.JPG",
+      "DJI_20261125181418_0300_D.JPG",
+      "DJI_20261125181440_0301_D.JPG",
+      "DJI_20261125181515_0302_D.JPG",
+      "DJI_20261125181559_0303_D.JPG",
+      "DJI_20261125181706_0305_D.JPG"
+     ],
+     "notes": "Signature Package. Entry Notes: meet tina at the property. Amenities or features to highlight: -. Strata: -. Land size: -. Title and land plan: -. Boundaries/land features to mark: -. Client Preferences: (blank). Title in Dropbox (Lot 190 on Plan 17501, Vol 1879 Fol 519) but no lot boundary tonight (cadastre not reachable on the night pass).",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "Merged - 6 Pinewood Place, Beechboro.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/6 pinewood pl, beechboro wa 6063, australia/Aerial - Drone Photography/Merged - 6 Pinewood Place, Beechboro.pdf"
+      },
+      {
+       "name": "Floor Plan (2).pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/6 pinewood pl, beechboro wa 6063, australia/Aerial - Drone Photography/Floor Plan (2).pdf"
+      },
+      {
+       "name": "6_pinewood_pl_beechboro_map.html",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/6 pinewood pl, beechboro wa 6063, australia/Aerial - Drone Photography/6_pinewood_pl_beechboro_map.html"
+      },
+      {
+       "name": "6_pinewood_pl_beechboro_qa.txt",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/6 pinewood pl, beechboro wa 6063, australia/Aerial - Drone Photography/6_pinewood_pl_beechboro_qa.txt"
+      },
+      {
+       "name": "6_pinewood_pl_beechboro_directions.txt",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/6 pinewood pl, beechboro wa 6063, australia/Aerial - Drone Photography/6_pinewood_pl_beechboro_directions.txt"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/6 pinewood pl, beechboro wa 6063, australia/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "sun-facing aerials 0300/0301 (also 0298, 0305) have low-sun glare and a blown hazy yellow horizon, so the set doesn't match \u2014 please re-edit sky/colour on every frame; no lot boundary yet (title Lot 190 on P17501 supplied, cadastre unreachable tonight)",
+     "lot": "Lot 190 on Plan 17501 (title 1879/519) \u2014 boundary NOT drawn tonight (cadastre unreachable); pins only"
     }
    ]
   },
