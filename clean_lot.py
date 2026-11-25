@@ -222,7 +222,15 @@ def clean(src, dst, cam, lot, remove=(), keep=(), review=None, dry=False):
         for c in cands:
             col = (255, 0, 60) if c['remove'] else (0, 230, 120)
             d.rectangle(c['box'], outline=col, width=6); d.text((c['box'][0], c['box'][1]-50), c['id'], fill=col, font=ft)
-        rv = rv.crop(crop); rv = rv.resize((max(1, round(rv.width*sc)), max(1, round(rv.height*sc))), Image.LANCZOS); rv.save(review, quality=82)
+        rv = rv.crop(crop); rv = rv.resize((max(1, round(rv.width*sc)), max(1, round(rv.height*sc))), Image.LANCZOS)
+        # 25 Nov: the COCO detector can't see cars from straight above (Arlunya 0274: ute + 2 cars, 0 found). Labelled 100 px grid in
+        # SHEET pixels so a by-eye box can be read straight off this image -> remove: [{"sheet": [x0,y0,x1,y1]}]
+        g = ImageDraw.Draw(rv); fs = None
+        try: fs = ImageFont.truetype('DejaVuSans.ttf', 14)
+        except Exception: fs = ImageFont.load_default()
+        for x in range(0, rv.width, 100): g.line([(x, 0), (x, rv.height)], fill=(255, 255, 0), width=1); g.text((x+2, 2), str(x), fill=(255, 255, 0), font=fs)
+        for y in range(0, rv.height, 100): g.line([(0, y), (rv.width, y)], fill=(255, 255, 0), width=1); g.text((2, y+2), str(y), fill=(255, 255, 0), font=fs)
+        rv.save(review, quality=82)
     if not dry:
         for c in cands:
             if c['remove']: lama_box(im, c['box'])

@@ -364,3 +364,15 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 Order per photo: agent's `must` places → headline landmarks (Perth CBD/Elizabeth Quay up to 7 km — Jason 25 Nov; Kings Park, Optus Stadium, Matagarup Bridge, Crown, RAC Arena, the river, Perth Zoo, unis, Perth Airport, racecourses up to 5 km — Jason 25 Nov) → beach → train station → shopping centres → schools → big parks/lakes → hospital → golf → leisure/library → other landmarks (cinema, tavern) → the park next door (≤200 m) → small parks ≤500 m.
 Before this, landmarks were never auto-picked (category 'landmark' ranked last), so frames looking at the city got little reserves instead of "Perth CBD".
 Filler: little parks/reserves more than 1.5 km away are never used just to reach 3 pins — a frame may go out with 1–2 strong pins instead. If a frame shows something big that isn't pinned (city, river, stadium, shopping centre), add it with `ticks`.
+
+## Side lengths and land size: from the plan ONLY (25 Nov 2026, Jason — 28 Cameron Way went out with sides 1–4 cm off)
+- Every side number on a top-down is copied EXACTLY from the land plan (deposited/survey-strata plan) into the day file `"lens"` (edge order = the `poly` edges, as strings, e.g. "9.85m"). Never computed from the cadastre, never rounded or "tidied". Land size = the plan/title figure in `"area"` with `"areaSource"`.
+- The cadastre (SLIP) only gives the outline's SHAPE/position. Its corner coordinates drift a few cm, so lengths measured from it are wrong in the 2nd decimal (Cameron: 9.86 vs 9.85, 13.03 vs 13.02, 14.06 vs 14.05, 6.96 vs 6.92).
+- No plan supplied → t12 prints NO side numbers and NO m², and writes PLAN_FLAGS.txt. Get the plan (title search / Landgate) or ask the agent; don't publish a top-down with made-up figures.
+- Check: read every number on the finished top-down against the plan, one by one, before publishing.
+
+## Other fixes 25 Nov (late morning)
+- fencefit: a whole-outline move > 2 m must clearly beat the best move within 1.6 m (parallel neighbour fences score alike). Manito Ct now lands on the right fences automatically.
+- Car check on top-downs: the detector can't see cars from straight above. Look at every `*_review.jpg` (now has a labelled 100 px grid) and box anything missed with `remove: [{"sheet": [x0,y0,x1,y1]}]`.
+- Unit/strata with no boundary: put the unit's own cadastre lot in `"pinPoly"` so the house pin goes on that unit, not the complex centre. `STOREYS_FLAGS.txt` lists unit-type jobs with no `storeys`.
+- Never fewer than 2 place pins (nearest named park ≤3 km as a last resort). The "Perth CBD" label sits above the towers.

@@ -81,7 +81,12 @@ for j in D['jobs']:
     nad = [f for f in ph if pitch(f) < -75]
     base = {'map': j['map'], 'agency': j.get('agency', 'grey')}
     if j.get('must'): base['must'] = j['must']
-    for k in ('skip', 'perPhoto', 'tune', 'storeys', 'roofH', 'roof', 'noMatch'):   # 25 Nov: storeys/roofH = house pin on the roof; noMatch = skip set-match   # 8 Nov: tune = editor TUNE overrides per job (e.g. noSolid)
+    # 25 Nov (Jason): apartment pins need the storey count, or the pin lands on the facade. Flag any unit-type job without it.
+    import re as _rs
+    if not j.get('storeys') and not j.get('roofH') and (re.search(r'^\s*\d+\s*/', j.get('addr','')) or _rs.search(r'apartment|unit complex|storey|level \d|penthouse', (j.get('notes') or ''), _rs.I)):
+        msg = f"STOREYS? {j['slug']}: unit/apartment address with no 'storeys' - count the floors in the first aerial and set storeys (1 for single-storey villas)"
+        print(msg); open('e2e/STOREYS_FLAGS.txt','a').write(msg + '\n')
+    for k in ('skip', 'perPhoto', 'tune', 'storeys', 'roofH', 'roof', 'noMatch', 'pinPoly'):   # 25 Nov: storeys/roofH = house pin on the roof; noMatch = skip set-match   # 8 Nov: tune = editor TUNE overrides per job (e.g. noSolid)
         if j.get(k): base[k] = j[k]
     if base['agency'] == 'green-belle':   # 29 Oct (Jason): every Belle Property office matches their listing look
         base.setdefault('skyPlate', 'B')   # 5 Nov (Jason): soft plain sky like 23 Karabil Way, every job; base.setdefault('perPhoto', 2)

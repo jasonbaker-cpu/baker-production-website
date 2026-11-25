@@ -626,6 +626,23 @@ function finishImage0(base, p){
       for (let y=Y0; y<yB; y++){ const j=y*w+x, i=j*4, kk = Math.max(K[j], Kb[j]); if (kk >= 0.98) continue; const iL=(y*w+L)*4, iR=(y*w+R)*4, a = 1-kk;
         const nr = px[iL]*(1-t)+px[iR]*t, ng = px[iL+1]*(1-t)+px[iR+1]*t, nb = px[iL+2]*(1-t)+px[iR+2]*t;
         px[i] = px[i]*(1-a) + nr*a; px[i+1] = px[i+1]*(1-a) + ng*a; px[i+2] = px[i+2]*(1-a) + nb*a; } } }
+  // 25 Nov 2026 (Jason: Perth CBD): inside the city box, anything that was smooth old sky (not tower) gets the new sky, sampled from the same row
+  // just outside the box, so no pale box of old sky is left around the skyline. Towers (darker/brighter than the old sky, or textured) stay.
+  if (_cbdB){ const k = w/(p.w||w), X0 = Math.max(2, Math.floor(_cbdB[0]*k)), X1 = Math.min(w-3, Math.ceil(_cbdB[2]*k)), Y0 = Math.max(1, Math.floor(_cbdB[1]*k));
+    const OY = new Float32Array(w*h); for (let j=0;j<OY.length;j++){ const i=j*4; OY[j]=(_orig[i]+_orig[i+1]+_orig[i+2])/3; }
+    const ob = gaussBlur(OY, w, h, 1.2*scale+0.3), tx = new Float32Array(w*h); for (let j=0;j<tx.length;j++) tx[j]=Math.abs(OY[j]-ob[j]); const txb = gaussBlur(tx, w, h, 1.5*scale+0.3);
+    const K = new Float32Array(w*h);
+    const L = Math.max(0, X0-6), R = Math.min(w-1, X1+6);
+    for (let x=X0; x<=X1; x++){ const yB = Math.min(h-2, Math.floor(line(x) - 0.002*h)), t = (x-L)/Math.max(1,(R-L)); if (yB <= Y0) continue;
+      for (let y=Y0; y<yB; y++){ const j=y*w+x, ref = ob[y*w+L]*(1-t) + ob[y*w+R]*t, dY = Math.abs(ob[j] - ref); K[j] = Math.min(1, Math.max(0, (dY-7)/8, (txb[j]-2.2)/2.5)); } }   /* old sky at the same row just outside the box = reference */
+    // towers stand on the skyline: keep only mask that is connected down to the horizon (a lone faint row in the old sky is not a tower)
+    for (let x=X0; x<=X1; x++){ const yB = Math.min(h-2, Math.floor(line(x) - 0.002*h)); let gap = 0, on = true;
+      for (let y=yB-1; y>=Y0; y--){ const j=y*w+x; if (!on){ K[j]=0; continue; } if (K[j] > 0.3) gap = 0; else if (++gap > Math.max(3, 0.002*h)) on = false; } }
+    const Kb = gaussBlur(K, w, h, 1.0*scale+0.3);
+    for (let x=X0; x<=X1; x++){ const yB = Math.min(h-2, Math.floor(line(x) - 0.002*h)), t = (x-L)/Math.max(1,(R-L));
+      for (let y=Y0; y<yB; y++){ const j=y*w+x, i=j*4, kk = Math.max(K[j], Kb[j]); if (kk >= 0.98) continue; const iL=(y*w+L)*4, iR=(y*w+R)*4, a = 1-kk;
+        const nr = px[iL]*(1-t)+px[iR]*t, ng = px[iL+1]*(1-t)+px[iR+1]*t, nb = px[iL+2]*(1-t)+px[iR+2]*t;
+        px[i] = px[i]*(1-a) + nr*a; px[i+1] = px[i+1]*(1-a) + ng*a; px[i+2] = px[i+2]*(1-a) + nb*a; } } }
   // soften the sky/land join: a short vertical blend across the horizon removes hard white lines
   if (sky && line && !(SKYP && SKYP.direct) && !(Object.assign({},TUNE,window.__TUNE||{}).noJoin)){ const r = Math.max(2, Math.round((Object.assign({},TUNE,window.__TUNE||{}).joinR||0.0025)*h)), col = new Float32Array((4*r+2)*3);
     for (let x=0; x<w; x++){ const cLim = (sky.colLim && !(SKYP && SKYP.direct)) ? sky.colLim[Math.min(sky.sw-1, (x/sky.s)|0)]*sky.s : 1e9, yb = Math.round(Math.min(line(x), cLim)), y0 = Math.max(1, yb-2*r), y1 = Math.min(h-2, yb+r); if (y1<=y0) continue; const n=y1-y0+1;

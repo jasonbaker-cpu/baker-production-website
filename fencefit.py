@@ -92,7 +92,7 @@ def fit(img, pts, area_m2=None, ppm=None):
     base, _ = score_poly(Q0, ev, m=m)
     pull = 0.012   # score lost per metre moved: the cadastre is roughly right, prefer small moves
     def obj(q): sc_, _ = score_poly(tf(Q0, c, q[0], q[1], q[2], q[3]), ev, m=m); return sc_ - pull * math.hypot(q[0], q[1]) / m - 0.15 * abs(q[2] - 1) - 0.02 * abs(math.degrees(q[3]))
-    best = (obj((0, 0, 1, 0)), (0.0, 0.0, 1.0, 0.0)); allv = []
+    best = (obj((0, 0, 1, 0)), (0.0, 0.0, 1.0, 0.0)); allv = []; near = None
     R = 4.5 * m
     for rt in np.radians(np.arange(-2, 2.01, 1.0)):
         for sc in (0.97, 1.0, 1.03):
@@ -100,6 +100,11 @@ def fit(img, pts, area_m2=None, ppm=None):
                 for dy in np.arange(-R, R + 1e-6, 0.5 * m):
                     v = obj((dx, dy, sc, rt)); allv.append(v)
                     if v > best[0]: best = (v, (dx, dy, sc, rt))
+                    if math.hypot(dx, dy) <= 1.6 * m and (near is None or v > near[0]): near = (v, (dx, dy, sc, rt))
+    # 25 Nov (Manito Ct locked onto the neighbour's rear fence, 3.4 m away): a far move must clearly beat the best near one.
+    # Parallel fences one lot-depth apart score alike, so when the gain is small keep the outline near the cadastre.
+    far_m = math.hypot(best[1][0], best[1][1]) / m; picked_near = False
+    if far_m > 2.0 and near is not None and near[0] >= best[0] - 0.12 * abs(best[0]): best = near; picked_near = True
     st = [0.25 * m, 0.25 * m, 0.01, math.radians(0.5)]
     for it in range(5):
         improved = True
@@ -110,6 +115,7 @@ def fit(img, pts, area_m2=None, ppm=None):
                     q = list(best[1]); q[k] += sgn * st[k]; v = obj(q)
                     if v > best[0] + 1e-6: best = (v, tuple(q)); improved = True
         st = [x / 2 for x in st]
+    if picked_near and math.hypot(best[1][0], best[1][1]) / m > 2.0: best = near   # refinement walked back toward the far fence
     Q1 = tf(Q0, c, *best[1])
     whole_score, _ = score_poly(Q1, ev, m=m)
     # stage 2: each side on its own fence
@@ -138,7 +144,7 @@ def fit(img, pts, area_m2=None, ppm=None):
     info = {'moved_m': round(math.hypot(best[1][0], best[1][1]) / m, 2), 'dx_m': round(best[1][0] / m, 2), 'dy_m': round(best[1][1] / m, 2),
             'turn_deg': round(math.degrees(best[1][3]), 2), 'size': round(best[1][2], 3), 'side_moves_m': moves,
             'score_before': round(base, 3), 'score_after': round(final, 3), 'conf': round(float(conf), 2),
-            'sides': [None if v is None else round(v, 3) for v in per]}
+            'sides': [None if v is None else round(v, 3) for v in per], 'farRejected_m': round(far_m, 2) if picked_near else 0}
     good = final > base * 1.05 and conf > 2.5 and final >= MIN_SCORE   # MIN_SCORE: no clear fences (bush, twilight glare) -> leave it, flag
     info['applied'] = bool(good)
     out = [(x / s, y / s) for x, y in Q2] if good else P0

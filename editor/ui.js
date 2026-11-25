@@ -145,6 +145,33 @@ function housePoint(p){
   const H = +R.roofH || (st ? 3.2*st + 0.6 : (window.__lotLL ? 4.5 : 3));   // no lot outline: the address point may sit on the driveway/garden, so lift it less
   const at = h => { const q = projectOrig(p.cam, p.ow, p.oh, ll[0], ll[1], h); return q && toWork(p, q); };
   let q = at(H); if (!q || !inFrame(p, q, 2)) return g;
+  if (st < 2 && !R.roofH) return q;   // single-storey (or unknown): no roofline snap   // houses: the lot middle lifted to roof height already lands on the roof (Arlunya/Tenth Ave tests, 25 Nov)
+  try {   // multi-storey: roofline = the strongest horizontal edge in a short window around the estimate; the tip goes just under it, onto the roof
+    const c = p.fin || p.base; if (!c) return q; const sc = c.width/(p.w||c.width), x2 = c.getContext("2d");
+    const hi = at(H + (st ? 3.5 : 2.5)), lo = at(Math.max(1.5, H - (st ? 5 : 2.5))); if (!hi || !lo) return q;
+    const W = Math.max(8, Math.round(0.012*p.w*sc)), y0 = Math.max(2, Math.round(hi[1]*sc) - 2), y1 = Math.min(c.height-3, Math.round(lo[1]*sc) + 2), xc = Math.round(q[0]*sc);
+    if (y1 - y0 < 8) return q;
+    const xa = Math.max(0, xc-W), ww = Math.min(c.width, xc+W+1) - xa, d = x2.getImageData(xa, y0-2, ww, y1-y0+5).data;
+    const row = y => { let r=0,gg=0,b=0; for (let x=0;x<ww;x++){ const i=((y-y0+2)*ww+x)*4; r+=d[i]; gg+=d[i+1]; b+=d[i+2]; } return [r/ww,gg/ww,b/ww]; };
+    const M = []; for (let y=y0-2; y<=y1+2; y++) M.push(row(y));
+    let best = -1, by = null; for (let y=y0; y<=y1; y++){ const u = M[y-y0], v = M[y-y0+4], e = Math.hypot(u[0]-v[0], u[1]-v[1], u[2]-v[2]); if (e > best){ best = e; by = y+2; } }
+    if (best < 12) return q;
+    return [q[0], by/sc + 0.005*p.h];
+  } catch(e){ return q; }
+}
+// 25 Nov 2026 (Jason): the house pin's tip sits ON the roof, never on the facade or the ground in front.
+// Point = middle of the lot (cadastre) when known, else the address point, lifted to roof height:
+// house ~4.5 m, or 3.2 m per storey (apartments: window.__roof.storeys / job.storeys), or an exact roofH.
+// Then the tip is walked up the roof to just under its top edge (region grow on the roof colour), capped at +2 storeys.
+function houseLL(){ const L = window.__lotLL; if (L && L.length > 2){ let a=0,b=0; L.forEach(q=>{ a+=q[0]; b+=q[1]; }); return [a/L.length, b/L.length]; } return job ? [job.lat, job.lng] : null; }
+function housePoint(p){
+  const ll = houseLL(); if (!ll) return null;
+  const g = autoPoint(p, ll[0], ll[1]); if (!g) return null;
+  if (!p.cam || !p.cam.ready || p.cam.pitch < -70) return g;   // top-downs: the point is already on the roof
+  const R = Object.assign({}, (job && job.roof) || {}, window.__roof || {}), st = +R.storeys || 0;
+  const H = +R.roofH || (st ? 3.2*st + 0.6 : (window.__lotLL ? 4.5 : 3));   // no lot outline: the address point may sit on the driveway/garden, so lift it less
+  const at = h => { const q = projectOrig(p.cam, p.ow, p.oh, ll[0], ll[1], h); return q && toWork(p, q); };
+  let q = at(H); if (!q || !inFrame(p, q, 2)) return g;
   if (!st && !R.roofH) return q;   // houses: the lot middle lifted to roof height already lands on the roof (Arlunya/Tenth Ave tests, 25 Nov)
   try {   // multi-storey: roofline = the strongest horizontal edge in a short window around the estimate; the tip goes just under it, onto the roof
     const c = p.fin || p.base; if (!c) return q; const sc = c.width/(p.w||c.width), x2 = c.getContext("2d");

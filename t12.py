@@ -87,7 +87,7 @@ async def main():
             if job.get('full'): await pg.evaluate("window.__bae.setPref('outMode','full')")
             await pg.evaluate("p=>{window.__portrait=!!p}", bool(job.get('portrait')))   # 29 Oct: booking asked for vertical drone photos
             _roof = job.get('roof') or {k: job[k] for k in ('storeys','roofH') if job.get(k)}   # 25 Nov: house pin on the roof (storeys for apartments)
-            await pg.evaluate("([r,l])=>{window.__roof=r||{}; window.__lotLL=l||null}", [_roof, job.get('poly')])
+            await pg.evaluate("([r,l])=>{window.__roof=r||{}; window.__lotLL=l||null}", [_roof, job.get('poly') or job.get('pinPoly')])   # pinPoly: the unit's own cadastre lot, used only to place the house pin (strata, no boundary drawn)
             await drag(pg, [job['map']]+job['photos']); await pg.wait_for_timeout(1500); await busy(pg)
             if job.get('agency'): await pg.select_option('#agSel', job['agency']); await pg.wait_for_timeout(300)
             th = pg.locator('.thumb'); n = await th.count(); base = n-len(job['photos'])
@@ -136,10 +136,13 @@ async def main():
                         i=j+1
                     lens=[('' if E[k]<max(3,0.04*sum(E)) else v) for k,v in enumerate(lens)]
                     area=_area0
-                    if job.get('lens') and len(job['lens'])==len(P): lens=[(fmt(v) if v else '') for v in job['lens']]   # side lengths from the title/strata plan beat the cadastre
+                    # 25 Nov 2026 (Jason, 28 Cameron Way went out with cadastre-derived sides 1-4 cm off the plan): side lengths come ONLY from
+                    # the land plan, copied exactly as printed; land size ONLY from the plan/title. The cadastre gives the outline's shape, never numbers.
+                    if job.get('lens') and len(job['lens'])==len(P): lens=[(v if isinstance(v,str) else (fmt(v) if v else '')) for v in job['lens']]
+                    else:
+                        lens=['']*len(P); open('PLAN_FLAGS.txt','a').write(f"{job.get('slug')}: no side lengths from a plan - top-down shows NO side numbers. Add 'lens' (exact plan figures, edge order) and rerun.\n"); print('  PLAN? no plan side lengths for', job.get('slug'), '- sides left blank')
                     if job.get('area') and job.get('areaSource'): area=int(job['area'])   # lot size from the title/strata plan — only with a stated source
-                    elif job.get('area'):   # 29 Oct (Jason): a hand-typed area with no source put 809 m2 on 47 Attra (cadastre 812). Cadastre wins; flag it.
-                        print(f"  AREA CHECK {job.get('slug')}: typed {job['area']} m2 has no areaSource - using cadastre {area} m2"); open('AREA_FLAGS.txt','a').write(f"{job.get('slug')}: typed {job['area']} vs cadastre {area}\n")
+                    else: area=0; open('PLAN_FLAGS.txt','a').write(f"{job.get('slug')}: no plan land size - top-down shows NO m2. Add 'area' + 'areaSource' from the plan/title.\n"); print('  PLAN? no plan land size for', job.get('slug'))
                     wt=700   # Jason (25 Oct): bold Open Sans lot size with a real ² (like his 195m² example)
                     rg = job.get('reg',{}).get(ph,[0,0])
                     ok = await pg.evaluate("([ll,a,b,l,ar,w,px])=>window.__bae.addLot(ll,a,b,l,ar,w,px)", [ll, rg[0], rg[1], lens, area, wt, job.get('pxpoly')]); print('  lot', ph, ok, area, lens, 'squared', await pg.evaluate("[window.__yawFix, window.__squared]"))
@@ -264,6 +267,15 @@ async def main():
                             if not done:   # put the greedy result back
                                 for nm in cur: await _tog(nm)
                                 await pg.evaluate("window.__bae.retidy()"); await pg.wait_for_timeout(150)
+                    if kept < 2:   # 25 Nov: never fewer than 2 pins - last resort, the nearest named park/reserve up to 3 km
+                        ph_ = await pg.evaluate("window.__bae.photo()"); cur=[q['name'] for q in ph_['pins'] if not q['house']]
+                        last=sorted([(_km(_cat[nm]) or 9, nm) for nm,cat in names if nm not in cur and cat.split('·')[0].strip() in SMALL and (_km(_cat[nm]) or 9) <= 3 and not any(x in nm.lower() for x in SKIP)])
+                        for _d, nm in last:
+                            if kept >= 2: break
+                            await _pl(nm).click(); await pg.wait_for_timeout(200); await pg.evaluate("window.__bae.retidy()"); await pg.wait_for_timeout(150)
+                            ph_ = await pg.evaluate("window.__bae.photo()")
+                            if any(q['clash'] for q in ph_['pins']) or not any(q['name']==nm for q in ph_['pins']): await _pl(nm).click(); await pg.wait_for_timeout(150)
+                            else: kept += 1
                     print('  kept', kept)
                 await pg.wait_for_timeout(300)
                 if False and job.get('poly'):

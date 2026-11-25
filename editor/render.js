@@ -302,6 +302,7 @@ function tidySides(p){
       const parts = pinParts(p,pin), r = parts[0];
       const mg = 10*s, off = Math.max(0, mg-r[0]) + Math.max(0, r[2]-(p.w-mg)) + Math.max(0, mg-r[1]) + Math.max(0, r[3]-(p.h-mg));
       let o = 0; for (const q of others) for (const a of parts) for (const b of q) o += ov(a,b);
+      { const cb = cbdBox(p); if (cb){ if (!isCbdPin(pin)) for (const a of parts) o += 3*ov(a, cb); else o += 3*ov(parts[0], cb); } }   /* 25 Nov: keep the city skyline clear (the CBD's own label sits above the towers, its stem may go in) */
       { const cb = cbdBox(p); if (cb && !isCbdPin(pin)) for (const a of parts) o += 3*ov(a, cb); }   /* 25 Nov: keep the city skyline clear */
       const score = off*20000 + o*8 + ((A.kind==="cream" ? Math.abs(k-3) : k)*(boxed?3000:9000) + (flip?5000:0))*s*s + (side==="top"||side==="bottom"?2500*s*s:0) + (!boxed && side!==(pin.ex > p.w*0.68 ? "left" : "right") ? 6000*s*s : 0) + (boxed && side!==.5 ? 4000*s*s : 0);
       if (!best || score < best.score) best = { side, flip, lift:pin.lift, score };
@@ -314,6 +315,7 @@ function tidySides(p){
   for (let it=0; it<2; it++) for (const pin of list){ if (pin.layoutLocked) continue; place(pin, p.pins.filter(q=>q!==pin).map(q=>pinParts(p,q))); }
   // flag anything still overlapping so the editor can drop a place (the finals never have overlapping labels)
   p.pins.forEach(a=>{ a.clash = false; if (!a.house){ const m = 0.012*p.h; for (const r of pinParts(p,a)) if (r[0] < m || r[2] > p.w-m || r[1] < 1.6*m) a.clash = true; } });
+  { const cb = cbdBox(p); if (cb) p.pins.forEach(a=>{ if (a.house) return; for (const r of (isCbdPin(a) ? [pinParts(p,a)[0]] : pinParts(p,a))){ const ox = Math.min(r[2],cb[2])-Math.max(r[0],cb[0]), oy = Math.min(r[3],cb[3])-Math.max(r[1],cb[1]); if (ox > 0 && oy > 0) a.clash = true; } }); }   /* 25 Nov: a label over the CBD counts as a clash */
   { const cb = cbdBox(p); if (cb) p.pins.forEach(a=>{ if (a.house || isCbdPin(a)) return; for (const r of pinParts(p,a)){ const ox = Math.min(r[2],cb[2])-Math.max(r[0],cb[0]), oy = Math.min(r[3],cb[3])-Math.max(r[1],cb[1]); if (ox > 0 && oy > 0) a.clash = true; } }); }   /* 25 Nov: a label over the CBD counts as a clash */   // any part touching the frame edge counts as a clash   // label hanging off the frame counts as a clash too
   for (const a of p.pins) for (const b of p.pins){ if (a===b) continue; let o=0; for (const x of pinParts(p,a)) for (const y of pinParts(p,b)) { const ox = Math.min(x[2],y[2])-Math.max(x[0],y[0]), oy = Math.min(x[3],y[3])-Math.max(x[1],y[1]); if (A.kind==="simple" ? (ox > 2*s && oy > 2*s) : (ox > -30*s && oy > -30*s)) o++;   /* simple: thin lines may pass close to other labels, as in the reference; only real overlaps count */ } if (o){ a.clash = b.clash = true; } }
 }

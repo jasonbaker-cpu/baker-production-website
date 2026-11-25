@@ -699,6 +699,23 @@ function finishImage0(base, p){
       for (let y=Y0; y<yB; y++){ const j=y*w+x, i=j*4, kk = Math.max(K[j], Kb[j]); if (kk >= 0.98) continue; const iL=(y*w+L)*4, iR=(y*w+R)*4, a = 1-kk;
         const nr = px[iL]*(1-t)+px[iR]*t, ng = px[iL+1]*(1-t)+px[iR+1]*t, nb = px[iL+2]*(1-t)+px[iR+2]*t;
         px[i] = px[i]*(1-a) + nr*a; px[i+1] = px[i+1]*(1-a) + ng*a; px[i+2] = px[i+2]*(1-a) + nb*a; } } }
+  // 25 Nov 2026 (Jason: Perth CBD): inside the city box, anything that was smooth old sky (not tower) gets the new sky, sampled from the same row
+  // just outside the box, so no pale box of old sky is left around the skyline. Towers (darker/brighter than the old sky, or textured) stay.
+  if (_cbdB){ const k = w/(p.w||w), X0 = Math.max(2, Math.floor(_cbdB[0]*k)), X1 = Math.min(w-3, Math.ceil(_cbdB[2]*k)), Y0 = Math.max(1, Math.floor(_cbdB[1]*k));
+    const OY = new Float32Array(w*h); for (let j=0;j<OY.length;j++){ const i=j*4; OY[j]=(_orig[i]+_orig[i+1]+_orig[i+2])/3; }
+    const ob = gaussBlur(OY, w, h, 1.2*scale+0.3), tx = new Float32Array(w*h); for (let j=0;j<tx.length;j++) tx[j]=Math.abs(OY[j]-ob[j]); const txb = gaussBlur(tx, w, h, 1.5*scale+0.3);
+    const K = new Float32Array(w*h);
+    const L = Math.max(0, X0-6), R = Math.min(w-1, X1+6);
+    for (let x=X0; x<=X1; x++){ const yB = Math.min(h-2, Math.floor(line(x) - 0.002*h)), t = (x-L)/Math.max(1,(R-L)); if (yB <= Y0) continue;
+      for (let y=Y0; y<yB; y++){ const j=y*w+x, ref = ob[y*w+L]*(1-t) + ob[y*w+R]*t, dY = Math.abs(ob[j] - ref); K[j] = Math.min(1, Math.max(0, (dY-7)/8, (txb[j]-2.2)/2.5)); } }   /* old sky at the same row just outside the box = reference */
+    // towers stand on the skyline: keep only mask that is connected down to the horizon (a lone faint row in the old sky is not a tower)
+    for (let x=X0; x<=X1; x++){ const yB = Math.min(h-2, Math.floor(line(x) - 0.002*h)); let gap = 0, on = true;
+      for (let y=yB-1; y>=Y0; y--){ const j=y*w+x; if (!on){ K[j]=0; continue; } if (K[j] > 0.3) gap = 0; else if (++gap > Math.max(3, 0.002*h)) on = false; } }
+    const Kb = gaussBlur(K, w, h, 1.0*scale+0.3);
+    for (let x=X0; x<=X1; x++){ const yB = Math.min(h-2, Math.floor(line(x) - 0.002*h)), t = (x-L)/Math.max(1,(R-L));
+      for (let y=Y0; y<yB; y++){ const j=y*w+x, i=j*4, kk = Math.max(K[j], Kb[j]); if (kk >= 0.98) continue; const iL=(y*w+L)*4, iR=(y*w+R)*4, a = 1-kk;
+        const nr = px[iL]*(1-t)+px[iR]*t, ng = px[iL+1]*(1-t)+px[iR+1]*t, nb = px[iL+2]*(1-t)+px[iR+2]*t;
+        px[i] = px[i]*(1-a) + nr*a; px[i+1] = px[i+1]*(1-a) + ng*a; px[i+2] = px[i+2]*(1-a) + nb*a; } } }
   // soften the sky/land join: a short vertical blend across the horizon removes hard white lines
   if (sky && line && !(SKYP && SKYP.direct) && !(Object.assign({},TUNE,window.__TUNE||{}).noJoin)){ const r = Math.max(2, Math.round((Object.assign({},TUNE,window.__TUNE||{}).joinR||0.0025)*h)), col = new Float32Array((4*r+2)*3);
     for (let x=0; x<w; x++){ const cLim = (sky.colLim && !(SKYP && SKYP.direct)) ? sky.colLim[Math.min(sky.sw-1, (x/sky.s)|0)]*sky.s : 1e9, yb = Math.round(Math.min(line(x), cLim)), y0 = Math.max(1, yb-2*r), y1 = Math.min(h-2, yb+r); if (y1<=y0) continue; const n=y1-y0+1;
@@ -1028,6 +1045,7 @@ function tidySides(p){
       const parts = pinParts(p,pin), r = parts[0];
       const mg = 10*s, off = Math.max(0, mg-r[0]) + Math.max(0, r[2]-(p.w-mg)) + Math.max(0, mg-r[1]) + Math.max(0, r[3]-(p.h-mg));
       let o = 0; for (const q of others) for (const a of parts) for (const b of q) o += ov(a,b);
+      { const cb = cbdBox(p); if (cb){ if (!isCbdPin(pin)) for (const a of parts) o += 3*ov(a, cb); else o += 3*ov(parts[0], cb); } }   /* 25 Nov: keep the city skyline clear (the CBD's own label sits above the towers, its stem may go in) */
       { const cb = cbdBox(p); if (cb && !isCbdPin(pin)) for (const a of parts) o += 3*ov(a, cb); }   /* 25 Nov: keep the city skyline clear */
       const score = off*20000 + o*8 + ((A.kind==="cream" ? Math.abs(k-3) : k)*(boxed?3000:9000) + (flip?5000:0))*s*s + (side==="top"||side==="bottom"?2500*s*s:0) + (!boxed && side!==(pin.ex > p.w*0.68 ? "left" : "right") ? 6000*s*s : 0) + (boxed && side!==.5 ? 4000*s*s : 0);
       if (!best || score < best.score) best = { side, flip, lift:pin.lift, score };
@@ -1040,6 +1058,7 @@ function tidySides(p){
   for (let it=0; it<2; it++) for (const pin of list){ if (pin.layoutLocked) continue; place(pin, p.pins.filter(q=>q!==pin).map(q=>pinParts(p,q))); }
   // flag anything still overlapping so the editor can drop a place (the finals never have overlapping labels)
   p.pins.forEach(a=>{ a.clash = false; if (!a.house){ const m = 0.012*p.h; for (const r of pinParts(p,a)) if (r[0] < m || r[2] > p.w-m || r[1] < 1.6*m) a.clash = true; } });
+  { const cb = cbdBox(p); if (cb) p.pins.forEach(a=>{ if (a.house) return; for (const r of (isCbdPin(a) ? [pinParts(p,a)[0]] : pinParts(p,a))){ const ox = Math.min(r[2],cb[2])-Math.max(r[0],cb[0]), oy = Math.min(r[3],cb[3])-Math.max(r[1],cb[1]); if (ox > 0 && oy > 0) a.clash = true; } }); }   /* 25 Nov: a label over the CBD counts as a clash */
   { const cb = cbdBox(p); if (cb) p.pins.forEach(a=>{ if (a.house || isCbdPin(a)) return; for (const r of pinParts(p,a)){ const ox = Math.min(r[2],cb[2])-Math.max(r[0],cb[0]), oy = Math.min(r[3],cb[3])-Math.max(r[1],cb[1]); if (ox > 0 && oy > 0) a.clash = true; } }); }   /* 25 Nov: a label over the CBD counts as a clash */   // any part touching the frame edge counts as a clash   // label hanging off the frame counts as a clash too
   for (const a of p.pins) for (const b of p.pins){ if (a===b) continue; let o=0; for (const x of pinParts(p,a)) for (const y of pinParts(p,b)) { const ox = Math.min(x[2],y[2])-Math.max(x[0],y[0]), oy = Math.min(x[3],y[3])-Math.max(x[1],y[1]); if (A.kind==="simple" ? (ox > 2*s && oy > 2*s) : (ox > -30*s && oy > -30*s)) o++;   /* simple: thin lines may pass close to other labels, as in the reference; only real overlaps count */ } if (o){ a.clash = b.clash = true; } }
 }
@@ -1411,6 +1430,33 @@ function landY(p, x){ const L = p.skyLine; if (!L) return -1e9; return L.m*x + L
 // A place beyond the horizon still gets its pin tip on land, never in the sky
 function clampPinsToLand(p){ let ch=false; (p.pins||[]).forEach(pin=>{ if (pin.house || pin.moved) return; const y = landY(p, pin.ex); if (pin.ey < y){ pin.ey = y; ch=true; } }); if (ch) tidySides(p); }
 function autoPoint(p, lat, lng){ const q = projectW(p, lat, lng); if (!inFrame(p, q, 2)) return null; const y = landY(p, q[0]); if (q[1] < y) q[1] = y; return q; }
+// 25 Nov 2026 (Jason): the house pin's tip sits ON the roof, never on the facade or the ground in front.
+// Point = middle of the lot (cadastre) when known, else the address point, lifted to roof height:
+// house ~4.5 m, or 3.2 m per storey (apartments: window.__roof.storeys / job.storeys), or an exact roofH.
+// Then the tip is walked up the roof to just under its top edge (region grow on the roof colour), capped at +2 storeys.
+function houseLL(){ const L = window.__lotLL; if (L && L.length > 2){ let a=0,b=0; L.forEach(q=>{ a+=q[0]; b+=q[1]; }); return [a/L.length, b/L.length]; } return job ? [job.lat, job.lng] : null; }
+function housePoint(p){
+  const ll = houseLL(); if (!ll) return null;
+  const g = autoPoint(p, ll[0], ll[1]); if (!g) return null;
+  if (!p.cam || !p.cam.ready || p.cam.pitch < -70) return g;   // top-downs: the point is already on the roof
+  const R = Object.assign({}, (job && job.roof) || {}, window.__roof || {}), st = +R.storeys || 0;
+  const H = +R.roofH || (st ? 3.2*st + 0.6 : (window.__lotLL ? 4.5 : 3));   // no lot outline: the address point may sit on the driveway/garden, so lift it less
+  const at = h => { const q = projectOrig(p.cam, p.ow, p.oh, ll[0], ll[1], h); return q && toWork(p, q); };
+  let q = at(H); if (!q || !inFrame(p, q, 2)) return g;
+  if (st < 2 && !R.roofH) return q;   // single-storey (or unknown): no roofline snap   // houses: the lot middle lifted to roof height already lands on the roof (Arlunya/Tenth Ave tests, 25 Nov)
+  try {   // multi-storey: roofline = the strongest horizontal edge in a short window around the estimate; the tip goes just under it, onto the roof
+    const c = p.fin || p.base; if (!c) return q; const sc = c.width/(p.w||c.width), x2 = c.getContext("2d");
+    const hi = at(H + (st ? 3.5 : 2.5)), lo = at(Math.max(1.5, H - (st ? 5 : 2.5))); if (!hi || !lo) return q;
+    const W = Math.max(8, Math.round(0.012*p.w*sc)), y0 = Math.max(2, Math.round(hi[1]*sc) - 2), y1 = Math.min(c.height-3, Math.round(lo[1]*sc) + 2), xc = Math.round(q[0]*sc);
+    if (y1 - y0 < 8) return q;
+    const xa = Math.max(0, xc-W), ww = Math.min(c.width, xc+W+1) - xa, d = x2.getImageData(xa, y0-2, ww, y1-y0+5).data;
+    const row = y => { let r=0,gg=0,b=0; for (let x=0;x<ww;x++){ const i=((y-y0+2)*ww+x)*4; r+=d[i]; gg+=d[i+1]; b+=d[i+2]; } return [r/ww,gg/ww,b/ww]; };
+    const M = []; for (let y=y0-2; y<=y1+2; y++) M.push(row(y));
+    let best = -1, by = null; for (let y=y0; y<=y1; y++){ const u = M[y-y0], v = M[y-y0+4], e = Math.hypot(u[0]-v[0], u[1]-v[1], u[2]-v[2]); if (e > best){ best = e; by = y+2; } }
+    if (best < 12) return q;
+    return [q[0], by/sc + 0.005*p.h];
+  } catch(e){ return q; }
+}
 // 25 Nov 2026 (Jason): the house pin's tip sits ON the roof, never on the facade or the ground in front.
 // Point = middle of the lot (cadastre) when known, else the address point, lifted to roof height:
 // house ~4.5 m, or 3.2 m per storey (apartments: window.__roof.storeys / job.storeys), or an exact roofH.
