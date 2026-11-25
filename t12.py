@@ -190,7 +190,7 @@ async def main():
                     def rank(c, nm='', s=''):   # 12 Nov (Jason): big key features beat little places; a park only wins if it's within 200 m
                         km=_kmS(s) if s else None
                         if c=='landmark':   # 25 Nov: the city skyline reads from far away; other landmarks only while they're still recognisable
-                            if _re.search(r'perth cbd|elizabeth quay', nm, _re.I): return 0 if (km is None or km<=25) else 99
+                            if _re.search(r'perth cbd|elizabeth quay', nm, _re.I): return 0 if (km is not None and km<=7) else 99   # 25 Nov (Jason): only pin the CBD / Elizabeth Quay within ~7 km
                             if _re.search(r'kings park|optus stadium|matagarup|crown perth|rac arena|swan river|perth zoo|university|perth airport|racecourse|fremantle|hillarys', nm, _re.I): return 0.5 if (km is not None and km<=8) else 99
                             return PRI.index('sport') if (km is not None and km<=5) else 99   # other landmarks (cinema, tavern, small attractions) rank below stations/shopping/schools
                         if c in SMALL: return -0.5 if (km is not None and km<=0.2) else (14 if (km is not None and km<=0.5) else 50)
