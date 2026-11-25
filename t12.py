@@ -182,14 +182,18 @@ async def main():
                 else:  # add places one at a time (landmarks first); keep each only if it doesn't clash; stop at 5
                     names = await pg.evaluate("""()=>[...document.querySelectorAll('.place:not(.off)')].map(b=>[b.querySelector('.t').textContent,b.querySelector('small').textContent+' · '+((b.querySelector('.d')||{}).textContent||'')])""")
                     if os.environ.get('DBG'): print('   NAMES', names)
-                    PRI=['beach','shopping','regional shopping','school','train','regional park','golf','hospital','aquatic','library','lake','sport','park','reserve','transport','community','childcare','playground']   # 3 Nov (Jason): beaches, shopping centres, schools, stations, big parks first
+                    PRI=['landmark','beach','train','regional shopping','shopping','school','university','regional park','lake','hospital','golf','aquatic','library','sport','park','reserve','transport','community','childcare','playground']   # 3 Nov (Jason): beaches, shopping centres, schools, stations, big parks first   # 25 Nov (Jason): "always pin the most important thing" - headline landmarks (Perth CBD, river, stadium, Kings Park) first; they were never picked before (cat 'landmark' ranked 99)
                     import re as _re   # never auto-pick childcare/kindy/driving/dance schools (Jason's amenity rules)
                     def _kmS(s):
                         m=_re.search(r'([\d.]+)\s*(km|m)', s.split('·')[-1]); return None if not m else (float(m.group(1)) if m.group(2)=='km' else float(m.group(1))/1000)
                     SMALL=('park','reserve','playground')
                     def rank(c, nm='', s=''):   # 12 Nov (Jason): big key features beat little places; a park only wins if it's within 200 m
                         km=_kmS(s) if s else None
-                        if c in SMALL: return -0.5 if (km is not None and km<=0.2) else 50
+                        if c=='landmark':   # 25 Nov: the city skyline reads from far away; other landmarks only while they're still recognisable
+                            if _re.search(r'perth cbd|elizabeth quay', nm, _re.I): return 0 if (km is None or km<=25) else 99
+                            if _re.search(r'kings park|optus stadium|matagarup|crown perth|rac arena|swan river|perth zoo|university|perth airport|racecourse|fremantle|hillarys', nm, _re.I): return 0.5 if (km is not None and km<=8) else 99
+                            return PRI.index('sport') if (km is not None and km<=5) else 99   # other landmarks (cinema, tavern, small attractions) rank below stations/shopping/schools
+                        if c in SMALL: return -0.5 if (km is not None and km<=0.2) else (14 if (km is not None and km<=0.5) else 50)
                         if c=='beach' and _re.search(r'\bdog\b', nm, _re.I): return 51   # dog beaches are minor
                         if c=='shopping' and not _re.search(r'shopping|westfield|plaza|centro|forum|square|village|central|precinct|markets|mall|galleria|dfo|quarter', nm, _re.I): return 52   # corner shops/marts are minor
                         return PRI.index(c) if c in PRI else 99
@@ -200,7 +204,7 @@ async def main():
                         m=_re.search(r'([\d.]+)\s*(km|m)', cat.split('·')[-1])
                         return None if not m else (float(m.group(1)) if m.group(2)=='km' else float(m.group(1))/1000)
                     _cat={nm:cat for nm,cat in names}
-                    BIG=('train','regional shopping','hospital','beach','regional park','golf','lake')
+                    BIG=('train','regional shopping','hospital','beach','regional park','golf','lake','landmark')
                     SKIP=[x.lower() for x in job.get('skip',[])]   # 28 Oct: agent-excluded categories or names (e.g. Jenny: no library)
                     cands=[c for c in cands if not any(x==c[3].lower() or x in c[2].lower() for x in SKIP)]
                     MUST=[m.lower() for m in job.get('must',[])]   # places the agent asked for (e.g. the CBD) skip the distance rules
@@ -210,7 +214,7 @@ async def main():
                     seen={}; kept=0; TARGET=int(job.get('perPhoto',3))   # 28 Oct (Jason): every location photo carries 3 pins
                     _all=[(rank(cat.split('·')[0].strip(), nm, cat), i, nm, cat.split('·')[0].strip()) for i,(nm,cat) in enumerate(names)]
                     _all=[c for c in _all if not _re.search(r'child ?care|early learning|kindergarten|kindy|daycare|driving school|dance', c[2], _re.I) and c[3]!='childcare' and not any(x==c[3].lower() or x in c[2].lower() for x in SKIP)]
-                    _extra=[(c[0]+100,)+tuple(c[1:]) for c in sorted(_all) if c[2] not in {d[2] for d in cands}]   # fallback pool if the strict list can't reach 3
+                    _extra=[(c[0]+100,)+tuple(c[1:]) for c in sorted(_all) if c[2] not in {d[2] for d in cands} and not (c[3] in SMALL and (_km(_cat[c[2]]) or 0)>1.5)]   # fallback pool if the strict list can't reach 3   # 25 Nov (Jason): no far-off little parks/reserves as filler - 2 good pins beat 3 with filler
                     import re as _rx
                     def _pl(nm):   # 12 Nov: exact name match — 'Scarborough Beach' must not hit 'Scarborough Beach Skate Park'
                         ex = pg.locator('.place').filter(has=pg.locator('.t', has_text=_rx.compile('^\\s*'+_rx.escape(nm)+'\\s*$')))

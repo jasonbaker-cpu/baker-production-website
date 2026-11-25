@@ -359,3 +359,8 @@ DNG skies are almost never clipped. Re-develop the bad frames with `python3 devs
 - realmark.com.au → `pill-r` (navy text-box labels with dotted markers + navy 'R' house pin with dotted marker). Already in agency_map.
 - Three-quarter aerials ONLY: no top-downs / bird's-eye for Realmark (overrides "both top-downs"). Drop the `__nadir` jobs from the run file before mkday.
 - Where there is a lot boundary, the guide wants an Azure Blue lot overlay on the obliques (#4E7FFF, 100%) — not built yet; flag it on boundary jobs.
+
+## Which places get pinned (25 Nov 2026, Jason: "always pin the most important thing rather than the more irrelevant places")
+Order per photo: agent's `must` places → headline landmarks (Perth CBD/Elizabeth Quay up to 25 km; Kings Park, Optus Stadium, Matagarup Bridge, Crown, RAC Arena, the river, Perth Zoo, unis, Perth Airport, racecourses up to 8 km) → beach → train station → shopping centres → schools → big parks/lakes → hospital → golf → leisure/library → other landmarks (cinema, tavern) → the park next door (≤200 m) → small parks ≤500 m.
+Before this, landmarks were never auto-picked (category 'landmark' ranked last), so frames looking at the city got little reserves instead of "Perth CBD".
+Filler: little parks/reserves more than 1.5 km away are never used just to reach 3 pins — a frame may go out with 1–2 strong pins instead. If a frame shows something big that isn't pinned (city, river, stadium, shopping centre), add it with `ticks`.
