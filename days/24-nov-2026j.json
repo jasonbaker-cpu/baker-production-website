@@ -1,0 +1,107 @@
+{
+ "label": "Tue 24 Nov 2026",
+ "jobs": [
+  {
+   "slug": "3_106_arlunya_ave",
+   "addr": "3/106 Arlunya Ave, Cloverdale WA 6105",
+   "who": "Devon Kelly \u00b7 Laurie Kelly",
+   "agency": "black",
+   "photos": "batch/3_106_arlunya_ave/jpg",
+   "map": "batch/3_106_arlunya_ave/3_106_arlunya_ave_places.json",
+   "notes": "Social Media Lite Package. Strata: Yes. Title/strata plan: agent will email (not received yet). Agent email 24 Nov: PLEASE MAKE PINPOINTS Cloverdale Primary, Belmont College, Belmont Forum, Faulkner Park, Notre Dame Primary, Miles Park, Forster Park, Bunnings, Belmont Tavern, Reading Cinema. (Survey-strata unit; strata plan not received, so no boundary yet.)",
+   "must": [
+    "Cloverdale Primary School",
+    "Belmont City College",
+    "Belmont Forum",
+    "Faulkner Park",
+    "Notre Dame Catholic Primary School",
+    "Miles Park",
+    "Forster Park",
+    "Bunnings Belmont",
+    "Belmont Tavern",
+    "Reading Cinemas Belmont"
+   ],
+   "nadirSplit": 1,
+   "nadirPick": [
+    "_0275_",
+    "_0274_"
+   ],
+   "streetRot": {
+    "3_106_arlunya_ave__nadir": 270,
+    "3_106_arlunya_ave__nadir2": 0
+   },
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/24-11-2026/3-106 Arlunya Ave, Cloverdale WA 6105, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "3_106_arlunya_ave_cloverdale_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/24-11-2026/3-106 Arlunya Ave, Cloverdale WA 6105, Australia/Aerial - Drone Photography/3_106_arlunya_ave_cloverdale_map.html"
+    },
+    {
+     "name": "3-106_arlunya_ave_cloverdale_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/24-11-2026/3-106 Arlunya Ave, Cloverdale WA 6105, Australia/Aerial - Drone Photography/3-106_arlunya_ave_cloverdale_map.html"
+    },
+    {
+     "name": "3_106_arlunya_ave_cloverdale_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/24-11-2026/3-106 Arlunya Ave, Cloverdale WA 6105, Australia/Aerial - Drone Photography/3_106_arlunya_ave_cloverdale_qa.txt"
+    },
+    {
+     "name": "3_106_arlunya_ave_cloverdale_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/24-11-2026/3-106 Arlunya Ave, Cloverdale WA 6105, Australia/Aerial - Drone Photography/3_106_arlunya_ave_cloverdale_directions.txt"
+    }
+   ],
+   "remove": {
+    "DJI_20261124173313_0274_D.jpg": [
+     {
+      "sheet": [
+       325,
+       310,
+       415,
+       500
+      ]
+     },
+     {
+      "sheet": [
+       930,
+       35,
+       980,
+       130
+      ]
+     }
+    ],
+    "DJI_20261124173321_0275_D.jpg": [
+     {
+      "sheet": [
+       420,
+       1165,
+       605,
+       1255
+      ]
+     },
+     {
+      "sheet": [
+       155,
+       640,
+       250,
+       678
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "slug": "8b_doney_st",
+   "addr": "8B Doney St, Alfred Cove WA 6154",
+   "who": "Robert Gauci \u00b7 Heron Johns First National",
+   "agency": "fn",
+   "photos": "batch/8b_doney_st/jpg",
+   "map": "batch/8b_doney_st/8b_doney_st_places.json",
+   "notes": "Essential Package (Floorplan or Drone = Floorplan). 2 extra drone shots taken by Jason toward the Swan River and Perth CBD; Jason asked for them to be edited 25 Nov.",
+   "must": [
+    "Perth CBD",
+    "Swan River"
+   ],
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/24-11-2026/8b doney st, alfred cove wa 6154, australia/drone",
+   "docs": []
+  }
+ ]
+}

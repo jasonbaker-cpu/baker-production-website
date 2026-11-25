@@ -1,0 +1,165 @@
+[
+ {
+  "map": "batch/3_106_arlunya_ave/3_106_arlunya_ave_places.json",
+  "agency": "black",
+  "must": [
+   "Cloverdale Primary School",
+   "Belmont City College",
+   "Belmont Forum",
+   "Faulkner Park",
+   "Notre Dame Catholic Primary School",
+   "Miles Park",
+   "Forster Park",
+   "Bunnings Belmont",
+   "Belmont Tavern",
+   "Reading Cinemas Belmont"
+  ],
+  "slug": "3_106_arlunya_ave",
+  "photos": [
+   "batch/3_106_arlunya_ave/und/DJI_20261124173338_0276_D.jpg",
+   "batch/3_106_arlunya_ave/und/DJI_20261124173359_0277_D.jpg",
+   "batch/3_106_arlunya_ave/lvl/DJI_20261124173414_0278_D.jpg",
+   "batch/3_106_arlunya_ave/und/DJI_20261124173427_0279_D.jpg",
+   "batch/3_106_arlunya_ave/und/DJI_20261124173442_0280_D.jpg",
+   "batch/3_106_arlunya_ave/und/DJI_20261124173458_0281_D.jpg",
+   "batch/3_106_arlunya_ave/lvl/DJI_20261124173512_0282_D.jpg",
+   "batch/3_106_arlunya_ave/und/DJI_20261124173526_0283_D.jpg"
+  ],
+  "poly": null,
+  "cams": {},
+  "steps": {
+   "batch/3_106_arlunya_ave/und/DJI_20261124173359_0277_D.jpg": {
+    "ticks": [
+     "Belmont Forum",
+     "Belmont Tavern",
+     "Norlin Park"
+    ]
+   },
+   "batch/3_106_arlunya_ave/und/DJI_20261124173427_0279_D.jpg": {
+    "hz": [
+     0.178,
+     0.18
+    ],
+    "ticks": [
+     "Perth CBD",
+     "Bunnings Belmont",
+     "Faulkner Park",
+     "Belmont City College"
+    ]
+   },
+   "batch/3_106_arlunya_ave/lvl/DJI_20261124173414_0278_D.jpg": {
+    "ticks": [
+     "Reading Cinemas Belmont",
+     "Belmont Tavern",
+     "Faulkner Park"
+    ]
+   }
+  }
+ },
+ {
+  "map": "batch/3_106_arlunya_ave/3_106_arlunya_ave_places.json",
+  "agency": "black",
+  "must": [
+   "Cloverdale Primary School",
+   "Belmont City College",
+   "Belmont Forum",
+   "Faulkner Park",
+   "Notre Dame Catholic Primary School",
+   "Miles Park",
+   "Forster Park",
+   "Bunnings Belmont",
+   "Belmont Tavern",
+   "Reading Cinemas Belmont"
+  ],
+  "slug": "3_106_arlunya_ave__nadir",
+  "photos": [
+   "batch/3_106_arlunya_ave/clean/DJI_20261124173321_0275_D_r270_sq.jpg"
+  ],
+  "poly": null,
+  "full": 1,
+  "snap": {
+   "on": true,
+   "mode": "ridge",
+   "sc": 0.0,
+   "R": 2.5,
+   "rot": 3
+  },
+  "edgeOff": {},
+  "cams": {
+   "batch/3_106_arlunya_ave/clean/DJI_20261124173321_0275_D_r270_sq.jpg": {
+    "yaw": -99.65000000000003,
+    "f35": 33.955998079483564
+   }
+  },
+  "gridAng": 0.0
+ },
+ {
+  "map": "batch/3_106_arlunya_ave/3_106_arlunya_ave_places.json",
+  "agency": "black",
+  "must": [
+   "Cloverdale Primary School",
+   "Belmont City College",
+   "Belmont Forum",
+   "Faulkner Park",
+   "Notre Dame Catholic Primary School",
+   "Miles Park",
+   "Forster Park",
+   "Bunnings Belmont",
+   "Belmont Tavern",
+   "Reading Cinemas Belmont"
+  ],
+  "slug": "3_106_arlunya_ave__nadir2",
+  "photos": [
+   "batch/3_106_arlunya_ave/clean/DJI_20261124173313_0274_D_sq.jpg"
+  ],
+  "poly": null,
+  "full": 1,
+  "snap": {
+   "on": true,
+   "mode": "ridge",
+   "sc": 0.0,
+   "R": 2.5,
+   "rot": 3
+  },
+  "edgeOff": {},
+  "cams": {
+   "batch/3_106_arlunya_ave/clean/DJI_20261124173313_0274_D_sq.jpg": {
+    "yaw": 80.79999999999998,
+    "f35": 24.444902106197123
+   }
+  },
+  "gridAng": 0.0
+ },
+ {
+  "map": "batch/8b_doney_st/8b_doney_st_places.json",
+  "agency": "fn",
+  "must": [
+   "Perth CBD",
+   "Swan River"
+  ],
+  "slug": "8b_doney_st",
+  "photos": [
+   "batch/8b_doney_st/und/DJI_20261124141628_0272_D.jpg",
+   "batch/8b_doney_st/lvl/DJI_20261124141653_0273_D.jpg"
+  ],
+  "cams": {},
+  "steps": {
+   "batch/8b_doney_st/und/DJI_20261124141628_0272_D.jpg": {
+    "ticks": [
+     "Perth CBD",
+     "Swan River",
+     "Tompkins Park",
+     "Alfred Cove Nature Reserve"
+    ]
+   },
+   "batch/8b_doney_st/lvl/DJI_20261124141653_0273_D.jpg": {
+    "ticks": [
+     "Perth CBD",
+     "Swan River",
+     "Matilda Bay Reserve",
+     "Alfred Cove Nature Reserve"
+    ]
+   }
+  }
+ }
+]

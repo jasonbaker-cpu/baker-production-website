@@ -127,6 +127,8 @@ async def main():
                 if not _clean and await pg.locator('#plHouse').count() and not any(q['house'] for q in (await pg.evaluate("window.__bae.photo()"))['pins']): await pg.click('#plHouse'); await pg.wait_for_timeout(300)   # 18 Nov: a hand 'house' click re-aims the camera but never added the house pin (0121/0134/0138 went out pinless)
                 if 'housepin' in st:   # 29 Oct: move only the house pin (e.g. onto an apartment roof) without re-aiming the camera
                     await pg.evaluate(f"window.__bae.setHouse({st['housepin'][0]},{st['housepin'][1]})"); await pg.wait_for_timeout(200)
+                if 'hz' in st:   # 25 Nov: hand sky line [left, right] as fractions of photo height (skyline finder cut 0279 Arlunya far too low)
+                    await pg.evaluate(f"window.__bae.setHorizon({st['hz'][0]},{st['hz'][1]})"); await pg.wait_for_timeout(300); await busy(pg)
                 if _clean: pass
                 elif 'ticks' in st:
                     for t in st['ticks']:
