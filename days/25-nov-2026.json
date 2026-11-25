@@ -1,0 +1,42 @@
+{
+ "label": "Wed 25 Nov 2026",
+ "jobs": [
+  {
+   "slug": "6_pinewood_pl",
+   "addr": "6 Pinewood Pl, Beechboro WA 6063",
+   "who": "Tina Ho \u00b7 Ray White",
+   "agency": "grey",
+   "photos": "batch/6_pinewood_pl/jpg",
+   "map": "batch/6_pinewood_pl/6_pinewood_pl_beechboro_map.html",
+   "notes": "Signature Package. Entry Notes: meet tina at the property. Amenities or features to highlight: -. Strata: -. Land size: -. Title and land plan: -. Boundaries/land features to mark: -. Client Preferences: (blank). Title in Dropbox (Lot 190 on Plan 17501, Vol 1879 Fol 519) but no lot boundary tonight (cadastre not reachable on the night pass).",
+   "nadirSplit": 1,
+   "streetRot": {
+    "6_pinewood_pl__nadir": 180,
+    "6_pinewood_pl__nadir2": 0
+   },
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/6 pinewood pl, beechboro wa 6063, australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "Merged - 6 Pinewood Place, Beechboro.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/6 pinewood pl, beechboro wa 6063, australia/Aerial - Drone Photography/Merged - 6 Pinewood Place, Beechboro.pdf"
+    },
+    {
+     "name": "Floor Plan (2).pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/6 pinewood pl, beechboro wa 6063, australia/Aerial - Drone Photography/Floor Plan (2).pdf"
+    },
+    {
+     "name": "6_pinewood_pl_beechboro_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/6 pinewood pl, beechboro wa 6063, australia/Aerial - Drone Photography/6_pinewood_pl_beechboro_map.html"
+    },
+    {
+     "name": "6_pinewood_pl_beechboro_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/6 pinewood pl, beechboro wa 6063, australia/Aerial - Drone Photography/6_pinewood_pl_beechboro_qa.txt"
+    },
+    {
+     "name": "6_pinewood_pl_beechboro_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/6 pinewood pl, beechboro wa 6063, australia/Aerial - Drone Photography/6_pinewood_pl_beechboro_directions.txt"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,41 @@
+{
+ "label": "Wed 25 Nov 2026",
+ "jobs": [
+  {
+   "slug": "5_letizia_ln",
+   "addr": "5 Letizia Ln, Bayswater WA 6053",
+   "who": "Nic Pulvirenti \u00b7 Professionals TWT",
+   "agency": "flags-p",
+   "photos": "batch/5_letizia_ln/jpg",
+   "map": "batch/5_letizia_ln/5_letizia_ln_bayswater_map.html",
+   "notes": "Signature Package + Twilight Add-On. Amenities or features to highlight: Front and middle house. Need them both photographed but only 1 floorplan is okay and 1 drone. Strata: -. Land size: -. Title and land plan: -. Boundaries/land features to mark: -. Drone flown at dusk 7:27-7:32pm (after sunset) -> photo editor. Lot 813 subdivided into units (working drawings only, no survey-strata plan) -> no boundary, pins only.",
+   "twilight": true,
+   "noMatch": 1,
+   "storeys": 2,
+   "nadirSplit": 1,
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/5 Letizia Ln, Bayswater WA 6053, Australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "5 Letizia Lane Unit 1 & Unit 2 .pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/5 Letizia Ln, Bayswater WA 6053, Australia/Aerial - Drone Photography/5 Letizia Lane Unit 1 & Unit 2 .pdf"
+    },
+    {
+     "name": "5_letizia_ln_bayswater_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/5 Letizia Ln, Bayswater WA 6053, Australia/Aerial - Drone Photography/5_letizia_ln_bayswater_map.html"
+    },
+    {
+     "name": "5_letizia_ln_bayswater_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/5 Letizia Ln, Bayswater WA 6053, Australia/Aerial - Drone Photography/5_letizia_ln_bayswater_qa.txt"
+    },
+    {
+     "name": "5_letizia_ln_bayswater_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Jason Baker/25-11-2026/5 Letizia Ln, Bayswater WA 6053, Australia/Aerial - Drone Photography/5_letizia_ln_bayswater_directions.txt"
+    }
+   ],
+   "streetRot": {
+    "5_letizia_ln__nadir": 180,
+    "5_letizia_ln__nadir2": 0
+   }
+  }
+ ]
+}
