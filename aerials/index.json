@@ -46,6 +46,67 @@
      "toEditor": true,
      "editorReason": "twilight drone (Twilight add-on, flown 6:58-7:03pm into the sunset) \u2014 please edit sky + colour on every frame; remove cars/people/washing on the property",
      "lot": "Lot 2303 on Deposited Plan 401770 (title 2838/430) \u2014 boundary NOT drawn tonight (cadastre unreachable); pins only"
+    },
+    {
+     "slug": "318_wanneroo_rd",
+     "addr": "318 Wanneroo Rd, Nollamara WA 6061",
+     "who": "Dante Holdsworth \u00b7 Holdsworth",
+     "agency": "grey",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261126_171430_0284_1795684738475_photo_r270.JPG",
+      "dji_fly_20261126_171422_0283_1795684739899_photo_sq.JPG"
+     ],
+     "src": "26-nov-2026/318_wanneroo_rd/src/",
+     "map": "318_wanneroo_rd_nollamara_map.html",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261126_171430_0284_1795684738475_photo_r270.JPG",
+      "dji_fly_20261126_171422_0283_1795684739899_photo_sq.JPG",
+      "dji_fly_20261126_171508_0285_1795684737043_photo.JPG",
+      "dji_fly_20261126_171552_0287_1795684734244_photo.JPG",
+      "dji_fly_20261126_171606_0288_1795684732811_photo.JPG",
+      "dji_fly_20261126_171620_0289_1795684731335_photo.JPG",
+      "dji_fly_20261126_171630_0290_1795684728940_photo.JPG",
+      "dji_fly_20261126_171700_0291_1795684727569_photo.JPG",
+      "dji_fly_20261126_171728_0292_1795684726302_photo.JPG"
+     ],
+     "notes": "Social Media Lite Package + Twilight Add-On. Entry Notes: meeting home owner at the property. Amenities: -. Strata: -. Land size: -. Title and land plan: Lot 136 on Plan 7007 (title 1211/262 + sketch) in Dropbox. Boundaries/land features to mark: -. Drone flown 5:14-5:17pm (day). DJI Fly JPGs with no drone XMP: camera pose estimated from the house position (no satellite tonight). No lot boundary tonight (cadastre unreachable on the night pass). holdsworth.com.au not in agency_map -> grey.",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "318_wanneroo_rd_nollamara_map.html",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/318_wanneroo_rd_nollamara_map.html"
+      },
+      {
+       "name": "318_wanneroo_rd_nollamara_qa.txt",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/318_wanneroo_rd_nollamara_qa.txt"
+      },
+      {
+       "name": "318_wanneroo_rd_nollamara_directions.txt",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/318_wanneroo_rd_nollamara_directions.txt"
+      },
+      {
+       "name": "plan-7007.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/plan-7007.pdf"
+      },
+      {
+       "name": "certificate-of-title-with-sketch-1211-262-sketch-for-1211-262.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/certificate-of-title-with-sketch-1211-262-sketch-for-1211-262.pdf"
+      },
+      {
+       "name": "certificate-of-title-with-sketch-1211-262-certificate-of-title-1211-262.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/certificate-of-title-with-sketch-1211-262-certificate-of-title-1211-262.pdf"
+      },
+      {
+       "name": "certificate-of-title-with-sketch-1211-262-certificate-of-title-1211-262 White Out.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/certificate-of-title-with-sketch-1211-262-certificate-of-title-1211-262 White Out.pdf"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography",
+     "toEditor": true,
+     "editorReason": "sun-facing aerials 0291/0292 have a hazy white horizon so the set doesn't match \u2014 please re-edit sky/colour on every frame; remove cars/people/washing on the property. DJI Fly files had no drone data, camera pose estimated tonight without satellite: VA please check the house pin on every frame (0291/0292 sit on the back yard, not the roof)",
+     "lot": "Lot 136 on Plan 7007 (title 1211/262) \u2014 boundary NOT drawn tonight (cadastre unreachable); pins only"
     }
    ]
   },
