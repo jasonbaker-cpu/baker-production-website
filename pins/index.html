@@ -2875,7 +2875,7 @@ async function openRemoteJob(entry){
     window.__portrait = !!entry.portrait;   // 29 Oct: booking asked for vertical   // 29 Oct: top-down travels in the same set as the aerials, but keeps its full frame
     $("busy").hidden = false; $("busy").textContent = "Downloading "+entry.addr+"…";
     const base = DAYS_ROOT + entry.src;
-    const get = async (name, type) => { const r = await fetch(base + encodeURIComponent(name)); if (!r.ok) throw new Error(name+" "+r.status); return new File([await r.blob()], name, { type }); };
+    const get = async (name, type) => { const r = await fetch(base + encodeURIComponent(name), { cache:"no-cache" }); /* 26 Nov: always revalidate so a re-published job shows its latest boundary/pins */ if (!r.ok) throw new Error(name+" "+r.status); return new File([await r.blob()], name, { type }); };
     const files = [];
     if (entry.map) files.push(await get(entry.map, entry.map.endsWith(".json") ? "application/json" : "text/html"));
     files.push(await get(entry.project || "project.json", "application/json"));
