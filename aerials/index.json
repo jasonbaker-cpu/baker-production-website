@@ -1,6 +1,55 @@
 {
  "days": [
   {
+   "id": "26-nov-2026",
+   "label": "Thu 26 Nov 2026",
+   "gallery": "26-nov-2026/",
+   "jobs": [
+    {
+     "slug": "15_glenora_wy",
+     "addr": "15 Glenora Wy, Harrisdale WA 6112",
+     "who": "Oshi Thilakarathna \u00b7 Mallison Real Estate",
+     "agency": "mallison",
+     "full": false,
+     "fullPhotos": [
+      "dji_fly_20261126_185842_0003_1795690967775_photo_r180.jpg",
+      "dji_fly_20261126_185848_0004_1795690966839_photo.jpg"
+     ],
+     "src": "26-nov-2026/15_glenora_wy/src/",
+     "map": "15_glenora_wy_places.json",
+     "project": "project.json",
+     "photos": [
+      "dji_fly_20261126_185842_0003_1795690967775_photo_r180.jpg",
+      "dji_fly_20261126_185848_0004_1795690966839_photo.jpg",
+      "dji_fly_20261126_185938_0005_1795690965902_photo.jpg",
+      "dji_fly_20261126_185956_0006_1795690965016_photo.jpg",
+      "dji_fly_20261126_190016_0007_1795690964095_photo.jpg",
+      "dji_fly_20261126_190044_0008_1795690963147_photo.jpg",
+      "dji_fly_20261126_190128_0009_1795690961909_photo.jpg",
+      "dji_fly_20261126_190206_0010_1795690961013_photo.jpg",
+      "dji_fly_20261126_190244_0011_1795690960294_photo.jpg",
+      "dji_fly_20261126_190318_0012_1795690959317_photo.jpg"
+     ],
+     "notes": "Essential Package + Twilight Add-On (Floorplan or Drone = Drone). Entry Notes: collect keys from mallison real estate office. Amenities: -. Strata: -. Land size: -. Title and land plan: Certificate of Title 2838/430 + Deposited Plan 401770 (Lot 2303) in Dropbox. Boundaries/land features to mark: -. Client Preferences: let me know what time is best for Twilight. Drone flown 6:58-7:03pm at sunset -> photo editor. No lot boundary tonight (cadastre unreachable on the night pass). Public schools not pinned (intake zones not checked).",
+     "portrait": false,
+     "docs": [
+      {
+       "name": "Certificate of Title 2838-430 15 Glenora Way, HARRISDALE 6112.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/26-11-2026/15 Glenora Wy, Harrisdale WA 6112, Australia/Floorplan or Drone/Certificate of Title 2838-430 15 Glenora Way, HARRISDALE 6112.pdf"
+      },
+      {
+       "name": "Deposited Plan 401770.pdf",
+       "path": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/26-11-2026/15 Glenora Wy, Harrisdale WA 6112, Australia/Floorplan or Drone/Deposited Plan 401770.pdf"
+      }
+     ],
+     "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Andrew Seo/26-11-2026/15 Glenora Wy, Harrisdale WA 6112, Australia/Floorplan or Drone",
+     "toEditor": true,
+     "editorReason": "twilight drone (Twilight add-on, flown 6:58-7:03pm into the sunset) \u2014 please edit sky + colour on every frame; remove cars/people/washing on the property",
+     "lot": "Lot 2303 on Deposited Plan 401770 (title 2838/430) \u2014 boundary NOT drawn tonight (cadastre unreachable); pins only"
+    }
+   ]
+  },
+  {
    "id": "25-nov-2026",
    "label": "Wed 25 Nov 2026",
    "gallery": "25-nov-2026/",
