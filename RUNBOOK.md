@@ -387,3 +387,8 @@ Filler: little parks/reserves more than 1.5 km away are never used just to reach
 - SET-MATCH (after runjobs, inside t12 `set_match`/`apply_job_look`): ground Lab stats per frame vs job median, frames dE >= 2.5 get a clamped Reinhard transfer below the horizon (overlays untouched), unswapped-sky frames redone with the sky forced above the true horizon, top-downs matched to e2e/<slug>/job_look.json. `"noMatch": 1` for twilight/editor-only sets.
 - Every run: all frames of a job on ONE contact sheet — nothing may stand out (sun-facing glare frames that can't be matched -> toEditor); then each frame at 100% for bands/halos at the horizon and around labels.
 - Night pass 25 Nov: first run using this section (6 Pinewood Pl sun-glare frames could not be matched -> sent to editor).
+
+## 26 Nov 2026 (night pass)
+- mkday: top-downs with no lot boundary (no poly / pxpoly — strata, or cadastre unreachable on a Mac-offline night) skip the fence-check gate (there is no fence line to check). Boundary jobs still need a passing fence file.
+- DJI Fly JPGs with no drone XMP and no satellite (Mac offline): pose estimated by sighting the house in each oblique (yaw = bearing to house minus its horizontal offset, pitch from the horizon, height from the house's depression angle; ~118 m on 318 Wanneroo Rd). Marked `baker:EstimatedPose="house-sighting"`. Always flag for the VA to check the house pins; prefer estpose.py against satellite when the Mac is up.
+- mallison.com.au (Mallison Real Estate, same brand as mallisonre.com.au) → `mallison`.

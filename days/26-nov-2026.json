@@ -1,0 +1,54 @@
+{
+ "label": "Thu 26 Nov 2026",
+ "jobs": [
+  {
+   "slug": "318_wanneroo_rd",
+   "addr": "318 Wanneroo Rd, Nollamara WA 6061",
+   "who": "Dante Holdsworth \u00b7 Holdsworth",
+   "agency": "grey",
+   "photos": "batch/318_wanneroo_rd/jpg",
+   "map": "batch/318_wanneroo_rd/318_wanneroo_rd_nollamara_map.html",
+   "notes": "Social Media Lite Package + Twilight Add-On. Entry Notes: meeting home owner at the property. Amenities: -. Strata: -. Land size: -. Title and land plan: Lot 136 on Plan 7007 (title 1211/262 + sketch) in Dropbox. Boundaries/land features to mark: -. Drone flown 5:14-5:17pm (day). DJI Fly JPGs with no drone XMP: camera pose estimated from the house position (no satellite tonight). No lot boundary tonight (cadastre unreachable on the night pass). holdsworth.com.au not in agency_map -> grey.",
+   "nadirSplit": 1,
+   "nadirPick": [
+    "_0284_",
+    "_0283_"
+   ],
+   "streetRot": {
+    "318_wanneroo_rd__nadir": 270,
+    "318_wanneroo_rd__nadir2": 0
+   },
+   "rawPath": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography",
+   "docs": [
+    {
+     "name": "318_wanneroo_rd_nollamara_map.html",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/318_wanneroo_rd_nollamara_map.html"
+    },
+    {
+     "name": "318_wanneroo_rd_nollamara_qa.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/318_wanneroo_rd_nollamara_qa.txt"
+    },
+    {
+     "name": "318_wanneroo_rd_nollamara_directions.txt",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/318_wanneroo_rd_nollamara_directions.txt"
+    },
+    {
+     "name": "plan-7007.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/plan-7007.pdf"
+    },
+    {
+     "name": "certificate-of-title-with-sketch-1211-262-sketch-for-1211-262.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/certificate-of-title-with-sketch-1211-262-sketch-for-1211-262.pdf"
+    },
+    {
+     "name": "certificate-of-title-with-sketch-1211-262-certificate-of-title-1211-262.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/certificate-of-title-with-sketch-1211-262-certificate-of-title-1211-262.pdf"
+    },
+    {
+     "name": "certificate-of-title-with-sketch-1211-262-certificate-of-title-1211-262 White Out.pdf",
+     "path": "/Baker Production team folder/Baker Production Media/Raw Files/Yanhua chai/26-11-2026/318 wanneroo rd, nollamara wa 6061, australia/Aerial - Drone Photography/certificate-of-title-with-sketch-1211-262-certificate-of-title-1211-262 White Out.pdf"
+    }
+   ]
+  }
+ ]
+}

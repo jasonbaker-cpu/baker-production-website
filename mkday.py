@@ -77,7 +77,8 @@ for slug, m in META.items():
     if not variants: continue
     for nv in nads:
         if os.environ.get('SKIP_FENCE'): break
-        fp = f"{SP}e2e/fence_{nv['slug']}.json"
+        if not nv.get('poly') and not nv.get('pxpoly'): continue   # 26 Nov: no lot boundary drawn (strata / no cadastre) -> no fence line to check
+        fp =f"{SP}e2e/fence_{nv['slug']}.json"
         if not os.path.exists(fp) or not json.load(open(fp)).get('pass'):
             sys.exit(f"STOP: {nv['slug']} has no passing fence check ({fp}). Run edgeruler + independent fence check + fencefix.py first.")
     os.makedirs(f'{OUT}{slug}', exist_ok=True)
