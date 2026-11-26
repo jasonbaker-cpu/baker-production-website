@@ -94,6 +94,7 @@ nav a{font-size:13.5px;font-weight:600;text-decoration:none;color:var(--ink);bac
 #lb img{max-width:100%;max-height:100%;border-radius:8px}
 footer{margin-top:44px;font-size:13px;color:var(--faint)}
 @media (max-width:520px){.ba{grid-template-columns:1fr}}
+.std p{margin:0 0 10px}.std h3{font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin:16px 0 6px;opacity:.75}.std ol{margin:0;padding-left:24px}.std li{margin:6px 0}.std .lock{display:inline-block;background:var(--accent);color:#fff;font-weight:700;font-size:13px;padding:5px 10px;border-radius:999px}.std .end{margin:16px 0 0;padding-top:12px;border-top:1px solid rgba(128,128,128,.3)}
 </style>
 </head>
 <body>
@@ -101,16 +102,73 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
   <header>
     <div>
       <h1>Baker Production · Editing Standard</h1>
-      <p class="sub">For our photo editors. Self-check your job before delivery, then check the job reviews. Match the good examples, avoid the bad ones. Private page.</p>
+      <p class="sub">For our photo editors. Follow the 15 rules, match the 18 reference photos, and self-check your job before delivery. Private page.</p>
     </div>
     <div class="upd">Updated <span id="upd"></span></div>
   </header>
 
   <nav>
-    <a href="#tools">Editor tools</a><a href="#selfcheck">Self-check my job</a><a href="#reviews">Job reviews</a><a href="#exterior-look">Exterior look</a><a href="#rules">Rules</a><a href="#links">Reference links</a><a href="#good">Good</a><a href="#bad">Bad</a><a href="#fixes">Before / after</a><a href="#premium">Premium day</a>
+    <a href="#standard">The standard</a><a href="#reference">Reference photos</a><a href="#tools">Editor tools</a><a href="#selfcheck">Self-check my job</a><a href="#drone">Drone</a><a href="#reviews">Job reviews</a><a href="#premium">Premium day</a>
   </nav>
 
-  <div class="callout"><b>Locked standard (18 Nov 2026): true to the raw first, bright second.</b> Every floor, wall, benchtop, paver, brick and garden is the same colour as in the raw. If you must choose between brighter and accurate, choose accurate. <b>One reference: Crib Creative.</b> Natural colour, real blacks, bright but never hazy, no HDR look, nothing glowing. Interiors stay at our normal brightness (165-185). <b>This standard will not change.</b> When something is unclear, the answer is always: match the raw.</div>
+  <div class="callout std" id="standard">
+    <p class="lock">Version 1 &middot; locked 27 Nov to 27 Dec 2026 &middot; no changes</p>
+    <p><b>This is the only standard for Baker day and twilight photos.</b> 15 rules and 18 reference photos. It replaces every earlier email, note, review and reference link.</p>
+    <h3>Colour comes first</h3>
+    <ol>
+      <li><b>True to the house first, bright second.</b> Floors, walls, cabinets, benchtops, carpet, pavers, brick and garden stay the colour of the real house. If you must choose between brighter and accurate, choose accurate.</li>
+      <li><b>The flash frame is the colour reference.</b> Every interior scene has one flash frame. Match wall, floor, cabinet and timber colour to it. Do not use the white balance eyedropper on walls.</li>
+      <li><b>Cream walls stay cream. Grey cabinets stay grey. Timber stays timber.</b> Never turn a room white to make it look clean. Removing a yellow lamp cast from a white wall is correct.</li>
+    </ol>
+    <h3>Interiors</h3>
+    <ol start="4">
+      <li><b>Bright but not hazy.</b> TVs, pendants, benchtops and dark furniture stay black. Soft shadows under furniture stay. Never brighter than the reference photos.</li>
+      <li><b>Windows pulled.</b> The view is visible and natural. No halos or glowing edges.</li>
+      <li><b>No extra clarity, texture, dehaze, sharpening or saturation.</b> If unsure, do less.</li>
+      <li><b>Straight verticals</b> on every photo.</li>
+      <li><b>The whole set matches.</b> Same brightness and colour in every photo of the job. If one photo is off, fix the look of the whole set.</li>
+    </ol>
+    <h3>Exteriors</h3>
+    <ol start="9">
+      <li><b>Natural, like the raw.</b> No HDR look. Greens natural, not neon. Pavers, brick and roof their real colour, nothing glowing. Do not lift shadows until the photo looks flat.</li>
+      <li><b>Day sky: soft pale blue,</b> near white at the horizon, a few light clouds. Never deep blue, grey or white.</li>
+      <li><b>No cut lines.</b> After a sky replacement, check every tree, palm and roof edge. No white outline or halo against the sky.</li>
+      <li><b>Never remove</b> neighbouring houses or power lines.</li>
+    </ol>
+    <h3>Twilight</h3>
+    <ol start="13">
+      <li><b>Natural sunset, lights on.</b> House and lawn stay bright. Soft pink and purple are fine. No dark fake purple, no all-gold sky, no grey cloud tops.</li>
+      <li><b>Sky from the Default folder only,</b> and a different sky on every job. Grey or white houses get a blue and pink sky, not orange.</li>
+    </ol>
+    <h3>Delivery</h3>
+    <ol start="15">
+      <li><b>Edit every photo in the folder.</b> No duplicate angles. Same size and same file names. Follow the booking notes for the job.</li>
+    </ol>
+    <p class="end"><b>If you are unsure:</b> match the flash frame and the reference photos below. If a message from Baker ever disagrees with this page, this page wins. Ask Jason before you edit. Fixes on one job are fixes for that job only. They do not change these rules.</p>
+  </div>
+
+  <h2 id="reference">The 18 reference photos</h2>
+  <p class="sub" style="margin:-4px 0 12px">Every job should look like these. Each one was checked against its raw. Tap a photo to see it larger.</p>
+  <div class="grid" id="refGrid">
+    <div class="ex"><img loading="lazy" src="img/ref/01.jpg" alt="Reference 1, Front"><div class="t"><span class="tag good">Match this</span><div class="meta">1 &middot; Front</div><p class="why">Pale sky with a few soft clouds. White render stays white, lawn natural, verticals straight.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/02.jpg" alt="Reference 2, Front"><div class="t"><span class="tag good">Match this</span><div class="meta">2 &middot; Front</div><p class="why">Three-quarter front. Same sky and colour as photo 1.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/03.jpg" alt="Reference 3, Alfresco"><div class="t"><span class="tag good">Match this</span><div class="meta">3 &middot; Alfresco</div><p class="why">Shadows kept. Limestone and paving their real colour. No HDR look.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/04.jpg" alt="Reference 4, Living"><div class="t"><span class="tag good">Match this</span><div class="meta">4 &middot; Living</div><p class="why">Bright but not hazy. Cream walls stay cream, carpet keeps its grey, tables stay black.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/05.jpg" alt="Reference 5, Living"><div class="t"><span class="tag good">Match this</span><div class="meta">5 &middot; Living</div><p class="why">Window view pulled and natural. Soft shadows under the sofas kept. TV stays black.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/06.jpg" alt="Reference 6, Living"><div class="t"><span class="tag good">Match this</span><div class="meta">6 &middot; Living</div><p class="why">Wall colour true, timber floor depth kept, real blacks in the cushions.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/07.jpg" alt="Reference 7, Living to kitchen"><div class="t"><span class="tag good">Match this</span><div class="meta">7 &middot; Living to kitchen</div><p class="why">Deep room even from front to back. Feature wall and stone fireplace true to colour.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/08.jpg" alt="Reference 8, Living"><div class="t"><span class="tag good">Match this</span><div class="meta">8 &middot; Living</div><p class="why">Timber floor keeps its warm brown. Not bleached, not orange.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/09.jpg" alt="Reference 9, Kitchen"><div class="t"><span class="tag good">Match this</span><div class="meta">9 &middot; Kitchen</div><p class="why">Dark cabinets stay dark. Cream walls stay cream. White benchtop clean.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/10.jpg" alt="Reference 10, Kitchen"><div class="t"><span class="tag good">Match this</span><div class="meta">10 &middot; Kitchen</div><p class="why">Steel appliances neutral, not blue. Window view natural.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/11.jpg" alt="Reference 11, Kitchen"><div class="t"><span class="tag good">Match this</span><div class="meta">11 &middot; Kitchen</div><p class="why">White kitchen bright without glare. Pendants and stools stay black.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/12.jpg" alt="Reference 12, Dining"><div class="t"><span class="tag good">Match this</span><div class="meta">12 &middot; Dining</div><p class="why">Timber table true. Same brightness and colour as the kitchen photos.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/13.jpg" alt="Reference 13, Main bedroom"><div class="t"><span class="tag good">Match this</span><div class="meta">13 &middot; Main bedroom</div><p class="why">Green bedhead keeps its colour. Lamps warm. Cream walls stay cream.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/14.jpg" alt="Reference 14, Bedroom"><div class="t"><span class="tag good">Match this</span><div class="meta">14 &middot; Bedroom</div><p class="why">Window view pulled, curtains true navy, timber bed rich not orange.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/15.jpg" alt="Reference 15, Bedroom"><div class="t"><span class="tag good">Match this</span><div class="meta">15 &middot; Bedroom</div><p class="why">Carpet true beige. Shutters crisp. Bedspread colour accurate.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/16.jpg" alt="Reference 16, Kids room"><div class="t"><span class="tag good">Match this</span><div class="meta">16 &middot; Kids room</div><p class="why">Bright and clean with the colour in the decor kept.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/17.jpg" alt="Reference 17, Bathroom"><div class="t"><span class="tag good">Match this</span><div class="meta">17 &middot; Bathroom</div><p class="why">Tiles and pattern true. Whites bright but with detail.</p></div></div>
+    <div class="ex"><img loading="lazy" src="img/ref/18.jpg" alt="Reference 18, Ensuite"><div class="t"><span class="tag good">Match this</span><div class="meta">18 &middot; Ensuite</div><p class="why">White bathroom bright but not blown. Grey wall stays grey.</p></div></div>
+  </div>
 
   <h2 id="tools">Editor tools</h2>
   <div class="links" id="toolList"></div>
@@ -126,38 +184,8 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
     <div id="scOut"></div>
   </div>
 
-  <h2 id="reviews">Job reviews</h2>
-  <p class="sub" style="margin:-4px 0 12px">Latest QC on our jobs. Fix the red points; keep doing the green ones.</p>
-  <div id="revList" class="revs"></div>
-
-  <h2 id="exterior-look">Exterior look: natural, like the raw</h2>
-  <div class="callout"><b>Reference: Crib Creative (day: Edward Lim at Ray White ELG; twilight: <a href="https://holdsworth.com.au/properties-for-sale-perth/" target="_blank" rel="noopener">Holdsworth listings</a>).</b> Clean natural colour, true blacks, nothing glaring, never HDR or gritty. Pavers, brick and roof tiles no brighter or more orange than the raw. Greens natural, never neon. Shadows stay shadows: do not lift them until the photo looks flat. <b>Skies: soft pale blue, fading to near-white at the horizon, light wispy clouds. Never deep or saturated blue, no dark gradient at the top. Sky reference: <a href="https://bastonandco.com/property/228-rutland-avenue-carlisle/" target="_blank" rel="noopener">Baston &amp; Co, 228 Rutland Ave Carlisle</a>.</b> Ignore Crib's sunset-sky exteriors.</div>
-
-  <h2 id="rules">Rules</h2>
+  <h2 id="drone">Drone</h2>
   <div class="rules">
-    <div class="card">
-      <h3>Interiors</h3>
-      <ul>
-        <li><b>Natural, true to the raw (16 Nov).</b> Tiles, floors and walls keep the same colour as the raw. No extra sharpening, clarity, texture or saturation &ndash; a seller complained tiles looked over-edited and sharp.</li>
-        <li><b>Walls true to the raw.</b> Not grey/blue, not extra yellow/cream, not blown to pure white.</li>
-        <li><b>Bright, not washed out.</b> Rooms light and airy like Thorburn; ceilings must keep detail.</li>
-        <li><b>Ceilings read white.</b> No orange or peach cast.</li>
-        <li><b>Every photo in a job matches</b> in brightness and colour, including patios and alfrescos.</li>
-        <li><b>Windows pulled</b> with the view visible. No halos or glowing edges.</li>
-        <li><b>Verticals straight.</b></li>
-        <li><b>Timber floors natural.</b> Not orange or over-saturated.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3>Exteriors &amp; skies</h3>
-      <ul>
-        <li><b>Day skies soft pale blue</b> with light wispy clouds. Never grey or white, never deep or cartoon blue.</li><li><b>Exteriors natural, matching the raw.</b> Pavers, brick, roof, lawn and trees keep their real colour. No HDR look, nothing glowing, bright ground and walls pulled back so nothing glares.</li>
-        <li><b>Twilight:</b> natural sunset look, lights on. Soft pink/purple OK; dark fake purple is not.</li>
-        <li><b>Shadows natural.</b> Open them only as far as the raw brackets show; never lift until the photo looks flat.</li>
-        <li><b>Grass natural green,</b> not lime.</li>
-        <li><b>Never remove</b> neighbouring houses or power lines.</li>
-      </ul>
-    </div>
     <div class="card">
       <h3>Drone</h3>
       <ul>
@@ -169,28 +197,13 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
         <li><b>Same file size</b> across the whole set.</li>
       </ul>
     </div>
-    <div class="card">
-      <h3>Delivery</h3>
-      <ul>
-        <li><b>No duplicates.</b> Don't send two photos of the same room from the same angle.</li>
-        <li><b>All photos same resolution.</b></li>
-        <li><b>Redo the whole set's look</b> if one photo is off. Don't fix only one and leave the rest.</li>
-        <li><b>Follow the booking notes</b> for each job.</li>
-      </ul>
-    </div>
   </div>
 
-  <h2 id="links">Reference links</h2>
-  <div class="links" id="linkList"></div>
+  <h2 id="reviews">Job reviews</h2>
+  <p class="sub" style="margin:-4px 0 12px">Reviews of jobs against Version 1 will be posted here. Older reviews were removed because they used old targets.</p>
+  <div id="revList" class="revs"></div>
 
-  <h2 id="good">Good: do this</h2>
-  <div class="grid" id="goodGrid"></div>
-
-  <h2 id="bad">Bad: avoid this</h2>
-  <div class="grid" id="badGrid"></div>
-
-  <h2 id="fixes">Before / after: good fixes</h2>
-  <div class="grid" id="baGrid"></div>
+  <div hidden><div id="linkList"></div><div id="goodGrid"></div><div id="badGrid"></div><div id="baGrid"></div></div>
 
   <h2 id="premium">Premium day photos</h2>
   <p class="sub" style="margin:-4px 0 12px">Premium tier only. Standard jobs keep the normal rules above.</p>
@@ -213,7 +226,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
     <div class="card">
       <h3>Premium vs standard</h3>
       <ul>
-        <li><b>Standard:</b> bright, even, walls ~210, very few shadows.</li>
+        <li><b>Standard:</b> follow the 15 rules and 18 reference photos at the top of this page.</li>
         <li><b>Premium:</b> just as bright in the main area, but with natural depth and direction of light.</li>
         <li><b>Same set rule:</b> every photo in the job matches.</li>
         <li><b>Exteriors and drone:</b> same rules as standard (soft pale blue sky, natural greens and shadows that match the raw).</li>
@@ -228,7 +241,7 @@ footer{margin-top:44px;font-size:13px;color:var(--faint)}
 </div>
 <div id="lb"><img alt=""></div>
 
-<script src="data.js?v=8"></script>
+<script src="data.js?v=9"></script>
 <script src="selfcheck.js?v=18" defer></script>
 <script>
 (function(){
